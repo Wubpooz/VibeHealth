@@ -9,19 +9,60 @@
     "delete": "Delete",
     "edit": "Edit",
     "close": "Close",
-    "loading": "Loading..."
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "success": "Success"
   },
   "nav": {
     "home": "Home",
     "profile": "Profile",
     "medical_id": "Medical ID",
-    "settings": "Settings"
+    "settings": "Settings",
+    "dashboard": "Dashboard"
   },
-  "auth": {
-    "login": "Log in",
-    "logout": "Log out",
-    "register": "Sign up",
-    "email": "Email",
-    "password": "Password"
+  "AUTH": {
+    "LOGIN": "Log in",
+    "LOGOUT": "Log out",
+    "SIGN_IN": "Sign in",
+    "SIGN_UP": "Sign up",
+    "EMAIL": "Email",
+    "PASSWORD": "Password",
+    "CONFIRM_PASSWORD": "Confirm Password",
+    "NAME": "Name",
+    "NAME_OPTIONAL": "Name (optional)",
+    "YOUR_NAME": "Your name",
+    "ENTER_EMAIL": "Enter your email",
+    "FORGOT_PASSWORD": "Forgot password?",
+    "WELCOME_BACK": "Welcome back!",
+    "SIGN_IN_TO_ACCOUNT": "Sign in to your VibeHealth account",
+    "JOIN_VIBEHEALTH": "Join VibeHealth!",
+    "CREATE_ACCOUNT": "Create account",
+    "CREATING_ACCOUNT": "Creating account...",
+    "CREATE_ACCOUNT_DESC": "Create your account and start your health journey",
+    "SIGNING_IN": "Signing in...",
+    "OR_CONTINUE_WITH": "Or continue with",
+    "OR_SIGN_UP_WITH": "Or sign up with",
+    "NO_ACCOUNT": "Don't have an account?",
+    "HAVE_ACCOUNT": "Already have an account?",
+    "SIGN_IN_WITH_MAGIC_LINK": "Sign in with magic link instead",
+    "SEND_MAGIC_LINK": "Send magic link",
+    "MAGIC_LINK_SENT": "Magic link sent! Check your email.",
+    "VERIFY_EMAIL": "Check your email!",
+    "VERIFY_EMAIL_SENT": "We've sent a verification link to your email address.",
+    "RESEND_VERIFICATION": "Resend verification email",
+    "VERIFICATION_SENT": "Verification email sent!",
+    "PASSWORD_MIN_LENGTH": "Must be at least 8 characters",
+    "PASSWORDS_NOT_MATCH": "Passwords do not match",
+    "CONTINUE_WITH_GOOGLE": "Continue with Google",
+    "CONTINUE_WITH_GITHUB": "Continue with GitHub",
+    "CONTINUE_WITH_APPLE": "Continue with Apple"
+  },
+  "DASHBOARD": {
+    "WELCOME": "Welcome to VibeHealth!",
+    "SETUP_COMPLETE": "You're all set up. Authentication is working!",
+    "YOUR_PROFILE": "Your Profile",
+    "EMAIL_VERIFIED": "Email verified",
+    "ROLE": "Role",
+    "VERIFY_EMAIL_BANNER": "Please verify your email to access all features."
   }
 }

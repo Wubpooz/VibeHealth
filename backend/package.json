@@ -10,16 +10,20 @@
     "lint": "eslint src --ext .ts",
     "typecheck": "tsc --noEmit",
     "test": "bun test",
-    "db:generate": "prisma generate",
-    "db:push": "prisma db push",
-    "db:migrate": "prisma migrate dev",
-    "db:studio": "prisma studio"
+    "db:generate": "bunx --bun prisma generate",
+    "db:push": "bunx --bun prisma db push",
+    "db:migrate": "bunx --bun prisma migrate dev",
+    "db:studio": "bunx --bun prisma studio",
+    "db:seed": "bun run src/db/seed.ts",
+    "setup:db": "docker run --name vibehealth-db -e POSTGRES_USER=vibehealth -e POSTGRES_PASSWORD=vibehealth_dev -e POSTGRES_DB=vibehealth -p 5432:5432 -d postgres:16-alpine || docker start vibehealth-db",
+    "setup:wait": "bun run src/scripts/wait-for-db.ts",
+    "dev:stack": "bun run setup:db && bun run setup:wait && bun run db:generate && bun run db:push && bun run db:seed && bun run dev"
   },
   "dependencies": {
-    "hono": "^4.0.0",
-    "zod": "^3.22.4",
     "@prisma/client": "^5.9.0",
-    "@better-auth/core": "^1.5.5"
+    "better-auth": "^1.5.5",
+    "hono": "^4.0.0",
+    "zod": "^3.22.4"
   },
   "devDependencies": {
     "@types/bun": "latest",
