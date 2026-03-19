@@ -1,0 +1,27 @@
+{
+  "app": {
+    "title": "VibeHealth",
+    "tagline": "Your personal health companion 🐰"
+  },
+  "common": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "close": "Close",
+    "loading": "Loading..."
+  },
+  "nav": {
+    "home": "Home",
+    "profile": "Profile",
+    "medical_id": "Medical ID",
+    "settings": "Settings"
+  },
+  "auth": {
+    "login": "Log in",
+    "logout": "Log out",
+    "register": "Sign up",
+    "email": "Email",
+    "password": "Password"
+  }
+}

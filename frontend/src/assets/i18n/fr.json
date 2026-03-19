@@ -1,0 +1,27 @@
+{
+  "app": {
+    "title": "VibeHealth",
+    "tagline": "Votre compagnon santé personnel 🐰"
+  },
+  "common": {
+    "save": "Enregistrer",
+    "cancel": "Annuler",
+    "delete": "Supprimer",
+    "edit": "Modifier",
+    "close": "Fermer",
+    "loading": "Chargement..."
+  },
+  "nav": {
+    "home": "Accueil",
+    "profile": "Profil",
+    "medical_id": "Carte médicale",
+    "settings": "Paramètres"
+  },
+  "auth": {
+    "login": "Se connecter",
+    "logout": "Se déconnecter",
+    "register": "S'inscrire",
+    "email": "Email",
+    "password": "Mot de passe"
+  }
+}
