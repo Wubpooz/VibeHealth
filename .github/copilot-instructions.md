@@ -1,5 +1,23 @@
 # Copilot Instructions for VibeHealth
 
+## Agent bootstrap context (auto-load order)
+
+For any coding task, agents should load this context first to stay aligned with project conventions and current architecture:
+
+1. `.github/.vibehealth/SKILL.md` (master context)
+2. `.github/.vibehealth/claude.md` (model-specific guidance where relevant)
+3. Task-specific guides:
+   - Frontend: `.github/.vibehealth/frontend.md`
+   - Backend: `.github/.vibehealth/backend.md`
+   - Design: `.github/.vibehealth/design.md`
+   - Testing: `.github/.vibehealth/testing.md`
+   - Prompt templates: `.github/.vibehealth/prompts.md`
+
+Deep references for framework-level details:
+- Angular 21: `.github/.angular/llms-full.txt`
+- Hono: `.github/.hono/llms-full.txt`
+- Anime.js v4/GSAP references: `.github/.gsap/CLAUDE.md`, `.github/.gsap/llms.txt`
+
 ## Build, test, and lint commands
 
 Use scripts from each package rather than ad-hoc commands.

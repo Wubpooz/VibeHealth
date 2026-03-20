@@ -7,6 +7,7 @@ import { HttpClient } from '@angular/common/http';
 import { firstValueFrom, catchError, of } from 'rxjs';
 import { BunnyMascotComponent } from '../../shared/components/bunny-mascot/bunny-mascot.component';
 import { SpinnerComponent } from '../../shared/components/spinner/spinner.component';
+import { AutocompleteComponent } from '../../shared/components/autocomplete/autocomplete.component';
 import {
   OnboardingProfile,
   ONBOARDING_STEPS,
@@ -18,11 +19,12 @@ import {
 } from './onboarding.types';
 import { environment } from '../../../environments/environment';
 import { AuthService } from '../../core/auth/auth.service';
+import { ReferenceDataService } from '../../core/reference-data/reference-data.service';
 
 @Component({
   selector: 'app-onboarding',
   standalone: true,
-  imports: [CommonModule, FormsModule, TranslateModule, BunnyMascotComponent, SpinnerComponent],
+  imports: [CommonModule, FormsModule, TranslateModule, BunnyMascotComponent, SpinnerComponent, AutocompleteComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="min-h-screen bg-gradient-to-br from-rose-50 via-white to-sage-50 dark:from-gray-950 dark:via-gray-900 dark:to-gray-950 overflow-hidden relative">
@@ -164,14 +166,17 @@ import { AuthService } from '../../core/auth/auth.service';
                     <!-- Date of Birth -->
                     <div class="form-group">
                       <label class="form-label">When's your birthday?</label>
-                      <div class="date-picker-wrapper">
+                      <div class="relative">
                         <input
                           type="date"
                           [(ngModel)]="profile.dateOfBirth"
-                          class="input-field date-input"
+                          class="input-field date-input pl-10"
                           [max]="maxDate"
                           [min]="minDate"
                         />
+                        <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">
+                          📅
+                        </span>
                       </div>
                       <p class="text-xs text-gray-400 mt-1">Used for age-appropriate recommendations</p>
                     </div>
@@ -324,69 +329,37 @@ import { AuthService } from '../../core/auth/auth.service';
                     <!-- Medical Conditions -->
                     <div class="form-group">
                       <label class="form-label">Any medical conditions?</label>
-                      <div class="flex flex-wrap gap-2 mb-3">
-                        @for (condition of commonConditions; track condition) {
-                          <button
-                            type="button"
-                            (click)="toggleArrayItem(profile.medicalConditions, condition)"
-                            class="tag-chip"
-                            [class.selected]="profile.medicalConditions.includes(condition)"
-                          >
-                            {{ condition }}
-                          </button>
-                        }
-                      </div>
-                      <input
-                        type="text"
-                        [(ngModel)]="customCondition"
-                        (keyup.enter)="addCustomItem(profile.medicalConditions, 'customCondition')"
-                        placeholder="Add other..."
-                        class="input-field text-sm"
-                      />
+                      <app-autocomplete
+                        [suggestions]="commonConditions()"
+                        [selectedItems]="profile.medicalConditions"
+                        [placeholder]="'Search conditions...'"
+                        [allowCustom]="true"
+                        (itemsChange)="profile.medicalConditions = $event"
+                      ></app-autocomplete>
                     </div>
 
                     <!-- Allergies -->
                     <div class="form-group">
                       <label class="form-label">Any allergies?</label>
-                      <div class="flex flex-wrap gap-2 mb-3">
-                        @for (allergy of commonAllergies; track allergy) {
-                          <button
-                            type="button"
-                            (click)="toggleArrayItem(profile.allergies, allergy)"
-                            class="tag-chip"
-                            [class.selected]="profile.allergies.includes(allergy)"
-                          >
-                            {{ allergy }}
-                          </button>
-                        }
-                      </div>
-                      <input
-                        type="text"
-                        [(ngModel)]="customAllergy"
-                        (keyup.enter)="addCustomItem(profile.allergies, 'customAllergy')"
-                        placeholder="Add other..."
-                        class="input-field text-sm"
-                      />
+                      <app-autocomplete
+                        [suggestions]="commonAllergies()"
+                        [selectedItems]="profile.allergies"
+                        [placeholder]="'Search allergies...'"
+                        [allowCustom]="true"
+                        (itemsChange)="profile.allergies = $event"
+                      ></app-autocomplete>
                     </div>
 
                     <!-- Medications -->
                     <div class="form-group">
                       <label class="form-label">Current medications?</label>
-                      <div class="flex flex-wrap gap-2 mb-2">
-                        @for (med of profile.currentMedications; track med) {
-                          <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-sage-100 text-sage-700 text-sm font-medium dark:bg-sage-900/30 dark:text-sage-300">
-                            {{ med }}
-                            <button (click)="removeItem(profile.currentMedications, med)" class="hover:text-sage-900">×</button>
-                          </span>
-                        }
-                      </div>
-                      <input
-                        type="text"
-                        [(ngModel)]="customMedication"
-                        (keyup.enter)="addCustomItem(profile.currentMedications, 'customMedication')"
-                        placeholder="Type medication name and press Enter"
-                        class="input-field text-sm"
-                      />
+                      <app-autocomplete
+                        [suggestions]="commonMedications()"
+                        [selectedItems]="profile.currentMedications"
+                        [placeholder]="'Add medications...'"
+                        [allowCustom]="true"
+                        (itemsChange)="profile.currentMedications = $event"
+                      ></app-autocomplete>
                     </div>
                   </div>
 
@@ -790,13 +763,17 @@ export class OnboardingComponent {
   private readonly http = inject(HttpClient);
   private readonly router = inject(Router);
   private readonly authService = inject(AuthService);
+  private readonly referenceDataService = inject(ReferenceDataService);
 
   // Step data
   steps = ONBOARDING_STEPS;
   healthGoals = HEALTH_GOALS;
   fitnessLevels = FITNESS_LEVELS;
-  commonConditions = COMMON_CONDITIONS;
-  commonAllergies = COMMON_ALLERGIES;
+  
+  // Expose signals from service
+  commonConditions = this.referenceDataService.conditions;
+  commonAllergies = this.referenceDataService.allergies;
+  commonMedications = this.referenceDataService.medications;
 
   // State
   currentStep = signal(0);
@@ -828,11 +805,6 @@ export class OnboardingComponent {
       medicationReminders: false,
     },
   };
-
-  // Custom input fields
-  customCondition = '';
-  customAllergy = '';
-  customMedication = '';
 
   // Sex options
   sexOptions = [
@@ -889,30 +861,6 @@ export class OnboardingComponent {
       goals.splice(index, 1);
     } else {
       goals.push(goalId);
-    }
-  }
-
-  toggleArrayItem(array: string[], item: string) {
-    const index = array.indexOf(item);
-    if (index > -1) {
-      array.splice(index, 1);
-    } else {
-      array.push(item);
-    }
-  }
-
-  addCustomItem(array: string[], fieldName: 'customCondition' | 'customAllergy' | 'customMedication') {
-    const value = this[fieldName].trim();
-    if (value && !array.includes(value)) {
-      array.push(value);
-      this[fieldName] = '';
-    }
-  }
-
-  removeItem(array: string[], item: string) {
-    const index = array.indexOf(item);
-    if (index > -1) {
-      array.splice(index, 1);
     }
   }
 

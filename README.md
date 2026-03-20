@@ -34,11 +34,11 @@ VibeHealth is a modern, full-stack Progressive Web Application (PWA) designed to
 - ✅ CI pipeline (lint → typecheck → test → build)
 - ✅ i18n support (FR + EN)
 - ✅ Service Worker for offline capabilities
-- ⏳ Authentication & user accounts
-- ⏳ Onboarding wizard
-- ⏳ Bunny mascot system
-- ⏳ Medical ID with QR code
-- ⏳ Design system & shared UI components
+- ✅ Authentication & user accounts
+- ✅ Onboarding wizard with smart autocomplete
+- ✅ Bunny mascot system
+- ✅ Medical ID with QR code
+- ✅ Design system & shared UI components
 - ⏳ First aid guide (offline-first)
 
 ### Future Phases
@@ -69,6 +69,27 @@ vibehealth/
 └── .github/
     └── workflows/        # CI/CD pipelines
 \`\`\`
+
+## 🤖 AI Agent Discovery & Auto-Load Context
+
+VibeHealth includes an LLM context system for consistent multi-agent collaboration.
+
+- Entry point: `.github/.vibehealth/SKILL.md`
+- Index: `.github/.vibehealth/README.md`
+- Subskills:
+  - `.github/.vibehealth/frontend.md`
+  - `.github/.vibehealth/backend.md`
+  - `.github/.vibehealth/design.md`
+  - `.github/.vibehealth/testing.md`
+  - `.github/.vibehealth/prompts.md`
+  - `.github/.vibehealth/claude.md`
+
+Framework references for deep lookup:
+- Angular 21: `.github/.angular/llms-full.txt`
+- Hono: `.github/.hono/llms-full.txt`
+- Animation refs: `.github/.gsap/CLAUDE.md`, `.github/.gsap/llms.txt`
+
+Agent behavior convention: load `.github/.vibehealth/SKILL.md` first, then load task-specific subskills.
 
 ## 🛠️ Development Setup
 
