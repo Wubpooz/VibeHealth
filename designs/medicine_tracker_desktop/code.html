@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Medicine Tracker - Velvet Rabbit</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;900&amp;family=Plus+Jakarta+Sans:wght@400;500;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "tertiary-container": "#008656",
+                        "surface-dim": "#ddd9d9",
+                        "on-tertiary-fixed-variant": "#005233",
+                        "surface-container-low": "#f7f2f2",
+                        "surface-container-highest": "#e6e1e1",
+                        "outline-variant": "#e3bdbf",
+                        "on-surface-variant": "#5b4041",
+                        "primary-container": "#dc2c4f",
+                        "error": "#ba1a1a",
+                        "on-primary": "#ffffff",
+                        "on-tertiary": "#ffffff",
+                        "on-primary-fixed": "#40000d",
+                        "surface-container": "#f1eded",
+                        "surface-bright": "#fdf8f8",
+                        "error-container": "#ffdad6",
+                        "on-secondary-fixed": "#002114",
+                        "on-primary-container": "#fffbff",
+                        "on-secondary": "#ffffff",
+                        "inverse-on-surface": "#f4f0f0",
+                        "on-secondary-container": "#00714e",
+                        "primary-fixed-dim": "#ffb2b7",
+                        "surface-tint": "#bc0b3b",
+                        "primary": "#b90538",
+                        "tertiary-fixed-dim": "#64dca0",
+                        "inverse-surface": "#313030",
+                        "secondary-container": "#64f9bc",
+                        "on-surface": "#1c1b1c",
+                        "secondary-fixed-dim": "#45dfa4",
+                        "on-error-container": "#93000a",
+                        "tertiary": "#006a43",
+                        "background": "#fdf8f8",
+                        "inverse-primary": "#ffb2b7",
+                        "surface-container-high": "#ece7e7",
+                        "surface": "#fdf8f8",
+                        "primary-fixed": "#ffdadb",
+                        "tertiary-fixed": "#82f9ba",
+                        "on-secondary-fixed-variant": "#005137",
+                        "secondary-fixed": "#68fcbf",
+                        "on-primary-fixed-variant": "#92002a",
+                        "on-background": "#1c1b1c",
+                        "on-tertiary-fixed": "#002112",
+                        "outline": "#8f6f71",
+                        "on-tertiary-container": "#f6fff6",
+                        "secondary": "#006c4b",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-variant": "#e6e1e1",
+                        "on-error": "#ffffff"
+                    },
+                    fontFamily: {
+                        "headline": ["Outfit", "sans-serif"],
+                        "body": ["Plus Jakarta Sans", "sans-serif"],
+                        "label": ["Plus Jakarta Sans", "sans-serif"]
+                    },
+                    borderRadius: { "DEFAULT": "1.5rem", "md": "1.5rem", "lg": "2rem", "xl": "3rem", "full": "9999px" },
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        h1, h2, h3, h4, h5, h6, .font-headline { font-family: 'Outfit', sans-serif; letter-spacing: -0.02em; }
+        .glass-panel {
+            background-color: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(227, 189, 191, 0.15); /* outline-variant 15% */
+            box-shadow: 0 10px 32px -4px rgba(28, 27, 28, 0.05); /* on-surface tinted shadow */
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #b90538, #dc2c4f); /* primary to primary-container */
+            color: #ffffff;
+            box-shadow: 0 4px 12px rgba(185, 5, 56, 0.2);
+        }
+        .text-gradient {
+            background: linear-gradient(135deg, #b90538, #dc2c4f);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface antialiased min-h-screen flex overflow-x-hidden">
+<!-- Sidebar Navigation (Shared Component Logic applied) -->
+<div class="relative flex h-auto min-h-screen w-64 flex-col bg-surface-container-low group/design-root overflow-y-auto shrink-0 border-r border-outline-variant/10 hidden md:flex">
+<div class="layout-container flex h-full grow flex-col">
+<div class="flex flex-1 justify-center py-8 px-6">
+<div class="layout-content-container flex flex-col w-full flex-1">
+<div class="flex h-full flex-col justify-between gap-8">
+<div class="flex flex-col gap-8">
+<!-- Brand -->
+<div class="flex gap-4 items-center pl-2">
+<div class="bg-primary-container text-on-primary-container aspect-square rounded-full size-12 flex items-center justify-center text-2xl" data-alt="Bunny Mascot Logo">🐰</div>
+<div class="flex flex-col">
+<h1 class="font-headline text-on-surface text-xl font-bold leading-tight">Velvet Rabbit</h1>
+<p class="text-primary text-xs font-medium uppercase tracking-wider">Medicine Tracker</p>
+</div>
+</div>
+<!-- Nav Links -->
+<div class="flex flex-col gap-2">
+<div class="flex items-center gap-4 px-4 py-3 rounded-xl hover:bg-surface-bright transition-colors cursor-pointer text-on-surface-variant hover:text-on-surface">
+<span class="material-symbols-outlined text-2xl" style="font-variation-settings: 'FILL' 0;">house</span>
+<p class="font-body text-base font-semibold">Home</p>
+</div>
+<div class="flex items-center gap-4 px-4 py-3 rounded-xl hover:bg-surface-bright transition-colors cursor-pointer text-on-surface-variant hover:text-on-surface">
+<span class="material-symbols-outlined text-2xl" style="font-variation-settings: 'FILL' 0;">favorite</span>
+<p class="font-body text-base font-semibold">Vitals</p>
+</div>
+<div class="flex items-center gap-4 px-4 py-3 rounded-xl hover:bg-surface-bright transition-colors cursor-pointer text-on-surface-variant hover:text-on-surface">
+<span class="material-symbols-outlined text-2xl" style="font-variation-settings: 'FILL' 0;">monitoring</span>
+<p class="font-body text-base font-semibold">Wellness</p>
+</div>
+<div class="flex items-center gap-4 px-4 py-3 rounded-xl bg-primary-fixed text-on-primary-fixed-variant shadow-sm cursor-pointer glass-panel">
+<span class="material-symbols-outlined text-2xl" style="font-variation-settings: 'FILL' 1;">medical_services</span>
+<p class="font-body text-base font-bold">Medical</p>
+</div>
+<div class="flex items-center gap-4 px-4 py-3 rounded-xl hover:bg-surface-bright transition-colors cursor-pointer text-on-surface-variant hover:text-on-surface">
+<span class="material-symbols-outlined text-2xl" style="font-variation-settings: 'FILL' 0;">person</span>
+<p class="font-body text-base font-semibold">Profile</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Main Content Area -->
+<main class="flex-1 flex flex-col p-6 md:p-12 gap-10 overflow-y-auto w-full max-w-[1200px] mx-auto">
+<!-- Header -->
+<header class="flex flex-wrap items-center justify-between gap-6">
+<div class="flex flex-col gap-2 max-w-2xl">
+<h1 class="font-headline text-[3.5rem] leading-none font-bold text-on-surface">My Medications 🐰</h1>
+<p class="font-body text-lg text-on-surface-variant">Stay on track with your daily doses and schedules. You're doing great!</p>
+</div>
+<button class="btn-primary flex items-center gap-2 h-14 px-8 rounded-full font-body text-lg font-bold shrink-0 hover:opacity-90 transition-opacity">
+<span class="material-symbols-outlined">add</span>
+                Add Medication
+            </button>
+</header>
+<!-- Warning Alert -->
+<div class="glass-panel bg-error-container/80 rounded-xl p-5 flex items-start gap-4">
+<span class="material-symbols-outlined text-error text-3xl shrink-0" style="font-variation-settings: 'FILL' 1;">warning</span>
+<div>
+<h3 class="font-headline text-error text-xl font-bold mb-1">Potential Interaction Detected</h3>
+<p class="font-body text-on-error-container">Taking <span class="font-bold">Lisinopril</span> and <span class="font-bold">Ibuprofen</span> together may reduce the effectiveness of Lisinopril. Please consult your doctor.</p>
+</div>
+</div>
+<!-- Medication List -->
+<div class="flex flex-col gap-6">
+<!-- Medication Card 1 -->
+<div class="glass-panel rounded-xl p-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-6 group hover:bg-surface-bright transition-colors">
+<div class="flex items-center gap-6 w-full md:w-auto">
+<div class="bg-primary-fixed text-on-primary-fixed-variant size-16 rounded-2xl flex items-center justify-center text-3xl shadow-inner shrink-0">💊</div>
+<div class="flex flex-col gap-1 flex-1">
+<h2 class="font-headline text-2xl font-bold text-on-surface">Lisinopril 10mg</h2>
+<div class="flex flex-wrap items-center gap-x-4 gap-y-1 text-on-surface-variant text-sm font-body">
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[16px]">schedule</span> 1 pill daily at 8:00 AM</span>
+<span class="text-primary font-semibold flex items-center gap-1"><span class="material-symbols-outlined text-[16px]">alarm</span> Next: Tomorrow, 8:00 AM</span>
+</div>
+</div>
+</div>
+<div class="flex items-center justify-between w-full md:w-auto gap-8">
+<!-- Adherence Ring (Simulated) -->
+<div class="flex items-center gap-3">
+<div class="relative size-12 flex items-center justify-center">
+<svg class="size-full transform -rotate-90" viewbox="0 0 36 36" xmlns="http://www.w3.org/2000/svg">
+<circle class="stroke-secondary-container" cx="18" cy="18" fill="none" r="16" stroke-width="4"></circle>
+<circle class="stroke-secondary" cx="18" cy="18" fill="none" r="16" stroke-dasharray="100 100" stroke-dashoffset="10" stroke-width="4"></circle>
+</svg>
+<span class="absolute font-headline text-xs font-bold text-secondary">90%</span>
+</div>
+</div>
+<!-- Actions -->
+<div class="flex items-center gap-3">
+<button class="bg-surface-container-highest hover:bg-surface-dim text-on-surface-variant px-5 py-2.5 rounded-full font-body text-sm font-bold transition-colors">Skip</button>
+<button class="bg-surface-container-highest hover:bg-surface-dim text-on-surface-variant px-5 py-2.5 rounded-full font-body text-sm font-bold transition-colors">Snooze</button>
+<button class="bg-secondary text-on-secondary px-6 py-2.5 rounded-full font-body text-sm font-bold shadow-sm hover:opacity-90 transition-opacity">Taken</button>
+</div>
+</div>
+</div>
+<!-- Medication Card 2 -->
+<div class="glass-panel rounded-xl p-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-6 group hover:bg-surface-bright transition-colors border-l-4 border-l-secondary">
+<div class="flex items-center gap-6 w-full md:w-auto">
+<div class="bg-secondary-container text-on-secondary-container size-16 rounded-2xl flex items-center justify-center text-3xl shadow-inner shrink-0">🟢</div>
+<div class="flex flex-col gap-1 flex-1">
+<h2 class="font-headline text-2xl font-bold text-on-surface">Metformin 500mg</h2>
+<div class="flex flex-wrap items-center gap-x-4 gap-y-1 text-on-surface-variant text-sm font-body">
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[16px]">restaurant</span> 1 pill twice daily with meals</span>
+<span class="text-secondary font-semibold flex items-center gap-1"><span class="material-symbols-outlined text-[16px]">check_circle</span> Taken Today, 8:00 AM</span>
+</div>
+</div>
+</div>
+<div class="flex items-center justify-between w-full md:w-auto gap-8">
+<div class="flex items-center gap-3">
+<div class="relative size-12 flex items-center justify-center">
+<svg class="size-full transform -rotate-90" viewbox="0 0 36 36" xmlns="http://www.w3.org/2000/svg">
+<circle class="stroke-secondary-container" cx="18" cy="18" fill="none" r="16" stroke-width="4"></circle>
+<circle class="stroke-secondary" cx="18" cy="18" fill="none" r="16" stroke-dasharray="100 100" stroke-dashoffset="0" stroke-width="4"></circle>
+</svg>
+<span class="absolute font-headline text-xs font-bold text-secondary">100%</span>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<span class="px-6 py-2.5 rounded-full font-body text-sm font-bold text-secondary bg-secondary-container/50">All caught up!</span>
+</div>
+</div>
+</div>
+</div>
+</main>
+</body></html>

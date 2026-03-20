@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>VibeHealth | Desktop Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "on-secondary-fixed-variant": "#005137",
+              "primary-fixed": "#ffdadb",
+              "on-primary-container": "#fffbff",
+              "outline-variant": "#e3bdbf",
+              "on-primary-fixed-variant": "#92002a",
+              "on-tertiary-fixed-variant": "#005233",
+              "on-surface-variant": "#5b4041",
+              "on-secondary-container": "#00714e",
+              "tertiary": "#006a43",
+              "surface-tint": "#bc0b3b",
+              "surface-container-lowest": "#ffffff",
+              "on-tertiary-fixed": "#002112",
+              "on-secondary-fixed": "#002114",
+              "tertiary-container": "#008656",
+              "secondary-fixed": "#68fcbf",
+              "on-surface": "#1c1b1c",
+              "surface": "#fdf8f8",
+              "surface-container-high": "#ece7e7",
+              "error": "#ba1a1a",
+              "outline": "#8f6f71",
+              "inverse-surface": "#313030",
+              "inverse-primary": "#ffb2b7",
+              "surface-container-highest": "#e6e1e1",
+              "on-primary-fixed": "#40000d",
+              "tertiary-fixed": "#82f9ba",
+              "secondary-fixed-dim": "#45dfa4",
+              "on-error": "#ffffff",
+              "secondary": "#006c4b",
+              "error-container": "#ffdad6",
+              "on-background": "#1c1b1c",
+              "secondary-container": "#64f9bc",
+              "on-primary": "#ffffff",
+              "on-error-container": "#93000a",
+              "on-tertiary": "#ffffff",
+              "surface-dim": "#ddd9d9",
+              "primary-container": "#dc2c4f",
+              "surface-container": "#f1eded",
+              "on-tertiary-container": "#f6fff6",
+              "on-secondary": "#ffffff",
+              "inverse-on-surface": "#f4f0f0",
+              "background": "#fdf8f8",
+              "surface-bright": "#fdf8f8",
+              "primary-fixed-dim": "#ffb2b7",
+              "primary": "#b90538",
+              "surface-container-low": "#f7f2f2",
+              "surface-variant": "#e6e1e1",
+              "tertiary-fixed-dim": "#64dca0"
+            },
+            fontFamily: {
+              "headline": ["Outfit"],
+              "body": ["Plus Jakarta Sans"],
+              "label": ["Plus Jakarta Sans"]
+            },
+            borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(227, 189, 191, 0.15);
+        }
+        .text-gradient {
+            background: linear-gradient(135deg, #b90538 0%, #dc2c4f 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .btn-gradient {
+            background: linear-gradient(135deg, #b90538 0%, #dc2c4f 100%);
+        }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+    </style>
+</head>
+<body class="bg-surface font-body text-on-surface antialiased overflow-x-hidden">
+<!-- Sidebar Navigation (Desktop Only) -->
+<aside class="hidden lg:flex fixed left-0 top-0 h-full w-72 flex-col p-8 glass-panel rounded-r-xl z-50">
+<div class="text-3xl font-headline font-bold text-primary mb-8">VibeHealth</div>
+<div class="flex items-center gap-4 mb-10 p-4 bg-surface-container-low rounded-2xl">
+<div class="w-12 h-12 bg-primary-fixed rounded-full flex items-center justify-center overflow-hidden">
+<img alt="Bunny Mascot Profile" class="w-10 h-10" src="https://lh3.googleusercontent.com/aida-public/AB6AXuArRKxEicUAjGadk6sQW7VTSFaX1AwAQmRr0LYJiGBF3j1yGfBgtxPoGZlb-7xfTdbSa-NeD5oMs8R45OGaylaj0lOq7sYqxMrbu0xFwsSSb3KLlRiaX7nzWXrDU8HRPHjS3sazZ_z-O_YPM1Tx2ZnoHlsU8pWqZaDRJyUfe50EDiITOI8pKUTz8vkZYN3Ux4s46qlzI-OeCOii2aibRgG_165qpJigpTsvNLaAS3G2CtvcHT8CQmyWGWBL-NxTt0WJhHH9pGCy7YFJ"/>
+</div>
+<div>
+<p class="font-headline font-bold text-on-surface">Alex 🐰</p>
+<p class="text-xs text-on-surface-variant font-medium">Premium Member</p>
+</div>
+</div>
+<nav class="flex-1 space-y-2">
+<a class="flex items-center gap-4 px-6 py-4 bg-rose-50 text-rose-600 font-bold rounded-2xl hover:translate-x-1 transition-transform duration-300" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">home</span>
+<span class="text-sm font-medium">Home</span>
+</a>
+<a class="flex items-center gap-4 px-6 py-4 text-zinc-500 hover:text-rose-500 hover:translate-x-1 transition-transform duration-300" href="#">
+<span class="material-symbols-outlined">ecg_heart</span>
+<span class="text-sm font-medium">Vitals</span>
+</a>
+<a class="flex items-center gap-4 px-6 py-4 text-zinc-500 hover:text-rose-500 hover:translate-x-1 transition-transform duration-300" href="#">
+<span class="material-symbols-outlined">self_care</span>
+<span class="text-sm font-medium">Wellness</span>
+</a>
+<a class="flex items-center gap-4 px-6 py-4 text-zinc-500 hover:text-rose-500 hover:translate-x-1 transition-transform duration-300" href="#">
+<span class="material-symbols-outlined">medical_services</span>
+<span class="text-sm font-medium">Medical</span>
+</a>
+<a class="flex items-center gap-4 px-6 py-4 text-zinc-500 hover:text-rose-500 hover:translate-x-1 transition-transform duration-300" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="text-sm font-medium">Profile</span>
+</a>
+</nav>
+<button class="mt-auto btn-gradient text-on-primary py-4 px-6 rounded-2xl font-headline font-bold shadow-lg shadow-primary/20 active:scale-95 transition-transform">
+        Book Checkup
+    </button>
+</aside>
+<!-- Top App Bar -->
+<header class="fixed top-0 right-0 left-0 lg:left-72 z-40 bg-white/80 backdrop-blur-xl px-10 py-6 flex justify-between items-center">
+<div class="flex items-center gap-4">
+<div class="hidden md:flex items-center gap-2 bg-surface-container-low px-4 py-2 rounded-full border border-outline-variant/15">
+<span class="material-symbols-outlined text-sm text-on-surface-variant">calendar_today</span>
+<span class="text-sm font-medium text-on-surface-variant">Monday, 24 May 2024</span>
+<span class="mx-2 text-outline-variant">|</span>
+<span class="material-symbols-outlined text-sm text-secondary">sunny</span>
+<span class="text-sm font-medium text-on-surface-variant">24°C London</span>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-3 text-zinc-500 hover:bg-rose-50/50 rounded-full transition-colors active:scale-95">
+<span class="material-symbols-outlined">search</span>
+</button>
+<button class="p-3 text-zinc-500 hover:bg-rose-50/50 rounded-full transition-colors active:scale-95">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="flex items-center gap-2 pl-2 pr-4 py-2 bg-surface-container-low rounded-full">
+<img alt="User" class="w-8 h-8 rounded-full" src="https://lh3.googleusercontent.com/aida-public/AB6AXuArRKxEicUAjGadk6sQW7VTSFaX1AwAQmRr0LYJiGBF3j1yGfBgtxPoGZlb-7xfTdbSa-NeD5oMs8R45OGaylaj0lOq7sYqxMrbu0xFwsSSb3KLlRiaX7nzWXrDU8HRPHjS3sazZ_z-O_YPM1Tx2ZnoHlsU8pWqZaDRJyUfe50EDiITOI8pKUTz8vkZYN3Ux4s46qlzI-OeCOii2aibRgG_165qpJigpTsvNLaAS3G2CtvcHT8CQmyWGWBL-NxTt0WJhHH9pGCy7YFJ"/>
+<span class="text-sm font-bold text-on-surface">Alex P.</span>
+</button>
+</div>
+</header>
+<!-- Main Canvas -->
+<main class="lg:ml-72 pt-28 px-10 pb-24 min-h-screen">
+<div class="max-w-7xl mx-auto space-y-12">
+<!-- Greeting & Mascot Section -->
+<section class="flex flex-col md:flex-row md:items-center justify-between gap-8 py-4">
+<div class="space-y-3">
+<h2 class="text-5xl md:text-6xl font-headline font-bold text-on-surface tracking-tight">Good morning, Alex! 🐰</h2>
+<p class="text-2xl text-on-surface-variant font-medium opacity-80">Ready to crush your wellness goals today?</p>
+</div>
+<!-- Mascot Widget -->
+<div class="relative group">
+<div class="absolute -top-14 -right-2 bg-white px-5 py-3 rounded-2xl shadow-xl border border-outline-variant/15 animate-bounce z-10">
+<p class="text-sm font-bold text-primary italic">"Drink some water!"</p>
+<div class="absolute -bottom-2 right-6 w-4 h-4 bg-white border-b border-r border-outline-variant/15 rotate-45"></div>
+</div>
+<div class="w-40 h-40 bg-primary-fixed rounded-3xl flex items-center justify-center p-6 shadow-2xl shadow-primary/10 group-hover:scale-105 transition-transform cursor-pointer">
+<img alt="Mascot Mascot" class="w-full h-full object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD1g0px-K270iK8uugQHSTEVH0vUPM5tGcX4oioR3Mp9iBaTLuYcuEcxPSO2MmeDOTRFmu-1Qkm9U7DD-6AbyH6dX6rl1860FH9BN6uVu10teqn9oOQW8Nq13dgpbkZVvGF8IqfQeWTjvJzTxYZ4n_C9EYHpDSB4JawVSFFOZGQR9j1dnhbSEl85gRM2mVTXJ8ELRK8kcyKfvttSbAhLD94OWXJwZq6Nx9xB9voQBK_xf1vMuwg7yhVz_CXPDEqp-wV9j72y8ZhhgI_"/>
+</div>
+</div>
+</section>
+<!-- Quick Action Grid -->
+<section class="grid grid-cols-2 md:grid-cols-4 gap-6">
+<button class="glass-panel p-8 rounded-3xl flex flex-col items-center gap-4 hover:bg-white hover:shadow-xl transition-all group">
+<div class="w-16 h-16 bg-rose-50 rounded-2xl flex items-center justify-center text-4xl group-hover:scale-110 transition-transform">🍎</div>
+<span class="font-headline font-bold text-on-surface text-lg">Log Meal</span>
+</button>
+<button class="glass-panel p-8 rounded-3xl flex flex-col items-center gap-4 hover:bg-white hover:shadow-xl transition-all group">
+<div class="w-16 h-16 bg-secondary-container/30 rounded-2xl flex items-center justify-center text-4xl group-hover:scale-110 transition-transform">💧</div>
+<span class="font-headline font-bold text-on-surface text-lg">Log Water</span>
+</button>
+<button class="glass-panel p-8 rounded-3xl flex flex-col items-center gap-4 hover:bg-white hover:shadow-xl transition-all group">
+<div class="w-16 h-16 bg-tertiary-fixed-dim/30 rounded-2xl flex items-center justify-center text-4xl group-hover:scale-110 transition-transform">😊</div>
+<span class="font-headline font-bold text-on-surface text-lg">Log Mood</span>
+</button>
+<button class="glass-panel p-8 rounded-3xl flex flex-col items-center gap-4 hover:bg-white hover:shadow-xl transition-all group">
+<div class="w-16 h-16 bg-primary-fixed rounded-2xl flex items-center justify-center text-4xl group-hover:scale-110 transition-transform">🏃‍♂️</div>
+<span class="font-headline font-bold text-on-surface text-lg">Start Workout</span>
+</button>
+</section>
+<!-- Stats Grid -->
+<section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+<!-- Steps Progress -->
+<div class="glass-panel p-10 rounded-3xl space-y-8 flex flex-col justify-between">
+<div class="flex justify-between items-center">
+<span class="text-xs font-bold uppercase tracking-widest text-on-surface-variant">Daily Activity</span>
+<div class="w-10 h-10 bg-primary-fixed rounded-xl flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">directions_run</span>
+</div>
+</div>
+<div class="flex items-center gap-8">
+<div class="relative w-32 h-32">
+<svg class="w-full h-full transform -rotate-90">
+<circle class="text-surface-container-high" cx="64" cy="64" fill="transparent" r="56" stroke="currentColor" stroke-width="12"></circle>
+<circle class="text-primary" cx="64" cy="64" fill="transparent" r="56" stroke="currentColor" stroke-dasharray="351.8" stroke-dashoffset="70" stroke-linecap="round" stroke-width="12"></circle>
+</svg>
+<div class="absolute inset-0 flex items-center justify-center font-headline font-bold text-on-surface text-2xl">80%</div>
+</div>
+<div>
+<p class="text-4xl font-headline font-bold">8,432</p>
+<p class="text-on-surface-variant text-sm font-medium">Steps / 10k Goal</p>
+</div>
+</div>
+</div>
+<!-- Heart Rate -->
+<div class="glass-panel p-10 rounded-3xl space-y-8 flex flex-col justify-between">
+<div class="flex justify-between items-center">
+<span class="text-xs font-bold uppercase tracking-widest text-on-surface-variant">Heart Health</span>
+<span class="text-error animate-pulse material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">favorite</span>
+</div>
+<div>
+<div class="flex items-baseline gap-2 mb-6">
+<span class="text-5xl font-headline font-bold">72</span>
+<span class="text-on-surface-variant font-medium text-lg">BPM</span>
+</div>
+<div class="h-20 w-full bg-surface-container-low rounded-2xl flex items-end gap-1.5 px-3 pb-3">
+<div class="w-full bg-error/30 h-1/2 rounded-full"></div>
+<div class="w-full bg-error/30 h-2/3 rounded-full"></div>
+<div class="w-full bg-error/50 h-3/4 rounded-full"></div>
+<div class="w-full bg-error/30 h-1/2 rounded-full"></div>
+<div class="w-full bg-error/80 h-full rounded-full"></div>
+<div class="w-full bg-error/40 h-3/5 rounded-full"></div>
+<div class="w-full bg-error/20 h-2/5 rounded-full"></div>
+</div>
+</div>
+</div>
+<!-- Sleep -->
+<div class="glass-panel p-10 rounded-3xl space-y-8 flex flex-col justify-between">
+<div class="flex justify-between items-center">
+<span class="text-xs font-bold uppercase tracking-widest text-on-surface-variant">Sleep Quality</span>
+<span class="material-symbols-outlined text-primary">nights_stay</span>
+</div>
+<div>
+<p class="text-4xl font-headline font-bold">7h 42m</p>
+<div class="flex items-center gap-2 mt-2">
+<span class="px-3 py-1 bg-secondary-container/20 text-secondary text-xs font-bold rounded-full">Excellent</span>
+<span class="text-xs text-on-surface-variant font-medium">+12m vs yesterday</span>
+</div>
+</div>
+<div class="w-full h-3 bg-surface-container-high rounded-full overflow-hidden">
+<div class="h-full bg-primary rounded-full" style="width: 75%;"></div>
+</div>
+</div>
+</section>
+<!-- Large Data Section -->
+<section class="grid grid-cols-1 lg:grid-cols-3 gap-10">
+<!-- Weekly Trends -->
+<div class="lg:col-span-2 glass-panel p-12 rounded-3xl flex flex-col gap-10">
+<div class="flex justify-between items-center">
+<div>
+<h3 class="text-3xl font-headline font-bold text-on-surface">Weekly Trends</h3>
+<p class="text-on-surface-variant font-medium text-lg mt-1">Consistency is key to results</p>
+</div>
+<select class="bg-surface-container-low border-none rounded-xl text-sm font-bold text-on-surface-variant px-6 py-3">
+<option>Last 7 Days</option>
+<option>Last 30 Days</option>
+</select>
+</div>
+<div class="h-80 relative w-full flex items-end justify-between px-4">
+<div class="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-primary/5 to-transparent rounded-3xl"></div>
+<div class="flex-1 flex flex-col items-center gap-6">
+<div class="w-12 h-32 bg-primary/10 rounded-xl relative group cursor-pointer hover:bg-primary/20 transition-colors">
+<div class="absolute bottom-0 w-full h-3/4 bg-primary/40 rounded-xl"></div>
+</div>
+<span class="text-sm font-bold text-on-surface-variant">Mon</span>
+</div>
+<div class="flex-1 flex flex-col items-center gap-6">
+<div class="w-12 h-44 bg-primary/10 rounded-xl relative group cursor-pointer hover:bg-primary/20 transition-colors">
+<div class="absolute bottom-0 w-full h-5/6 bg-primary/40 rounded-xl"></div>
+</div>
+<span class="text-sm font-bold text-on-surface-variant">Tue</span>
+</div>
+<div class="flex-1 flex flex-col items-center gap-6">
+<div class="w-12 h-56 bg-primary/10 rounded-xl relative group cursor-pointer hover:bg-primary/20 transition-colors">
+<div class="absolute bottom-0 w-full h-full bg-primary/60 rounded-xl shadow-[0_0_20px_rgba(185,5,56,0.3)] border-2 border-primary/20"></div>
+</div>
+<span class="text-sm font-bold text-on-surface-variant">Wed</span>
+</div>
+<div class="flex-1 flex flex-col items-center gap-6">
+<div class="w-12 h-48 bg-primary/10 rounded-xl relative group cursor-pointer hover:bg-primary/20 transition-colors">
+<div class="absolute bottom-0 w-full h-4/5 bg-primary/40 rounded-xl"></div>
+</div>
+<span class="text-sm font-bold text-on-surface-variant">Thu</span>
+</div>
+<div class="flex-1 flex flex-col items-center gap-6">
+<div class="w-12 h-52 bg-primary/10 rounded-xl relative group cursor-pointer hover:bg-primary/20 transition-colors">
+<div class="absolute bottom-0 w-full h-11/12 bg-primary/40 rounded-xl"></div>
+</div>
+<span class="text-sm font-bold text-on-surface-variant">Fri</span>
+</div>
+<div class="flex-1 flex flex-col items-center gap-6">
+<div class="w-12 h-36 bg-primary/10 rounded-xl relative group cursor-pointer hover:bg-primary/20 transition-colors">
+<div class="absolute bottom-0 w-full h-2/3 bg-primary/40 rounded-xl"></div>
+</div>
+<span class="text-sm font-bold text-on-surface-variant">Sat</span>
+</div>
+<div class="flex-1 flex flex-col items-center gap-6">
+<div class="w-12 h-40 bg-primary/10 rounded-xl relative group cursor-pointer hover:bg-primary/20 transition-colors">
+<div class="absolute bottom-0 w-full h-3/4 bg-primary/40 rounded-xl"></div>
+</div>
+<span class="text-sm font-bold text-on-surface-variant">Sun</span>
+</div>
+</div>
+</div>
+<!-- Schedule -->
+<div class="glass-panel p-12 rounded-3xl space-y-10">
+<div class="flex justify-between items-center">
+<h3 class="text-3xl font-headline font-bold text-on-surface">Schedule</h3>
+<button class="p-2 bg-primary-fixed text-primary rounded-full"><span class="material-symbols-outlined">add</span></button>
+</div>
+<div class="space-y-10 relative before:absolute before:left-[23px] before:top-4 before:bottom-4 before:w-[2px] before:bg-outline-variant/30">
+<div class="relative pl-14">
+<div class="absolute left-0 top-1 w-12 h-12 bg-surface border-2 border-primary rounded-2xl flex items-center justify-center z-10 shadow-sm">
+<span class="material-symbols-outlined text-primary">pill</span>
+</div>
+<div class="space-y-1">
+<p class="font-bold text-on-surface text-lg">Morning Meds</p>
+<p class="text-sm text-on-surface-variant font-medium">Omega-3 &amp; Multivitamin • 09:00 AM</p>
+<button class="mt-4 text-xs font-bold text-primary bg-rose-50 px-4 py-2 rounded-xl border border-primary/10 uppercase tracking-widest">Done</button>
+</div>
+</div>
+<div class="relative pl-14">
+<div class="absolute left-0 top-1 w-12 h-12 bg-surface border-2 border-secondary rounded-2xl flex items-center justify-center z-10 shadow-sm">
+<span class="material-symbols-outlined text-secondary">stethoscope</span>
+</div>
+<div class="space-y-1">
+<p class="font-bold text-on-surface text-lg">Dental Cleaning</p>
+<p class="text-sm text-on-surface-variant font-medium">BrightSmile Clinic • 02:30 PM</p>
+</div>
+</div>
+<div class="relative pl-14">
+<div class="absolute left-0 top-1 w-12 h-12 bg-surface border-2 border-outline-variant/50 rounded-2xl flex items-center justify-center z-10 opacity-50">
+<span class="material-symbols-outlined text-on-surface-variant">pill</span>
+</div>
+<div class="space-y-1 opacity-50">
+<p class="font-bold text-on-surface text-lg">Evening Supplement</p>
+<p class="text-sm text-on-surface-variant font-medium">Magnesium • 09:00 PM</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Activity Feed Section -->
+<section class="glass-panel p-12 rounded-3xl">
+<div class="flex justify-between items-center mb-10">
+<h3 class="text-3xl font-headline font-bold text-on-surface">Activity Log</h3>
+<button class="text-sm font-bold text-primary hover:bg-rose-50 px-6 py-2 rounded-xl transition-colors">See all history</button>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+<div class="flex items-center gap-6 p-6 rounded-3xl hover:bg-surface transition-all group cursor-pointer">
+<div class="w-14 h-14 bg-secondary-container rounded-2xl flex items-center justify-center text-secondary group-hover:rotate-12 transition-transform">
+<span class="material-symbols-outlined text-3xl">fitness_center</span>
+</div>
+<div>
+<p class="font-bold text-on-surface text-lg">Morning Yoga</p>
+<p class="text-sm text-on-surface-variant font-medium">45 min • 240 kcal burned</p>
+</div>
+</div>
+<div class="flex items-center gap-6 p-6 rounded-3xl hover:bg-surface transition-all group cursor-pointer">
+<div class="w-14 h-14 bg-primary-fixed rounded-2xl flex items-center justify-center text-primary group-hover:rotate-12 transition-transform">
+<span class="material-symbols-outlined text-3xl">restaurant</span>
+</div>
+<div>
+<p class="font-bold text-on-surface text-lg">Breakfast Logged</p>
+<p class="text-sm text-on-surface-variant font-medium">Acai Bowl • 420 kcal</p>
+</div>
+</div>
+<div class="flex items-center gap-6 p-6 rounded-3xl hover:bg-surface transition-all group cursor-pointer">
+<div class="w-14 h-14 bg-tertiary-fixed rounded-2xl flex items-center justify-center text-tertiary group-hover:rotate-12 transition-transform">
+<span class="material-symbols-outlined text-3xl">bedtime</span>
+</div>
+<div>
+<p class="font-bold text-on-surface text-lg">Sleep Sync</p>
+<p class="text-sm text-on-surface-variant font-medium">Auto-recorded via Watch</p>
+</div>
+</div>
+</div>
+</section>
+</div>
+</main>
+<!-- Bottom Navigation (Mobile Only) -->
+<nav class="lg:hidden fixed bottom-0 left-0 w-full flex justify-around items-center px-4 pb-10 pt-4 bg-white/90 backdrop-blur-xl border-t border-outline-variant/10 z-50">
+<a class="flex flex-col items-center justify-center bg-rose-100 text-rose-600 rounded-3xl px-6 py-3" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="font-headline text-[10px] font-bold uppercase mt-1">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-zinc-400 px-4 py-2" href="#">
+<span class="material-symbols-outlined">ecg_heart</span>
+<span class="font-headline text-[10px] font-bold uppercase mt-1">Vitals</span>
+</a>
+<a class="flex flex-col items-center justify-center text-zinc-400 px-4 py-2" href="#">
+<span class="material-symbols-outlined">self_care</span>
+<span class="font-headline text-[10px] font-bold uppercase mt-1">Well</span>
+</a>
+<a class="flex flex-col items-center justify-center text-zinc-400 px-4 py-2" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="font-headline text-[10px] font-bold uppercase mt-1">Me</span>
+</a>
+</nav>
+</body></html>

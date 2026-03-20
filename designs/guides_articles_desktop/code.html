@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;800&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "on-tertiary-container": "#f6fff6",
+              "inverse-on-surface": "#f4f0f0",
+              "on-primary-fixed-variant": "#92002a",
+              "surface-container-high": "#ece7e7",
+              "on-background": "#1c1b1c",
+              "surface": "#fdf8f8",
+              "tertiary-fixed-dim": "#64dca0",
+              "secondary-fixed-dim": "#45dfa4",
+              "on-error-container": "#93000a",
+              "surface-dim": "#ddd9d9",
+              "outline": "#8f6f71",
+              "background": "#fdf8f8",
+              "on-primary-fixed": "#40000d",
+              "primary-fixed": "#ffdadb",
+              "surface-variant": "#e6e1e1",
+              "on-secondary-fixed-variant": "#005137",
+              "on-primary": "#ffffff",
+              "on-surface-variant": "#5b4041",
+              "surface-container-highest": "#e6e1e1",
+              "tertiary-container": "#008656",
+              "on-primary-container": "#fffbff",
+              "secondary-container": "#64f9bc",
+              "tertiary-fixed": "#82f9ba",
+              "tertiary": "#006a43",
+              "surface-container": "#f1eded",
+              "outline-variant": "#e3bdbf",
+              "on-tertiary-fixed": "#002112",
+              "on-error": "#ffffff",
+              "secondary-fixed": "#68fcbf",
+              "on-surface": "#1c1b1c",
+              "on-secondary": "#ffffff",
+              "inverse-surface": "#313030",
+              "on-tertiary-fixed-variant": "#005233",
+              "inverse-primary": "#ffb2b7",
+              "surface-bright": "#fdf8f8",
+              "primary-fixed-dim": "#ffb2b7",
+              "primary-container": "#dc2c4f",
+              "on-secondary-fixed": "#002114",
+              "error-container": "#ffdad6",
+              "primary": "#b90538",
+              "on-tertiary": "#ffffff",
+              "on-secondary-container": "#00714e",
+              "surface-container-low": "#f7f2f2",
+              "error": "#ba1a1a",
+              "surface-container-lowest": "#ffffff",
+              "surface-tint": "#bc0b3b",
+              "secondary": "#006c4b"
+            },
+            fontFamily: {
+              "headline": ["Outfit", "sans-serif"],
+              "body": ["Plus Jakarta Sans", "sans-serif"],
+              "label": ["Plus Jakarta Sans", "sans-serif"]
+            },
+            borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        h1, h2, h3 { font-family: 'Outfit', sans-serif; }
+    </style>
+</head>
+<body class="bg-surface text-on-surface min-h-screen">
+<!-- Top Navigation Anchor -->
+<header class="fixed top-0 w-full z-50 bg-white/80 dark:bg-zinc-900/80 backdrop-blur-xl shadow-sm shadow-rose-900/5 flex justify-between items-center px-6 py-4 w-full">
+<div class="flex items-center gap-2">
+<span class="text-2xl font-bold tracking-tight text-rose-600 dark:text-rose-400">VibeHealth</span>
+</div>
+<div class="flex items-center gap-6">
+<div class="hidden md:flex gap-8 items-center">
+<a class="text-zinc-500 dark:text-zinc-400 hover:bg-rose-50/50 dark:hover:bg-rose-900/20 transition-colors px-3 py-2 rounded-lg" href="#">Tracker</a>
+<a class="text-zinc-500 dark:text-zinc-400 hover:bg-rose-50/50 dark:hover:bg-rose-900/20 transition-colors px-3 py-2 rounded-lg" href="#">Medical ID</a>
+<a class="text-zinc-500 dark:text-zinc-400 hover:bg-rose-50/50 dark:hover:bg-rose-900/20 transition-colors px-3 py-2 rounded-lg" href="#">Health</a>
+<a class="text-rose-700 dark:text-rose-300 font-bold hover:bg-rose-50/50 dark:hover:bg-rose-900/20 transition-colors px-3 py-2 rounded-lg" href="#">Guides</a>
+</div>
+<div class="flex gap-3">
+<button class="p-2 rounded-full hover:bg-rose-50/50 transition-colors"><span class="material-symbols-outlined text-zinc-600">qr_code_scanner</span></button>
+<button class="p-2 rounded-full hover:bg-rose-50/50 transition-colors"><span class="material-symbols-outlined text-zinc-600">account_circle</span></button>
+</div>
+</div>
+</header>
+<main class="pt-24 pb-32 px-6 max-w-7xl mx-auto flex flex-col md:flex-row gap-8">
+<!-- Search & Filter Layout (Vertical Stack) -->
+<div class="w-full">
+<!-- Hero Title -->
+<div class="mb-12 max-w-2xl">
+<div class="flex items-center gap-3 mb-4">
+<span class="text-xs font-bold tracking-[0.2em] text-primary uppercase font-label">Knowledge Base</span>
+<div class="h-px flex-1 bg-outline-variant/30"></div>
+</div>
+<h1 class="text-5xl md:text-6xl font-extrabold tracking-tight text-on-surface mb-6">Expert health insights, <span class="text-primary italic">simplified.</span></h1>
+<p class="text-lg text-on-surface-variant leading-relaxed">Discover curated articles designed to help you live your best, most vibrant life. Guided by science, written for you.</p>
+</div>
+<!-- Search Bar (Premium Editorial Style) -->
+<div class="sticky top-24 z-40 mb-10">
+<div class="bg-surface-container-lowest/80 backdrop-blur-xl border border-outline-variant/15 p-2 rounded-full shadow-lg shadow-on-surface/5 flex items-center gap-4 pr-6">
+<div class="bg-primary/10 p-4 rounded-full flex items-center justify-center text-primary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">search</span>
+</div>
+<input class="bg-transparent border-none focus:ring-0 flex-1 text-on-surface placeholder:text-on-surface-variant/50 font-medium" placeholder="Search for heart health, meditation, nutrition..." type="text"/>
+<button class="hidden md:block bg-primary text-on-primary px-8 py-3 rounded-full font-bold shadow-md shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all">Search</button>
+</div>
+</div>
+<!-- Category Chips -->
+<div class="flex flex-wrap gap-3 mb-12">
+<button class="px-6 py-2.5 rounded-full bg-primary text-on-primary font-bold shadow-sm">All</button>
+<button class="px-6 py-2.5 rounded-full bg-surface-container-low text-on-surface-variant font-semibold hover:bg-surface-bright transition-colors">Heart</button>
+<button class="px-6 py-2.5 rounded-full bg-surface-container-low text-on-surface-variant font-semibold hover:bg-surface-bright transition-colors">Diabetes</button>
+<button class="px-6 py-2.5 rounded-full bg-surface-container-low text-on-surface-variant font-semibold hover:bg-surface-bright transition-colors">Nutrition</button>
+<button class="px-6 py-2.5 rounded-full bg-surface-container-low text-on-surface-variant font-semibold hover:bg-surface-bright transition-colors">Mental Health</button>
+</div>
+<!-- Article Grid (Asymmetric Editorial Style) -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+<!-- Main Featured Card (Spans 2 columns on large screens) -->
+<div class="lg:col-span-2 group bg-surface-container-lowest/80 backdrop-blur-xl rounded-xl border border-outline-variant/15 overflow-hidden flex flex-col md:flex-row shadow-sm hover:shadow-xl transition-all duration-500">
+<div class="md:w-1/2 h-64 md:h-full relative overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" data-alt="Calm woman practicing yoga in sunlit studio" src="https://lh3.googleusercontent.com/aida-public/AB6AXuALNTTPk_ELDVcRJXA1_xmbKjvTR-x0XQ7R168W-Nx3wKFwYo73dGTRoYnAv9BP0dZcnZaGJ1IzgP4zGOpyONTaq7VpyzFNk8mPbWSeSK7iErccOeDcZ1-RWB0KOdVoibDnOjFQNLg0g135WbsXuNeenORVY-SvoRElqNVQ3qhpvd_4tH2ETZACgeDeoVh1I5tFGu97lvUCIXmCPC6lVv3jWRuOLUCxfQLYL4fDEJ5zi8d9GiYyOzB6uyxlGlfjkmI8iPdGAx6qqQLf"/>
+<div class="absolute top-4 left-4">
+<span class="bg-tertiary-container text-on-tertiary-container text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full">New Guide</span>
+</div>
+</div>
+<div class="md:w-1/2 p-8 flex flex-col justify-center">
+<div class="flex items-center gap-2 mb-4">
+<span class="text-tertiary font-bold text-xs uppercase font-label">Mental Health</span>
+<span class="w-1 h-1 rounded-full bg-outline-variant"></span>
+<span class="text-on-surface-variant/60 text-xs font-semibold">12 min read</span>
+</div>
+<h3 class="text-3xl font-bold leading-tight mb-4 group-hover:text-primary transition-colors">Mindful Mornings: The Rabbit's Guide to Inner Peace</h3>
+<p class="text-on-surface-variant mb-8 line-clamp-3 leading-relaxed">Discover how a 5-minute daily meditation can rewire your stress response and improve your focus throughout the day.</p>
+<div class="mt-auto flex items-center justify-between">
+<div class="flex items-center gap-2">
+<div class="w-8 h-8 rounded-full bg-secondary-container flex items-center justify-center text-xs">🐰</div>
+<span class="text-sm font-bold">VibeTeam</span>
+</div>
+<button class="text-primary font-bold flex items-center gap-1 group/btn">
+                                Read More 
+                                <span class="material-symbols-outlined group-hover/btn:translate-x-1 transition-transform">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Regular Card 1 -->
+<div class="bg-surface-container-lowest/80 backdrop-blur-xl rounded-xl border border-outline-variant/15 p-4 shadow-sm hover:shadow-lg transition-all flex flex-col group">
+<div class="h-48 rounded-lg overflow-hidden mb-6 relative">
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="Healthy colorful salad with fresh ingredients" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA3xH03OVrFsMBl1pVcH7-pqDscxoH26LcC0zHrVnPGYAERW9ohZgbuYjON_z6YfYvMRVrvCnP1jc7h90jKZKaqAKbzu-Cx42kV-tPACZ2nM8BcLGnokoKhZsakIWxHyXo5XLVV-D-RYHoyLkzNSngY8YU6Yxo1YomxVhp7kU5Axc0L0SbyC6Y_uJWo_qi5E3iQVGSASryFypONS0VcUU6mA299NeBYD3e--xd1encsXgIhI6HSfOInkTtdJMT8KSIKJ_BaTf8XphDN"/>
+<span class="absolute bottom-3 right-3 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-[10px] font-bold shadow-sm">6 min</span>
+</div>
+<span class="text-primary font-bold text-[10px] uppercase font-label tracking-wider mb-2">Nutrition</span>
+<h3 class="text-xl font-bold mb-3 leading-snug">The 7 Superfoods Your Heart Actually Needs</h3>
+<p class="text-sm text-on-surface-variant line-clamp-2 mb-6">Forget the fads. These science-backed foods are proven to strengthen cardiovascular health naturally.</p>
+<div class="mt-auto pt-4 border-t border-outline-variant/10 flex items-center justify-between">
+<span class="text-[10px] font-bold text-on-surface-variant/50">MAR 14, 2024</span>
+<span class="material-symbols-outlined text-primary group-hover:translate-x-1 transition-transform">east</span>
+</div>
+</div>
+<!-- Regular Card 2 -->
+<div class="bg-surface-container-lowest/80 backdrop-blur-xl rounded-xl border border-outline-variant/15 p-4 shadow-sm hover:shadow-lg transition-all flex flex-col group">
+<div class="h-48 rounded-lg overflow-hidden mb-6 relative">
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="Runner stretching in early morning light" src="https://lh3.googleusercontent.com/aida-public/AB6AXuADkK5b_4cYOnOLQ1QfeYct4mZy3_xRLrn9Ub4ywmxxpRuVO0t-hOXbI-1q1p0RKFUdPVoOClz9kmaaKTmuJfqjYEOwko8EDEID1s5IxX421DDj7vkUSLfTC3nJHBltEuR3W6vZXmgVmtgEhPLhfZvnZ3tvcoKS0jOMIjdnxESJCLDCV5ulBUJwZh1PHNcn8CDog9CJ_Jx09vYZG_kQoFmlOdmLKM8OtTHANCzcFY46cwS6ZwlgyEkarkbKlJwzptM8Sbwz1NgxNuY3"/>
+<span class="absolute bottom-3 right-3 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-[10px] font-bold shadow-sm">8 min</span>
+</div>
+<span class="text-secondary font-bold text-[10px] uppercase font-label tracking-wider mb-2">Diabetes</span>
+<h3 class="text-xl font-bold mb-3 leading-snug">Walking Your Way to Better Blood Sugar</h3>
+<p class="text-sm text-on-surface-variant line-clamp-2 mb-6">How simple post-meal movements can make a massive impact on your insulin sensitivity.</p>
+<div class="mt-auto pt-4 border-t border-outline-variant/10 flex items-center justify-between">
+<span class="text-[10px] font-bold text-on-surface-variant/50">MAR 12, 2024</span>
+<span class="material-symbols-outlined text-primary group-hover:translate-x-1 transition-transform">east</span>
+</div>
+</div>
+<!-- Regular Card 3 -->
+<div class="bg-surface-container-lowest/80 backdrop-blur-xl rounded-xl border border-outline-variant/15 p-4 shadow-sm hover:shadow-lg transition-all flex flex-col group">
+<div class="h-48 rounded-lg overflow-hidden mb-6 relative">
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="Healthy organic meal prep containers" src="https://lh3.googleusercontent.com/aida-public/AB6AXuByaejorBKj1USc_qEvctYYwM7f3nJARpBSmiJTA5pkYKpYPtImvbKaJ8ns8jPhZq4fzX6lfZ0Hr7sS41Mq6lXUfR3i-HjQXZv8wtaUQv2-nMPYUP0IZM71h81qjqA8_rAv4NdN32w4NnphTpn3xPjf9cGiv15Upq0b6CR7xH-1l-hx9WczQa7dVezQ-G6Pzb_DzP3_JlMWLnk62InDmtrpdwk0tG6VyvIkjjTe5XmYjnQRCW5tn-rhsJ4g4uAkFQS6H3fi8KLST1VY"/>
+<span class="absolute bottom-3 right-3 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-[10px] font-bold shadow-sm">15 min</span>
+</div>
+<span class="text-primary font-bold text-[10px] uppercase font-label tracking-wider mb-2">Nutrition</span>
+<h3 class="text-xl font-bold mb-3 leading-snug">The Ultimate Guide to Plant-Based Protein</h3>
+<p class="text-sm text-on-surface-variant line-clamp-2 mb-6">Build muscle and maintain energy without relying on animal products. Complete guide for beginners.</p>
+<div class="mt-auto pt-4 border-t border-outline-variant/10 flex items-center justify-between">
+<span class="text-[10px] font-bold text-on-surface-variant/50">MAR 10, 2024</span>
+<span class="material-symbols-outlined text-primary group-hover:translate-x-1 transition-transform">east</span>
+</div>
+</div>
+<!-- Asymmetric Card (Vertical Emphasis) -->
+<div class="bg-primary-container text-on-primary-container rounded-xl p-8 flex flex-col shadow-xl shadow-primary/20 relative overflow-hidden">
+<div class="absolute -right-12 -bottom-12 w-48 h-48 bg-white/10 rounded-full blur-3xl"></div>
+<div class="bg-white/20 w-12 h-12 rounded-full flex items-center justify-center mb-6">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+</div>
+<h3 class="text-2xl font-bold mb-4">Personalized Reading List</h3>
+<p class="text-on-primary-container/80 mb-8 leading-relaxed">Let VibeHealth's AI curate articles based on your health tracker metrics and personal goals.</p>
+<button class="bg-white text-primary font-bold px-6 py-3 rounded-full hover:scale-105 transition-transform w-fit">Get Started</button>
+<div class="mt-12 flex justify-end">
+<span class="text-6xl opacity-30">🐰</span>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Bottom Navigation Bar (Mobile only visibility handled via tailwind) -->
+<nav class="fixed bottom-0 left-0 w-full flex justify-around items-center px-4 pb-6 pt-3 bg-white/80 dark:bg-zinc-900/80 backdrop-blur-2xl shadow-[0_-8px_30px_rgb(0,0,0,0.04)] z-50 rounded-t-[3rem] md:hidden">
+<a class="flex flex-col items-center justify-center text-zinc-400 dark:text-zinc-500 px-5 py-2 hover:text-rose-500 transition-all" href="#">
+<span class="material-symbols-outlined">pill</span>
+<span class="text-[10px] font-bold uppercase tracking-tighter mt-1">Tracker</span>
+</a>
+<a class="flex flex-col items-center justify-center text-zinc-400 dark:text-zinc-500 px-5 py-2 hover:text-rose-500 transition-all" href="#">
+<span class="material-symbols-outlined">contact_emergency</span>
+<span class="text-[10px] font-bold uppercase tracking-tighter mt-1">Medical ID</span>
+</a>
+<a class="flex flex-col items-center justify-center text-zinc-400 dark:text-zinc-500 px-5 py-2 hover:text-rose-500 transition-all" href="#">
+<span class="material-symbols-outlined">timeline</span>
+<span class="text-[10px] font-bold uppercase tracking-tighter mt-1">Health</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-rose-100 dark:bg-rose-900/40 text-rose-700 dark:text-rose-200 rounded-full px-5 py-2 hover:text-rose-500 transition-all" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">menu_book</span>
+<span class="text-[10px] font-bold uppercase tracking-tighter mt-1">Guides</span>
+</a>
+</nav>
+<!-- Floating Action Button (FAB) - Suppression logic: Hidden on Guides Detail, Visible on Browse -->
+<button class="fixed right-6 bottom-32 md:bottom-12 bg-primary text-on-primary w-14 h-14 rounded-full shadow-2xl shadow-primary/40 flex items-center justify-center hover:scale-110 active:scale-90 transition-all z-40">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">bookmark</span>
+</button>
+</body></html>

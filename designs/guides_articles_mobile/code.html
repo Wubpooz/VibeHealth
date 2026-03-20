@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@700;800&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "on-tertiary-container": "#f6fff6",
+              "inverse-on-surface": "#f4f0f0",
+              "on-primary-fixed-variant": "#92002a",
+              "surface-container-high": "#ece7e7",
+              "on-background": "#1c1b1c",
+              "surface": "#fdf8f8",
+              "tertiary-fixed-dim": "#64dca0",
+              "secondary-fixed-dim": "#45dfa4",
+              "on-error-container": "#93000a",
+              "surface-dim": "#ddd9d9",
+              "outline": "#8f6f71",
+              "background": "#fdf8f8",
+              "on-primary-fixed": "#40000d",
+              "primary-fixed": "#ffdadb",
+              "surface-variant": "#e6e1e1",
+              "on-secondary-fixed-variant": "#005137",
+              "on-primary": "#ffffff",
+              "on-surface-variant": "#5b4041",
+              "surface-container-highest": "#e6e1e1",
+              "tertiary-container": "#008656",
+              "on-primary-container": "#fffbff",
+              "secondary-container": "#64f9bc",
+              "tertiary-fixed": "#82f9ba",
+              "tertiary": "#006a43",
+              "surface-container": "#f1eded",
+              "outline-variant": "#e3bdbf",
+              "on-tertiary-fixed": "#002112",
+              "on-error": "#ffffff",
+              "secondary-fixed": "#68fcbf",
+              "on-surface": "#1c1b1c",
+              "on-secondary": "#ffffff",
+              "inverse-surface": "#313030",
+              "on-tertiary-fixed-variant": "#005233",
+              "inverse-primary": "#ffb2b7",
+              "surface-bright": "#fdf8f8",
+              "primary-fixed-dim": "#ffb2b7",
+              "primary-container": "#dc2c4f",
+              "on-secondary-fixed": "#002114",
+              "error-container": "#ffdad6",
+              "primary": "#b90538",
+              "on-tertiary": "#ffffff",
+              "on-secondary-container": "#00714e",
+              "surface-container-low": "#f7f2f2",
+              "error": "#ba1a1a",
+              "surface-container-lowest": "#ffffff",
+              "surface-tint": "#bc0b3b",
+              "secondary": "#006c4b"
+            },
+            fontFamily: {
+              "headline": ["Outfit", "sans-serif"],
+              "body": ["Plus Jakarta Sans", "sans-serif"],
+              "label": ["Plus Jakarta Sans", "sans-serif"]
+            },
+            borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        h1, h2, h3 { font-family: 'Outfit', sans-serif; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface min-h-screen pb-32">
+<!-- Top AppBar (from JSON) -->
+<header class="fixed top-0 w-full z-50 bg-white/80 dark:bg-zinc-900/80 backdrop-blur-xl shadow-sm shadow-rose-900/5 flex justify-between items-center px-6 py-4 w-full">
+<div class="text-2xl font-bold tracking-tight text-rose-600 dark:text-rose-400">VibeHealth</div>
+<div class="flex gap-4">
+<button class="hover:bg-rose-50/50 dark:hover:bg-rose-900/20 transition-colors rounded-full p-2 scale-95 duration-200">
+<span class="material-symbols-outlined text-rose-600 dark:text-rose-400" data-icon="qr_code_scanner">qr_code_scanner</span>
+</button>
+<button class="hover:bg-rose-50/50 dark:hover:bg-rose-900/20 transition-colors rounded-full p-2 scale-95 duration-200">
+<span class="material-symbols-outlined text-rose-600 dark:text-rose-400" data-icon="account_circle">account_circle</span>
+</button>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="pt-24 px-6">
+<!-- Hero Section -->
+<section class="mb-10">
+<p class="text-[0.75rem] font-bold tracking-widest text-primary uppercase mb-2">Knowledge Base</p>
+<h1 class="text-[2.25rem] leading-tight font-bold text-on-surface mb-6">Wellness Guides</h1>
+<!-- Search Bar -->
+<div class="relative group">
+<div class="absolute inset-y-0 left-4 flex items-center pointer-events-none">
+<span class="material-symbols-outlined text-outline" data-icon="search">search</span>
+</div>
+<input class="w-full bg-surface-container-highest border-none rounded-[1.5rem] py-4 pl-12 pr-4 text-on-surface placeholder:text-outline focus:ring-2 focus:ring-primary/40 transition-all outline-none" placeholder="Search health topics..." type="text"/>
+</div>
+</section>
+<!-- Categories Horizontal Scroll -->
+<section class="mb-10 -mx-6 px-6">
+<div class="flex gap-3 overflow-x-auto pb-4 no-scrollbar">
+<button class="flex-none bg-primary text-on-primary px-6 py-3 rounded-full font-bold text-sm shadow-lg shadow-primary/20">All Topics</button>
+<button class="flex-none bg-surface-container-lowest text-on-surface-variant px-6 py-3 rounded-full font-bold text-sm hover:bg-surface-bright transition-colors shadow-sm">Nutrition</button>
+<button class="flex-none bg-surface-container-lowest text-on-surface-variant px-6 py-3 rounded-full font-bold text-sm hover:bg-surface-bright transition-colors shadow-sm">Sleep</button>
+<button class="flex-none bg-surface-container-lowest text-on-surface-variant px-6 py-3 rounded-full font-bold text-sm hover:bg-surface-bright transition-colors shadow-sm">Mental Clarity</button>
+<button class="flex-none bg-surface-container-lowest text-on-surface-variant px-6 py-3 rounded-full font-bold text-sm hover:bg-surface-bright transition-colors shadow-sm">Cardio</button>
+</div>
+</section>
+<!-- Featured Editorial Card -->
+<section class="mb-10">
+<div class="relative w-full aspect-[16/10] rounded-xl overflow-hidden group shadow-xl">
+<img alt="" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" data-alt="Person practicing peaceful morning yoga pose" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCx8ggjyAhMnoakJZldmbYztlsleBZIUPv7OoEEQpGGvzZwuSXQQ-mHFEt_oi1Mm0IkWBBHamxAGRkM0X7CPe5pt0KgOz_Sim6MJsGR05kWsjpcjmhyhkvg7W58W4OGmrO-jh9mfXV7xBgvjeYiBRsEq9C08o0cwol3-kjFfGGSJi6jIBJXE60gOS25w6pQMmbQvb6fohH3joJaNbGBbms0eGfaDe-tSA4NUyEENq8B6J3yScJAlUwtuzDStfODPzCkO1oEdtVDYGjV"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex flex-col justify-end p-8">
+<span class="bg-secondary-container text-on-secondary-container text-[0.65rem] font-extrabold uppercase px-3 py-1 rounded-full w-fit mb-3 tracking-wider">Featured Guide</span>
+<h2 class="text-white text-2xl font-bold mb-2">The Zen Routine: Morning Rituals for Focus</h2>
+<p class="text-white/80 text-sm mb-4">Discover how 15 minutes can reshape your entire day's productivity.</p>
+<div class="flex items-center gap-4 text-white/60 text-xs">
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-sm" data-icon="schedule">schedule</span> 8 min read</span>
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-sm" data-icon="person">person</span> Dr. Elena Vance</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Article List -->
+<section class="space-y-6">
+<h3 class="text-xl font-bold text-on-surface flex items-center gap-2">
+                Latest Articles
+                <div class="h-1 w-12 bg-primary-container rounded-full"></div>
+</h3>
+<!-- Article Card 1 -->
+<div class="bg-surface-container-lowest p-4 rounded-xl flex gap-4 items-center shadow-[0_4px_20px_rgba(0,0,0,0.03)] border border-outline-variant/15">
+<div class="w-24 h-24 rounded-lg overflow-hidden flex-shrink-0">
+<img alt="" class="w-full h-full object-cover" data-alt="Fresh vibrant salad with avocado" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAyc3sIX8CraqyGVSW5cJF3FW06FnqOw-YXbEqEfUa1xygyWnlTVArBIQlhStaAmWYvy1f6aXLL7InsRoM7CYEdCQhWQdSLbj9Qk7SCcuzVM3S6LNMdFQnvPVgtDdoa4v201_wo8dlBG6AXaVzkT47exrhsv3momRWYZ286f5pINsp4I9CvnlWY4omZPYoYWdXuUV9Qu2YZuttG7kqwIiIBKRDEf0kPPkVY4kUsnxDyMCKETZQ8MFV_hOzfzWHl498FY7QifCoi9ReU"/>
+</div>
+<div class="flex-1">
+<span class="text-[0.6rem] font-extrabold uppercase text-secondary tracking-widest">Nutrition</span>
+<h4 class="text-on-surface font-bold text-lg leading-tight mb-2">Superfoods for Heart Health</h4>
+<div class="flex items-center gap-3 text-on-surface-variant text-[0.7rem] font-medium">
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[1rem]" data-icon="timer">timer</span> 5 min read</span>
+</div>
+</div>
+</div>
+<!-- Article Card 2 -->
+<div class="bg-surface-container-lowest p-4 rounded-xl flex gap-4 items-center shadow-[0_4px_20px_rgba(0,0,0,0.03)] border border-outline-variant/15">
+<div class="w-24 h-24 rounded-lg overflow-hidden flex-shrink-0">
+<img alt="" class="w-full h-full object-cover" data-alt="Close up of a peaceful sleeping person" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAzJ33TynXxeLyf9TBViQ3rs94WdI6lq1aKuLxhG7buNreCFsgF4awxqAdo1x7QFwMuPNdMt-7_rOEynBbPEfKynqx1EnTGsek6B7Tuvt4VLzANr9w0cEtDzxILejCkYzGt_fCvXeQlIYC1kWCRkFGg4NJHEiOiG0Fh6uJ13flbWOlgr4W7iS2rqtOG9_WF22PII2oITq5iFJEbqKxRusUELu37rZ5SN4InKJcLLSvEAOLnROx8XjUCkyJ1Tje5Ia2HQjUFb5lUAIGD"/>
+</div>
+<div class="flex-1">
+<span class="text-[0.6rem] font-extrabold uppercase text-secondary tracking-widest">Sleep Hygiene</span>
+<h4 class="text-on-surface font-bold text-lg leading-tight mb-2">Mastering Your Circadian Rhythm</h4>
+<div class="flex items-center gap-3 text-on-surface-variant text-[0.7rem] font-medium">
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[1rem]" data-icon="timer">timer</span> 12 min read</span>
+</div>
+</div>
+</div>
+<!-- Article Card 3 -->
+<div class="bg-surface-container-lowest p-4 rounded-xl flex gap-4 items-center shadow-[0_4px_20px_rgba(0,0,0,0.03)] border border-outline-variant/15">
+<div class="w-24 h-24 rounded-lg overflow-hidden flex-shrink-0">
+<img alt="" class="w-full h-full object-cover" data-alt="Serene landscape for meditation" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD0rdIhq5ak_Wc1d6sBd7XM913qU0qgmwf2L4Fr5q11mTJowivk5FdIVLHOEXz65Hsa6qDB8APKabYHyJxYFfLTYbefO9ULAQhho7o6jk7FgFgFdHgFQbVpfB4JcyPdWAiW2D9_D84JiwEuPG9jrHaYqw4EcfnH7MoQKKuMkm-53PsmBT_Sde4vAzmAq9AWlQNDkRGXhmzjqO24vrt-BH0cIKDzMxJfoYcRpfdjJGSRsWjbxILia1UGsDpjdlu5EdRBR-o52AxrQ8rM"/>
+</div>
+<div class="flex-1">
+<span class="text-[0.6rem] font-extrabold uppercase text-secondary tracking-widest">Mental Health</span>
+<h4 class="text-on-surface font-bold text-lg leading-tight mb-2">Anxiety Management 101</h4>
+<div class="flex items-center gap-3 text-on-surface-variant text-[0.7rem] font-medium">
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[1rem]" data-icon="timer">timer</span> 7 min read</span>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar (from JSON) -->
+<nav class="fixed bottom-0 left-0 w-full flex justify-around items-center px-4 pb-6 pt-3 bg-white/80 dark:bg-zinc-900/80 backdrop-blur-2xl shadow-[0_-8px_30px_rgb(0,0,0,0.04)] z-50 rounded-t-[3rem]">
+<!-- Tracker -->
+<a class="flex flex-col items-center justify-center text-zinc-400 dark:text-zinc-500 px-5 py-2 hover:text-rose-500 transition-all" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="pill">pill</span>
+<span class="text-[0.65rem] font-bold uppercase tracking-wider">Tracker</span>
+</a>
+<!-- Medical ID -->
+<a class="flex flex-col items-center justify-center text-zinc-400 dark:text-zinc-500 px-5 py-2 hover:text-rose-500 transition-all" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="contact_emergency">contact_emergency</span>
+<span class="text-[0.65rem] font-bold uppercase tracking-wider">Medical ID</span>
+</a>
+<!-- Health -->
+<a class="flex flex-col items-center justify-center text-zinc-400 dark:text-zinc-500 px-5 py-2 hover:text-rose-500 transition-all" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="timeline">timeline</span>
+<span class="text-[0.65rem] font-bold uppercase tracking-wider">Health</span>
+</a>
+<!-- Guides (Active) -->
+<a class="flex flex-col items-center justify-center bg-rose-100 dark:bg-rose-900/40 text-rose-700 dark:text-rose-200 rounded-full px-5 py-2" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="menu_book">menu_book</span>
+<span class="text-[0.65rem] font-bold uppercase tracking-wider">Guides</span>
+</a>
+</nav>
+</body></html>

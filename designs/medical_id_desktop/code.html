@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>VibeHealth - Medical ID</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@700&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "on-tertiary-container": "#f6fff6",
+              "inverse-on-surface": "#f4f0f0",
+              "on-primary-fixed-variant": "#92002a",
+              "surface-container-high": "#ece7e7",
+              "on-background": "#1c1b1c",
+              "surface": "#fdf8f8",
+              "tertiary-fixed-dim": "#64dca0",
+              "secondary-fixed-dim": "#45dfa4",
+              "on-error-container": "#93000a",
+              "surface-dim": "#ddd9d9",
+              "outline": "#8f6f71",
+              "background": "#fdf8f8",
+              "on-primary-fixed": "#40000d",
+              "primary-fixed": "#ffdadb",
+              "surface-variant": "#e6e1e1",
+              "on-secondary-fixed-variant": "#005137",
+              "on-primary": "#ffffff",
+              "on-surface-variant": "#5b4041",
+              "surface-container-highest": "#e6e1e1",
+              "tertiary-container": "#008656",
+              "on-primary-container": "#fffbff",
+              "secondary-container": "#64f9bc",
+              "tertiary-fixed": "#82f9ba",
+              "tertiary": "#006a43",
+              "surface-container": "#f1eded",
+              "outline-variant": "#e3bdbf",
+              "on-tertiary-fixed": "#002112",
+              "on-error": "#ffffff",
+              "secondary-fixed": "#68fcbf",
+              "on-surface": "#1c1b1c",
+              "on-secondary": "#ffffff",
+              "inverse-surface": "#313030",
+              "on-tertiary-fixed-variant": "#005233",
+              "inverse-primary": "#ffb2b7",
+              "surface-bright": "#fdf8f8",
+              "primary-fixed-dim": "#ffb2b7",
+              "primary-container": "#dc2c4f",
+              "on-secondary-fixed": "#002114",
+              "error-container": "#ffdad6",
+              "primary": "#b90538",
+              "on-tertiary": "#ffffff",
+              "on-secondary-container": "#00714e",
+              "surface-container-low": "#f7f2f2",
+              "error": "#ba1a1a",
+              "surface-container-lowest": "#ffffff",
+              "surface-tint": "#bc0b3b",
+              "secondary": "#006c4b"
+            },
+            fontFamily: {
+              "headline": ["Outfit", "sans-serif"],
+              "body": ["Plus Jakarta Sans", "sans-serif"],
+              "label": ["Plus Jakarta Sans", "sans-serif"]
+            },
+            borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .font-outfit { font-family: 'Outfit', sans-serif; }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(227, 189, 191, 0.15);
+        }
+        .no-line-rule { border: none !important; }
+    </style>
+</head>
+<body class="bg-surface text-on-surface min-h-screen">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-white/80 dark:bg-zinc-900/80 backdrop-blur-xl shadow-sm shadow-rose-900/5 flex justify-between items-center px-6 py-4 w-full">
+<div class="text-2xl font-bold tracking-tight text-rose-600 dark:text-rose-400 font-outfit">VibeHealth</div>
+<div class="hidden md:flex gap-8 items-center">
+<a class="text-zinc-500 dark:text-zinc-400 font-medium hover:bg-rose-50/50 transition-colors px-3 py-2 rounded-lg" href="#">Tracker</a>
+<a class="text-rose-700 dark:text-rose-300 font-bold px-3 py-2 rounded-lg" href="#">Medical ID</a>
+<a class="text-zinc-500 dark:text-zinc-400 font-medium hover:bg-rose-50/50 transition-colors px-3 py-2 rounded-lg" href="#">Health</a>
+<a class="text-zinc-500 dark:text-zinc-400 font-medium hover:bg-rose-50/50 transition-colors px-3 py-2 rounded-lg" href="#">Guides</a>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 rounded-full hover:bg-rose-50/50 transition-colors">
+<span class="material-symbols-outlined text-zinc-600" data-icon="qr_code_scanner">qr_code_scanner</span>
+</button>
+<button class="p-2 rounded-full hover:bg-rose-50/50 transition-colors">
+<span class="material-symbols-outlined text-zinc-600" data-icon="account_circle">account_circle</span>
+</button>
+</div>
+</header>
+<main class="pt-24 pb-32 px-6 max-w-7xl mx-auto flex flex-col md:flex-row gap-8">
+<!-- Sidebar Navigation (Desktop Only) -->
+<aside class="hidden md:flex flex-col gap-4 w-64 shrink-0">
+<nav class="glass-panel rounded-xl p-4 sticky top-28">
+<div class="flex flex-col gap-2">
+<a class="flex items-center gap-3 px-4 py-3 text-zinc-500 hover:text-rose-600 transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="pill">pill</span>
+<span class="font-bold text-sm tracking-wide uppercase">Tracker</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 bg-rose-100 dark:bg-rose-900/40 text-rose-700 rounded-full" href="#">
+<span class="material-symbols-outlined" data-icon="contact_emergency" style="font-variation-settings: 'FILL' 1;">contact_emergency</span>
+<span class="font-bold text-sm tracking-wide uppercase">Medical ID</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-zinc-500 hover:text-rose-600 transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="timeline">timeline</span>
+<span class="font-bold text-sm tracking-wide uppercase">Health</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-zinc-500 hover:text-rose-600 transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="menu_book">menu_book</span>
+<span class="font-bold text-sm tracking-wide uppercase">Guides</span>
+</a>
+</div>
+</nav>
+<!-- Offline Indicator -->
+<div class="px-6 py-3 flex items-center gap-2 text-secondary font-semibold text-sm">
+<span class="material-symbols-outlined text-sm" data-icon="check_circle">check_circle</span>
+                Available offline ✓
+            </div>
+</aside>
+<!-- Content Canvas -->
+<section class="flex-grow space-y-8">
+<!-- Hero Header -->
+<div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
+<div>
+<h1 class="text-5xl font-outfit font-bold text-on-surface tracking-tight">Medical ID</h1>
+<p class="text-on-surface-variant mt-2 text-lg">Essential emergency information available at a glance.</p>
+</div>
+<div class="flex gap-3">
+<button class="bg-surface-container-highest px-6 py-3 rounded-full font-bold text-on-surface flex items-center gap-2 hover:bg-surface-bright transition-all">
+<span class="material-symbols-outlined" data-icon="ios_share">ios_share</span>
+                        Share
+                    </button>
+<button class="bg-primary text-on-primary px-6 py-3 rounded-full font-bold flex items-center gap-2 shadow-lg shadow-primary/20 hover:scale-105 transition-transform">
+<span class="material-symbols-outlined" data-icon="picture_as_pdf">picture_as_pdf</span>
+                        Export PDF
+                    </button>
+</div>
+</div>
+<!-- Bento Grid Layout -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-6">
+<!-- Main ID Card (Glass) -->
+<div class="md:col-span-8 glass-panel rounded-xl overflow-hidden shadow-2xl shadow-rose-900/5 relative">
+<!-- Branding Accent -->
+<div class="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-bl-full pointer-events-none"></div>
+<div class="p-8 md:p-12">
+<div class="flex flex-col md:flex-row gap-8 items-start">
+<div class="w-32 h-32 rounded-xl bg-surface-container-high overflow-hidden flex-shrink-0">
+<img class="w-full h-full object-cover" data-alt="Professional portrait for medical identification" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDiutRWLXezbKFRS0PoVJlIcAk_5-ASGVneqqy8eOMxJbAF0XMqCWxy4gtbBHQAfslplT2A14uUjyx4KNydmnX0wOMHiPQcW526GmTK1xKHh3iEbRbYEX-DHry_TuLgJ8xZV9YTAVj1mFv7UEMpHUEbKBEaCbWfnC4O8AkL326GvLb_0mN_LEQF0XBVHYRXsG4_rfP-NZQqvX1oSUMIzSlMh7VJ09YSi4PyvqbH1WYs3cgkVS4iPjQHLd0pNJPNocwhaT0ANllnv0kV"/>
+</div>
+<div class="flex-grow">
+<span class="bg-primary/10 text-primary font-bold px-3 py-1 rounded-full text-xs uppercase tracking-widest mb-4 inline-block">Emergency Profile</span>
+<h2 class="text-4xl font-outfit font-bold text-on-surface">Elena Rodriguez</h2>
+<div class="flex flex-wrap gap-8 mt-6">
+<div>
+<p class="text-xs font-bold text-on-surface-variant uppercase tracking-widest">Age</p>
+<p class="text-2xl font-outfit font-bold text-on-surface">29</p>
+</div>
+<div>
+<p class="text-xs font-bold text-on-surface-variant uppercase tracking-widest">Blood Type</p>
+<p class="text-2xl font-outfit font-bold text-primary">O Negative</p>
+</div>
+<div>
+<p class="text-xs font-bold text-on-surface-variant uppercase tracking-widest">Weight</p>
+<p class="text-2xl font-outfit font-bold text-on-surface">62 kg</p>
+</div>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-12 mt-12 pt-12 border-t border-rose-100/50">
+<!-- Allergies Section -->
+<div class="space-y-4">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-error" data-icon="warning" style="font-variation-settings: 'FILL' 1;">warning</span>
+<h3 class="font-outfit text-xl font-bold">Allergies</h3>
+</div>
+<div class="flex flex-wrap gap-2">
+<span class="bg-error-container text-on-error-container px-4 py-2 rounded-full font-bold text-sm">Penicillin</span>
+<span class="bg-error-container text-on-error-container px-4 py-2 rounded-full font-bold text-sm">Peanuts</span>
+<span class="bg-error-container text-on-error-container px-4 py-2 rounded-full font-bold text-sm">Latex</span>
+</div>
+</div>
+<!-- Medications Section -->
+<div class="space-y-4">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary" data-icon="medication" style="font-variation-settings: 'FILL' 1;">medication</span>
+<h3 class="font-outfit text-xl font-bold">Medications</h3>
+</div>
+<ul class="space-y-3">
+<li class="flex items-center justify-between p-3 bg-surface-container rounded-lg">
+<span class="font-semibold">Lisinopril</span>
+<span class="text-sm text-on-surface-variant">10mg / Day</span>
+</li>
+<li class="flex items-center justify-between p-3 bg-surface-container rounded-lg">
+<span class="font-semibold">Ventolin Inhaler</span>
+<span class="text-sm text-on-surface-variant">As needed</span>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<!-- QR Code Sidebar -->
+<div class="md:col-span-4 flex flex-col gap-6">
+<div class="glass-panel rounded-xl p-8 flex flex-col items-center text-center shadow-lg shadow-rose-900/5">
+<h3 class="font-outfit text-lg font-bold mb-6">Digital ID Scan</h3>
+<div class="bg-white p-4 rounded-2xl shadow-inner border border-rose-50">
+<img class="w-48 h-48 grayscale" data-alt="High contrast QR code for emergency medical access" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBrOxRidA2MgS4U54J4mEhncCEvRec2yPrd9l-U1iiDLIj-tLaZEusgD5RmH-ZtAZPTBqq4-RiyfKRDy7n07t1HyC773Ls1r-6eurFmTuqsXUpMQD_L8UXT5pPFYFi_Kfb4P1b-RdABMSZNoz5RVahsDjn4y-RsTibuMMz-D10KqTEEvbw9yVYYlF6LWHNBNrLyAtGjkWkFumZ6znbhc2AQYt9dENXSt5koHZ7eP5MSIVFJUzAd6ZONfq8XGCG9E0H-aRWfmmzb1X0k"/>
+</div>
+<p class="mt-6 text-sm text-on-surface-variant leading-relaxed">
+                            First responders can scan this code to access your full medical history and emergency protocols.
+                        </p>
+</div>
+<!-- Emergency Contacts -->
+<div class="glass-panel rounded-xl p-6 shadow-lg shadow-rose-900/5">
+<h3 class="font-outfit text-lg font-bold mb-4">Emergency Contacts</h3>
+<div class="space-y-4">
+<div class="flex items-center justify-between p-4 bg-surface-container-lowest rounded-xl border border-rose-100/30">
+<div>
+<p class="font-bold">Marcus Rodriguez</p>
+<p class="text-xs text-on-surface-variant uppercase font-bold tracking-tighter">Husband</p>
+</div>
+<button class="bg-secondary text-on-secondary p-3 rounded-full hover:scale-110 transition-transform">
+<span class="material-symbols-outlined" data-icon="call" style="font-variation-settings: 'FILL' 1;">call</span>
+</button>
+</div>
+<div class="flex items-center justify-between p-4 bg-surface-container-lowest rounded-xl border border-rose-100/30">
+<div>
+<p class="font-bold">Dr. Sarah Jenkins</p>
+<p class="text-xs text-on-surface-variant uppercase font-bold tracking-tighter">Primary Physician</p>
+</div>
+<button class="bg-secondary text-on-secondary p-3 rounded-full hover:scale-110 transition-transform">
+<span class="material-symbols-outlined" data-icon="call" style="font-variation-settings: 'FILL' 1;">call</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Health History Preview (Editorial Style) -->
+<div class="bg-surface-container-low rounded-xl p-8 relative overflow-hidden">
+<div class="max-w-2xl">
+<h3 class="text-2xl font-outfit font-bold text-on-surface mb-4">Past Medical History</h3>
+<p class="text-on-surface-variant leading-relaxed mb-6">
+                        Documented history of mild asthma (childhood onset) and previous appendectomy (2018). No history of cardiac issues or diabetes. All immunizations are current as of August 2023.
+                    </p>
+<button class="text-primary font-bold flex items-center gap-1 hover:underline">
+                        View Detailed Records
+                        <span class="material-symbols-outlined text-sm" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</div>
+<div class="hidden lg:block absolute -right-4 -bottom-4 opacity-20">
+<span class="material-symbols-outlined text-[12rem]" data-icon="medical_services">medical_services</span>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full flex justify-around items-center px-4 pb-6 pt-3 bg-white/80 dark:bg-zinc-900/80 backdrop-blur-2xl rounded-t-[3rem] shadow-[0_-8px_30px_rgb(0,0,0,0.04)] z-50">
+<a class="flex flex-col items-center justify-center text-zinc-400 px-5 py-2 hover:text-rose-500 transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="pill">pill</span>
+<span class="text-[0.65rem] font-bold uppercase mt-1">Tracker</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-rose-100 text-rose-700 rounded-full px-5 py-2" href="#">
+<span class="material-symbols-outlined" data-icon="contact_emergency" style="font-variation-settings: 'FILL' 1;">contact_emergency</span>
+<span class="text-[0.65rem] font-bold uppercase mt-1">Medical ID</span>
+</a>
+<a class="flex flex-col items-center justify-center text-zinc-400 px-5 py-2 hover:text-rose-500 transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="timeline">timeline</span>
+<span class="text-[0.65rem] font-bold uppercase mt-1">Health</span>
+</a>
+<a class="flex flex-col items-center justify-center text-zinc-400 px-5 py-2 hover:text-rose-500 transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="menu_book">menu_book</span>
+<span class="text-[0.65rem] font-bold uppercase mt-1">Guides</span>
+</a>
+</nav>
+</body></html>

@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>VibeHealth - Login</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&amp;family=Plus_Jakarta_Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "on-secondary-fixed-variant": "#005137",
+              "primary-fixed": "#ffdadb",
+              "on-primary-container": "#fffbff",
+              "outline-variant": "#e3bdbf",
+              "on-primary-fixed-variant": "#92002a",
+              "on-tertiary-fixed-variant": "#005233",
+              "on-surface-variant": "#5b4041",
+              "on-secondary-container": "#00714e",
+              "tertiary": "#006a43",
+              "surface-tint": "#bc0b3b",
+              "surface-container-lowest": "#ffffff",
+              "on-tertiary-fixed": "#002112",
+              "on-secondary-fixed": "#002114",
+              "tertiary-container": "#008656",
+              "secondary-fixed": "#68fcbf",
+              "on-surface": "#1c1b1c",
+              "surface": "#fdf8f8",
+              "surface-container-high": "#ece7e7",
+              "error": "#ba1a1a",
+              "outline": "#8f6f71",
+              "inverse-surface": "#313030",
+              "inverse-primary": "#ffb2b7",
+              "surface-container-highest": "#e6e1e1",
+              "on-primary-fixed": "#40000d",
+              "tertiary-fixed": "#82f9ba",
+              "secondary-fixed-dim": "#45dfa4",
+              "on-error": "#ffffff",
+              "secondary": "#006c4b",
+              "error-container": "#ffdad6",
+              "on-background": "#1c1b1c",
+              "secondary-container": "#64f9bc",
+              "on-primary": "#ffffff",
+              "on-error-container": "#93000a",
+              "on-tertiary": "#ffffff",
+              "surface-dim": "#ddd9d9",
+              "primary-container": "#dc2c4f",
+              "surface-container": "#f1eded",
+              "on-tertiary-container": "#f6fff6",
+              "on-secondary": "#ffffff",
+              "inverse-on-surface": "#f4f0f0",
+              "background": "#fdf8f8",
+              "surface-bright": "#fdf8f8",
+              "primary-fixed-dim": "#ffb2b7",
+              "primary": "#b90538",
+              "surface-container-low": "#f7f2f2",
+              "surface-variant": "#e6e1e1",
+              "tertiary-fixed-dim": "#64dca0"
+            },
+            fontFamily: {
+              "headline": ["Outfit"],
+              "body": ["Plus Jakarta Sans"],
+              "label": ["Plus Jakarta Sans"]
+            },
+            borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+      .glass-panel {
+        background: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(16px);
+        border: 1px solid rgba(227, 189, 191, 0.15);
+      }
+      .bg-gradient-soft {
+        background: radial-gradient(circle at 10% 20%, rgba(185, 5, 56, 0.05) 0%, transparent 40%),
+                    radial-gradient(circle at 90% 80%, rgba(0, 108, 75, 0.05) 0%, transparent 40%);
+      }
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+    </style>
+</head>
+<body class="bg-surface font-body text-on-surface min-h-screen flex flex-col overflow-hidden select-none">
+<!-- Global Background Blobs -->
+<div class="fixed inset-0 -z-10 bg-gradient-soft"></div>
+<div class="fixed top-[-10%] left-[-5%] w-[40%] h-[40%] bg-primary/5 rounded-full blur-[120px]"></div>
+<div class="fixed bottom-[-10%] right-[-5%] w-[40%] h-[40%] bg-secondary/5 rounded-full blur-[120px]"></div>
+<!-- Language Switcher (Floating Top Right) -->
+<div class="fixed top-8 right-12 z-50 flex items-center space-x-4">
+<div class="glass-panel px-4 py-2 rounded-full flex items-center space-x-2 text-sm font-bold shadow-sm cursor-pointer hover:bg-surface-bright transition-all">
+<span class="text-primary">EN</span>
+<span class="text-outline-variant">/</span>
+<span class="text-on-surface-variant opacity-60">FR</span>
+</div>
+</div>
+<!-- Main Content Container -->
+<main class="flex-1 flex w-full max-w-[1440px] mx-auto min-h-screen">
+<!-- Left Side: Editorial Branding -->
+<section class="hidden lg:flex flex-col justify-center w-1/2 p-24 relative overflow-hidden">
+<div class="relative z-10">
+<div class="mb-12 flex items-center space-x-3">
+<div class="w-12 h-12 bg-primary rounded-2xl flex items-center justify-center text-white text-2xl font-bold">V</div>
+<span class="text-3xl font-headline font-bold text-primary tracking-tight">VibeHealth</span>
+</div>
+<h1 class="text-[5rem] font-headline font-bold leading-[0.95] mb-8 tracking-tighter text-on-surface">
+                    Your Health,<br/>
+<span class="text-primary italic">Elevated.</span>
+</h1>
+<p class="text-xl text-on-surface-variant leading-relaxed max-w-md opacity-80 mb-12">
+                    Experience the next generation of wellness companion. Personal, precise, and delightfully ethereal.
+                </p>
+<!-- Bunny Mascot Element -->
+<div class="relative w-full h-80 mt-8">
+<img alt="Digital character 3d rendering" class="absolute -left-12 bottom-0 w-64 h-64 object-contain rounded-full bg-primary-fixed p-4 shadow-xl" data-alt="Soft 3D cute bunny mascot peeking out" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCCHHUzVy8t_i-90JuTExadky_FssHPsVYHphUWUc8mV13mfPcsWPHXdctN5XgK07PH8KIx6LoKuyniyfcpn2bOMj2gG6NlR9RxtmnJdgaCVKa4XwzkYuQGKzHA1kDROhMXznsb7GSLfODy5bdnKtytYU_x06bE1Bl3pd6ItClVnIiDp9A3DSImuLnzP6-WowaT4GIUtUYtEDLavyYj5Eq1BP9Kt3yHz26qL3UDY2r9Kie7lV9PiilGr5mFEGR9yr5HS6puKa6rNpB5"/>
+<div class="absolute left-60 bottom-24 glass-panel px-6 py-4 rounded-3xl shadow-lg border-primary/10">
+<p class="text-on-surface font-semibold italic">"Welcome back, Bunny! 🐰"</p>
+</div>
+</div>
+</div>
+<!-- Background Decoration -->
+<div class="absolute top-1/2 left-0 -translate-y-1/2 -translate-x-1/2 w-[800px] h-[800px] bg-gradient-to-br from-primary/10 to-transparent rounded-full -z-10 blur-3xl"></div>
+</section>
+<!-- Right Side: Login Panel -->
+<section class="w-full lg:w-1/2 flex items-center justify-center p-8 lg:p-12">
+<div class="glass-panel w-full max-w-xl p-12 lg:p-16 rounded-xl shadow-2xl relative">
+<div class="mb-10">
+<h2 class="text-4xl font-headline font-bold mb-3 tracking-tight">Welcome Back</h2>
+<p class="text-on-surface-variant font-medium">Log in to your personalized health dashboard.</p>
+</div>
+<!-- Form Section -->
+<form class="space-y-6">
+<div class="space-y-2">
+<label class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant ml-1">Email Address</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-5 top-1/2 -translate-y-1/2 text-outline-variant">mail</span>
+<input class="w-full bg-surface-container-highest border-none rounded-lg py-4 pl-14 pr-6 text-on-surface placeholder:text-outline focus:ring-2 focus:ring-primary/20 transition-all outline-none" placeholder="hello@vibehealth.com" type="email"/>
+</div>
+</div>
+<div class="space-y-2">
+<label class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant ml-1">Password</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-5 top-1/2 -translate-y-1/2 text-outline-variant">lock</span>
+<input class="w-full bg-surface-container-highest border-none rounded-lg py-4 pl-14 pr-14 text-on-surface placeholder:text-outline focus:ring-2 focus:ring-primary/20 transition-all outline-none" placeholder="••••••••••••" type="password"/>
+<button class="absolute right-5 top-1/2 -translate-y-1/2 text-outline-variant hover:text-primary transition-colors" type="button">
+<span class="material-symbols-outlined" data-icon="visibility">visibility</span>
+</button>
+</div>
+</div>
+<div class="flex items-center justify-between py-2">
+<label class="flex items-center space-x-3 cursor-pointer group">
+<input class="w-5 h-5 rounded-md border-outline-variant text-primary focus:ring-primary/30 transition-all" type="checkbox"/>
+<span class="text-sm font-semibold text-on-surface-variant group-hover:text-primary transition-colors">Remember Me</span>
+</label>
+<a class="text-sm font-bold text-primary hover:underline underline-offset-4" href="#">Forgot Password?</a>
+</div>
+<button class="w-full bg-gradient-to-r from-primary to-primary-container text-white py-5 rounded-full font-headline font-bold text-lg shadow-[0_8px_24px_rgba(185,5,56,0.25)] hover:shadow-[0_12px_32px_rgba(185,5,56,0.35)] hover:-translate-y-0.5 active:scale-[0.98] transition-all" type="submit">
+                        Log In to VibeHealth
+                    </button>
+</form>
+<!-- Divider -->
+<div class="relative my-10 flex items-center">
+<div class="flex-grow h-[1px] bg-outline-variant/20"></div>
+<span class="px-4 text-xs font-bold uppercase tracking-widest text-on-surface-variant/50">or continue with</span>
+<div class="flex-grow h-[1px] bg-outline-variant/20"></div>
+</div>
+<!-- Social Logins -->
+<div class="grid grid-cols-3 gap-4 mb-10">
+<button class="flex items-center justify-center p-4 rounded-lg bg-surface-container-low hover:bg-surface-container-high transition-colors border border-outline-variant/10">
+<img alt="Google" class="w-6 h-6" data-alt="Google Logo" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAwIyIBqI-FbgbXov1jbCdkUwClcaM_XHsBfZmp4myfwJHxkRl-wQtt9EkPidlCcGx_S0WgVCw9qcyih8po0jS0Jy0GkDauY3hd3hZPYuz9rB3P-e4hmfUw6T0MUm2JpCbNxNYXCHdiKbr9UAR1GIe3cbbPp8XhAblaIhIoTEMA3cQG2R4ROTWPY21R6QdWH7iV9a-fVWT-PcHcBfhm3-8lTR1C6ukBowNrnvJayPHkcOxYzEsNYfVp4Yn04yIJ0V7RuMx4-IGppued"/>
+</button>
+<button class="flex items-center justify-center p-4 rounded-lg bg-surface-container-low hover:bg-surface-container-high transition-colors border border-outline-variant/10">
+<span class="material-symbols-outlined text-2xl" data-icon="laptop_apple">laptop_mac</span>
+</button>
+<button class="flex items-center justify-center p-4 rounded-lg bg-surface-container-low hover:bg-surface-container-high transition-colors border border-outline-variant/10">
+<span class="material-symbols-outlined text-2xl" data-icon="terminal">terminal</span>
+</button>
+</div>
+<!-- Signup Link -->
+<div class="text-center">
+<p class="text-on-surface-variant font-medium">
+                        New to VibeHealth? 
+                        <a class="text-primary font-bold ml-1 hover:underline underline-offset-4" href="#">Sign up for free</a>
+</p>
+</div>
+<!-- Bottom Mascot Detail -->
+<div class="absolute -bottom-12 right-12 lg:-right-6 opacity-40 hover:opacity-100 transition-opacity">
+<span class="material-symbols-outlined text-7xl text-primary-fixed" data-icon="pets">pets</span>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer Meta (Subtle) -->
+<footer class="p-8 flex justify-center lg:justify-start lg:pl-24">
+<div class="flex items-center space-x-6 text-[10px] font-bold uppercase tracking-[0.2em] text-on-surface-variant/40">
+<span class="cursor-pointer hover:text-primary transition-colors">Privacy Policy</span>
+<span class="w-1 h-1 bg-outline-variant rounded-full"></span>
+<span class="cursor-pointer hover:text-primary transition-colors">Terms of Service</span>
+<span class="w-1 h-1 bg-outline-variant rounded-full"></span>
+<span>© 2024 VibeHealth Global</span>
+</div>
+</footer>
+</body></html>
