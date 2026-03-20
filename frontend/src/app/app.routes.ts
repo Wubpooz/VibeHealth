@@ -43,6 +43,18 @@ export const routes: Routes = [
     canActivate: [authGuard],
   },
   {
+    path: 'first-aid',
+    loadComponent: () =>
+      import('./features/first-aid/first-aid.component').then((m) => m.FirstAidComponent),
+    canActivate: [authGuard],
+  },
+  {
+    path: 'first-aid/:id',
+    loadComponent: () =>
+      import('./features/first-aid/first-aid-detail.component').then((m) => m.FirstAidDetailComponent),
+    canActivate: [authGuard],
+  },
+  {
     path: 'not-found',
     loadComponent: () =>
       import('./features/not-found/not-found.component').then((m) => m.NotFoundComponent),

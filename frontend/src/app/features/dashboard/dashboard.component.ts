@@ -210,19 +210,29 @@ import { ThemeToggleComponent } from '../../shared/components/theme-toggle/theme
             </div>
           </a>
 
-          <!-- First Aid Card - Coming Soon -->
-          <div class="group relative glass-panel rounded-3xl p-8 transition-all duration-300 opacity-60 cursor-not-allowed">
+          <!-- First Aid Card - Now Active! -->
+          <a 
+            routerLink="/first-aid"
+            class="group relative glass-panel rounded-3xl p-8 transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl hover:shadow-green-500/10 cursor-pointer"
+          >
+            <div class="absolute inset-0 bg-gradient-to-br from-green-500/5 to-transparent rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
+            <div class="absolute top-4 right-4 px-2.5 py-1 bg-green-100 text-green-600 text-xs font-bold rounded-full dark:bg-green-900/30 dark:text-green-400">
+              NEW
+            </div>
             <div class="relative z-10">
-              <div class="w-14 h-14 rounded-2xl bg-white shadow-lg shadow-gray-200/50 flex items-center justify-center text-3xl mb-6 dark:bg-gray-800 dark:shadow-none">
+              <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-green-500 to-emerald-600 shadow-lg shadow-green-500/30 flex items-center justify-center text-2xl mb-6 group-hover:scale-110 transition-transform text-white">
                 🩹
               </div>
-              <h3 class="text-xl font-bold text-gray-900 mb-2 dark:text-white font-heading">First Aid Guide</h3>
-              <p class="text-gray-500 font-medium dark:text-gray-400">Quick access to emergency instructions.</p>
-              <div class="mt-6 flex items-center text-sm font-bold text-gray-400">
-                Coming Soon
+              <h3 class="text-xl font-bold text-gray-900 mb-2 dark:text-white font-heading">{{ 'nav.first_aid' | translate }}</h3>
+              <p class="text-gray-500 font-medium dark:text-gray-400">{{ 'LANDING.FEATURE_FIRST_AID_DESC' | translate }}</p>
+              <div class="mt-6 flex items-center text-sm font-bold text-green-600 dark:text-green-400">
+                Open First Aid
+                <svg class="w-4 h-4 ml-2 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                </svg>
               </div>
             </div>
-          </div>
+          </a>
         </div>
 
         <!-- Demo: Award Carrots Button -->
@@ -254,7 +264,9 @@ export class DashboardComponent implements OnInit {
   async checkProfileStatus() {
     await this.profileService.loadProfile();
     // Show onboarding prompt if user hasn't completed their profile
-    this.showOnboardingPrompt.set(!this.profileService.hasProfile());
+    // hasProfile() returns null initially, false if no profile, true if profile exists
+    const hasProfile = this.profileService.hasProfile();
+    this.showOnboardingPrompt.set(hasProfile === false);
   }
   
   awardTestCarrots() {

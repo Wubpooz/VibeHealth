@@ -29,4 +29,5 @@
 
 ## Milestone 4: Localization & Community (Phase 5)
 - [ ] Validate FR & EN translations are 100% complete across all new features.
+- [ ] Ensure dynamic/reference content (medicine names, helpline numbers, and help websites) is properly internationalized based on the user's localized region.
 - [ ] Structure the app to easily accept community-contributed translation packs.

@@ -24,7 +24,7 @@ import { CommonModule } from '@angular/common';
         (click)="scrollToTop()"
         aria-label="Scroll to top"
       >
-        <svg class="ring" viewBox="0 0 100 100" aria-hidden="true">
+        <svg class="progress-ring" viewBox="0 0 100 100" aria-hidden="true">
           <circle class="ring-bg" cx="50" cy="50" r="46" />
           <circle
             class="ring-progress"
@@ -61,7 +61,13 @@ import { CommonModule } from '@angular/common';
       background: transparent;
       color: #0f172a;
       cursor: pointer;
-      transition: transform 0.2s ease;
+      transition: transform 0.2s ease, outline 0.2s ease;
+      outline: none;
+    }
+
+    .scroll-top-btn:focus-visible {
+      outline: 2px solid #e11d48;
+      outline-offset: 4px;
     }
 
     .scroll-top-btn:hover {
@@ -72,7 +78,7 @@ import { CommonModule } from '@angular/common';
       color: #e11d48;
     }
 
-    .ring {
+    .progress-ring {
       position: absolute;
       inset: 0;
       width: 100%;
@@ -121,7 +127,7 @@ export class ScrollTopProgressComponent {
   readonly isVisible = signal(false);
 
   constructor() {
-    if (typeof window === 'undefined') {
+    if (globalThis.window === undefined) {
       return;
     }
 

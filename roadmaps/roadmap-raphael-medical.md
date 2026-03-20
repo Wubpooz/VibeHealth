@@ -12,12 +12,12 @@
 ## Milestone 1: First Aid & Guides (Offline First)
 - [x] Configure Angular Service Workers to forcefully cache First Aid content.
 - [x] Build offline-first, quick-reference First Aid cards UI (burns, CPR, choking).
-- [ ] Implement an offline-accessible local helpline directory (one-tap call links).
+- [ ] Implement an offline-accessible local helpline directory (one-tap call links). **Ensure helpline numbers and help websites are internationalized per region**.
 - [ ] Integrate a condition library and markdown document renderer for health articles.
 
 ## Milestone 2: Medication & Reminders
 - [ ] Add `MEDICATION` and `MEDICATION_REMINDER` to `schema.prisma`.
-- [ ] Create Hono CRUD routes to list, add, edit, and stop tracking medicines.
+- [ ] Create Hono CRUD routes to list, add, edit, and stop tracking medicines. **Ensure medicine names are internationalized or mapped to universal standards (e.g. WHO INN)**.
 - [ ] Build the Frontend UI to schedule doses, set duration, and view upcoming refill alerts.
 - [ ] Write Backend workers/crons to dispatch Web Push and Email notifications.
 
