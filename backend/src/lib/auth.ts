@@ -3,14 +3,21 @@ import { prismaAdapter } from 'better-auth/adapters/prisma';
 import { prisma } from './prisma';
 
 const isDev = process.env.NODE_ENV === 'development';
+const DEV_FALLBACK_SECRET = 'dev-insecure-secret-change-in-production-1234';
 
 // Validate AUTH_SECRET at startup
-const authSecret = process.env.AUTH_SECRET;
+let authSecret = process.env.AUTH_SECRET;
 if (!authSecret || authSecret.length < 32) {
-  if (isDev && !authSecret) {
-    console.warn('⚠️  AUTH_SECRET not set. Using insecure default for development.');
-  } else if (!isDev) {
+  if (!isDev) {
     throw new Error('AUTH_SECRET must be set and at least 32 characters long in production');
+  }
+
+  if (!authSecret) {
+    authSecret = DEV_FALLBACK_SECRET;
+    console.warn('⚠️  AUTH_SECRET not set. Using insecure development fallback secret.');
+  } else {
+    authSecret = DEV_FALLBACK_SECRET;
+    console.warn('⚠️  AUTH_SECRET is shorter than 32 chars. Using insecure development fallback secret.');
   }
 }
 

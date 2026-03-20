@@ -1,8 +1,25 @@
 import { Hono } from 'hono';
 import { prisma } from '../lib/prisma';
 import { requireAuth } from '../middleware/auth.middleware';
+import { z } from 'zod';
 
 const medicalIdRoutes = new Hono();
+
+const emergencyContactSchema = z.object({
+  id: z.string().trim().min(1).max(120).optional(),
+  name: z.string().trim().min(1).max(120),
+  relationship: z.string().trim().min(1).max(120).optional(),
+  phone: z.string().trim().min(1).max(40),
+  isPrimary: z.boolean().optional(),
+});
+
+const medicalIdSchema = z.object({
+  bloodType: z.enum(['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-']).nullable().optional(),
+  allergies: z.array(z.string().trim().min(1).max(120)).max(100).optional(),
+  medications: z.array(z.string().trim().min(1).max(120)).max(100).optional(),
+  medicalConditions: z.array(z.string().trim().min(1).max(120)).max(100).optional(),
+  emergencyContacts: z.array(emergencyContactSchema).max(10).optional(),
+});
 
 // Get medical ID for current user
 medicalIdRoutes.get('/', requireAuth, async (c) => {
@@ -74,9 +91,23 @@ medicalIdRoutes.get('/', requireAuth, async (c) => {
 medicalIdRoutes.post('/', requireAuth, async (c) => {
   const user = c.get('user');
   const body = await c.req.json();
+
+  const parsed = medicalIdSchema.safeParse(body);
+  if (!parsed.success) {
+    return c.json({
+      error: 'Invalid medical ID payload',
+      details: parsed.error.flatten(),
+    }, 400);
+  }
+
+  const payload = parsed.data;
   
   try {
-    const { bloodType, allergies, medications, medicalConditions, emergencyContacts } = body;
+    const bloodType = payload.bloodType;
+    const allergies = payload.allergies || [];
+    const medications = payload.medications || [];
+    const medicalConditions = payload.medicalConditions;
+    const emergencyContacts = payload.emergencyContacts || [];
     
     // Generate QR code data
     const qrData = JSON.stringify({
@@ -85,15 +116,15 @@ medicalIdRoutes.post('/', requireAuth, async (c) => {
       a: (allergies || []).slice(0, 5),
       m: (medications || []).slice(0, 5),
       c: (medicalConditions || []).slice(0, 3),
-      ec: (emergencyContacts || []).slice(0, 2).map((c: any) => ({
-        n: c.name,
-        p: c.phone
+      ec: emergencyContacts.slice(0, 2).map((contact) => ({
+        n: contact.name,
+        p: contact.phone
       }))
     });
     
     // Update Profile if medical conditions are provided
-    if (medicalConditions) {
-      await prisma.profile.update({
+    if (medicalConditions !== undefined) {
+      await prisma.profile.updateMany({
         where: { userId: user.id },
         data: { medicalConditions }
       });

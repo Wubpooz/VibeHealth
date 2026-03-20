@@ -2,6 +2,7 @@ import { Hono } from 'hono';
 import { prisma } from '../lib/prisma';
 import { requireAuth } from '../middleware/auth.middleware';
 import type { Session as AuthSession, User as AuthUser } from 'better-auth';
+import { z } from 'zod';
 
 // Extend Hono context to include auth info
 type AuthContext = {
@@ -12,6 +13,25 @@ type AuthContext = {
 };
 
 const profileRoutes = new Hono<AuthContext>();
+
+const onboardingProfileSchema = z.object({
+  name: z.string().trim().min(1).max(120).optional(),
+  dateOfBirth: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).refine(
+    (value) => !Number.isNaN(Date.parse(`${value}T00:00:00.000Z`)),
+    { message: 'Invalid date value' },
+  ).optional(),
+  biologicalSex: z.enum(['male', 'female', 'other', 'prefer_not_to_say']).optional(),
+  height: z.number().nonnegative().max(300).optional(),
+  heightUnit: z.enum(['cm', 'ft']).optional(),
+  weight: z.number().nonnegative().max(500).optional(),
+  weightUnit: z.enum(['kg', 'lb']).optional(),
+  fitnessLevel: z.enum(['sedentary', 'light', 'moderate', 'active', 'very_active', 'intermediate']).optional(),
+  goals: z.array(z.string().trim().min(1).max(60)).max(20).optional(),
+  medicalConditions: z.array(z.string().trim().min(1).max(120)).max(100).optional(),
+  allergies: z.array(z.string().trim().min(1).max(120)).max(100).optional(),
+  currentMedications: z.array(z.string().trim().min(1).max(120)).max(100).optional(),
+  notificationPreferences: z.record(z.boolean()).optional(),
+});
 
 // All profile routes require authentication
 profileRoutes.use('*', requireAuth);
@@ -40,21 +60,39 @@ profileRoutes.get('/', async (c) => {
 profileRoutes.post('/', async (c) => {
   const user = c.get('user');
   const body = await c.req.json();
+
+  const parsed = onboardingProfileSchema.safeParse(body);
+  if (!parsed.success) {
+    return c.json({
+      error: 'Invalid profile payload',
+      details: parsed.error.flatten(),
+    }, 400);
+  }
+
+  const payload = parsed.data;
+
+  if ((payload.height !== undefined && payload.height > 0 && payload.heightUnit === undefined) ||
+      (payload.weight !== undefined && payload.weight > 0 && payload.weightUnit === undefined)) {
+    return c.json({
+      error: 'Invalid profile payload',
+      details: 'heightUnit is required when height is provided, and weightUnit is required when weight is provided.',
+    }, 400);
+  }
   
   try {
     // Transform the incoming data to match the Prisma schema
     const profileData = {
       userId: user.id,
-      dateOfBirth: body.dateOfBirth ? new Date(body.dateOfBirth) : null,
-      biologicalSex: body.biologicalSex || null,
-      height: convertHeight(body.height, body.heightUnit),
-      weight: convertWeight(body.weight, body.weightUnit),
-      fitnessLevel: body.fitnessLevel || null,
-      goals: body.goals || [],
-      medicalConditions: body.medicalConditions || [],
-      allergies: body.allergies || [],
-      currentMedications: body.currentMedications || [],
-      notificationPreferences: body.notificationPreferences || {},
+      dateOfBirth: payload.dateOfBirth ? parseDateOnly(payload.dateOfBirth) : null,
+      biologicalSex: payload.biologicalSex || null,
+      height: convertHeight(payload.height, payload.heightUnit),
+      weight: convertWeight(payload.weight, payload.weightUnit),
+      fitnessLevel: payload.fitnessLevel || null,
+      goals: payload.goals || [],
+      medicalConditions: payload.medicalConditions || [],
+      allergies: payload.allergies || [],
+      currentMedications: payload.currentMedications || [],
+      notificationPreferences: payload.notificationPreferences || {},
     };
     
     // Upsert profile (create if not exists, update if exists)
@@ -66,10 +104,10 @@ profileRoutes.post('/', async (c) => {
     
     
     // Also update the user's name if provided
-    if (body.name) {
+    if (payload.name) {
       await prisma.user.update({
         where: { id: user.id },
-        data: { name: body.name },
+        data: { name: payload.name },
       });
     }
     
@@ -85,8 +123,8 @@ profileRoutes.post('/', async (c) => {
 });
 
 // Helper functions for unit conversion
-function convertHeight(value: number, unit: 'cm' | 'ft'): number | null {
-  if (!value) return null;
+function convertHeight(value: number | undefined, unit: 'cm' | 'ft' | undefined): number | null {
+  if (value === undefined || value === null || value === 0) return null;
   if (unit === 'ft') {
     // Convert feet to cm (assuming decimal feet like 5.9)
     return Math.round(value * 30.48);
@@ -94,13 +132,17 @@ function convertHeight(value: number, unit: 'cm' | 'ft'): number | null {
   return value;
 }
 
-function convertWeight(value: number, unit: 'kg' | 'lb'): number | null {
-  if (!value) return null;
+function convertWeight(value: number | undefined, unit: 'kg' | 'lb' | undefined): number | null {
+  if (value === undefined || value === null || value === 0) return null;
   if (unit === 'lb') {
     // Convert pounds to kg
     return Math.round(value * 0.453592 * 10) / 10;
   }
   return value;
+}
+
+function parseDateOnly(value: string): Date {
+  return new Date(`${value}T00:00:00.000Z`);
 }
 
 export { profileRoutes };

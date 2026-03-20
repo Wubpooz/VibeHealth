@@ -274,6 +274,67 @@ describe('POST /profile', () => {
     expect(userUpdateSpy).not.toHaveBeenCalled();
   });
 
+  it('returns 400 for invalid dateOfBirth', async () => {
+    const app = buildApp();
+    const res = await postProfile(app, {
+      dateOfBirth: 'not-a-date',
+      height: 175,
+      heightUnit: 'cm',
+      weight: 70,
+      weightUnit: 'kg',
+    });
+    const body: any = await res.json();
+
+    expect(res.status).toBe(400);
+    expect(body.error).toBe('Invalid profile payload');
+    expect(upsertSpy).not.toHaveBeenCalled();
+  });
+
+  it('returns 400 when goals is not an array', async () => {
+    const app = buildApp();
+    const res = await postProfile(app, {
+      goals: 'weight_loss',
+      height: 175,
+      heightUnit: 'cm',
+      weight: 70,
+      weightUnit: 'kg',
+    });
+    const body: any = await res.json();
+
+    expect(res.status).toBe(400);
+    expect(body.error).toBe('Invalid profile payload');
+    expect(upsertSpy).not.toHaveBeenCalled();
+  });
+
+  it('returns 400 when height is provided without heightUnit', async () => {
+    const app = buildApp();
+    const res = await postProfile(app, {
+      height: 175,
+      weight: 70,
+      weightUnit: 'kg',
+    });
+    const body: any = await res.json();
+
+    expect(res.status).toBe(400);
+    expect(body.error).toBe('Invalid profile payload');
+    expect(upsertSpy).not.toHaveBeenCalled();
+  });
+
+  it('returns 400 for negative weight', async () => {
+    const app = buildApp();
+    const res = await postProfile(app, {
+      height: 175,
+      heightUnit: 'cm',
+      weight: -10,
+      weightUnit: 'kg',
+    });
+    const body: any = await res.json();
+
+    expect(res.status).toBe(400);
+    expect(body.error).toBe('Invalid profile payload');
+    expect(upsertSpy).not.toHaveBeenCalled();
+  });
+
   // ── Error handling ─────────────────────────────────────────────────────────
 
   it('returns 500 when Prisma upsert throws', async () => {

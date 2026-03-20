@@ -3,20 +3,34 @@ import { Router, type CanActivateFn } from '@angular/router';
 import { AuthService } from './auth.service';
 
 const AUTH_LOAD_TIMEOUT = 10000; // 10 seconds max wait
+const AUTH_POLL_INTERVAL = 50;
+let pendingAuthReadyCheck: Promise<void> | null = null;
 
 // Helper to wait for auth service to finish loading
 function waitForAuthReady(auth: AuthService): Promise<void> {
   if (!auth.isLoading()) return Promise.resolve();
 
-  return new Promise((resolve) => {
+  if (pendingAuthReadyCheck) {
+    return pendingAuthReadyCheck;
+  }
+
+  pendingAuthReadyCheck = new Promise((resolve) => {
     const startTime = Date.now();
-    const checkLoading = setInterval(() => {
+
+    const poll = () => {
       if (!auth.isLoading() || Date.now() - startTime > AUTH_LOAD_TIMEOUT) {
-        clearInterval(checkLoading);
+        pendingAuthReadyCheck = null;
         resolve();
+        return;
       }
-    }, 50);
+
+      setTimeout(poll, AUTH_POLL_INTERVAL);
+    };
+
+    poll();
   });
+
+  return pendingAuthReadyCheck;
 }
 
 // Guard for routes that require authentication

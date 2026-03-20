@@ -21,6 +21,7 @@ FROM base AS builder
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
+RUN bun run db:generate
 RUN bun run build
 
 # Production stage

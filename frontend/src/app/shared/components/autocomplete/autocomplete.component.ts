@@ -17,6 +17,11 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Subject, debounceTime, distinctUntilChanged } from 'rxjs';
 
+interface HighlightPart {
+  text: string;
+  isMatch: boolean;
+}
+
 @Component({
   selector: 'app-autocomplete',
   standalone: true,
@@ -119,7 +124,11 @@ import { Subject, debounceTime, distinctUntilChanged } from 'rxjs';
                 tabindex="-1"
                 [attr.aria-selected]="isSelected(suggestion)"
               >
-                <span [innerHTML]="highlightMatch(suggestion)"></span>
+                <span>
+                  @for (part of getHighlightParts(suggestion); track $index) {
+                    <span [class.match-highlight]="part.isMatch">{{ part.text }}</span>
+                  }
+                </span>
                 @if (isSelected(suggestion)) {
                   <svg viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4 check-icon">
                     <path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z" clip-rule="evenodd"/>
@@ -392,7 +401,7 @@ import { Subject, debounceTime, distinctUntilChanged } from 'rxjs';
     }
 
     /* Highlight match styling */
-    :host ::ng-deep .match-highlight {
+    .match-highlight {
       background: #fef08a;
       border-radius: 2px;
       padding: 0 1px;
@@ -491,7 +500,7 @@ import { Subject, debounceTime, distinctUntilChanged } from 'rxjs';
       color: #fb7185;
     }
 
-    :host-context(.dark) :host ::ng-deep .match-highlight {
+    :host-context(.dark) .match-highlight {
       background: rgba(250, 204, 21, 0.3);
     }
 
@@ -741,12 +750,20 @@ export class AutocompleteComponent implements AfterViewInit, OnDestroy {
     return this.selectedItems.includes(item);
   }
 
-  highlightMatch(text: string): string {
+  getHighlightParts(text: string): HighlightPart[] {
     const query = this.debouncedQuery().trim();
-    if (!query) return text;
+    if (!query) return [{ text, isMatch: false }];
 
     const regex = new RegExp(`(${this.escapeRegex(query)})`, 'gi');
-    return text.replace(regex, '<span class="match-highlight">$1</span>');
+    const normalizedQuery = query.toLowerCase();
+
+    return text
+      .split(regex)
+      .filter((part) => part.length > 0)
+      .map((part) => ({
+        text: part,
+        isMatch: part.toLowerCase() === normalizedQuery,
+      }));
   }
 
   private escapeRegex(str: string): string {
