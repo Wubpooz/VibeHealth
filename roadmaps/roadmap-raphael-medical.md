@@ -11,8 +11,10 @@
 
 ## Milestone 1: First Aid & Guides (Offline First)
 - [x] Configure Angular Service Workers to forcefully cache First Aid content.
-- [x] Build offline-first, quick-reference First Aid cards UI (burns, CPR, choking).
-- [ ] Implement an offline-accessible local helpline directory (one-tap call links). **Ensure helpline numbers and help websites are internationalized per region**.
+- [x] Build offline-first, quick-reference First Aid cards UI representing 8 emergency procedures (CPR, Choking, Burns, etc.).
+- [ ] Implement severity tiers (🚨 Critical / ⚠️ Urgent / 💙 Moderate) with color-coded cards, keyword search, and severity filter pills.
+- [ ] Add expandable step-by-step accordions with numbered steps.
+- [ ] Implement an offline-accessible local helpline directory (one-tap call links) including a sticky emergency call button always in the header. **Ensure helpline numbers and help websites are internationalized per region**.
 - [ ] Integrate a condition library and markdown document renderer for health articles.
 
 ## Milestone 2: Medication & Reminders

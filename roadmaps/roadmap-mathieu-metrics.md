@@ -12,8 +12,9 @@
 ## Milestone 1: Hydration & Vitals Foundation
 - [ ] Add `VITAL_LOG` and `HYDRATION_LOG` to `schema.prisma`.
 - [ ] Create Hono CRUD routes for logging vitals (heart rate, sleep, BP, steps) and water intake.
-- [ ] Build Frontend Quick-log buttons for Hydration (glass, bottle, custom amount).
-- [ ] Implement Vitals Dashboard cards for displaying the latest logged metrics.
+- [ ] Build Frontend Quick-log buttons for Hydration (with animated progress bar, per-glass buttons, and logic to award +1/+5 🥕 per drink).
+- [ ] Implement Vitals Dashboard components: time-of-day greeting (with user's first name), stats grid (streak/level/carrots), level XP progress bar, and recent carrot activity feed.
+- [ ] Add Quick-action grid to dashboard (Medical ID, First Aid, Journal, Profile) with gradient icon tiles.
 
 ## Milestone 2: Activity & Nutrition
 - [ ] Add `ACTIVITY_LOG` and `MEAL_LOG` to `schema.prisma`.
