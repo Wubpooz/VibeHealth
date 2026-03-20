@@ -36,7 +36,7 @@ export const guestGuard: CanActivateFn = async () => {
 
   await waitForAuthReady(auth);
 
-  return !auth.isAuthenticated() ? true : router.createUrlTree(['/dashboard']);
+  return auth.isAuthenticated() ? router.createUrlTree(['/dashboard']) : true;
 };
 
 // Guard for routes that require email verification

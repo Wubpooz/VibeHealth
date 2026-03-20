@@ -10,13 +10,16 @@ import { CommonModule } from '@angular/common';
       <div 
         class="modal-backdrop"
         [class.closing]="isClosing()"
+        role="presentation"
         (click)="onBackdropClick()"
+        (keydown.escape)="onBackdropClick()"
       >
         <div 
           class="modal-container"
           [class]="'modal-' + size"
           [class.closing]="isClosing()"
           (click)="$event.stopPropagation()"
+          (keydown)="$event.stopPropagation()"
           role="dialog"
           [attr.aria-modal]="true"
           [attr.aria-labelledby]="title ? 'modal-title' : null"

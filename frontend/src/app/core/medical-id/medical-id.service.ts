@@ -9,18 +9,18 @@ export class MedicalIdService {
   private readonly http = inject(HttpClient);
   private readonly profileService = inject(ProfileService);
   private readonly authService = inject(AuthService);
-  
+
   private readonly _medicalId = signal<MedicalIdData | null>(null);
   private readonly _loading = signal(false);
   private readonly _error = signal<string | null>(null);
-  
+
   // Public signals
   readonly medicalId = this._medicalId.asReadonly();
   readonly loading = this._loading.asReadonly();
   readonly error = this._error.asReadonly();
-  
+
   readonly hasMedicalId = computed(() => this._medicalId() !== null);
-  
+
   // Quick-access critical info
   readonly criticalInfo = computed(() => {
     const data = this._medicalId();
@@ -39,12 +39,12 @@ export class MedicalIdService {
   async loadMedicalId(): Promise<void> {
     this._loading.set(true);
     this._error.set(null);
-    
+
     try {
       const response = await this.http.get<{ medicalId: MedicalIdData | null }>('/api/v1/medical-id', {
         withCredentials: true
       }).toPromise();
-      
+
       if (response?.medicalId) {
         this._medicalId.set({
           ...response.medicalId,
@@ -71,12 +71,12 @@ export class MedicalIdService {
   async saveMedicalId(data: Partial<MedicalIdData>): Promise<boolean> {
     this._loading.set(true);
     this._error.set(null);
-    
+
     try {
       const response = await this.http.post<{ medicalId: MedicalIdData }>('/api/v1/medical-id', data, {
         withCredentials: true
       }).toPromise();
-      
+
       if (response?.medicalId) {
         this._medicalId.set({
           ...response.medicalId,
@@ -110,7 +110,7 @@ export class MedicalIdService {
       ...contact,
       id: crypto.randomUUID(),
     };
-    
+
     const contacts = [...(current?.emergencyContacts || []), newContact];
     return this.saveMedicalId({ emergencyContacts: contacts });
   }
@@ -121,7 +121,7 @@ export class MedicalIdService {
   async removeEmergencyContact(contactId: string): Promise<boolean> {
     const current = this._medicalId();
     if (!current) return false;
-    
+
     const contacts = current.emergencyContacts.filter(c => c.id !== contactId);
     return this.saveMedicalId({ emergencyContacts: contacts });
   }
@@ -132,7 +132,7 @@ export class MedicalIdService {
   generateQRData(): string {
     const data = this._medicalId();
     if (!data) return '';
-    
+
     // Compact emergency data for QR
     const qrData = {
       n: data.name,
@@ -145,7 +145,7 @@ export class MedicalIdService {
         p: c.phone
       }))
     };
-    
+
     return JSON.stringify(qrData);
   }
 
@@ -155,14 +155,14 @@ export class MedicalIdService {
   private async buildFromProfile(): Promise<void> {
     const profile = this.profileService.profile();
     if (!profile) return;
-    
+
     // Get user name from auth service
     const user = this.authService.user();
-    
+
     // Calculate age from DOB
     const dob = profile.dateOfBirth ? new Date(profile.dateOfBirth) : null;
     const age = dob ? this.calculateAge(dob) : 0;
-    
+
     const medicalId: MedicalIdData = {
       name: user?.name || '',
       dateOfBirth: profile.dateOfBirth || '',
@@ -174,7 +174,7 @@ export class MedicalIdService {
       emergencyContacts: [],
       lastUpdated: new Date(),
     };
-    
+
     this._medicalId.set(medicalId);
   }
 

@@ -32,6 +32,7 @@
     "CONFIRM_PASSWORD": "Confirm Password",
     "NAME": "Name",
     "NAME_OPTIONAL": "Name (optional)",
+    "NAME_REQUIRED": "Name is required",
     "YOUR_NAME": "Your name",
     "ENTER_EMAIL": "Enter your email",
     "FORGOT_PASSWORD": "Forgot password?",
@@ -58,6 +59,21 @@
     "CONTINUE_WITH_GOOGLE": "Continue with Google",
     "CONTINUE_WITH_GITHUB": "Continue with GitHub",
     "CONTINUE_WITH_APPLE": "Continue with Apple"
+  },
+  "LANDING": {
+    "HERO_TITLE": "Your Personal Health Companion",
+    "HERO_SUBTITLE": "Meet your friendly bunny health buddy who helps you track wellness, manage medical info, and build healthy habits — all in one beautiful app.",
+    "GET_STARTED": "Get Started",
+    "SIGN_IN": "Sign In",
+    "FEATURES_TITLE": "Everything you need for better health",
+    "FEATURE_MEDICAL_ID": "Medical ID",
+    "FEATURE_MEDICAL_ID_DESC": "Keep your emergency health info accessible, even offline",
+    "FEATURE_REWARDS": "Carrot Rewards",
+    "FEATURE_REWARDS_DESC": "Earn carrots for healthy habits and watch your bunny thrive",
+    "FEATURE_FIRST_AID": "First Aid Guide",
+    "FEATURE_FIRST_AID_DESC": "Quick reference for emergencies, works without internet",
+    "FEATURE_DASHBOARD": "Personal Dashboard",
+    "FEATURE_DASHBOARD_DESC": "Track your health journey with personalized insights"
   },
   "DASHBOARD": {
     "WELCOME": "Welcome to VibeHealth!",

@@ -32,6 +32,7 @@
     "CONFIRM_PASSWORD": "Confirmer le mot de passe",
     "NAME": "Nom",
     "NAME_OPTIONAL": "Nom (optionnel)",
+    "NAME_REQUIRED": "Le nom est obligatoire",
     "YOUR_NAME": "Votre nom",
     "ENTER_EMAIL": "Entrez votre email",
     "FORGOT_PASSWORD": "Mot de passe oublié ?",
@@ -58,6 +59,21 @@
     "CONTINUE_WITH_GOOGLE": "Continuer avec Google",
     "CONTINUE_WITH_GITHUB": "Continuer avec GitHub",
     "CONTINUE_WITH_APPLE": "Continuer avec Apple"
+  },
+  "LANDING": {
+    "HERO_TITLE": "Votre Compagnon Santé Personnel",
+    "HERO_SUBTITLE": "Découvrez votre sympathique lapin compagnon santé qui vous aide à suivre votre bien-être, gérer vos infos médicales et construire de bonnes habitudes — tout dans une belle application.",
+    "GET_STARTED": "Commencer",
+    "SIGN_IN": "Se connecter",
+    "FEATURES_TITLE": "Tout ce dont vous avez besoin pour une meilleure santé",
+    "FEATURE_MEDICAL_ID": "Carte Médicale",
+    "FEATURE_MEDICAL_ID_DESC": "Gardez vos infos de santé d'urgence accessibles, même hors ligne",
+    "FEATURE_REWARDS": "Récompenses Carottes",
+    "FEATURE_REWARDS_DESC": "Gagnez des carottes pour vos bonnes habitudes et regardez votre lapin s'épanouir",
+    "FEATURE_FIRST_AID": "Guide Premiers Secours",
+    "FEATURE_FIRST_AID_DESC": "Référence rapide pour les urgences, fonctionne sans internet",
+    "FEATURE_DASHBOARD": "Tableau de Bord Personnel",
+    "FEATURE_DASHBOARD_DESC": "Suivez votre parcours santé avec des insights personnalisés"
   },
   "DASHBOARD": {
     "WELCOME": "Bienvenue sur VibeHealth !",

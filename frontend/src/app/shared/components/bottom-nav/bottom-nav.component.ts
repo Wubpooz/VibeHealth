@@ -17,14 +17,14 @@ export interface NavItem {
   template: `
     <nav class="bottom-nav" [class.hidden]="hidden()">
       <!-- Active indicator pill -->
-      <div 
-        class="active-pill" 
+      <div
+        class="active-pill"
         [style.left.%]="activePillPosition()"
         [style.opacity]="showPill() ? 1 : 0"
       ></div>
-      
+
       @for (item of items; track item.id; let i = $index) {
-        <a 
+        <a
           class="nav-item"
           [routerLink]="item.route"
           routerLinkActive="active"
@@ -72,7 +72,7 @@ export interface NavItem {
                 </svg>
               }
             }
-            
+
             <!-- Badge -->
             @if (item.badge && item.badge > 0) {
               <span class="badge">{{ item.badge > 99 ? '99+' : item.badge }}</span>
@@ -102,11 +102,11 @@ export interface NavItem {
       box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.05);
       transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
-    
+
     .bottom-nav.hidden {
       transform: translateY(100%);
     }
-    
+
     /* Active pill indicator */
     .active-pill {
       position: absolute;
@@ -118,7 +118,7 @@ export interface NavItem {
       transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
       box-shadow: 0 2px 8px rgba(244, 63, 94, 0.4);
     }
-    
+
     .nav-item {
       display: flex;
       flex-direction: column;
@@ -132,15 +132,15 @@ export interface NavItem {
       position: relative;
       min-width: 60px;
     }
-    
+
     .nav-item.active {
       color: #f43f5e;
     }
-    
+
     .nav-item:active {
       transform: scale(0.95);
     }
-    
+
     .nav-icon-wrapper {
       position: relative;
       width: 28px;
@@ -149,29 +149,29 @@ export interface NavItem {
       align-items: center;
       justify-content: center;
     }
-    
+
     .nav-icon {
       width: 24px;
       height: 24px;
       transition: all 0.2s ease;
     }
-    
+
     .nav-item.active .nav-icon {
       transform: scale(1.1);
       stroke-width: 2.5;
     }
-    
+
     .nav-label {
       font-size: 0.625rem;
       font-weight: 600;
       letter-spacing: 0.02em;
       transition: all 0.2s ease;
     }
-    
+
     .nav-item.active .nav-label {
       font-weight: 700;
     }
-    
+
     /* Badge */
     .badge {
       position: absolute;
@@ -191,26 +191,26 @@ export interface NavItem {
       box-shadow: 0 2px 6px rgba(244, 63, 94, 0.4);
       animation: badge-pulse 2s ease-in-out infinite;
     }
-    
+
     @keyframes badge-pulse {
       0%, 100% { transform: scale(1); }
       50% { transform: scale(1.05); }
     }
-    
+
     /* Dark mode */
     :host-context(.dark) .bottom-nav {
       background: rgba(17, 17, 17, 0.95);
       border-color: rgba(255, 255, 255, 0.06);
     }
-    
+
     :host-context(.dark) .nav-item {
       color: #6B7280;
     }
-    
+
     :host-context(.dark) .nav-item.active {
       color: #fb7185;
     }
-    
+
     /* Responsive adjustments */
     @media (min-width: 768px) {
       .bottom-nav {
@@ -223,26 +223,26 @@ export class BottomNavComponent {
   @Input() items: NavItem[] = [];
   @Input() hidden = signal(false);
   @Output() navigate = new EventEmitter<NavItem>();
-  
+
   private router = inject(Router);
-  
-  private activeIndex = signal(0);
-  
+
+  private readonly activeIndex = signal(0);
+
   readonly showPill = signal(false);
-  
+
   readonly activePillPosition = () => {
     const count = this.items.length || 1;
     const index = this.activeIndex();
     const itemWidth = 100 / count;
     return (index * itemWidth) + (itemWidth / 2) - (itemWidth / 2);
   };
-  
+
   onItemClick(index: number) {
     this.activeIndex.set(index);
     this.showPill.set(true);
     this.navigate.emit(this.items[index]);
   }
-  
+
   constructor() {
     // Show pill after a brief delay for initial render
     setTimeout(() => this.showPill.set(true), 100);

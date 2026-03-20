@@ -47,5 +47,6 @@ export type OAuthProvider = 'google' | 'github' | 'apple';
 export class SocialButtonsComponent {
   providers = input<OAuthProvider[]>(['google', 'github']);
   loading = input(false);
+  // eslint-disable-next-line @angular-eslint/no-output-on-prefix
   onProviderClick = output<OAuthProvider>();
 }

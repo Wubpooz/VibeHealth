@@ -134,7 +134,7 @@ export class AuthService {
   }
 
   getOAuthUrl(provider: 'google' | 'github' | 'apple'): string {
-    const callbackUrl = encodeURIComponent(window.location.origin + '/dashboard');
+    const callbackUrl = encodeURIComponent(globalThis.location.origin + '/dashboard');
     return `${this.apiUrl}/sign-in/social/${provider}?callbackURL=${callbackUrl}`;
   }
 

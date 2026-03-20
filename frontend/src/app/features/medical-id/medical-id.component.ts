@@ -31,7 +31,7 @@ type ViewMode = 'card' | 'edit';
             </div>
             <h1>{{ 'MEDICAL_ID.TITLE' | translate }}</h1>
           </div>
-          <button 
+          <button
             class="mode-toggle"
             (click)="toggleMode()"
             [attr.aria-label]="viewMode() === 'card' ? 'Edit' : 'View card'"
@@ -151,12 +151,12 @@ type ViewMode = 'card' | 'edit';
                 </svg>
                 Emergency Contacts
               </h3>
-              
+
               @if ((medicalIdData()?.emergencyContacts?.length || 0) > 0) {
                 <div class="contacts-grid">
                   @for (contact of medicalIdData()?.emergencyContacts; track contact.id) {
-                    <a 
-                      [href]="'tel:' + contact.phone" 
+                    <a
+                      [href]="'tel:' + contact.phone"
                       class="contact-card"
                       [class.primary]="contact.isPrimary"
                     >
@@ -181,12 +181,17 @@ type ViewMode = 'card' | 'edit';
             <!-- QR Code Section -->
             <div class="qr-section">
               <div class="qr-wrapper">
-                <div class="qr-placeholder" (click)="showQR.set(true)">
+                <button
+                  type="button"
+                  class="qr-placeholder"
+                  (click)="showQR.set(true)"
+                  aria-label="View QR Code"
+                >
                   <svg class="qr-icon" viewBox="0 0 24 24" fill="currentColor">
                     <path d="M3 3h6v6H3V3zm2 2v2h2V5H5zm8-2h6v6h-6V3zm2 2v2h2V5h-2zM3 13h6v6H3v-6zm2 2v2h2v-2H5zm13-2h3v2h-3v-2zm-5 0h2v3h-2v-3zm2 3h3v3h-2v-1h-1v-2zm3 0h2v2h-2v-2zm-2-3h2v2h-2v-2zm2 5v1h-3v-1h3zm-5 1v-1h2v1h-2z"/>
                   </svg>
                   <span>Tap for QR</span>
-                </div>
+                </button>
               </div>
               <p class="qr-hint">Scan to access emergency info</p>
             </div>
@@ -206,7 +211,7 @@ type ViewMode = 'card' | 'edit';
               <h3 class="section-label">Blood Type</h3>
               <div class="blood-type-grid">
                 @for (type of bloodTypes; track type) {
-                  <button 
+                  <button
                     class="blood-type-btn"
                     [class.selected]="editData.bloodType === type"
                     (click)="editData.bloodType = type"
@@ -229,7 +234,7 @@ type ViewMode = 'card' | 'edit';
                   }
                 </div>
                 <div class="input-row">
-                  <input 
+                  <input
                     type="text"
                     [(ngModel)]="newAllergy"
                     placeholder="Add allergy..."
@@ -255,7 +260,7 @@ type ViewMode = 'card' | 'edit';
                   }
                 </div>
                 <div class="input-row">
-                  <input 
+                  <input
                     type="text"
                     [(ngModel)]="newMedication"
                     placeholder="Add medication..."
@@ -271,7 +276,7 @@ type ViewMode = 'card' | 'edit';
 
             <section class="form-section">
               <h3 class="section-label">Emergency Contacts</h3>
-              
+
               @for (contact of editData.emergencyContacts; track contact.id) {
                 <div class="contact-edit-card">
                   <div class="contact-edit-header">
@@ -287,8 +292,8 @@ type ViewMode = 'card' | 'edit';
                     <span class="contact-edit-phone">{{ contact.phone }}</span>
                   </div>
                   <label class="primary-toggle">
-                    <input 
-                      type="checkbox" 
+                    <input
+                      type="checkbox"
                       [checked]="contact.isPrimary"
                       (change)="setPrimaryContact(contact.id)"
                     />
@@ -301,13 +306,13 @@ type ViewMode = 'card' | 'edit';
               <div class="add-contact-form">
                 <h4>Add Contact</h4>
                 <div class="contact-inputs">
-                  <input 
+                  <input
                     type="text"
                     [(ngModel)]="newContact.name"
                     placeholder="Name"
                     class="contact-input"
                   />
-                  <select 
+                  <select
                     [(ngModel)]="newContact.relationship"
                     class="contact-select"
                   >
@@ -316,13 +321,13 @@ type ViewMode = 'card' | 'edit';
                       <option [value]="rel">{{ rel }}</option>
                     }
                   </select>
-                  <input 
+                  <input
                     type="tel"
                     [(ngModel)]="newContact.phone"
                     placeholder="Phone number"
                     class="contact-input"
                   />
-                  <button 
+                  <button
                     class="add-contact-btn"
                     (click)="addContact()"
                     [disabled]="!canAddContact()"
@@ -337,7 +342,7 @@ type ViewMode = 'card' | 'edit';
             </section>
 
             <!-- Save Button -->
-            <button 
+            <button
               class="save-btn"
               (click)="saveChanges()"
               [disabled]="saving()"
@@ -355,10 +360,28 @@ type ViewMode = 'card' | 'edit';
 
       <!-- QR Modal -->
       @if (showQR()) {
-        <div class="qr-modal" (click)="showQR.set(false)">
-          <div class="qr-modal-content" (click)="$event.stopPropagation()">
-            <button class="qr-close" (click)="showQR.set(false)">×</button>
-            <h3>Emergency QR Code</h3>
+        <div
+          class="qr-modal"
+          role="presentation"
+          (click)="showQR.set(false)"
+          (keydown.escape)="showQR.set(false)"
+        >
+          <div
+            class="qr-modal-content"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="qr-modal-title"
+            (click)="$event.stopPropagation()"
+            (keydown)="$event.stopPropagation()"
+          >
+            <button
+              class="qr-close"
+              (click)="showQR.set(false)"
+              aria-label="Close QR Modal"
+            >
+              ×
+            </button>
+            <h3 id="qr-modal-title">Emergency QR Code</h3>
             <div class="qr-large">
               <!-- Simple QR placeholder - in production, use a QR library -->
               <svg class="qr-svg" viewBox="0 0 200 200" fill="currentColor">
@@ -406,12 +429,12 @@ type ViewMode = 'card' | 'edit';
        Bold reds, stark whites, high contrast
        Designed for quick scanning in emergencies
        ========================================= */
-    
+
     .medical-id-page {
       min-height: 100vh;
       background: linear-gradient(180deg, #FEF2F2 0%, #FAFAFA 50%);
     }
-    
+
     /* Emergency Header */
     .emergency-header {
       background: linear-gradient(135deg, #DC2626 0%, #B91C1C 100%);
@@ -421,7 +444,7 @@ type ViewMode = 'card' | 'edit';
       z-index: 50;
       box-shadow: 0 4px 20px rgba(185, 28, 28, 0.3);
     }
-    
+
     .header-content {
       display: flex;
       align-items: center;
@@ -429,7 +452,7 @@ type ViewMode = 'card' | 'edit';
       max-width: 600px;
       margin: 0 auto;
     }
-    
+
     .back-link {
       display: flex;
       align-items: center;
@@ -441,44 +464,44 @@ type ViewMode = 'card' | 'edit';
       color: white;
       transition: all 0.2s;
     }
-    
+
     .back-link:hover {
       background: rgba(255,255,255,0.25);
       transform: translateX(-2px);
     }
-    
+
     .header-title {
       display: flex;
       align-items: center;
       gap: 0.75rem;
     }
-    
+
     .medical-cross {
       position: relative;
       width: 28px;
       height: 28px;
     }
-    
+
     .cross-h, .cross-v {
       position: absolute;
       background: white;
       border-radius: 2px;
     }
-    
+
     .cross-h {
       width: 100%;
       height: 8px;
       top: 50%;
       transform: translateY(-50%);
     }
-    
+
     .cross-v {
       width: 8px;
       height: 100%;
       left: 50%;
       transform: translateX(-50%);
     }
-    
+
     .header-title h1 {
       font-family: 'Outfit', sans-serif;
       font-size: 1.25rem;
@@ -486,7 +509,7 @@ type ViewMode = 'card' | 'edit';
       color: white;
       letter-spacing: -0.02em;
     }
-    
+
     .mode-toggle {
       display: flex;
       align-items: center;
@@ -500,35 +523,35 @@ type ViewMode = 'card' | 'edit';
       cursor: pointer;
       transition: all 0.2s;
     }
-    
+
     .mode-toggle:hover {
       background: rgba(255,255,255,0.25);
     }
-    
+
     /* Main Content */
     .main-content {
       max-width: 600px;
       margin: 0 auto;
       padding: 1.5rem 1rem 6rem;
     }
-    
+
     /* Emergency Card */
     .emergency-card {
       background: white;
       border-radius: 24px;
       overflow: hidden;
-      box-shadow: 
+      box-shadow:
         0 4px 6px rgba(0,0,0,0.05),
         0 20px 40px rgba(185, 28, 28, 0.1);
       border: 2px solid #FEE2E2;
     }
-    
+
     .card-header {
       position: relative;
       padding: 1.5rem;
       background: linear-gradient(135deg, #FEF2F2 0%, #FFF 100%);
     }
-    
+
     .alert-stripe {
       position: absolute;
       top: 0;
@@ -543,20 +566,20 @@ type ViewMode = 'card' | 'edit';
         #FEE2E2 40px
       );
     }
-    
+
     .card-identity {
       display: flex;
       align-items: center;
       gap: 1rem;
       margin-top: 0.5rem;
     }
-    
+
     .avatar-ring {
       padding: 3px;
       border-radius: 50%;
       background: linear-gradient(135deg, #DC2626, #F87171);
     }
-    
+
     .avatar {
       width: 64px;
       height: 64px;
@@ -571,11 +594,11 @@ type ViewMode = 'card' | 'edit';
       color: #DC2626;
       border: 3px solid white;
     }
-    
+
     .identity-info {
       flex: 1;
     }
-    
+
     .name {
       font-family: 'Outfit', sans-serif;
       font-size: 1.5rem;
@@ -583,25 +606,25 @@ type ViewMode = 'card' | 'edit';
       color: #1F2937;
       margin: 0;
     }
-    
+
     .age-dob {
       font-size: 0.875rem;
       color: #6B7280;
       margin: 0.25rem 0 0;
     }
-    
+
     .separator {
       margin: 0 0.5rem;
       opacity: 0.5;
     }
-    
+
     /* Critical Section */
     .critical-section {
       padding: 1.25rem;
       display: grid;
       gap: 1rem;
     }
-    
+
     .blood-type-display {
       background: linear-gradient(135deg, #DC2626 0%, #B91C1C 100%);
       border-radius: 16px;
@@ -611,11 +634,11 @@ type ViewMode = 'card' | 'edit';
       justify-content: space-between;
       box-shadow: 0 4px 12px rgba(185, 28, 28, 0.25);
     }
-    
+
     .blood-type-display.empty {
       background: linear-gradient(135deg, #9CA3AF 0%, #6B7280 100%);
     }
-    
+
     .blood-type-display .label {
       font-size: 0.875rem;
       font-weight: 600;
@@ -623,7 +646,7 @@ type ViewMode = 'card' | 'edit';
       text-transform: uppercase;
       letter-spacing: 0.05em;
     }
-    
+
     .blood-type-display .value {
       font-family: 'Outfit', sans-serif;
       font-size: 2.5rem;
@@ -631,7 +654,7 @@ type ViewMode = 'card' | 'edit';
       color: white;
       letter-spacing: -0.02em;
     }
-    
+
     /* Alert Box (Allergies) */
     .alert-box {
       background: #FEF2F2;
@@ -639,25 +662,25 @@ type ViewMode = 'card' | 'edit';
       border-radius: 16px;
       padding: 1rem;
     }
-    
+
     .alert-box.has-items {
       border-color: #F87171;
       background: linear-gradient(135deg, #FEF2F2 0%, #FEE2E2 100%);
     }
-    
+
     .alert-header {
       display: flex;
       align-items: center;
       gap: 0.5rem;
       margin-bottom: 0.75rem;
     }
-    
+
     .alert-icon {
       width: 20px;
       height: 20px;
       color: #DC2626;
     }
-    
+
     .alert-header span {
       font-weight: 700;
       font-size: 0.875rem;
@@ -665,13 +688,13 @@ type ViewMode = 'card' | 'edit';
       text-transform: uppercase;
       letter-spacing: 0.03em;
     }
-    
+
     .alert-content {
       display: flex;
       flex-wrap: wrap;
       gap: 0.5rem;
     }
-    
+
     /* Info Box (Medications, Conditions) */
     .info-box {
       background: #F9FAFB;
@@ -679,20 +702,20 @@ type ViewMode = 'card' | 'edit';
       border-radius: 16px;
       padding: 1rem;
     }
-    
+
     .info-header {
       display: flex;
       align-items: center;
       gap: 0.5rem;
       margin-bottom: 0.75rem;
     }
-    
+
     .info-icon {
       width: 18px;
       height: 18px;
       color: #6B7280;
     }
-    
+
     .info-header span {
       font-weight: 600;
       font-size: 0.8rem;
@@ -700,13 +723,13 @@ type ViewMode = 'card' | 'edit';
       text-transform: uppercase;
       letter-spacing: 0.03em;
     }
-    
+
     .info-content {
       display: flex;
       flex-wrap: wrap;
       gap: 0.5rem;
     }
-    
+
     /* Tags */
     .tag {
       display: inline-flex;
@@ -715,37 +738,37 @@ type ViewMode = 'card' | 'edit';
       font-size: 0.8125rem;
       font-weight: 600;
     }
-    
+
     .allergy-tag {
       background: #FEE2E2;
       color: #B91C1C;
       border: 1px solid #FECACA;
     }
-    
+
     .med-tag {
       background: #DBEAFE;
       color: #1E40AF;
       border: 1px solid #BFDBFE;
     }
-    
+
     .condition-tag {
       background: #FEF3C7;
       color: #92400E;
       border: 1px solid #FDE68A;
     }
-    
+
     .none-listed {
       font-size: 0.875rem;
       color: #9CA3AF;
       font-style: italic;
     }
-    
+
     /* Contacts Section */
     .contacts-section {
       padding: 1.25rem;
       border-top: 1px solid #F3F4F6;
     }
-    
+
     .section-title {
       display: flex;
       align-items: center;
@@ -756,16 +779,16 @@ type ViewMode = 'card' | 'edit';
       color: #374151;
       margin: 0 0 1rem;
     }
-    
+
     .section-title svg {
       color: #6B7280;
     }
-    
+
     .contacts-grid {
       display: grid;
       gap: 0.75rem;
     }
-    
+
     .contact-card {
       display: flex;
       align-items: center;
@@ -777,45 +800,45 @@ type ViewMode = 'card' | 'edit';
       text-decoration: none;
       transition: all 0.2s;
     }
-    
+
     .contact-card:hover {
       background: #F3F4F6;
       border-color: #D1D5DB;
     }
-    
+
     .contact-card.primary {
       background: linear-gradient(135deg, #EFF6FF 0%, #DBEAFE 100%);
       border-color: #93C5FD;
     }
-    
+
     .contact-info {
       display: flex;
       flex-direction: column;
       gap: 0.125rem;
     }
-    
+
     .contact-name {
       font-weight: 700;
       color: #1F2937;
     }
-    
+
     .contact-relation {
       font-size: 0.75rem;
       color: #6B7280;
     }
-    
+
     .contact-action {
       display: flex;
       align-items: center;
       gap: 0.75rem;
     }
-    
+
     .phone {
       font-size: 0.875rem;
       font-weight: 600;
       color: #374151;
     }
-    
+
     .call-icon {
       width: 24px;
       height: 24px;
@@ -824,14 +847,14 @@ type ViewMode = 'card' | 'edit';
       color: white;
       border-radius: 6px;
     }
-    
+
     .no-contacts {
       text-align: center;
       color: #9CA3AF;
       font-size: 0.875rem;
       padding: 1rem;
     }
-    
+
     /* QR Section */
     .qr-section {
       padding: 1.25rem;
@@ -841,12 +864,12 @@ type ViewMode = 'card' | 'edit';
       align-items: center;
       gap: 0.75rem;
     }
-    
+
     .qr-wrapper {
       width: 80px;
       height: 80px;
     }
-    
+
     .qr-placeholder {
       width: 100%;
       height: 100%;
@@ -860,31 +883,33 @@ type ViewMode = 'card' | 'edit';
       cursor: pointer;
       transition: all 0.2s;
       background: #F9FAFB;
+      padding: 0;
+      font-family: inherit;
     }
-    
+
     .qr-placeholder:hover {
       border-color: #9CA3AF;
       background: #F3F4F6;
     }
-    
+
     .qr-icon {
       width: 32px;
       height: 32px;
       color: #6B7280;
     }
-    
+
     .qr-placeholder span {
       font-size: 0.625rem;
       color: #6B7280;
       font-weight: 600;
     }
-    
+
     .qr-hint {
       font-size: 0.75rem;
       color: #9CA3AF;
       margin: 0;
     }
-    
+
     /* Offline Badge */
     .offline-badge {
       display: flex;
@@ -897,7 +922,7 @@ type ViewMode = 'card' | 'edit';
       font-size: 0.75rem;
       font-weight: 600;
     }
-    
+
     /* QR Modal */
     .qr-modal {
       position: fixed;
@@ -910,12 +935,12 @@ type ViewMode = 'card' | 'edit';
       padding: 1rem;
       animation: fadeIn 0.2s ease-out;
     }
-    
+
     @keyframes fadeIn {
       from { opacity: 0; }
       to { opacity: 1; }
     }
-    
+
     .qr-modal-content {
       background: white;
       border-radius: 24px;
@@ -926,12 +951,12 @@ type ViewMode = 'card' | 'edit';
       position: relative;
       animation: scaleIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
-    
+
     @keyframes scaleIn {
       from { transform: scale(0.9); opacity: 0; }
       to { transform: scale(1); opacity: 1; }
     }
-    
+
     .qr-close {
       position: absolute;
       top: 1rem;
@@ -946,12 +971,12 @@ type ViewMode = 'card' | 'edit';
       color: #6B7280;
       transition: all 0.2s;
     }
-    
+
     .qr-close:hover {
       background: #E5E7EB;
       color: #1F2937;
     }
-    
+
     .qr-modal-content h3 {
       font-family: 'Outfit', sans-serif;
       font-size: 1.25rem;
@@ -959,7 +984,7 @@ type ViewMode = 'card' | 'edit';
       color: #1F2937;
       margin: 0 0 1.5rem;
     }
-    
+
     .qr-large {
       width: 200px;
       height: 200px;
@@ -968,35 +993,35 @@ type ViewMode = 'card' | 'edit';
       border: 8px solid #1F2937;
       border-radius: 8px;
     }
-    
+
     .qr-svg {
       width: 100%;
       height: 100%;
     }
-    
+
     .qr-instructions {
       margin: 1.5rem 0 0;
       font-size: 0.875rem;
       color: #6B7280;
       line-height: 1.5;
     }
-    
+
     /* =========================================
        EDIT MODE STYLES
        ========================================= */
-    
+
     .edit-form {
       display: grid;
       gap: 1.5rem;
     }
-    
+
     .form-section {
       background: white;
       border-radius: 20px;
       padding: 1.25rem;
       box-shadow: 0 2px 8px rgba(0,0,0,0.04);
     }
-    
+
     .section-label {
       font-family: 'Outfit', sans-serif;
       font-size: 0.875rem;
@@ -1006,13 +1031,13 @@ type ViewMode = 'card' | 'edit';
       letter-spacing: 0.05em;
       margin: 0 0 1rem;
     }
-    
+
     .blood-type-grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       gap: 0.5rem;
     }
-    
+
     .blood-type-btn {
       padding: 0.875rem 0.5rem;
       border: 2px solid #E5E7EB;
@@ -1025,31 +1050,31 @@ type ViewMode = 'card' | 'edit';
       cursor: pointer;
       transition: all 0.2s;
     }
-    
+
     .blood-type-btn:hover {
       border-color: #D1D5DB;
       background: #F9FAFB;
     }
-    
+
     .blood-type-btn.selected {
       border-color: #DC2626;
       background: linear-gradient(135deg, #FEF2F2 0%, #FEE2E2 100%);
       color: #DC2626;
     }
-    
+
     .chip-input-container {
       display: flex;
       flex-direction: column;
       gap: 0.75rem;
     }
-    
+
     .chips {
       display: flex;
       flex-wrap: wrap;
       gap: 0.5rem;
       min-height: 32px;
     }
-    
+
     .chip {
       display: inline-flex;
       align-items: center;
@@ -1059,17 +1084,17 @@ type ViewMode = 'card' | 'edit';
       font-size: 0.8125rem;
       font-weight: 600;
     }
-    
+
     .allergy-chip {
       background: #FEE2E2;
       color: #B91C1C;
     }
-    
+
     .med-chip {
       background: #DBEAFE;
       color: #1E40AF;
     }
-    
+
     .chip-remove {
       width: 18px;
       height: 18px;
@@ -1084,16 +1109,16 @@ type ViewMode = 'card' | 'edit';
       justify-content: center;
       transition: background 0.2s;
     }
-    
+
     .chip-remove:hover {
       background: rgba(0,0,0,0.2);
     }
-    
+
     .input-row {
       display: flex;
       gap: 0.5rem;
     }
-    
+
     .chip-input {
       flex: 1;
       padding: 0.75rem 1rem;
@@ -1102,13 +1127,13 @@ type ViewMode = 'card' | 'edit';
       font-size: 0.9375rem;
       transition: all 0.2s;
     }
-    
+
     .chip-input:focus {
       outline: none;
       border-color: #DC2626;
       box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
     }
-    
+
     .add-btn {
       padding: 0.75rem 1.25rem;
       border: none;
@@ -1119,17 +1144,17 @@ type ViewMode = 'card' | 'edit';
       cursor: pointer;
       transition: all 0.2s;
     }
-    
+
     .add-btn:hover:not(:disabled) {
       transform: translateY(-1px);
       box-shadow: 0 4px 12px rgba(185, 28, 28, 0.3);
     }
-    
+
     .add-btn:disabled {
       opacity: 0.5;
       cursor: not-allowed;
     }
-    
+
     /* Contact Edit Cards */
     .contact-edit-card {
       padding: 1rem;
@@ -1138,19 +1163,19 @@ type ViewMode = 'card' | 'edit';
       border-radius: 12px;
       margin-bottom: 0.75rem;
     }
-    
+
     .contact-edit-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
       margin-bottom: 0.5rem;
     }
-    
+
     .contact-edit-name {
       font-weight: 700;
       color: #1F2937;
     }
-    
+
     .delete-contact {
       width: 32px;
       height: 32px;
@@ -1164,18 +1189,18 @@ type ViewMode = 'card' | 'edit';
       justify-content: center;
       transition: all 0.2s;
     }
-    
+
     .delete-contact:hover {
       background: #FECACA;
     }
-    
+
     .contact-edit-details {
       display: flex;
       gap: 1rem;
       font-size: 0.875rem;
       color: #6B7280;
     }
-    
+
     .primary-toggle {
       display: flex;
       align-items: center;
@@ -1185,32 +1210,32 @@ type ViewMode = 'card' | 'edit';
       color: #4B5563;
       cursor: pointer;
     }
-    
+
     .primary-toggle input {
       width: 16px;
       height: 16px;
       accent-color: #DC2626;
     }
-    
+
     /* Add Contact Form */
     .add-contact-form {
       margin-top: 1rem;
       padding-top: 1rem;
       border-top: 1px dashed #E5E7EB;
     }
-    
+
     .add-contact-form h4 {
       font-size: 0.875rem;
       font-weight: 600;
       color: #6B7280;
       margin: 0 0 0.75rem;
     }
-    
+
     .contact-inputs {
       display: grid;
       gap: 0.5rem;
     }
-    
+
     .contact-input, .contact-select {
       padding: 0.75rem 1rem;
       border: 2px solid #E5E7EB;
@@ -1218,13 +1243,13 @@ type ViewMode = 'card' | 'edit';
       font-size: 0.9375rem;
       transition: all 0.2s;
     }
-    
+
     .contact-input:focus, .contact-select:focus {
       outline: none;
       border-color: #DC2626;
       box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
     }
-    
+
     .add-contact-btn {
       display: flex;
       align-items: center;
@@ -1239,18 +1264,18 @@ type ViewMode = 'card' | 'edit';
       cursor: pointer;
       transition: all 0.2s;
     }
-    
+
     .add-contact-btn:hover:not(:disabled) {
       border-color: #DC2626;
       color: #DC2626;
       background: #FEF2F2;
     }
-    
+
     .add-contact-btn:disabled {
       opacity: 0.5;
       cursor: not-allowed;
     }
-    
+
     /* Save Button */
     .save-btn {
       display: flex;
@@ -1270,17 +1295,17 @@ type ViewMode = 'card' | 'edit';
       transition: all 0.2s;
       box-shadow: 0 4px 12px rgba(185, 28, 28, 0.3);
     }
-    
+
     .save-btn:hover:not(:disabled) {
       transform: translateY(-2px);
       box-shadow: 0 8px 20px rgba(185, 28, 28, 0.4);
     }
-    
+
     .save-btn:disabled {
       opacity: 0.7;
       cursor: not-allowed;
     }
-    
+
     .spinner {
       width: 20px;
       height: 20px;
@@ -1289,38 +1314,38 @@ type ViewMode = 'card' | 'edit';
       border-radius: 50%;
       animation: spin 0.8s linear infinite;
     }
-    
+
     @keyframes spin {
       to { transform: rotate(360deg); }
     }
-    
+
     /* Dark mode support */
     :host-context(.dark) .medical-id-page {
       background: linear-gradient(180deg, #1C1917 0%, #0C0A09 50%);
     }
-    
+
     :host-context(.dark) .emergency-card {
       background: #1C1917;
       border-color: #44403C;
     }
-    
+
     :host-context(.dark) .card-header {
       background: linear-gradient(135deg, #292524 0%, #1C1917 100%);
     }
-    
+
     :host-context(.dark) .name {
       color: #FAFAF9;
     }
-    
+
     :host-context(.dark) .info-box {
       background: #292524;
       border-color: #44403C;
     }
-    
+
     :host-context(.dark) .form-section {
       background: #1C1917;
     }
-    
+
     :host-context(.dark) .chip-input,
     :host-context(.dark) .contact-input,
     :host-context(.dark) .contact-select,
@@ -1335,16 +1360,16 @@ export class MedicalIdComponent implements OnInit {
   readonly medicalIdService = inject(MedicalIdService);
   readonly profileService = inject(ProfileService);
   readonly auth = inject(AuthService);
-  
+
   // View state
   readonly viewMode = signal<ViewMode>('card');
   readonly showQR = signal(false);
   readonly saving = signal(false);
-  
+
   // Constants
   readonly bloodTypes = BLOOD_TYPES;
   readonly relationships = RELATIONSHIPS;
-  
+
   // Edit form data
   editData: {
     bloodType: BloodType | null;
@@ -1357,7 +1382,7 @@ export class MedicalIdComponent implements OnInit {
     medications: [],
     emergencyContacts: []
   };
-  
+
   newAllergy = '';
   newMedication = '';
   newContact: Omit<EmergencyContact, 'id'> = {
@@ -1366,31 +1391,33 @@ export class MedicalIdComponent implements OnInit {
     phone: '',
     isPrimary: false
   };
-  
+
   // Computed
   readonly medicalIdData = computed(() => this.medicalIdService.medicalId());
-  
+
   readonly displayName = computed(() => {
     const data = this.medicalIdData();
     return data?.name || this.auth.user()?.name || 'User';
   });
-  
+
   readonly initials = computed(() => {
     const name = this.displayName();
     if (!name) return '?';
     const parts = name.split(' ');
     if (parts.length >= 2) {
-      return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+      const firstInitial = parts[0].charAt(0);
+      const lastInitial = parts.at(-1)?.charAt(0) ?? '';
+      return (firstInitial + lastInitial).toUpperCase();
     }
     return name.substring(0, 2).toUpperCase();
   });
-  
+
   async ngOnInit() {
     await this.profileService.loadProfile();
     await this.medicalIdService.loadMedicalId();
     this.syncEditData();
   }
-  
+
   toggleMode() {
     if (this.viewMode() === 'card') {
       this.syncEditData();
@@ -1399,7 +1426,7 @@ export class MedicalIdComponent implements OnInit {
       this.viewMode.set('card');
     }
   }
-  
+
   syncEditData() {
     const data = this.medicalIdData();
     if (data) {
@@ -1411,17 +1438,17 @@ export class MedicalIdComponent implements OnInit {
       };
     }
   }
-  
+
   formatDate(dateStr?: string): string {
     if (!dateStr) return '';
     const date = new Date(dateStr);
-    return date.toLocaleDateString('en-US', { 
-      month: 'short', 
-      day: 'numeric', 
-      year: 'numeric' 
+    return date.toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric'
     });
   }
-  
+
   // Allergy management
   addAllergy() {
     const value = this.newAllergy.trim();
@@ -1430,11 +1457,11 @@ export class MedicalIdComponent implements OnInit {
     }
     this.newAllergy = '';
   }
-  
+
   removeAllergy(allergy: string) {
     this.editData.allergies = this.editData.allergies.filter(a => a !== allergy);
   }
-  
+
   // Medication management
   addMedication() {
     const value = this.newMedication.trim();
@@ -1443,19 +1470,19 @@ export class MedicalIdComponent implements OnInit {
     }
     this.newMedication = '';
   }
-  
+
   removeMedication(med: string) {
     this.editData.medications = this.editData.medications.filter(m => m !== med);
   }
-  
+
   // Contact management
   canAddContact(): boolean {
     return !!(this.newContact.name.trim() && this.newContact.relationship && this.newContact.phone.trim());
   }
-  
+
   addContact() {
     if (!this.canAddContact()) return;
-    
+
     const contact: EmergencyContact = {
       id: crypto.randomUUID(),
       name: this.newContact.name.trim(),
@@ -1463,27 +1490,27 @@ export class MedicalIdComponent implements OnInit {
       phone: this.newContact.phone.trim(),
       isPrimary: this.editData.emergencyContacts.length === 0
     };
-    
+
     this.editData.emergencyContacts.push(contact);
-    
+
     // Reset form
     this.newContact = { name: '', relationship: '', phone: '', isPrimary: false };
   }
-  
+
   removeContact(id: string) {
     this.editData.emergencyContacts = this.editData.emergencyContacts.filter(c => c.id !== id);
   }
-  
+
   setPrimaryContact(id: string) {
     this.editData.emergencyContacts = this.editData.emergencyContacts.map(c => ({
       ...c,
       isPrimary: c.id === id
     }));
   }
-  
+
   async saveChanges() {
     this.saving.set(true);
-    
+
     try {
       const success = await this.medicalIdService.saveMedicalId({
         bloodType: this.editData.bloodType,
@@ -1491,7 +1518,7 @@ export class MedicalIdComponent implements OnInit {
         medications: this.editData.medications,
         emergencyContacts: this.editData.emergencyContacts
       });
-      
+
       if (success) {
         this.viewMode.set('card');
       }

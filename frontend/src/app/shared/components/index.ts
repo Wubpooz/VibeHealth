@@ -6,3 +6,4 @@ export * from './bottom-nav/bottom-nav.component';
 export * from './fab/fab.component';
 export * from './modal/modal.component';
 export * from './theme-toggle/theme-toggle.component';
+export * from './autocomplete/autocomplete.component';

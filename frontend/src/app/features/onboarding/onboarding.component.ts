@@ -1,4 +1,4 @@
-import { Component, inject, signal} from '@angular/core';
+import { Component, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -23,22 +23,15 @@ import { AuthService } from '../../core/auth/auth.service';
   selector: 'app-onboarding',
   standalone: true,
   imports: [CommonModule, FormsModule, TranslateModule, BunnyMascotComponent, SpinnerComponent],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="min-h-screen bg-gradient-to-br from-rose-50 via-white to-sage-50 dark:from-gray-950 dark:via-gray-900 dark:to-gray-950 overflow-hidden relative">
 
-      <!-- Animated background elements -->
+      <!-- Simplified background - no blur -->
       <div class="fixed inset-0 pointer-events-none overflow-hidden">
-        <!-- Floating carrots -->
-        <div class="carrot carrot-1">🥕</div>
-        <div class="carrot carrot-2">🥕</div>
-        <div class="carrot carrot-3">🥕</div>
-
-        <!-- Soft gradient orbs -->
-        <div class="absolute top-[-20%] right-[-15%] w-[600px] h-[600px] rounded-full bg-gradient-to-br from-primary-200/30 to-primary-300/10 blur-3xl animate-pulse-slow"></div>
-        <div class="absolute bottom-[-30%] left-[-20%] w-[700px] h-[700px] rounded-full bg-gradient-to-tr from-sage-200/30 to-sage-300/10 blur-3xl animate-pulse-slow" style="animation-delay: -2s"></div>
-
-        <!-- Grid pattern overlay -->
-        <div class="absolute inset-0 opacity-[0.015]" style="background-image: radial-gradient(circle, #f43f5e 1px, transparent 1px); background-size: 40px 40px;"></div>
+        <!-- Static gradient orbs (no animation) -->
+        <div class="absolute top-[-20%] right-[-15%] w-[500px] h-[500px] rounded-full bg-gradient-to-br from-primary-200/20 to-transparent"></div>
+        <div class="absolute bottom-[-30%] left-[-20%] w-[600px] h-[600px] rounded-full bg-gradient-to-tr from-sage-200/20 to-transparent"></div>
       </div>
 
       <!-- Header with progress -->
@@ -47,7 +40,7 @@ import { AuthService } from '../../core/auth/auth.service';
           <!-- Logo & Skip -->
           <div class="flex items-center justify-between mb-8">
             <div class="flex items-center gap-3">
-              <div class="w-10 h-10 rounded-2xl bg-white shadow-lg shadow-primary-500/10 flex items-center justify-center">
+              <div class="w-10 h-10 rounded-2xl bg-white shadow-lg shadow-primary-500/10 flex items-center justify-center dark:bg-gray-800">
                 <span class="text-xl">🐰</span>
               </div>
               <span class="font-heading font-bold text-xl text-gray-900 dark:text-white">VibeHealth</span>
@@ -71,19 +64,18 @@ import { AuthService } from '../../core/auth/auth.service';
                   class="progress-dot"
                   [class.completed]="i < currentStep()"
                   [class.active]="i === currentStep()"
-                  [style.animation-delay.ms]="i * 50"
                 >
                   @if (i < currentStep()) {
                     <span class="text-sm">🥕</span>
                   } @else if (i === currentStep()) {
-                    <div class="w-3 h-3 rounded-full bg-primary-500 animate-pulse"></div>
+                    <div class="w-3 h-3 rounded-full bg-primary-500"></div>
                   } @else {
                     <div class="w-2 h-2 rounded-full bg-gray-300 dark:bg-gray-600"></div>
                   }
                 </div>
                 @if (i < steps.length - 1) {
                   <div
-                    class="w-8 h-0.5 mx-1 rounded-full transition-colors duration-300"
+                    class="w-8 h-0.5 mx-1 rounded-full transition-colors duration-200"
                     [class]="i < currentStep() ? 'bg-primary-400' : 'bg-gray-200 dark:bg-gray-700'"
                   ></div>
                 }
@@ -97,7 +89,7 @@ import { AuthService } from '../../core/auth/auth.service';
       <main class="relative z-10 px-6 pb-12">
         <div class="max-w-2xl mx-auto">
 
-          <!-- Step Container with slide animation -->
+          <!-- Step Container -->
           <div class="relative min-h-[500px]" [class]="'step-' + currentStep()">
 
             <!-- STEP 0: Welcome -->
@@ -132,7 +124,7 @@ import { AuthService } from '../../core/auth/auth.service';
 
             <!-- STEP 1: Personal Info -->
             @if (currentStep() === 1) {
-              <div class="step-content animate-fade-in-up">
+              <div class="step-content">
                 <div class="text-center mb-6">
                   <app-bunny-mascot
                     [mood]="'curious'"
@@ -151,25 +143,37 @@ import { AuthService } from '../../core/auth/auth.service';
                   </div>
 
                   <div class="space-y-5">
-                    <!-- Name -->
+                    <!-- Name (Required) -->
                     <div class="form-group">
-                      <label class="form-label">What should I call you?</label>
+                      <label class="form-label">
+                        What should I call you? <span class="text-red-500">*</span>
+                      </label>
                       <input
                         type="text"
                         [(ngModel)]="profile.name"
                         placeholder="Your name"
                         class="input-field"
+                        [class.input-field-error]="nameError()"
+                        required
                       />
+                      @if (nameError()) {
+                        <p class="text-sm text-red-500 mt-1">Please enter your name to continue</p>
+                      }
                     </div>
 
                     <!-- Date of Birth -->
                     <div class="form-group">
                       <label class="form-label">When's your birthday?</label>
-                      <input
-                        type="date"
-                        [(ngModel)]="profile.dateOfBirth"
-                        class="input-field"
-                      />
+                      <div class="date-picker-wrapper">
+                        <input
+                          type="date"
+                          [(ngModel)]="profile.dateOfBirth"
+                          class="input-field date-input"
+                          [max]="maxDate"
+                          [min]="minDate"
+                        />
+                      </div>
+                      <p class="text-xs text-gray-400 mt-1">Used for age-appropriate recommendations</p>
                     </div>
 
                     <!-- Biological Sex -->
@@ -196,9 +200,8 @@ import { AuthService } from '../../core/auth/auth.service';
                       ← Back
                     </button>
                     <button
-                      (click)="nextStep()"
+                      (click)="validateAndNext()"
                       class="btn-primary"
-                      [disabled]="!profile.name"
                     >
                       Continue →
                     </button>
@@ -532,26 +535,6 @@ import { AuthService } from '../../core/auth/auth.service';
     </div>
   `,
   styles: [`
-    /* Floating carrots animation */
-    .carrot {
-      position: absolute;
-      font-size: 24px;
-      opacity: 0.15;
-      animation: float-carrot 20s linear infinite;
-    }
-
-    .carrot-1 { top: 10%; left: 5%; animation-delay: 0s; font-size: 28px; }
-    .carrot-2 { top: 60%; right: 8%; animation-delay: -7s; font-size: 20px; }
-    .carrot-3 { bottom: 20%; left: 15%; animation-delay: -14s; font-size: 24px; }
-
-    @keyframes float-carrot {
-      0% { transform: translateY(0) rotate(0deg); opacity: 0.15; }
-      25% { transform: translateY(-30px) rotate(10deg); opacity: 0.25; }
-      50% { transform: translateY(-10px) rotate(-5deg); opacity: 0.15; }
-      75% { transform: translateY(-40px) rotate(8deg); opacity: 0.2; }
-      100% { transform: translateY(0) rotate(0deg); opacity: 0.15; }
-    }
-
     /* Progress dots */
     .progress-dot {
       display: flex;
@@ -562,39 +545,32 @@ import { AuthService } from '../../core/auth/auth.service';
       border-radius: 50%;
       background: white;
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-      transition: all 0.3s ease;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    :host-context(.dark) .progress-dot {
+      background: #1f2937;
     }
 
     .progress-dot.completed {
       background: linear-gradient(135deg, #fef2f2, #fff1f2);
-      animation: pop-in 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
 
     .progress-dot.active {
       box-shadow: 0 0 0 4px rgba(244, 63, 94, 0.15);
     }
 
-    @keyframes pop-in {
-      0% { transform: scale(0.8); }
-      50% { transform: scale(1.1); }
-      100% { transform: scale(1); }
-    }
-
-    /* Glass card */
+    /* Glass card - NO backdrop-filter for performance */
     .glass-card {
-      background: rgba(255, 255, 255, 0.9);
-      backdrop-filter: blur(20px);
-      border-radius: 32px;
-      padding: 32px;
-      border: 1px solid rgba(255, 255, 255, 0.8);
-      box-shadow:
-        0 4px 6px -1px rgba(0, 0, 0, 0.05),
-        0 10px 30px -5px rgba(0, 0, 0, 0.08),
-        inset 0 1px 0 rgba(255, 255, 255, 0.6);
+      background: rgba(255, 255, 255, 0.97);
+      border-radius: 24px;
+      padding: 28px;
+      border: 1px solid rgba(0, 0, 0, 0.06);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
     }
 
     :host-context(.dark) .glass-card {
-      background: rgba(17, 24, 39, 0.9);
+      background: rgba(17, 24, 39, 0.97);
       border-color: rgba(255, 255, 255, 0.1);
     }
 
@@ -744,7 +720,7 @@ import { AuthService } from '../../core/auth/auth.service';
       background: rgba(255, 255, 255, 0.05);
     }
 
-    /* Confetti */
+    /* Confetti - simplified */
     .confetti-container {
       position: absolute;
       top: 0;
@@ -757,27 +733,56 @@ import { AuthService } from '../../core/auth/auth.service';
 
     .confetti {
       position: absolute;
-      width: 10px;
-      height: 10px;
+      width: 8px;
+      height: 8px;
       top: -10px;
       border-radius: 2px;
-      animation: confetti-fall 3s ease-out forwards;
+      animation: confetti-fall 2s ease-out forwards;
     }
 
     @keyframes confetti-fall {
-      0% { transform: translateY(0) rotate(0deg); opacity: 1; }
-      100% { transform: translateY(400px) rotate(720deg); opacity: 0; }
+      0% { transform: translateY(0); opacity: 1; }
+      100% { transform: translateY(300px); opacity: 0; }
     }
 
-    /* Step transitions */
+    /* Step content - simple fade */
     .step-content {
-      opacity: 0;
-      animation: step-in 0.5s ease forwards;
+      animation: fade-in 0.3s ease forwards;
     }
 
-    @keyframes step-in {
-      0% { opacity: 0; transform: translateX(30px); }
-      100% { opacity: 1; transform: translateX(0); }
+    @keyframes fade-in {
+      0% { opacity: 0; }
+      100% { opacity: 1; }
+    }
+
+    /* Date picker improvements */
+    .date-picker-wrapper {
+      position: relative;
+    }
+
+    .date-input {
+      cursor: pointer;
+    }
+
+    .date-input::-webkit-calendar-picker-indicator {
+      cursor: pointer;
+      opacity: 0.6;
+      transition: opacity 0.2s;
+    }
+
+    .date-input::-webkit-calendar-picker-indicator:hover {
+      opacity: 1;
+    }
+
+    /* Error state for inputs */
+    .input-field-error {
+      border-color: #ef4444 !important;
+      background-color: #fef2f2 !important;
+    }
+
+    :host-context(.dark) .input-field-error {
+      border-color: #f87171 !important;
+      background-color: rgba(239, 68, 68, 0.1) !important;
     }
   `],
 })
@@ -796,6 +801,11 @@ export class OnboardingComponent {
   // State
   currentStep = signal(0);
   saving = signal(false);
+  nameError = signal(false);
+  
+  // Date constraints
+  maxDate: string;
+  minDate: string;
 
   // Profile data
   profile: OnboardingProfile = {
@@ -832,9 +842,9 @@ export class OnboardingComponent {
     { id: 'prefer_not_to_say', label: 'Prefer not to say' },
   ] as const;
 
-  // Confetti celebration
-  confettiPieces = Array.from({ length: 10 }, (_, i) => i);
-  confettiColors = ['#f43f5e', '#34d399', '#fbbf24', '#3b82f6', '#a855f7', '#ec4899'];
+  // Confetti celebration - reduced count for performance
+  confettiPieces = Array.from({ length: 6 }, (_, i) => i);
+  confettiColors = ['#f43f5e', '#34d399', '#fbbf24', '#3b82f6'];
 
   constructor() {
     // Pre-fill name from auth user if available
@@ -842,6 +852,12 @@ export class OnboardingComponent {
     if (user?.name) {
       this.profile.name = user.name;
     }
+    
+    // Set date constraints
+    const today = new Date();
+    this.maxDate = today.toISOString().split('T')[0];
+    const minYear = today.getFullYear() - 120;
+    this.minDate = `${minYear}-01-01`;
   }
 
   nextStep() {
@@ -854,6 +870,16 @@ export class OnboardingComponent {
     if (this.currentStep() > 0) {
       this.currentStep.update(s => s - 1);
     }
+  }
+
+  // Validate step 1 and proceed
+  validateAndNext() {
+    if (!this.profile.name.trim()) {
+      this.nameError.set(true);
+      return;
+    }
+    this.nameError.set(false);
+    this.nextStep();
   }
 
   toggleGoal(goalId: HealthGoal) {
