@@ -497,5 +497,33 @@
       "NAME": "Find A Helpline",
       "DESC": "Répertoire international des services de soutien en cas de crise"
     }
+  },
+  "METRICS": {
+    "TITLE": "Métriques de santé",
+    "HYDRATION": {
+      "TITLE": "Hydratation",
+      "TODAY": "Aujourd'hui",
+      "GOAL": "Objectif",
+      "GLASS": "Verre",
+      "BOTTLE": "Bouteille",
+      "LARGE": "Grande",
+      "LOGGED": "Eau enregistrée !",
+      "GOAL_REACHED": "Objectif quotidien atteint ! 🎉"
+    },
+    "VITALS": {
+      "TITLE": "Signes vitaux",
+      "HEART_RATE": "Fréquence cardiaque",
+      "BLOOD_PRESSURE": "Tension artérielle",
+      "SLEEP": "Sommeil",
+      "STEPS": "Pas",
+      "WEIGHT": "Poids",
+      "TEMPERATURE": "Température",
+      "OXYGEN": "Saturation en oxygène",
+      "LOG_VITAL": "Enregistrer",
+      "LAST_READING": "Dernière mesure"
+    },
+    "QUICK_LOG": "Enregistrement rapide",
+    "VIEW_HISTORY": "Voir l'historique",
+    "TRENDS": "Tendances"
   }
 }

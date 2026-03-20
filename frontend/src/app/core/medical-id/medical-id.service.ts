@@ -86,8 +86,9 @@ export class MedicalIdService {
         return true;
       }
       return false;
-    } catch (err: any) {
-      this._error.set(err.message || 'Failed to save medical ID');
+    } catch (err: unknown) {
+      const errorMessage = err instanceof Error ? err.message : 'Failed to save medical ID';
+      this._error.set(errorMessage);
       return false;
     } finally {
       this._loading.set(false);

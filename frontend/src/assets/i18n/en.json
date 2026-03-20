@@ -497,5 +497,33 @@
       "NAME": "Find A Helpline",
       "DESC": "International directory of crisis support services"
     }
+  },
+  "METRICS": {
+    "TITLE": "Health Metrics",
+    "HYDRATION": {
+      "TITLE": "Hydration",
+      "TODAY": "Today",
+      "GOAL": "Goal",
+      "GLASS": "Glass",
+      "BOTTLE": "Bottle",
+      "LARGE": "Large",
+      "LOGGED": "Water logged!",
+      "GOAL_REACHED": "Daily goal reached! 🎉"
+    },
+    "VITALS": {
+      "TITLE": "Vitals",
+      "HEART_RATE": "Heart Rate",
+      "BLOOD_PRESSURE": "Blood Pressure",
+      "SLEEP": "Sleep",
+      "STEPS": "Steps",
+      "WEIGHT": "Weight",
+      "TEMPERATURE": "Temperature",
+      "OXYGEN": "Oxygen Saturation",
+      "LOG_VITAL": "Log Vital",
+      "LAST_READING": "Last reading"
+    },
+    "QUICK_LOG": "Quick Log",
+    "VIEW_HISTORY": "View History",
+    "TRENDS": "Trends"
   }
 }

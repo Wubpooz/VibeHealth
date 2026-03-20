@@ -13,8 +13,6 @@ import {
   ONBOARDING_STEPS,
   HEALTH_GOALS,
   FITNESS_LEVELS,
-  COMMON_CONDITIONS,
-  COMMON_ALLERGIES,
   HealthGoal,
 } from './onboarding.types';
 import { environment } from '../../../environments/environment';
@@ -147,10 +145,11 @@ import { ReferenceDataService } from '../../core/reference-data/reference-data.s
                   <div class="space-y-5">
                     <!-- Name (Required) -->
                     <div class="form-group">
-                      <label class="form-label">
+                      <label for="name" class="form-label">
                         What should I call you? <span class="text-red-500">*</span>
                       </label>
                       <input
+                        id="name"
                         type="text"
                         [(ngModel)]="profile.name"
                         placeholder="Your name"
@@ -165,9 +164,10 @@ import { ReferenceDataService } from '../../core/reference-data/reference-data.s
 
                     <!-- Date of Birth -->
                     <div class="form-group">
-                      <label class="form-label">When's your birthday?</label>
+                      <label for="dateOfBirth" class="form-label">When's your birthday?</label>
                       <div class="relative">
                         <input
+                          id="dateOfBirth"
                           type="date"
                           [(ngModel)]="profile.dateOfBirth"
                           class="input-field date-input pl-10"
@@ -182,8 +182,8 @@ import { ReferenceDataService } from '../../core/reference-data/reference-data.s
                     </div>
 
                     <!-- Biological Sex -->
-                    <div class="form-group">
-                      <label class="form-label">Biological sex</label>
+                    <div class="form-group" role="group" aria-labelledby="sex-label">
+                      <span id="sex-label" class="form-label">Biological sex</span>
                       <p class="text-xs text-gray-400 mb-3">Helps with accurate health calculations</p>
                       <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
                         @for (option of sexOptions; track option.id) {
@@ -238,9 +238,10 @@ import { ReferenceDataService } from '../../core/reference-data/reference-data.s
                   <div class="space-y-6">
                     <!-- Height -->
                     <div class="form-group">
-                      <label class="form-label">Height</label>
+                      <label for="height" class="form-label">Height</label>
                       <div class="flex gap-3">
                         <input
+                          id="height"
                           type="number"
                           [(ngModel)]="profile.height"
                           [placeholder]="profile.heightUnit === 'cm' ? '175' : '5.9'"
@@ -266,9 +267,10 @@ import { ReferenceDataService } from '../../core/reference-data/reference-data.s
 
                     <!-- Weight -->
                     <div class="form-group">
-                      <label class="form-label">Weight</label>
+                      <label for="weight" class="form-label">Weight</label>
                       <div class="flex gap-3">
                         <input
+                          id="weight"
                           type="number"
                           [(ngModel)]="profile.weight"
                           [placeholder]="profile.weightUnit === 'kg' ? '70' : '154'"
@@ -328,7 +330,7 @@ import { ReferenceDataService } from '../../core/reference-data/reference-data.s
                   <div class="space-y-6">
                     <!-- Medical Conditions -->
                     <div class="form-group">
-                      <label class="form-label">Any medical conditions?</label>
+                      <span id="conditions-label" class="form-label">Any medical conditions?</span>
                       <app-autocomplete
                         [suggestions]="commonConditions()"
                         [selectedItems]="profile.medicalConditions"
@@ -340,7 +342,7 @@ import { ReferenceDataService } from '../../core/reference-data/reference-data.s
 
                     <!-- Allergies -->
                     <div class="form-group">
-                      <label class="form-label">Any allergies?</label>
+                      <span id="allergies-label" class="form-label">Any allergies?</span>
                       <app-autocomplete
                         [suggestions]="commonAllergies()"
                         [selectedItems]="profile.allergies"
@@ -352,7 +354,7 @@ import { ReferenceDataService } from '../../core/reference-data/reference-data.s
 
                     <!-- Medications -->
                     <div class="form-group">
-                      <label class="form-label">Current medications?</label>
+                      <span id="medications-label" class="form-label">Current medications?</span>
                       <app-autocomplete
                         [suggestions]="commonMedications()"
                         [selectedItems]="profile.currentMedications"
@@ -397,8 +399,8 @@ import { ReferenceDataService } from '../../core/reference-data/reference-data.s
 
                   <div class="space-y-6">
                     <!-- Fitness Level -->
-                    <div class="form-group">
-                      <label class="form-label">Current activity level</label>
+                    <div class="form-group" role="group" aria-labelledby="fitness-label">
+                      <span id="fitness-label" class="form-label">Current activity level</span>
                       <div class="space-y-2">
                         @for (level of fitnessLevels; track level.id) {
                           <button
@@ -417,8 +419,8 @@ import { ReferenceDataService } from '../../core/reference-data/reference-data.s
                     </div>
 
                     <!-- Health Goals -->
-                    <div class="form-group">
-                      <label class="form-label">Select your goals <span class="text-gray-400 font-normal">(pick any)</span></label>
+                    <div class="form-group" role="group" aria-labelledby="goals-label">
+                      <span id="goals-label" class="form-label">Select your goals <span class="text-gray-400 font-normal">(pick any)</span></span>
                       <div class="grid grid-cols-2 gap-3">
                         @for (goal of healthGoals; track goal.id) {
                           <button

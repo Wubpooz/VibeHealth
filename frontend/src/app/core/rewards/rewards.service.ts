@@ -5,7 +5,7 @@ export interface CarrotReward {
   amount: number;
   reason: string;
   earnedAt: Date;
-  category: 'logging' | 'streak' | 'milestone' | 'achievement' | 'bonus';
+  category: 'logging' | 'streak' | 'milestone' | 'achievement' | 'bonus' | 'hydration';
 }
 
 export interface RewardStats {
@@ -154,7 +154,7 @@ export class RewardsService {
   /**
    * Spend carrots (for future features like Focus Helper)
    */
-  spendCarrots(amount: number, reason: string): boolean {
+  spendCarrots(amount: number): boolean {
     if (this._carrots() < amount) return false;
 
     this._carrots.update(c => c - amount);

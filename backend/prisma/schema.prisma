@@ -122,3 +122,46 @@ model Verification {
 
   @@map("verifications")
 }
+
+// Vitals Log (heart rate, blood pressure, sleep, steps, weight)
+model VitalLog {
+  id        String   @id @default(cuid())
+  userId    String
+  type      VitalType
+  value     Float
+  unit      String
+  source    String?   @default("manual") // manual, apple_health, google_fit
+  notes     String?
+  loggedAt  DateTime  @default(now())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  @@index([userId, type, loggedAt])
+  @@map("vital_logs")
+}
+
+enum VitalType {
+  HEART_RATE
+  BLOOD_PRESSURE_SYSTOLIC
+  BLOOD_PRESSURE_DIASTOLIC
+  SLEEP_HOURS
+  STEPS
+  WEIGHT
+  BODY_TEMPERATURE
+  OXYGEN_SATURATION
+}
+
+// Hydration Log (water intake tracking)
+model HydrationLog {
+  id        String   @id @default(cuid())
+  userId    String
+  amount    Float    // in ml
+  unit      String   @default("ml") // ml or oz
+  source    String?  @default("manual")
+  loggedAt  DateTime @default(now())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId, loggedAt])
+  @@map("hydration_logs")
+}

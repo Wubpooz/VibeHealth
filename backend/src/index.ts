@@ -5,6 +5,7 @@ import { prettyJSON } from 'hono/pretty-json';
 import { authRoutes } from './routes/auth.routes';
 import { profileRoutes } from './routes/profile.routes';
 import { medicalIdRoutes } from './routes/medical-id.routes';
+import { metricsRoutes } from './routes/metrics.routes';
 import referenceDataRoutes from './routes/reference-data.routes';
 import { requireAuth, type AuthUser, type AuthSession } from './middleware/auth.middleware';
 
@@ -58,6 +59,9 @@ api.route('/medical-id', medicalIdRoutes);
 
 // Reference data routes (public)
 api.route('/references', referenceDataRoutes);
+
+// Metrics routes (vitals, hydration)
+api.route('/metrics', metricsRoutes);
 
 app.route('/api/v1', api);
 

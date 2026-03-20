@@ -8,6 +8,7 @@ import { RewardsService } from '../../core/rewards/rewards.service';
 import { BunnyMascotComponent } from '../../shared/components/bunny-mascot/bunny-mascot.component';
 import { CarrotCounterComponent } from '../../shared/components/carrot-counter/carrot-counter.component';
 import { ThemeToggleComponent } from '../../shared/components/theme-toggle/theme-toggle.component';
+import { HydrationTrackerComponent } from '../metrics/hydration-tracker.component';
 
 @Component({
   selector: 'app-dashboard',
@@ -18,7 +19,8 @@ import { ThemeToggleComponent } from '../../shared/components/theme-toggle/theme
     TranslateModule, 
     BunnyMascotComponent, 
     CarrotCounterComponent,
-    ThemeToggleComponent
+    ThemeToggleComponent,
+    HydrationTrackerComponent
   ],
   template: `
     <div class="relative min-h-screen bg-gray-50 dark:bg-gray-950 transition-colors duration-500 overflow-hidden">
@@ -233,6 +235,30 @@ import { ThemeToggleComponent } from '../../shared/components/theme-toggle/theme
               </div>
             </div>
           </a>
+        </div>
+
+        <!-- Health Metrics Section -->
+        <h3 class="text-2xl font-bold text-gray-900 mb-6 px-2 dark:text-white font-heading">{{ 'METRICS.TITLE' | translate }}</h3>
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+          <!-- Hydration Tracker -->
+          <app-hydration-tracker />
+          
+          <!-- Placeholder for future vitals cards -->
+          <div class="glass-panel rounded-3xl p-8 flex flex-col items-center justify-center text-center opacity-60">
+            <div class="w-14 h-14 rounded-2xl bg-gray-100 flex items-center justify-center text-3xl mb-4 dark:bg-gray-800">
+              ❤️
+            </div>
+            <h4 class="font-bold text-gray-900 mb-2 dark:text-white">{{ 'METRICS.VITALS.TITLE' | translate }}</h4>
+            <p class="text-sm text-gray-500 dark:text-gray-400">Coming soon...</p>
+          </div>
+          
+          <div class="glass-panel rounded-3xl p-8 flex flex-col items-center justify-center text-center opacity-60">
+            <div class="w-14 h-14 rounded-2xl bg-gray-100 flex items-center justify-center text-3xl mb-4 dark:bg-gray-800">
+              📊
+            </div>
+            <h4 class="font-bold text-gray-900 mb-2 dark:text-white">{{ 'METRICS.TRENDS' | translate }}</h4>
+            <p class="text-sm text-gray-500 dark:text-gray-400">Coming soon...</p>
+          </div>
         </div>
 
         <!-- Demo: Award Carrots Button -->
