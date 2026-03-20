@@ -1,0 +1,28 @@
+# 🏃 Track & Move Team Roadmap (Metrics)
+
+> **Focus**: High-frequency quantitative logging, mathematical aggregations (charts / trends), and user goal tracking.
+
+## Technical Boundaries
+- **API Namespace**: `/api/v1/metrics/*` (managed in `backend/src/routes/metrics.routes.ts`)
+- **Database Scope**: Focus entirely on tracking models (`VITAL_LOG`, `ACTIVITY_LOG`, `MEAL_LOG`, `HYDRATION_LOG`, `GOAL`)
+- **Frontend Scope**: `frontend/src/app/features/metrics/*`
+
+---
+
+## Milestone 1: Hydration & Vitals Foundation
+- [ ] Add `VITAL_LOG` and `HYDRATION_LOG` to `schema.prisma`.
+- [ ] Create Hono CRUD routes for logging vitals (heart rate, sleep, BP, steps) and water intake.
+- [ ] Build Frontend Quick-log buttons for Hydration (glass, bottle, custom amount).
+- [ ] Implement Vitals Dashboard cards for displaying the latest logged metrics.
+
+## Milestone 2: Activity & Nutrition
+- [ ] Add `ACTIVITY_LOG` and `MEAL_LOG` to `schema.prisma`.
+- [ ] Create Hono CRUD routes for activities and meals (with macros: protein/carbs/fat).
+- [ ] Build Frontend interfaces for Manual Activity Logging and Food Diary.
+- [ ] Create reusable components for Charting (e.g., 7-day trend graphs for steps & calories).
+
+## Milestone 3: SMART Goals & Analysis
+- [ ] Add `GOAL` to `schema.prisma`.
+- [ ] Build the Goal creation wizard on the Frontend.
+- [ ] Write Backend services to compute progress against weekly/monthly goals (e.g. "Did user hit 10k steps 5 days this week?").
+- [ ] Implement Milestone celebrations (integrating with the Bunny Mascot system to react enthusiastically).
