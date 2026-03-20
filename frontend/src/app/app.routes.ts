@@ -43,7 +43,20 @@ export const routes: Routes = [
     canActivate: [authGuard],
   },
   {
+    path: 'first-aid',
+    loadComponent: () =>
+      import('./features/first-aid/first-aid.component').then((m) => m.FirstAidComponent),
+    canActivate: [authGuard],
+  },
+  {
+    path: 'journal',
+    loadComponent: () =>
+      import('./features/journal/journal.component').then((m) => m.JournalComponent),
+    canActivate: [authGuard],
+  },
+  {
     path: '**',
     redirectTo: '/',
   },
 ];
+
