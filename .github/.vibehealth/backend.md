@@ -137,6 +137,19 @@ export const auth = betterAuth({
 });
 ```
 
+### Email Delivery (useSend)
+
+- Use useSend for auth transactional emails (verification + reset password).
+- API base URL: `https://app.usesend.com/api` and send endpoint: `POST /v1/emails`.
+- Auth uses `Authorization: Bearer us_*`.
+- Keep a development fallback that logs links when keys are missing in dev, while surfacing errors in non-dev.
+
+```bash
+USESEND_API_KEY=us_xxx
+USESEND_FROM_EMAIL=hello@yourdomain.com
+USESEND_BASE_URL=https://app.usesend.com/api
+```
+
 ### Auth Middleware
 
 ```typescript

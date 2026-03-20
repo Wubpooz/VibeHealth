@@ -104,14 +104,21 @@ VibeHealth uses a distinctive **"Soft Pop"** design language characterized by:
 ```css
 :root {
   /* Display font (headings) */
-  --font-display: 'Lexend Deca', 'Poppins', system-ui, sans-serif;
+  --font-display: 'Satoshi', 'Avenir Next', 'Segoe UI', sans-serif;
   
   /* Body font (text) */
-  --font-body: 'Inter', 'Nunito', system-ui, sans-serif;
+  --font-body: 'Satoshi', 'Avenir Next', 'Segoe UI', sans-serif;
   
   /* Mono font (code) */
   --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
 }
+```
+
+### Font Source
+
+```css
+/* Fontshare */
+@import url('https://api.fontshare.com/v2/css?f[]=satoshi@300,400,500,700,900&display=swap');
 ```
 
 ### Font Sizes (Fluid Scale)
@@ -410,6 +417,83 @@ body {
 .stagger-2 { animation-delay: 0.2s; }
 .stagger-3 { animation-delay: 0.3s; }
 ```
+
+### Signature Micro-Interactions
+
+```css
+/* Radial-spread CTA button (Framer icon-slide-in-button inspired) */
+.slide-in-cta {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.slide-in-cta::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: 0;
+  height: 0;
+  background: #e11d48; /* single accent color */
+  border-radius: 50%;
+  transform: translate(-50%, 50%);
+  transition: width 0.45s cubic-bezier(0.4, 0, 0.2, 1), height 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: -1;
+}
+
+.slide-in-cta:hover::before,
+.slide-in-cta:focus-visible::before {
+  /* Expand radially from bottom center */
+  width: 300%;
+  height: 300%;
+}
+
+.slide-in-cta__icon {
+  transform: translateX(-4px);
+  opacity: 0;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
+}
+
+.slide-in-cta:hover .slide-in-cta__icon,
+.slide-in-cta:focus-visible .slide-in-cta__icon {
+  transform: translateX(0);
+  opacity: 1;
+}
+
+/* Spiral dot-field loader (Framer spiral inspired) */
+/* Use the <app-spiral-loader> component for loading states */
+/* See frontend/src/app/shared/components/spiral-loader/ */
+```
+
+### Animated Icon Guidance
+
+- Prefer the `<app-animated-icon>` component for standard icons (check-circle, heart, bell, etc.)
+- Animate only `transform`, `opacity`, and SVG stroke-dash offsets when possible.
+- For custom icons inspired by Lucide animated icons, recreate the interaction in Angular using CSS keyframes/transitions.
+- Keep icon animation subtle and meaningful (hover/focus state, not constant distraction).
+- Available animated icons: `check-circle`, `shield-check`, `heart`, `bell`, `download`, `loader`, `arrow-right`, `sparkles`.
+
+### Toast Motion Language
+
+- Toasts should feel organic and lively (goey-toast inspired), but remain readable and fast.
+- Use layered blob accents + small entrance motion, with clear tone colors (`success`, `error`, `info`, `warning`).
+- Keep toasts dismissible and time-bound, and honor reduced-motion preferences.
+
+### Scroll-to-Top Progress Pattern
+
+- Use a floating circular control that doubles as a scroll progress indicator.
+- Progress ring should represent `scrollY / (scrollHeight - clientHeight)`.
+- Keep hover interaction subtle; do not block content or primary actions.
+- Use transparent background with only the progress ring and arrow visible (no solid button background).
+
+### 404 Page Pattern
+
+- Use the "A Color Bright" inspired style with interactive eye-tracking.
+- Eyes follow the cursor using JavaScript-driven pupil transforms.
+- Display "4 0 4" where the 4s are represented by pairs of tracking eyes.
+- Maintain colorful orb decorations without blur (solid circles).
+- Keep background warm and light (#fffbf5) with subtle grain texture.
 
 ### Anime.js v4 Patterns
 

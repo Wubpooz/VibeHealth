@@ -1,5 +1,5 @@
-/* Import Fonts - preload critical fonts */
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap');
+/* Import Fonts - brand typography */
+@import url('https://api.fontshare.com/v2/css?f[]=satoshi@300,400,500,700,900&display=swap');
 
 /* Tailwind directives */
 @tailwind base;
@@ -53,14 +53,14 @@
 /* Global styles */
 body {
   margin: 0;
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: 'Satoshi', 'Avenir Next', 'Segoe UI', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   @apply bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-100;
 }
 
 h1, h2, h3, h4, h5, h6 {
-  font-family: 'Outfit', sans-serif;
+  font-family: 'Satoshi', 'Avenir Next', 'Segoe UI', sans-serif;
 }
 
 /* Reduce motion for users who prefer it */

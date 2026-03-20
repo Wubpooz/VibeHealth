@@ -7,8 +7,8 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        heading: ['Outfit', 'sans-serif'],
-        sans: ['Plus Jakarta Sans', 'sans-serif'],
+        heading: ['Satoshi', 'Avenir Next', 'Segoe UI', 'sans-serif'],
+        sans: ['Satoshi', 'Avenir Next', 'Segoe UI', 'sans-serif'],
       },
       colors: {
         primary: {

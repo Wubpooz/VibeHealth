@@ -275,6 +275,55 @@ export class DashboardComponent {
 }
 ```
 
+### Spiral Loader Component Usage
+
+```typescript
+import { SpiralLoaderComponent } from '@shared/components/spiral-loader/spiral-loader.component';
+
+@Component({
+  imports: [SpiralLoaderComponent],
+  template: `
+    @if (isLoading()) {
+      <app-spiral-loader [size]="80" [label]="'Loading health data...'" />
+    }
+  `
+})
+export class MyComponent {
+  readonly isLoading = signal(true);
+}
+```
+
+The spiral loader is a reusable loading indicator inspired by Framer's spiral component. Use it for async operations like:
+- API data fetching
+- Form submissions
+- Route transitions
+- Resource processing
+
+### Animated Icon Component Usage
+
+```typescript
+import { AnimatedIconComponent } from '@shared/components/animated-icons/animated-icon.component';
+
+@Component({
+  imports: [AnimatedIconComponent],
+  template: `
+    <!-- Hover-triggered animation -->
+    <app-animated-icon name="check-circle" [size]="24" color="#10b981" />
+    
+    <!-- Programmatically triggered -->
+    <app-animated-icon name="heart" [animate]="showHeartAnimation()" />
+  `
+})
+export class MyComponent {
+  readonly showHeartAnimation = signal(false);
+}
+```
+
+Available icons: `check-circle`, `shield-check`, `heart`, `bell`, `download`, `loader`, `arrow-right`, `sparkles`.
+
+Icons animate on hover by default and support programmatic triggering via the `[animate]` input.
+```
+
 ---
 
 ## 🌐 i18n with ngx-translate
@@ -433,6 +482,24 @@ anime({ targets: '.card', translateX: 250 }); // WRONG
 ```
 
 See `.github/.gsap/CLAUDE.md` for complete v4 reference.
+
+---
+
+## ✨ Landing Motion Pattern (Current Standard)
+
+- Primary hero CTA should use an **icon slide-in interaction** for emphasis.
+- Decorative hero motion can use a **spiral dot-field layer** inspired by generative spiral patterns.
+- Trust and feature affordance icons should be **animated inline SVGs** (Lucide-style motion cues).
+- Always include `prefers-reduced-motion` handling to disable non-essential motion.
+
+---
+
+## 🔔 Global Feedback & Navigation UX
+
+- Use the global **goey-toast** host mounted in `AppComponent` for async success/error/info feedback.
+- Trigger toasts from feature components via a shared `ToastService` instead of local alert banners when action outcomes are transient.
+- Include a global **scroll-to-top with circular progress indicator** in the root shell.
+- For unknown routes, use a dedicated standalone **Not Found** page component and route wildcard traffic to it.
 
 ---
 

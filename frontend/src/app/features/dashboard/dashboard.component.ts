@@ -34,7 +34,7 @@ import { ThemeToggleComponent } from '../../shared/components/theme-toggle/theme
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
           <div class="flex items-center gap-3">
             <div class="flex items-center justify-center w-10 h-10 rounded-xl bg-white shadow-sm border border-gray-100 dark:bg-gray-800 dark:border-gray-700">
-              <span class="text-2xl">🐰</span>
+              <img src="assets/logo.png" alt="VibeHealth Logo" class="w-6 h-6 object-contain" />
             </div>
             <h1 class="text-xl font-bold text-gray-900 tracking-tight dark:text-white font-heading">{{ 'app.title' | translate }}</h1>
           </div>

@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { AuthService } from '../../../core/auth/auth.service';
+import { ToastService } from '../../../core/toast/toast.service';
 import { SpinnerComponent } from '../../../shared/components';
 
 @Component({
@@ -93,12 +94,16 @@ import { SpinnerComponent } from '../../../shared/components';
 })
 export class VerifyEmailComponent {
   readonly auth = inject(AuthService);
+  private readonly toast = inject(ToastService);
   resent = false;
 
   async resendEmail(): Promise<void> {
     const success = await this.auth.resendVerificationEmail();
     if (success) {
       this.resent = true;
+      this.toast.success('Verification email resent.', 'Email sent');
+    } else if (this.auth.error()) {
+      this.toast.error(this.auth.error()!, 'Unable to resend verification');
     }
   }
 }

@@ -2,12 +2,9 @@ import {
   Component,
   ChangeDetectionStrategy,
   signal,
-  inject,
-  PLATFORM_ID,
   afterNextRender,
-  ElementRef,
 } from '@angular/core';
-import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { BunnyMascotComponent, ThemeToggleComponent } from '../../shared/components';
 
@@ -27,6 +24,11 @@ interface Feature {
   styles: [`
     :host {
       display: block;
+    }
+
+    .hero-shell {
+      position: relative;
+      isolation: isolate;
     }
 
     /* Feature card hover shadows based on color */
@@ -52,6 +54,120 @@ interface Feature {
       opacity: 0;
     }
 
+    .slide-in-cta {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      border-radius: 0.75rem;
+      padding: 1rem 1.6rem;
+      font-size: 1.125rem;
+      font-weight: 700;
+      color: #fff;
+      background: #0f172a;
+      overflow: hidden;
+      isolation: isolate;
+      transition: transform 0.25s ease;
+    }
+
+    .slide-in-cta::before {
+      content: '';
+      position: absolute;
+      /* Position at bottom center */
+      left: 50%;
+      bottom: 0;
+      width: 0;
+      height: 0;
+      background: #e11d48;
+      border-radius: 50%;
+      transform: translate(-50%, 50%);
+      transition: width 0.45s cubic-bezier(0.4, 0, 0.2, 1), height 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+      z-index: -1;
+    }
+
+    .slide-in-cta__label {
+      position: relative;
+      z-index: 1;
+    }
+
+    .slide-in-cta__icon {
+      position: relative;
+      z-index: 1;
+      width: 1.25rem;
+      height: 1.25rem;
+      display: grid;
+      place-items: center;
+      transform: translateX(-4px);
+      opacity: 0;
+      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
+      will-change: transform, opacity;
+    }
+
+    .slide-in-cta:hover,
+    .slide-in-cta:focus-visible {
+      transform: translateY(-2px);
+    }
+
+    .slide-in-cta:hover::before,
+    .slide-in-cta:focus-visible::before {
+      /* Expand to cover button with circular shape */
+      width: 300%;
+      height: 300%;
+    }
+
+    .slide-in-cta:hover .slide-in-cta__icon,
+    .slide-in-cta:focus-visible .slide-in-cta__icon {
+      transform: translateX(0);
+      opacity: 1;
+    }
+
+    .trust-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      background: rgba(255, 255, 255, 0.55);
+      padding: 0.45rem 0.8rem;
+      transition: border-color 0.25s ease, transform 0.25s ease, background-color 0.25s ease;
+    }
+
+    .trust-item:hover {
+      border-color: rgba(244, 63, 94, 0.45);
+      transform: translateY(-2px);
+      background: rgba(255, 255, 255, 0.85);
+    }
+
+    .trust-icon {
+      width: 1.25rem;
+      height: 1.25rem;
+      color: #059669;
+      transition: transform 0.25s ease;
+    }
+
+    .trust-item:hover .trust-icon {
+      transform: scale(1.05);
+    }
+
+    .trust-icon--shield .icon-check {
+      stroke-dasharray: 16;
+      stroke-dashoffset: 16;
+    }
+
+    .trust-item:hover .trust-icon--shield .icon-check {
+      animation: drawCheck 0.45s ease forwards;
+    }
+
+    .trust-item:hover .trust-icon--offline {
+      animation: iconFloat 0.7s ease-in-out;
+    }
+
+    .trust-item:hover .trust-icon--heart {
+      animation: iconBeat 0.7s ease-in-out;
+      color: #e11d48;
+    }
+
     @keyframes fadeInUp {
       from {
         opacity: 0;
@@ -63,21 +179,48 @@ interface Feature {
       }
     }
 
+    @keyframes drawCheck {
+      to { stroke-dashoffset: 0; }
+    }
+
+    @keyframes iconFloat {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-2px); }
+    }
+
+    @keyframes iconBeat {
+      0%, 100% { transform: scale(1); }
+      25% { transform: scale(1.12); }
+      65% { transform: scale(0.98); }
+    }
+
     /* Reduce motion for accessibility */
     @media (prefers-reduced-motion: reduce) {
       .animate-fade-in-up,
       .animate-float,
-      .animate-pulse-slow {
+      .animate-pulse-slow,
+      .slide-in-cta,
+      .slide-in-cta::before,
+      .slide-in-cta__icon,
+      .trust-icon {
         animation: none !important;
         opacity: 1;
+        transition: none !important;
+      }
+
+      .slide-in-cta::before {
+        width: 300%;
+        height: 300%;
+      }
+
+      .slide-in-cta__icon {
+        opacity: 1;
+        transform: translateX(0);
       }
     }
   `],
 })
 export class LandingComponent {
-  private readonly platformId = inject(PLATFORM_ID);
-  private readonly elementRef = inject(ElementRef);
-
   readonly isVisible = signal(false);
   readonly currentYear = new Date().getFullYear();
 

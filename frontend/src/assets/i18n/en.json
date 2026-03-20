@@ -9,6 +9,7 @@
     "delete": "Delete",
     "edit": "Edit",
     "close": "Close",
+    "dismiss_notification": "Dismiss notification",
     "loading": "Loading...",
     "error": "An error occurred",
     "success": "Success"

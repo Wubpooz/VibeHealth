@@ -7,3 +7,7 @@ export * from './fab/fab.component';
 export * from './modal/modal.component';
 export * from './theme-toggle/theme-toggle.component';
 export * from './autocomplete/autocomplete.component';
+export * from './goey-toast/goey-toast.component';
+export * from './scroll-top-progress/scroll-top-progress.component';
+export * from './spiral-loader/spiral-loader.component';
+export * from './animated-icons/animated-icon.component';

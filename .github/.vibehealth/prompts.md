@@ -194,7 +194,13 @@ Requirements:
 - Use the color palette (coral, peach, warm gradients)
 - Use rounded corners (1rem+ for cards, 9999px for buttons)
 - Add soft shadows (not harsh drop shadows)
-- Include subtle animations (fade-in, float)
+- Use Satoshi typography from Fontshare (`https://api.fontshare.com/v2/css?f[]=satoshi...`)
+- Include subtle animations (fade-in, float, icon slide-in CTA where relevant)
+- Consider spiral dot-field animation for hero sections when context fits
+- Use animated inline SVG icons for trust badges and affordances when possible
+- Use goey-style toast feedback for action success/error states where appropriate
+- Add scroll-to-top progress controls on long pages when discoverability is useful
+- For wildcard routes, prefer a custom branded 404 page instead of redirecting silently
 - NO `backdrop-filter: blur` (performance)
 
 Specific elements to style:

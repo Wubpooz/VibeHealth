@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { RouterLink, Router } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { AuthService } from '../../../core/auth/auth.service';
+import { ToastService } from '../../../core/toast/toast.service';
 import { SpinnerComponent, SocialButtonsComponent, OAuthProvider } from '../../../shared/components';
 
 @Component({
@@ -25,7 +26,7 @@ import { SpinnerComponent, SocialButtonsComponent, OAuthProvider } from '../../.
         <!-- Logo -->
         <div class="text-center mb-8">
           <div class="inline-flex items-center justify-center w-20 h-20 rounded-3xl bg-white shadow-xl shadow-primary-500/10 mb-6 dark:bg-gray-800">
-            <span class="text-5xl">🐰</span>
+            <img src="assets/logo.png" alt="VibeHealth Logo" class="w-14 h-14 object-contain" />
           </div>
           <h1 class="text-4xl font-bold tracking-tight text-gray-900 mb-3 dark:text-white font-heading">
             {{ 'AUTH.JOIN_VIBEHEALTH' | translate }}
@@ -173,6 +174,7 @@ import { SpinnerComponent, SocialButtonsComponent, OAuthProvider } from '../../.
 export class RegisterComponent {
   readonly auth = inject(AuthService);
   private readonly router = inject(Router);
+  private readonly toast = inject(ToastService);
 
   name = '';
   email = '';
@@ -205,8 +207,11 @@ export class RegisterComponent {
     });
 
     if (success) {
+      this.toast.success('Account created! Let’s complete your profile.', 'Welcome to VibeHealth');
       // Redirect new users to onboarding
       this.router.navigate(['/onboarding']);
+    } else if (this.auth.error()) {
+      this.toast.error(this.auth.error()!, 'Sign up failed');
     }
   }
 

@@ -122,8 +122,9 @@ bun run db:studio     # Open Prisma Studio
 
 ### "Soft Pop" Aesthetic
 - **Colors**: Warm gradients (coral → peach), soft shadows, organic shapes
-- **Typography**: Playful display fonts (e.g., "Lexend Deca"), generous spacing
-- **Motion**: Subtle float animations, spring-based micro-interactions
+- **Typography**: Satoshi from Fontshare for both display and body, generous spacing
+- **Motion**: Subtle float animations, radial-spread CTA micro-interactions, spiral-loader for loading states, and progress-ring back-to-top controls
+- **Feedback**: Gooey-style toast notifications for success/error/info states
 - **Texture**: Noise overlays for depth, no harsh `backdrop-filter: blur` (performance)
 
 ### Component Patterns

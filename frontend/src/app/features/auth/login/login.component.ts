@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { RouterLink, Router } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { AuthService } from '../../../core/auth/auth.service';
+import { ToastService } from '../../../core/toast/toast.service';
 import { SpinnerComponent, SocialButtonsComponent, OAuthProvider } from '../../../shared/components';
 
 @Component({
@@ -24,7 +25,7 @@ import { SpinnerComponent, SocialButtonsComponent, OAuthProvider } from '../../.
         <!-- Logo -->
         <div class="text-center mb-8">
           <div class="inline-flex items-center justify-center w-20 h-20 rounded-3xl bg-white shadow-xl shadow-primary-500/10 mb-6 animate-float dark:bg-gray-800">
-            <span class="text-5xl">🐰</span>
+            <img src="assets/logo.png" alt="VibeHealth Logo" class="w-14 h-14 object-contain" />
           </div>
           <h1 class="text-4xl font-bold tracking-tight text-gray-900 mb-3 dark:text-white font-heading">
             {{ 'AUTH.WELCOME_BACK' | translate }}
@@ -176,6 +177,7 @@ import { SpinnerComponent, SocialButtonsComponent, OAuthProvider } from '../../.
 export class LoginComponent {
   readonly auth = inject(AuthService);
   private readonly router = inject(Router);
+  private readonly toast = inject(ToastService);
 
   email = '';
   password = '';
@@ -188,7 +190,10 @@ export class LoginComponent {
 
     const success = await this.auth.signIn({ email: this.email, password: this.password });
     if (success) {
+      this.toast.success('Welcome back! Your health dashboard is ready.', 'Signed in');
       this.router.navigate(['/dashboard']);
+    } else if (this.auth.error()) {
+      this.toast.error(this.auth.error()!, 'Sign in failed');
     }
   }
 
@@ -202,6 +207,9 @@ export class LoginComponent {
     const success = await this.auth.sendMagicLink(this.magicLinkEmail);
     if (success) {
       this.magicLinkSent.set(true);
+      this.toast.success('Magic link sent. Check your inbox.', 'Email sent');
+    } else if (this.auth.error()) {
+      this.toast.error(this.auth.error()!, 'Unable to send magic link');
     }
   }
 }

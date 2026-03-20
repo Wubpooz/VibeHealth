@@ -43,7 +43,7 @@ import { ReferenceDataService } from '../../core/reference-data/reference-data.s
           <div class="flex items-center justify-between mb-8">
             <div class="flex items-center gap-3">
               <div class="w-10 h-10 rounded-2xl bg-white shadow-lg shadow-primary-500/10 flex items-center justify-center dark:bg-gray-800">
-                <span class="text-xl">🐰</span>
+                <img src="assets/logo.png" alt="VibeHealth Logo" class="w-6 h-6 object-contain" />
               </div>
               <span class="font-heading font-bold text-xl text-gray-900 dark:text-white">VibeHealth</span>
             </div>
