@@ -1,0 +1,36 @@
+{
+  "name": "@vibehealth/backend",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "bun run --watch src/index.ts",
+    "start": "bun run src/index.ts",
+    "build": "bun build src/index.ts --outdir ./dist --target bun",
+    "lint": "eslint src --ext .ts",
+    "typecheck": "tsc --noEmit",
+    "test": "bun test",
+    "db:generate": "bunx prisma generate",
+    "db:push": "bunx prisma db push",
+    "db:migrate": "bunx prisma migrate dev",
+    "db:studio": "bunx prisma studio",
+    "db:seed": "bun run src/db/seed.ts",
+    "setup:db": "docker run --name vibehealth-db -e POSTGRES_USER=vibehealth -e POSTGRES_PASSWORD=vibehealth_dev -e POSTGRES_DB=vibehealth -p 5432:5432 -d postgres:16-alpine || docker start vibehealth-db",
+    "setup:wait": "bun run src/scripts/wait-for-db.ts",
+    "dev:stack": "bun run setup:db && bun run setup:wait && bun run db:generate && bun run db:push && bun run db:seed && bun run dev"
+  },
+  "dependencies": {
+    "@prisma/client": "^5.9.0",
+    "better-auth": "^1.5.5",
+    "hono": "^4.0.0",
+    "zod": "^3.22.4"
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "prisma": "^5.9.0",
+    "typescript": "^5.3.3",
+    "eslint": "^8.56.0",
+    "@typescript-eslint/eslint-plugin": "^6.19.0",
+    "@typescript-eslint/parser": "^6.19.0"
+  }
+}

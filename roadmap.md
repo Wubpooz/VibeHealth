@@ -67,30 +67,30 @@ gantt
 - Role model: user, caregiver (read-only shared access), admin
 
 ### 0.3 Onboarding / Profiling Wizard
-Multi-step wizard collecting:
-- Name, date of birth, biological sex, height, weight
-- Medical conditions, allergies, current medications
-- Fitness level, goals (weight loss, muscle gain, maintenance, wellness)
-- Menstrual cycle info (optional)
-- Pregnancy status (optional)
-- Notification preferences (web push, device push, email)
+✅ Multi-step wizard collecting:
+- ✅ Name, date of birth, biological sex, height, weight
+- ✅ Medical conditions, allergies, current medications (smart autocomplete)
+- ✅ Fitness level, goals (weight loss, muscle gain, maintenance, wellness)
+- ✅ Menstrual cycle info (optional)
+- ✅ Pregnancy status (optional)
+- ✅ Notification preferences (web push, device push, email)
 
 ### 0.4 Bunny Mascot System 🐰
-- Mascot component with idle, happy, sad, encouraging states
-- Bunny reacts to user actions (logging, streaks, milestones)
-- Carrot reward system (used by the Focus Helper in Phase 3)
+- ✅ Mascot component with idle, happy, sad, encouraging states
+- ✅ Bunny reacts to user actions (logging, streaks, milestones)
+- ✅ Carrot reward system (used by the Focus Helper in Phase 3)
 
 ### 0.5 Medical ID
-- Emergency card: name, age, blood type, allergies, medications, emergency contacts
-- Always-accessible (even from lock screen concept)
-- QR code generation for quick scan
-- **Offline-ready** — cached via Service Worker, works without network
+- ✅ Emergency card: name, age, blood type, allergies, medications, emergency contacts
+- ✅ Always-accessible (even from lock screen concept)
+- ✅ QR code generation for quick scan
+- ✅ **Offline-ready** — cached via Service Worker, works without network
 
 ### 0.6 Design System & Shared UI
-- Color palette, typography, spacing tokens
-- Reusable components: cards, charts, modals, bottom nav, FAB
-- Dark mode support
-- Micro-animations (animate.js)
+- ✅ Color palette, typography, spacing tokens
+- ✅ Reusable components: cards, charts, modals, bottom nav, FAB, Autocomplete
+- ✅ Dark mode support
+- ✅ Micro-animations (animate.js)
 
 ### 0.7 Internationalization (i18n)
 - Angular i18n / ngx-translate setup

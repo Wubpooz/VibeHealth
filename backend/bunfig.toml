@@ -1,0 +1,15 @@
+[test]
+# Preload this script before every test file — installs module mocks so
+# Prisma and BetterAuth never attempt a real DB connection during tests.
+preload = ["./src/tests/setup.ts"]
+
+# Test files glob
+include = ["src/tests/**/*.test.ts"]
+
+# Environment overrides for tests
+[test.env]
+NODE_ENV = "test"
+DATABASE_URL = "postgresql://test:test@localhost:5432/test_db"
+AUTH_SECRET = "test_secret_key_that_is_at_least_32_chars!!"
+AUTH_URL = "http://localhost:3000"
+FRONTEND_URL = "http://localhost:4200"
