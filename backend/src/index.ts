@@ -5,6 +5,7 @@ import { prettyJSON } from 'hono/pretty-json';
 import { authRoutes } from './routes/auth.routes';
 import { profileRoutes } from './routes/profile.routes';
 import { medicalIdRoutes } from './routes/medical-id.routes';
+import referenceDataRoutes from './routes/reference-data.routes';
 import { requireAuth, type AuthUser, type AuthSession } from './middleware/auth.middleware';
 
 // Extend Hono context types for auth
@@ -54,6 +55,9 @@ api.route('/profile', profileRoutes);
 
 // Medical ID routes
 api.route('/medical-id', medicalIdRoutes);
+
+// Reference data routes (public)
+api.route('/references', referenceDataRoutes);
 
 app.route('/api/v1', api);
 

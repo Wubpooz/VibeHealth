@@ -31,10 +31,16 @@
 
   <!-- Hero Section -->
   <section class="relative pt-32 pb-20 sm:pt-40 sm:pb-32 overflow-hidden">
-    <!-- Background Gradients -->
+    <!-- Background Gradients & Organic Shapes -->
     <div class="absolute inset-0 overflow-hidden pointer-events-none" aria-hidden="true">
-      <div class="absolute top-[-20%] left-[-10%] w-[60%] h-[60%] bg-gradient-to-br from-primary-200/40 to-primary-100/20 dark:from-primary-900/20 dark:to-primary-950/10 rounded-full blur-3xl"></div>
-      <div class="absolute bottom-[-20%] right-[-10%] w-[50%] h-[50%] bg-gradient-to-tl from-sage-200/40 to-sage-100/20 dark:from-sage-900/20 dark:to-sage-950/10 rounded-full blur-3xl"></div>
+      <!-- Top Left Blob -->
+      <div class="absolute top-[-10%] left-[-10%] w-[70%] h-[70%] bg-gradient-to-br from-primary-100/40 to-primary-50/10 dark:from-primary-900/20 dark:to-transparent rounded-[40%_60%_70%_30%/40%_50%_60%_50%] blur-3xl animate-float" style="animation-duration: 15s;"></div>
+      
+      <!-- Bottom Right Blob -->
+      <div class="absolute bottom-[-10%] right-[-5%] w-[60%] h-[60%] bg-gradient-to-tl from-sage-100/40 to-sage-50/10 dark:from-sage-900/20 dark:to-transparent rounded-[60%_40%_30%_70%/60%_30%_70%_40%] blur-3xl animate-float" style="animation-duration: 20s; animation-delay: -5s;"></div>
+      
+      <!-- Center Accent -->
+      <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[40%] h-[40%] bg-amber-100/20 dark:bg-amber-900/10 rounded-full blur-[100px]"></div>
     </div>
 
     <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -42,31 +48,34 @@
         <!-- Text Content -->
         <div class="text-center lg:text-left">
           <div 
-            class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary-50 dark:bg-primary-900/30 text-primary-600 dark:text-primary-400 text-sm font-semibold mb-6"
+            class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm border border-primary-100 dark:border-primary-900/50 text-primary-700 dark:text-primary-300 text-sm font-semibold mb-8 shadow-sm"
             [class.animate-fade-in-up]="isVisible()"
           >
-            <span class="w-2 h-2 rounded-full bg-sage-500 animate-pulse"></span>
+            <span class="flex h-2 w-2 relative">
+              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary-400 opacity-75"></span>
+              <span class="relative inline-flex rounded-full h-2 w-2 bg-primary-500"></span>
+            </span>
             Your Health Journey Starts Here
           </div>
 
           <h1 
-            class="text-4xl sm:text-5xl lg:text-6xl font-bold font-heading text-gray-900 dark:text-white leading-tight mb-6"
+            class="text-5xl sm:text-6xl lg:text-7xl font-bold font-heading text-gray-900 dark:text-white leading-[1.1] mb-6 tracking-tight"
             [class.animate-fade-in-up]="isVisible()"
             [style.animation-delay]="'0.1s'"
           >
             Your Personal
-            <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary-500 to-primary-600">
+            <span class="block text-transparent bg-clip-text bg-gradient-to-r from-primary-500 via-primary-600 to-rose-600 pb-2">
               Health Companion
             </span>
           </h1>
 
           <p 
-            class="text-lg sm:text-xl text-gray-600 dark:text-gray-400 mb-8 max-w-xl mx-auto lg:mx-0"
+            class="text-xl text-gray-600 dark:text-gray-300 mb-10 max-w-xl mx-auto lg:mx-0 leading-relaxed text-balance"
             [class.animate-fade-in-up]="isVisible()"
             [style.animation-delay]="'0.2s'"
           >
-            Meet your new health buddy! Our adorable bunny mascot guides you through your wellness journey with 
-            <span class="font-semibold text-sage-600 dark:text-sage-400">carrot rewards</span>, 
+            Meet your new health buddy! 🐰 Our adorable mascot guides you through your wellness journey with 
+            <span class="font-semibold text-sage-600 dark:text-sage-400 decoration-sage-300 underline decoration-2 underline-offset-2">carrot rewards</span>, 
             personalized insights, and emergency-ready tools.
           </p>
 
@@ -78,19 +87,19 @@
           >
             <a
               routerLink="/register"
-              class="group inline-flex items-center justify-center gap-2 px-8 py-4 text-lg font-bold text-white bg-gradient-to-r from-primary-500 to-primary-600 rounded-2xl shadow-xl shadow-primary-500/30 hover:shadow-primary-500/50 hover:scale-105 active:scale-95 transition-all duration-200"
+              class="group inline-flex items-center justify-center gap-2 px-8 py-4 text-lg font-bold text-white bg-gradient-to-r from-primary-500 to-rose-600 rounded-2xl shadow-[0_10px_20px_-10px_rgba(244,63,94,0.5)] hover:shadow-[0_20px_30px_-10px_rgba(244,63,94,0.6)] hover:-translate-y-1 active:translate-y-0 active:scale-95 transition-all duration-300"
             >
               Get Started Free
               <svg class="w-5 h-5 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 7l5 5m0 0l-5 5m5-5H6" />
               </svg>
             </a>
             <a
               routerLink="/login"
-              class="group inline-flex items-center justify-center gap-2 px-8 py-4 text-lg font-semibold text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-700 rounded-2xl shadow-lg hover:border-primary-300 dark:hover:border-primary-600 hover:scale-105 active:scale-95 transition-all duration-200"
+              class="group inline-flex items-center justify-center gap-2 px-8 py-4 text-lg font-semibold text-gray-700 dark:text-gray-200 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm border border-gray-200 dark:border-gray-700 rounded-2xl shadow-sm hover:bg-white dark:hover:bg-gray-800 hover:border-primary-200 dark:hover:border-primary-800 hover:-translate-y-1 active:translate-y-0 active:scale-95 transition-all duration-300"
             >
               Sign In
-              <svg class="w-5 h-5 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <svg class="w-5 h-5 transition-transform group-hover:translate-x-1 text-gray-400 group-hover:text-primary-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
               </svg>
             </a>

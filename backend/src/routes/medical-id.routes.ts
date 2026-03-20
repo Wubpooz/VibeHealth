@@ -76,7 +76,7 @@ medicalIdRoutes.post('/', requireAuth, async (c) => {
   const body = await c.req.json();
   
   try {
-    const { bloodType, allergies, medications, emergencyContacts, medicalNotes, organDonor } = body;
+    const { bloodType, allergies, medications, medicalConditions, emergencyContacts } = body;
     
     // Generate QR code data
     const qrData = JSON.stringify({
@@ -84,11 +84,20 @@ medicalIdRoutes.post('/', requireAuth, async (c) => {
       bt: bloodType,
       a: (allergies || []).slice(0, 5),
       m: (medications || []).slice(0, 5),
+      c: (medicalConditions || []).slice(0, 3),
       ec: (emergencyContacts || []).slice(0, 2).map((c: any) => ({
         n: c.name,
         p: c.phone
       }))
     });
+    
+    // Update Profile if medical conditions are provided
+    if (medicalConditions) {
+      await prisma.profile.update({
+        where: { userId: user.id },
+        data: { medicalConditions }
+      });
+    }
     
     const medicalId = await prisma.medicalId.upsert({
       where: { userId: user.id },

@@ -184,31 +184,32 @@ import { Subject, debounceTime, distinctUntilChanged } from 'rxjs';
       display: inline-flex;
       align-items: center;
       gap: 0.375rem;
-      padding: 0.375rem 0.5rem 0.375rem 0.75rem;
-      background: linear-gradient(135deg, #fef2f2 0%, #fff1f2 100%);
+      padding: 0.375rem 0.75rem 0.375rem 0.875rem;
+      background: linear-gradient(135deg, #fff1f2 0%, #ffe4e6 100%);
       border: 1px solid #fecdd3;
-      border-radius: 9999px;
+      border-radius: 12px;
       font-size: 0.875rem;
-      font-weight: 500;
-      color: #be123c;
-      transition: all 0.15s ease;
-      animation: chip-enter 0.2s ease-out;
+      font-weight: 600;
+      color: #e11d48;
+      box-shadow: 0 1px 2px rgba(225, 29, 72, 0.1);
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      animation: chip-enter 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    
+    .chip:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 6px -1px rgba(225, 29, 72, 0.1), 0 2px 4px -1px rgba(225, 29, 72, 0.06);
     }
 
     @keyframes chip-enter {
       from {
         opacity: 0;
-        transform: scale(0.8);
+        transform: scale(0.8) translateY(4px);
       }
       to {
         opacity: 1;
-        transform: scale(1);
+        transform: scale(1) translateY(0);
       }
-    }
-
-    .chip:hover {
-      background: linear-gradient(135deg, #ffe4e6 0%, #fecdd3 100%);
-      border-color: #fda4af;
     }
 
     .chip-text {
@@ -252,32 +253,32 @@ import { Subject, debounceTime, distinctUntilChanged } from 'rxjs';
 
     .autocomplete-input {
       width: 100%;
-      padding: 0.75rem 5rem 0.75rem 1rem;
-      border-radius: 0.75rem;
-      border: 1px solid #e5e7eb;
-      background: rgba(249, 250, 251, 0.8);
-      color: #111827;
+      padding: 0.75rem 1rem;
+      padding-right: 2.5rem;
+      border: 1px solid #e2e8f0;
+      border-radius: 1rem;
+      background-color: #f8fafc;
+      color: #1e293b;
+      font-family: inherit;
       font-size: 1rem;
-      transition: all 0.15s ease;
+      line-height: 1.5;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
     }
 
     .autocomplete-input::placeholder {
-      color: #9ca3af;
+      color: #94a3b8;
     }
 
     .autocomplete-input:focus {
       outline: none;
       border-color: #f43f5e;
-      background: white;
-      box-shadow: 0 0 0 3px rgba(244, 63, 94, 0.15);
+      background-color: #ffffff;
+      box-shadow: 0 0 0 4px rgba(244, 63, 94, 0.15);
     }
 
     .is-open .autocomplete-input {
       border-color: #f43f5e;
-      background: white;
-      box-shadow: 0 0 0 3px rgba(244, 63, 94, 0.15);
-      border-bottom-left-radius: 0;
-      border-bottom-right-radius: 0;
     }
 
     /* Buttons in input */
@@ -316,26 +317,28 @@ import { Subject, debounceTime, distinctUntilChanged } from 'rxjs';
       position: absolute;
       top: 100%;
       left: 0;
-      right: 0;
-      max-height: 240px;
+      width: 100%;
+      max-height: 280px;
       overflow-y: auto;
-      background: white;
-      border: 1px solid #f43f5e;
-      border-top: none;
-      border-radius: 0 0 0.75rem 0.75rem;
-      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+      margin-top: 0.5rem;
+      background-color: #ffffff;
+      border: 1px solid #f1f5f9;
+      border-radius: 1rem;
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05), 0 20px 25px -5px rgba(0, 0, 0, 0.1);
       z-index: 50;
-      animation: dropdown-enter 0.15s ease-out;
+      padding: 0.5rem;
+      animation: dropdown-enter 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      transform-origin: top center;
     }
 
     @keyframes dropdown-enter {
       from {
         opacity: 0;
-        transform: translateY(-4px);
+        transform: scaleY(0.95) translateY(-5px);
       }
       to {
         opacity: 1;
-        transform: translateY(0);
+        transform: scaleY(1) translateY(0);
       }
     }
 

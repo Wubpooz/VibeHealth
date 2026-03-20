@@ -4,6 +4,8 @@ import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { MedicalIdService } from '../../core/medical-id/medical-id.service';
+import { ReferenceDataService } from '../../core/reference-data/reference-data.service';
+import { AutocompleteComponent } from '../../shared/components/autocomplete/autocomplete.component';
 import { ProfileService } from '../../core/profile/profile.service';
 import { AuthService } from '../../core/auth/auth.service';
 import { BLOOD_TYPES, RELATIONSHIPS, BloodType, EmergencyContact } from './medical-id.types';
@@ -13,7 +15,7 @@ type ViewMode = 'card' | 'edit';
 @Component({
   selector: 'app-medical-id',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink, TranslateModule],
+  imports: [CommonModule, FormsModule, RouterLink, TranslateModule, AutocompleteComponent],
   template: `
     <div class="medical-id-page">
       <!-- Dramatic Emergency Header -->
@@ -225,52 +227,39 @@ type ViewMode = 'card' | 'edit';
             <section class="form-section">
               <h3 class="section-label">Allergies</h3>
               <div class="chip-input-container">
-                <div class="chips">
-                  @for (allergy of editData.allergies; track allergy) {
-                    <span class="chip allergy-chip">
-                      {{ allergy }}
-                      <button class="chip-remove" (click)="removeAllergy(allergy)">×</button>
-                    </span>
-                  }
-                </div>
-                <div class="input-row">
-                  <input
-                    type="text"
-                    [(ngModel)]="newAllergy"
-                    placeholder="Add allergy..."
-                    class="chip-input"
-                    (keydown.enter)="addAllergy()"
-                  />
-                  <button class="add-btn" (click)="addAllergy()" [disabled]="!newAllergy.trim()">
-                    Add
-                  </button>
-                </div>
+                <app-autocomplete
+                  [suggestions]="commonAllergies()"
+                  [selectedItems]="editData.allergies"
+                  [placeholder]="'Add allergy...'"
+                  [allowCustom]="true"
+                  (itemsChange)="editData.allergies = $event"
+                ></app-autocomplete>
               </div>
             </section>
 
             <section class="form-section">
               <h3 class="section-label">Medications</h3>
               <div class="chip-input-container">
-                <div class="chips">
-                  @for (med of editData.medications; track med) {
-                    <span class="chip med-chip">
-                      {{ med }}
-                      <button class="chip-remove" (click)="removeMedication(med)">×</button>
-                    </span>
-                  }
-                </div>
-                <div class="input-row">
-                  <input
-                    type="text"
-                    [(ngModel)]="newMedication"
-                    placeholder="Add medication..."
-                    class="chip-input"
-                    (keydown.enter)="addMedication()"
-                  />
-                  <button class="add-btn" (click)="addMedication()" [disabled]="!newMedication.trim()">
-                    Add
-                  </button>
-                </div>
+                <app-autocomplete
+                  [suggestions]="commonMedications()"
+                  [selectedItems]="editData.medications"
+                  [placeholder]="'Add medication...'"
+                  [allowCustom]="true"
+                  (itemsChange)="editData.medications = $event"
+                ></app-autocomplete>
+              </div>
+            </section>
+
+            <section class="form-section">
+              <h3 class="section-label">Medical Conditions</h3>
+              <div class="chip-input-container">
+                <app-autocomplete
+                  [suggestions]="commonConditions()"
+                  [selectedItems]="editData.medicalConditions"
+                  [placeholder]="'Add condition...'"
+                  [allowCustom]="true"
+                  (itemsChange)="editData.medicalConditions = $event"
+                ></app-autocomplete>
               </div>
             </section>
 
@@ -1360,6 +1349,7 @@ export class MedicalIdComponent implements OnInit {
   readonly medicalIdService = inject(MedicalIdService);
   readonly profileService = inject(ProfileService);
   readonly auth = inject(AuthService);
+  private readonly referenceDataService = inject(ReferenceDataService);
 
   // View state
   readonly viewMode = signal<ViewMode>('card');
@@ -1369,22 +1359,21 @@ export class MedicalIdComponent implements OnInit {
   // Constants
   readonly bloodTypes = BLOOD_TYPES;
   readonly relationships = RELATIONSHIPS;
+  
+  // Reference Data
+  readonly commonAllergies = this.referenceDataService.allergies;
+  readonly commonMedications = this.referenceDataService.medications;
+  readonly commonConditions = this.referenceDataService.conditions;
 
   // Edit form data
-  editData: {
-    bloodType: BloodType | null;
-    allergies: string[];
-    medications: string[];
-    emergencyContacts: EmergencyContact[];
-  } = {
-    bloodType: null,
-    allergies: [],
-    medications: [],
-    emergencyContacts: []
+  editData = {
+    bloodType: null as BloodType | null,
+    allergies: [] as string[],
+    medications: [] as string[],
+    medicalConditions: [] as string[],
+    emergencyContacts: [] as EmergencyContact[]
   };
 
-  newAllergy = '';
-  newMedication = '';
   newContact: Omit<EmergencyContact, 'id'> = {
     name: '',
     relationship: '',
@@ -1434,6 +1423,7 @@ export class MedicalIdComponent implements OnInit {
         bloodType: data.bloodType,
         allergies: [...data.allergies],
         medications: [...data.medications],
+        medicalConditions: [...(data.medicalConditions || [])],
         emergencyContacts: [...data.emergencyContacts]
       };
     }
@@ -1447,32 +1437,6 @@ export class MedicalIdComponent implements OnInit {
       day: 'numeric',
       year: 'numeric'
     });
-  }
-
-  // Allergy management
-  addAllergy() {
-    const value = this.newAllergy.trim();
-    if (value && !this.editData.allergies.includes(value)) {
-      this.editData.allergies.push(value);
-    }
-    this.newAllergy = '';
-  }
-
-  removeAllergy(allergy: string) {
-    this.editData.allergies = this.editData.allergies.filter(a => a !== allergy);
-  }
-
-  // Medication management
-  addMedication() {
-    const value = this.newMedication.trim();
-    if (value && !this.editData.medications.includes(value)) {
-      this.editData.medications.push(value);
-    }
-    this.newMedication = '';
-  }
-
-  removeMedication(med: string) {
-    this.editData.medications = this.editData.medications.filter(m => m !== med);
   }
 
   // Contact management
@@ -1516,6 +1480,7 @@ export class MedicalIdComponent implements OnInit {
         bloodType: this.editData.bloodType,
         allergies: this.editData.allergies,
         medications: this.editData.medications,
+        medicalConditions: this.editData.medicalConditions,
         emergencyContacts: this.editData.emergencyContacts
       });
 
