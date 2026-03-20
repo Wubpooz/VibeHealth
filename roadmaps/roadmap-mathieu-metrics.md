@@ -19,6 +19,7 @@
 - [ ] Add `ACTIVITY_LOG` and `MEAL_LOG` to `schema.prisma`.
 - [ ] Create Hono CRUD routes for activities and meals (with macros: protein/carbs/fat).
 - [ ] Build Frontend interfaces for Manual Activity Logging and Food Diary.
+- [ ] Implement Barcode scanner placeholder for packaged foods to speed up logging.
 - [ ] Create reusable components for Charting (e.g., 7-day trend graphs for steps & calories).
 
 ## Milestone 3: SMART Goals & Analysis
@@ -26,3 +27,8 @@
 - [ ] Build the Goal creation wizard on the Frontend.
 - [ ] Write Backend services to compute progress against weekly/monthly goals (e.g. "Did user hit 10k steps 5 days this week?").
 - [ ] Implement Milestone celebrations (integrating with the Bunny Mascot system to react enthusiastically).
+
+## Milestone 4: Workouts & Hardware Sync
+- [ ] Add `WORKOUT_PLAN` / Exercise logic to Backend.
+- [ ] Build the Workouts Tab matching profile to exercise suggestions and providing rep counters/rest timers.
+- [ ] Integrate Health Platform Sync (Google Fit / Samsung Health web APIs) to automatically pull/push metrics continuously.

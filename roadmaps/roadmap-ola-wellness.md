@@ -21,7 +21,13 @@
 - [ ] Build the Frontend UI (cycle logging: flow intensity, symptoms logs).
 - [ ] Allow configuring contraceptive pill reminders (with snooze support via device push).
 
-## Milestone 3: Relaxation & Focus Sessions
+## Milestone 3: Pregnancy Mode
+- [ ] Add `PREGNANCY` model to `schema.prisma`.
+- [ ] Add a visual setting to toggle from Period Tracker to Pregnancy Mode.
+- [ ] Build the kick counter and contraction timer functions.
+- [ ] Create UI for week-by-week guides (fetal development) and adapted symptom logging.
+
+## Milestone 4: Relaxation & Focus Sessions
 - [ ] Add `FOCUS_SESSION` to `schema.prisma`.
 - [ ] Implement an Ambient Audio player for relaxation modes (background sounds, timer logic).
 - [ ] Build the Focus Helper Pomodoro screen locking mechanism.

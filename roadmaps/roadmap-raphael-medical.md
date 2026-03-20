@@ -10,8 +10,8 @@
 ---
 
 ## Milestone 1: First Aid & Guides (Offline First)
-- [ ] Configure Angular Service Workers to forcefully cache First Aid content.
-- [ ] Build offline-first, quick-reference First Aid cards UI (burns, CPR, choking).
+- [x] Configure Angular Service Workers to forcefully cache First Aid content.
+- [x] Build offline-first, quick-reference First Aid cards UI (burns, CPR, choking).
 - [ ] Implement an offline-accessible local helpline directory (one-tap call links).
 - [ ] Integrate a condition library and markdown document renderer for health articles.
 
@@ -24,5 +24,9 @@
 ## Milestone 3: External Intelligence & Sync
 - [ ] Hook into OpenFDA (or ANSM open data) to display potential side effects and interactions.
 - [ ] Integrate a 3rd-party Pollen Tracking API to broadcast daily levels dynamically based on location.
-- [ ] Build the Appointment tracker (with recommended screenings based on user profile age/sex).
+- [ ] Build the Appointment tracker (with recommended screenings and vaccines based on user profile age/sex).
 - [ ] Plan Doctor Maps API integration (Free open APIs like OpenStreetMap) for finding nearby specialists.
+
+## Milestone 4: Calendar & Doctolib Sync
+- [ ] Add 2-way iCal sync for appointments and medication reminders.
+- [ ] Integrate Doctolib OAuth (or manual import flow) to pull upcoming appointments and prep notes automatically.
