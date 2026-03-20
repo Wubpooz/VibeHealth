@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink, Router } from '@angular/router';
@@ -12,7 +12,7 @@ import { SpinnerComponent, SocialButtonsComponent, OAuthProvider } from '../../.
   imports: [CommonModule, FormsModule, RouterLink, TranslateModule, SpinnerComponent, SocialButtonsComponent],
   template: `
     <div class="relative min-h-screen flex items-center justify-center overflow-hidden bg-gray-50 dark:bg-gray-950 px-4 py-12 transition-colors duration-500">
-      
+
       <!-- Ambient Background Effects -->
       <div class="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
         <div class="absolute top-[-10%] right-[-10%] w-[40%] h-[40%] bg-primary-300/20 rounded-full blur-[100px] animate-pulse-slow dark:bg-primary-900/20"></div>
@@ -20,7 +20,7 @@ import { SpinnerComponent, SocialButtonsComponent, OAuthProvider } from '../../.
       </div>
 
       <div class="relative w-full max-w-md animate-fade-in-up">
-        
+
         <!-- Logo -->
         <div class="text-center mb-8">
           <div class="inline-flex items-center justify-center w-20 h-20 rounded-3xl bg-white shadow-xl shadow-primary-500/10 mb-6 animate-float dark:bg-gray-800">
@@ -36,7 +36,7 @@ import { SpinnerComponent, SocialButtonsComponent, OAuthProvider } from '../../.
 
         <!-- Glass Card -->
         <div class="glass-panel rounded-3xl p-8 sm:p-10">
-          
+
           @if (auth.error()) {
             <div class="mb-6 p-4 rounded-xl bg-red-50 border border-red-100 text-red-600 text-sm font-medium flex items-start gap-3 animate-fade-in dark:bg-red-900/20 dark:border-red-800 dark:text-red-400">
               <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -191,11 +191,12 @@ export class RegisterComponent {
     });
 
     if (success) {
-      this.router.navigate(['/verify-email']);
+      // Redirect new users to onboarding
+      this.router.navigate(['/onboarding']);
     }
   }
 
   onOAuthClick(provider: OAuthProvider): void {
-    window.location.href = this.auth.getOAuthUrl(provider);
+    globalThis.location.href = this.auth.getOAuthUrl(provider);
   }
 }

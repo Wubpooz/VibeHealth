@@ -18,7 +18,9 @@
     "profile": "Profile",
     "medical_id": "Medical ID",
     "settings": "Settings",
-    "dashboard": "Dashboard"
+    "dashboard": "Dashboard",
+    "first_aid": "First Aid",
+    "journal": "Journal"
   },
   "AUTH": {
     "LOGIN": "Log in",
@@ -64,5 +66,62 @@
     "EMAIL_VERIFIED": "Email verified",
     "ROLE": "Role",
     "VERIFY_EMAIL_BANNER": "Please verify your email to access all features."
+  },
+  "ONBOARDING": {
+    "SKIP": "Skip for now",
+    "BACK": "Back",
+    "CONTINUE": "Continue",
+    "COMPLETE": "Complete Setup",
+    "SAVING": "Saving...",
+    "WELCOME_TITLE": "Welcome to VibeHealth!",
+    "WELCOME_SUBTITLE": "Let's set up your profile so I can help you feel your best.",
+    "LETS_GO": "Let's Go!",
+    "ABOUT_YOU": "About You",
+    "ABOUT_YOU_DESC": "The basics to personalize your experience",
+    "WHAT_TO_CALL": "What should I call you?",
+    "BIRTHDAY": "When's your birthday?",
+    "BIOLOGICAL_SEX": "Biological sex",
+    "SEX_HELP": "Helps with accurate health calculations",
+    "YOUR_BODY": "Your Body",
+    "YOUR_BODY_DESC": "Help us tailor recommendations",
+    "HEIGHT": "Height",
+    "WEIGHT": "Weight",
+    "HEALTH_BACKGROUND": "Health Background",
+    "HEALTH_BACKGROUND_DESC": "Optional but helpful for safety",
+    "MEDICAL_CONDITIONS": "Any medical conditions?",
+    "ALLERGIES": "Any allergies?",
+    "MEDICATIONS": "Current medications?",
+    "ADD_OTHER": "Add other...",
+    "YOUR_GOALS": "Your Goals",
+    "YOUR_GOALS_DESC": "What would you like to achieve?",
+    "ACTIVITY_LEVEL": "Current activity level",
+    "SELECT_GOALS": "Select your goals",
+    "PICK_ANY": "pick any",
+    "ALL_SET": "You're All Set!",
+    "ALL_SET_DESC": "Your health journey starts now. I'll be here cheering you on every step of the way!",
+    "GO_TO_DASHBOARD": "Go to Dashboard"
+  },
+  "MEDICAL_ID": {
+    "TITLE": "Medical ID",
+    "SUBTITLE": "Emergency health information",
+    "BLOOD_TYPE": "Blood Type",
+    "ALLERGIES": "Allergies",
+    "MEDICATIONS": "Medications",
+    "CONDITIONS": "Conditions",
+    "EMERGENCY_CONTACTS": "Emergency Contacts",
+    "ADD_CONTACT": "Add Contact",
+    "NONE_LISTED": "None listed",
+    "NO_CONTACTS": "No emergency contacts added",
+    "AVAILABLE_OFFLINE": "Available offline",
+    "SCAN_QR": "Scan to access emergency info",
+    "SAVE_CHANGES": "Save Medical ID",
+    "EDIT_MODE": "Edit",
+    "VIEW_MODE": "View Card"
+  },
+  "REWARDS": {
+    "CARROTS": "Carrots",
+    "LEVEL": "Level",
+    "STREAK": "Streak",
+    "DAYS": "days"
   }
 }

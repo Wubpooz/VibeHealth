@@ -3,6 +3,8 @@ import { cors } from 'hono/cors';
 import { logger } from 'hono/logger';
 import { prettyJSON } from 'hono/pretty-json';
 import { authRoutes } from './routes/auth.routes';
+import { profileRoutes } from './routes/profile.routes';
+import { medicalIdRoutes } from './routes/medical-id.routes';
 import { requireAuth, type AuthUser, type AuthSession } from './middleware/auth.middleware';
 
 // Extend Hono context types for auth
@@ -46,6 +48,12 @@ api.get('/me', requireAuth, (c) => {
   const user = c.get('user');
   return c.json({ user });
 });
+
+// Profile routes
+api.route('/profile', profileRoutes);
+
+// Medical ID routes
+api.route('/medical-id', medicalIdRoutes);
 
 app.route('/api/v1', api);
 

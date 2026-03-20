@@ -18,7 +18,9 @@
     "profile": "Profil",
     "medical_id": "Carte médicale",
     "settings": "Paramètres",
-    "dashboard": "Tableau de bord"
+    "dashboard": "Tableau de bord",
+    "first_aid": "Premiers secours",
+    "journal": "Journal"
   },
   "AUTH": {
     "LOGIN": "Se connecter",
@@ -64,5 +66,62 @@
     "EMAIL_VERIFIED": "Email vérifié",
     "ROLE": "Rôle",
     "VERIFY_EMAIL_BANNER": "Veuillez vérifier votre email pour accéder à toutes les fonctionnalités."
+  },
+  "ONBOARDING": {
+    "SKIP": "Passer pour l'instant",
+    "BACK": "Retour",
+    "CONTINUE": "Continuer",
+    "COMPLETE": "Terminer la configuration",
+    "SAVING": "Enregistrement...",
+    "WELCOME_TITLE": "Bienvenue sur VibeHealth !",
+    "WELCOME_SUBTITLE": "Configurons votre profil pour que je puisse vous aider à vous sentir au mieux.",
+    "LETS_GO": "C'est parti !",
+    "ABOUT_YOU": "À propos de vous",
+    "ABOUT_YOU_DESC": "Les bases pour personnaliser votre expérience",
+    "WHAT_TO_CALL": "Comment dois-je vous appeler ?",
+    "BIRTHDAY": "Quelle est votre date de naissance ?",
+    "BIOLOGICAL_SEX": "Sexe biologique",
+    "SEX_HELP": "Aide pour des calculs de santé précis",
+    "YOUR_BODY": "Votre corps",
+    "YOUR_BODY_DESC": "Aide à adapter les recommandations",
+    "HEIGHT": "Taille",
+    "WEIGHT": "Poids",
+    "HEALTH_BACKGROUND": "Antécédents médicaux",
+    "HEALTH_BACKGROUND_DESC": "Optionnel mais utile pour votre sécurité",
+    "MEDICAL_CONDITIONS": "Des conditions médicales ?",
+    "ALLERGIES": "Des allergies ?",
+    "MEDICATIONS": "Médicaments actuels ?",
+    "ADD_OTHER": "Ajouter autre...",
+    "YOUR_GOALS": "Vos objectifs",
+    "YOUR_GOALS_DESC": "Qu'aimeriez-vous accomplir ?",
+    "ACTIVITY_LEVEL": "Niveau d'activité actuel",
+    "SELECT_GOALS": "Sélectionnez vos objectifs",
+    "PICK_ANY": "choisissez en",
+    "ALL_SET": "Tout est prêt !",
+    "ALL_SET_DESC": "Votre parcours santé commence maintenant. Je serai là pour vous encourager à chaque étape !",
+    "GO_TO_DASHBOARD": "Aller au tableau de bord"
+  },
+  "MEDICAL_ID": {
+    "TITLE": "Carte Médicale",
+    "SUBTITLE": "Informations de santé d'urgence",
+    "BLOOD_TYPE": "Groupe sanguin",
+    "ALLERGIES": "Allergies",
+    "MEDICATIONS": "Médicaments",
+    "CONDITIONS": "Conditions",
+    "EMERGENCY_CONTACTS": "Contacts d'urgence",
+    "ADD_CONTACT": "Ajouter un contact",
+    "NONE_LISTED": "Aucun listé",
+    "NO_CONTACTS": "Aucun contact d'urgence ajouté",
+    "AVAILABLE_OFFLINE": "Disponible hors ligne",
+    "SCAN_QR": "Scanner pour accéder aux infos d'urgence",
+    "SAVE_CHANGES": "Enregistrer la carte médicale",
+    "EDIT_MODE": "Modifier",
+    "VIEW_MODE": "Voir la carte"
+  },
+  "REWARDS": {
+    "CARROTS": "Carottes",
+    "LEVEL": "Niveau",
+    "STREAK": "Série",
+    "DAYS": "jours"
   }
 }

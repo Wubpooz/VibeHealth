@@ -19,7 +19,7 @@ export const auth = betterAuth({
     provider: 'postgresql',
   }),
 
-  secret: authSecret || 'INSECURE_DEV_SECRET_DO_NOT_USE_IN_PRODUCTION',
+  secret: authSecret,
   baseURL: process.env.AUTH_URL || 'http://localhost:3000',
 
   trustedOrigins: [
