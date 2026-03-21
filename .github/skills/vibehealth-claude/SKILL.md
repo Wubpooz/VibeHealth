@@ -385,8 +385,8 @@ See: .github/.angular/llms-full.txt
 # For Hono API details  
 See: .github/.hono/llms-full.txt
 
-# For Anime.js v4 (CRITICAL: different from v3!)
-See: .github/.gsap/CLAUDE.md
+# For Animation patterns (Motion.dev + ngx-lottie)
+See: .github/llms/.gsap/CLAUDE.md
 
 # For build/test commands
 See: .github/copilot-instructions.md

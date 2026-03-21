@@ -3,6 +3,7 @@ import { provideRouter } from '@angular/router';
 import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/http';
 import { provideTranslateService } from '@ngx-translate/core';
 import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
+import { provideLottieOptions } from 'ngx-lottie';
 
 import { routes } from './app.routes';
 import { provideServiceWorker } from '@angular/service-worker';
@@ -19,6 +20,10 @@ export const appConfig: ApplicationConfig = {
     ),
     provideTranslateService({ fallbackLang: 'en' }),
     provideTranslateHttpLoader(),
+    // Lottie animations - lazy-loaded for bundle optimization
+    provideLottieOptions({
+      player: () => import('lottie-web'),
+    }),
     provideServiceWorker('ngsw-worker.js', {
       enabled: !isDevMode(),
       registrationStrategy: 'registerWhenStable:30000'

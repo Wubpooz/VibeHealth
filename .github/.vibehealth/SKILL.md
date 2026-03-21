@@ -44,7 +44,7 @@ vibehealth/
 │   ├── .vibehealth/            # This skill system
 │   ├── .angular/               # Angular 21 reference docs
 │   ├── .hono/                  # Hono framework reference
-│   ├── .gsap/                  # Animation library reference (Anime.js v4)
+│   ├── .gsap/                  # Animation reference (Motion.dev patterns)
 │   └── copilot-instructions.md # Build/test commands
 │
 └── roadmap.md                  # Product roadmap with phases
@@ -63,7 +63,8 @@ vibehealth/
 | **Auth** | BetterAuth | 1.x | Email/password, OAuth, magic links |
 | **Frontend** | Angular | 21.x | Standalone components + signals |
 | **Styling** | Tailwind CSS | 4.x | Utility-first CSS |
-| **Animation** | Anime.js | 4.x | See `.gsap/CLAUDE.md` for v4 syntax |
+| **Animation** | Motion.dev | 12.x | `motion/mini` for DOM, ngx-lottie for vectors |
+| **Lottie** | ngx-lottie | 20.x | Complex vector animations (mascot, icons) |
 | **i18n** | ngx-translate | 16.x | FR + EN locales |
 | **PWA** | Service Worker | - | Offline caching via ngsw |
 

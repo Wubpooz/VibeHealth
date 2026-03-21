@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, signal, ViewChildren, QueryList, ElementRef, AfterViewInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
@@ -9,10 +9,10 @@ import { BunnyMascotComponent } from '../../shared/components/bunny-mascot/bunny
 import { CarrotCounterComponent } from '../../shared/components/carrot-counter/carrot-counter.component';
 import { ThemeToggleComponent } from '../../shared/components/theme-toggle/theme-toggle.component';
 import { HydrationTrackerComponent } from '../metrics/hydration-tracker.component';
+import { animate } from 'motion/mini';
 
 @Component({
   selector: 'app-dashboard',
-  standalone: true,
   imports: [
     CommonModule, 
     RouterLink, 
@@ -22,6 +22,12 @@ import { HydrationTrackerComponent } from '../metrics/hydration-tracker.componen
     ThemeToggleComponent,
     HydrationTrackerComponent
   ],
+  styles: [`
+    /* Initial state for Motion.dev animations - start invisible */
+    .action-card {
+      opacity: 0;
+    }
+  `],
   template: `
     <div class="relative min-h-screen bg-gray-50 dark:bg-gray-950 transition-colors duration-500 overflow-hidden">
       
@@ -167,8 +173,9 @@ import { HydrationTrackerComponent } from '../metrics/hydration-tracker.componen
         <div class="grid md:grid-cols-3 gap-6 mb-12">
           <!-- Medical ID Card - Now Active! -->
           <a 
+            #actionCard
             routerLink="/medical-id"
-            class="group relative glass-panel rounded-3xl p-8 transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl hover:shadow-red-500/10 cursor-pointer"
+            class="action-card group relative glass-panel rounded-3xl p-8 transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl hover:shadow-red-500/10 cursor-pointer"
           >
             <div class="absolute inset-0 bg-gradient-to-br from-red-500/5 to-transparent rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
             <div class="absolute top-4 right-4 px-2.5 py-1 bg-red-100 text-red-600 text-xs font-bold rounded-full dark:bg-red-900/30 dark:text-red-400">
@@ -193,8 +200,9 @@ import { HydrationTrackerComponent } from '../metrics/hydration-tracker.componen
 
           <!-- Onboarding Card -->
           <a 
+            #actionCard
             routerLink="/onboarding"
-            class="group relative glass-panel rounded-3xl p-8 transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl hover:shadow-sage-500/10 cursor-pointer"
+            class="action-card group relative glass-panel rounded-3xl p-8 transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl hover:shadow-sage-500/10 cursor-pointer"
           >
             <div class="absolute inset-0 bg-gradient-to-br from-sage-500/5 to-transparent rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
             <div class="relative z-10">
@@ -214,8 +222,9 @@ import { HydrationTrackerComponent } from '../metrics/hydration-tracker.componen
 
           <!-- First Aid Card - Now Active! -->
           <a 
+            #actionCard
             routerLink="/first-aid"
-            class="group relative glass-panel rounded-3xl p-8 transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl hover:shadow-green-500/10 cursor-pointer"
+            class="action-card group relative glass-panel rounded-3xl p-8 transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl hover:shadow-green-500/10 cursor-pointer"
           >
             <div class="absolute inset-0 bg-gradient-to-br from-green-500/5 to-transparent rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
             <div class="absolute top-4 right-4 px-2.5 py-1 bg-green-100 text-green-600 text-xs font-bold rounded-full dark:bg-green-900/30 dark:text-green-400">
@@ -274,10 +283,12 @@ import { HydrationTrackerComponent } from '../metrics/hydration-tracker.componen
     </div>
   `,
 })
-export class DashboardComponent implements OnInit {
+export class DashboardComponent implements OnInit, AfterViewInit {
   readonly auth = inject(AuthService);
   readonly profileService = inject(ProfileService);
   readonly rewards = inject(RewardsService);
+  
+  @ViewChildren('actionCard') actionCards!: QueryList<ElementRef<HTMLElement>>;
   
   showOnboardingPrompt = signal(false);
   
@@ -285,6 +296,24 @@ export class DashboardComponent implements OnInit {
     this.checkProfileStatus();
     // Log daily activity for streak
     this.rewards.logDailyActivity();
+  }
+  
+  ngAfterViewInit() {
+    // Animate action cards with staggered entrance using Motion.dev
+    this.animateActionCards();
+  }
+  
+  private animateActionCards(): void {
+    if (this.actionCards?.length) {
+      // Motion/mini staggered entrance animation with CSS transforms
+      this.actionCards.forEach((el, i) => {
+        animate(
+          el.nativeElement,
+          { opacity: [0, 1], transform: ['translateY(30px) scale(0.95)', 'translateY(0) scale(1)'] },
+          { duration: 0.5, ease: 'easeOut', delay: i * 0.1 }
+        );
+      });
+    }
   }
   
   async checkProfileStatus() {

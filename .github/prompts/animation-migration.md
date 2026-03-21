@@ -1,19 +1,22 @@
-# Animation Architecture Migration: Motion.dev & ngx-lottie
+# Animation Architecture: Motion.dev & ngx-lottie
 
-Please help me migrate the animation architecture of the `VibeHealth` Angular 21 application. We are moving away from older, thread-blocking animation libraries (like Anime.js or heavy GSAP plugins) and standardizing on a dual-engine architecture:
+This document describes the animation architecture for VibeHealth. We use a dual-engine approach:
 
-1. **`motion` (Motion.dev):** For all standard UI choreography, layout transitions, and staggered component animations (runs on the Web Animations API / compositor thread).
-2. **`ngx-lottie`:** For all complex vector illustrations, specifically the VibeHealth Bunny Mascot and micro-animated icons.
+1. **`motion/mini` (Motion.dev):** For all standard UI choreography, staggered component animations, and micro-interactions (runs on the Web Animations API / compositor thread).
+2. **`ngx-lottie`:** For complex vector animations - the VibeHealth Bunny Mascot and rich animated icons.
 
-### Step 1: Dependencies
-Please run the necessary commands to install the new packages.
-`bun add motion lottie-web ngx-lottie`
+## Dependencies
 
-### Step 2: Global Application Config (`app.config.ts`)
-Set up `ngx-lottie` in our standalone Angular architecture. Use the dynamic import syntax so `lottie-web` is lazy-loaded and doesn't bloat our initial bundle.
+```bash
+# Already installed
+npm install motion lottie-web ngx-lottie
+```
+
+## Global Application Config (`app.config.ts`)
+
+ngx-lottie is configured with lazy-loaded lottie-web:
 
 ```typescript
-// Example config logic
 import { provideLottieOptions } from 'ngx-lottie';
 
 export const appConfig: ApplicationConfig = {
@@ -25,41 +28,106 @@ export const appConfig: ApplicationConfig = {
 };
 ```
 
-### Step 3: Implement Motion for UI Elements
-When animating HTML elements (like staggered grids, modal pop-ups, or status cards), strictly use the `motion` package. 
-**Crucial Angular Constraint:** Do not pass string CSS selectors (e.g. `animate('.card', ...)`) to Motion, as View Encapsulation can cause this to fail. Instead, use Angular's `@ViewChildren` or `@ViewChild` to gather the `ElementRef`s, unwrap their `nativeElement`s, and pass those HTMLElements directly to `animate()` inside `ngAfterViewInit`.
+## Motion.dev for UI Animations
 
-**Example Pattern for Motion:**
+**CRITICAL Angular Constraint:** Do NOT pass CSS selectors to Motion - View Encapsulation will break them. Use `@ViewChildren` with `ElementRef.nativeElement`.
+
+**IMPORTANT:** Use `motion/mini` (2.3kb) for DOM animations. It requires CSS transform strings (not x/y/scale shorthands).
+
+### Pattern for Staggered Entrance
+
 ```typescript
-import { animate, stagger } from 'motion';
+import { Component, ViewChildren, QueryList, ElementRef, AfterViewInit } from '@angular/core';
+import { animate } from 'motion/mini';
 
-@ViewChildren('card') cards!: QueryList<ElementRef<HTMLElement>>;
+@Component({
+  template: `<div #card *ngFor="let item of items">{{ item.name }}</div>`,
+  styles: [`.card { opacity: 0; }`] // Start invisible
+})
+export class MyComponent implements AfterViewInit {
+  @ViewChildren('card') cards!: QueryList<ElementRef<HTMLElement>>;
 
-ngAfterViewInit() {
-  const elements = this.cards.map(el => el.nativeElement);
-  animate(elements, { opacity: [0, 1], y: [20, 0] }, { delay: stagger(0.1) });
+  ngAfterViewInit() {
+    // Manual stagger with forEach
+    this.cards.forEach((el, i) => {
+      animate(
+        el.nativeElement,
+        { opacity: [0, 1], transform: ['translateY(30px)', 'translateY(0)'] },
+        { duration: 0.5, ease: 'easeOut', delay: i * 0.1 }
+      );
+    });
+  }
 }
 ```
 
-### Step 4: Implement ngx-lottie for the Mascot
-When animating the VibeHealth Mascot (or any future complex vector graphics), strictly use the `<ng-lottie>` component. Ensure change detection performance isn't destroyed by Lottie's `requestAnimationFrame` loop. 
-**Crucial Constraint:** If you need to bind to Lottie events (like `(loopComplete)` or `(animationCreated)`), remember that `ngx-lottie` runs these outside of the Angular zone. You MUST inject `NgZone` and use `ngZone.run()` or manually call `ChangeDetectorRef` when updating angular signals reacting to these events.
+### Options Reference
 
-**Example Pattern for Lottie:**
 ```typescript
-import { AnimationOptions, AnimationItem } from 'ngx-lottie';
+animate(element, keyframes, {
+  duration: 0.5,           // seconds
+  delay: 0.1,              // seconds  
+  ease: 'easeOut',         // 'easeIn' | 'easeOut' | 'easeInOut' | [0.4, 0, 0.2, 1]
+  type: 'spring',          // optional spring physics
+  stiffness: 400,
+  damping: 20,
+});
+```
 
-options: AnimationOptions = {
-  path: '/assets/animations/bunny-idle.json', // Treat all lottie assets like this
-};
+## ngx-lottie for Complex Vectors
 
-animationCreated(animationItem: AnimationItem): void {
-  // Save reference for manual playback control (play/pause/stop) 
+For the mascot and rich animated icons, use ngx-lottie:
+
+```typescript
+import { LottieComponent, AnimationOptions } from 'ngx-lottie';
+import { AnimationItem } from 'lottie-web';
+
+@Component({
+  imports: [LottieComponent],
+  template: `
+    <ng-lottie 
+      [options]="lottieOptions" 
+      (animationCreated)="onAnimationCreated($event)"
+    />
+  `
+})
+export class MascotComponent implements OnDestroy {
+  private animation?: AnimationItem;
+
+  lottieOptions: AnimationOptions = {
+    path: '/assets/animations/bunny-idle.json',
+    loop: true,
+    autoplay: true,
+  };
+
+  onAnimationCreated(animation: AnimationItem) {
+    this.animation = animation;
+  }
+
+  ngOnDestroy() {
+    this.animation?.destroy(); // Prevent memory leaks
+  }
 }
 ```
 
-### Task Execution:
-1. Scan `package.json` and remove Anime.js or redundant GSAP packages if they exist.
-2. Update the `app.config.ts` per my specs.
-3. Migrate our `Dashboard` to use `motion` for staggering the feature cards (Vitals, Hydration, First Aid, etc.) upon entry.
-4. Replace the static text-based "Bunny Mascot" widget on the Dashboard with a skeleton outline for an `<ng-lottie>` container.
+**Zone Warning:** ngx-lottie events run outside Angular zone. Use `NgZone.run()` if updating signals from event callbacks.
+
+## CSS Keyframes for Simple Loops
+
+For simple looping animations (float, pulse), prefer CSS keyframes:
+
+```css
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+.floating { animation: float 3s ease-in-out infinite; }
+```
+
+## Migration Checklist
+
+- [x] Install motion, lottie-web, ngx-lottie
+- [x] Configure provideLottieOptions in app.config.ts
+- [x] Dashboard uses motion/mini for card entrance animations
+- [ ] Replace static bunny emoji with ng-lottie container (needs Lottie JSON asset)
+- [x] Documentation updated with Motion.dev patterns

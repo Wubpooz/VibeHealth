@@ -500,19 +500,109 @@ body {
 - Maintain colorful orb decorations without blur (solid circles).
 - Keep background warm and light (#fffbf5) with subtle grain texture.
 
-### Anime.js v4 Patterns
+### Anime.js v4 → Motion.dev Migration
+
+**Note**: We have migrated from Anime.js to **Motion.dev** (formerly Framer Motion) for JavaScript animations. The `motion` package (v12+) is the standard for all programmatic animations.
 
 ```typescript
-// Simple entrance (single line)
-animate('.card', { opacity: [0, 1], y: [20, 0], duration: 0.5, ease: 'outQuad' });
+// Import from motion/mini for lightweight DOM animations (2.3kb)
+import { animate } from 'motion/mini';
 
-// Staggered list
-animate('.list-item', { opacity: [0, 1], y: [20, 0], delay: stagger(0.1), duration: 0.5, ease: 'outQuad' });
+// Simple entrance (single element)
+animate(element, { 
+  opacity: [0, 1], 
+  transform: ['translateY(20px)', 'translateY(0)'] 
+}, { duration: 0.5, ease: 'easeOut' });
 
-// Hover lift
-element.addEventListener('mouseenter', () => animate(element, { y: -4, duration: 0.2, ease: 'outQuad' }));
-element.addEventListener('mouseleave', () => animate(element, { y: 0, duration: 0.2, ease: 'outQuad' }));
+// Staggered list (manual stagger with forEach)
+elements.forEach((el, i) => {
+  animate(el, { 
+    opacity: [0, 1], 
+    transform: ['translateY(30px) scale(0.95)', 'translateY(0) scale(1)'] 
+  }, { duration: 0.5, ease: 'easeOut', delay: i * 0.1 });
+});
+
+// Spring animation
+animate(element, { 
+  transform: ['scale(1)', 'scale(1.05)', 'scale(1)'] 
+}, { type: 'spring', stiffness: 400, damping: 20 });
 ```
+
+**Angular Integration Pattern**:
+```typescript
+import { Component, ViewChildren, QueryList, ElementRef, AfterViewInit } from '@angular/core';
+import { animate } from 'motion/mini';
+
+export class MyComponent implements AfterViewInit {
+  @ViewChildren('card') cards!: QueryList<ElementRef<HTMLElement>>;
+
+  ngAfterViewInit() {
+    this.cards.forEach((el, i) => {
+      animate(
+        el.nativeElement,
+        { opacity: [0, 1], transform: ['translateY(30px)', 'translateY(0)'] },
+        { duration: 0.5, ease: 'easeOut', delay: i * 0.1 }
+      );
+    });
+  }
+}
+```
+
+**Important Notes**:
+- Always use `ViewChildren` + `ElementRef.nativeElement` (not CSS selectors) due to Angular's View Encapsulation
+- Use `motion/mini` for DOM animations (2.3kb) - supports `opacity`, `transform`, CSS properties
+- Ease values: `'easeIn'`, `'easeOut'`, `'easeInOut'`, or cubic-bezier arrays like `[0.4, 0, 0.2, 1]`
+- For complex animations (SVG morphing, sequences), use the full `motion` import
+
+### ngx-lottie for Vector Animations
+
+For complex vector animations (mascot, icons with intricate motion), use **ngx-lottie** with lazy-loaded `lottie-web`:
+
+```typescript
+// app.config.ts - Configure Lottie with lazy loading
+import { provideLottieOptions } from 'ngx-lottie';
+
+export const appConfig = {
+  providers: [
+    provideLottieOptions({
+      player: () => import('lottie-web'),
+    }),
+  ],
+};
+```
+
+```typescript
+// Component usage
+import { LottieComponent, AnimationOptions } from 'ngx-lottie';
+
+@Component({
+  imports: [LottieComponent],
+  template: `
+    <ng-lottie 
+      [options]="lottieOptions" 
+      (animationCreated)="onAnimationCreated($event)"
+    />
+  `
+})
+export class MyComponent {
+  lottieOptions: AnimationOptions = {
+    path: '/assets/animations/mascot.json',
+    loop: true,
+    autoplay: true,
+  };
+
+  onAnimationCreated(animation: AnimationItem) {
+    // Lottie events run outside Angular zone - use NgZone if updating signals
+    animation.setSpeed(0.8);
+  }
+}
+```
+
+**Lottie Best Practices**:
+- Store Lottie JSON files in `/assets/animations/`
+- Use `loop: false` for one-shot animations
+- Call `animation.destroy()` in `ngOnDestroy` to prevent memory leaks
+- Wrap zone-sensitive callbacks in `NgZone.run()` if updating Angular state
 
 ---
 

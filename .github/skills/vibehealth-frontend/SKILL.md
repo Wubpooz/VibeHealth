@@ -455,38 +455,109 @@ export const authGuard: CanActivateFn = () => {
 
 ---
 
-## 🎬 Animation Patterns (Anime.js v4)
+## 🎬 Animation Patterns (Motion.dev)
 
-### CRITICAL: Use v4 Syntax
+### Animation Architecture
 
-```typescript
-// ✅ CORRECT v4
-import { animate, createTimeline, stagger } from 'animejs';
+VibeHealth uses a layered animation approach:
 
-// Set time unit ONCE in main.ts
-import { engine } from 'animejs';
-engine.timeUnit = 's';
+| Layer | Tool | Purpose |
+|-------|------|---------|
+| **UI Choreography** | Motion.dev (`motion/mini`) | Staggered entrances, hover effects, micro-interactions |
+| **Complex Vectors** | ngx-lottie | Mascot animations, rich icons, loading sequences |
+| **Simple Motions** | CSS Keyframes | Float, pulse, simple looping animations |
 
-// Simple animation (single line)
-animate('.card', { opacity: [0, 1], y: [20, 0], duration: 0.5, ease: 'outQuad' });
-
-// Staggered entrance
-animate('.list-item', { opacity: [0, 1], y: [20, 0], delay: stagger(0.1), duration: 0.5 });
-
-// Timeline
-const tl = createTimeline({ defaults: { duration: 0.5, ease: 'outQuad' } });
-tl.add('.title', { opacity: [0, 1], y: [-20, 0] })
-  .add('.subtitle', { opacity: [0, 1] }, '-=0.3')
-  .add('.content', { opacity: [0, 1], y: [20, 0] }, '-=0.2');
-```
+### Motion.dev Integration
 
 ```typescript
-// ❌ WRONG v3 syntax
-import anime from 'animejs'; // WRONG
-anime({ targets: '.card', translateX: 250 }); // WRONG
+// Import from motion/mini for lightweight DOM animations (2.3kb)
+import { animate } from 'motion/mini';
+
+// ✅ CORRECT: Using ViewChildren with ElementRef
+@Component({
+  template: `
+    <div #card *ngFor="let item of items()">{{ item.name }}</div>
+  `
+})
+export class MyComponent implements AfterViewInit {
+  @ViewChildren('card') cards!: QueryList<ElementRef<HTMLElement>>;
+
+  ngAfterViewInit() {
+    // Staggered entrance animation
+    this.cards.forEach((el, i) => {
+      animate(
+        el.nativeElement,
+        { opacity: [0, 1], transform: ['translateY(30px)', 'translateY(0)'] },
+        { duration: 0.5, ease: 'easeOut', delay: i * 0.1 }
+      );
+    });
+  }
+}
 ```
 
-See `.github/.gsap/CLAUDE.md` for complete v4 reference.
+### Motion.dev Options
+
+```typescript
+animate(element, keyframes, {
+  duration: 0.5,           // seconds
+  delay: 0.1,              // seconds
+  ease: 'easeOut',         // 'easeIn' | 'easeOut' | 'easeInOut' | [0.4, 0, 0.2, 1]
+  type: 'spring',          // optional: spring physics
+  stiffness: 400,          // spring stiffness
+  damping: 20,             // spring damping
+});
+```
+
+### ❌ Anti-Patterns
+
+```typescript
+// ❌ WRONG: Using CSS selectors (fails with View Encapsulation)
+animate('.card', { opacity: 1 });
+
+// ❌ WRONG: Using Anime.js v3 syntax
+import anime from 'animejs';
+anime({ targets: '.card', translateX: 250 });
+
+// ❌ WRONG: Using y/x/scale directly (use transform string)
+animate(el, { y: 30, scale: 0.95 }); // motion/mini doesn't support these
+
+// ✅ CORRECT: Use transform string
+animate(el, { transform: ['translateY(30px) scale(0.95)', 'translateY(0) scale(1)'] });
+```
+
+### ngx-lottie for Complex Animations
+
+```typescript
+import { LottieComponent, AnimationOptions } from 'ngx-lottie';
+import { AnimationItem } from 'lottie-web';
+
+@Component({
+  imports: [LottieComponent],
+  template: `
+    <ng-lottie 
+      [options]="lottieOptions" 
+      (animationCreated)="onAnimationCreated($event)"
+    />
+  `
+})
+export class MyComponent implements OnDestroy {
+  private animation?: AnimationItem;
+  
+  lottieOptions: AnimationOptions = {
+    path: '/assets/animations/mascot.json',
+    loop: true,
+    autoplay: true,
+  };
+
+  onAnimationCreated(animation: AnimationItem) {
+    this.animation = animation;
+  }
+
+  ngOnDestroy() {
+    this.animation?.destroy(); // Prevent memory leaks
+  }
+}
+```
 
 ---
 

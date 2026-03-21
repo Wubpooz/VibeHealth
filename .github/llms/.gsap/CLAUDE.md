@@ -1,396 +1,296 @@
-# Anime.js v4 Reference Guide for AI Assistants
+# Motion.dev Animation Reference Guide for AI Assistants
 
-## 🚨 CRITICAL: ALWAYS USE ANIME.JS V4 SYNTAX 🚨
+## 🚨 CRITICAL: USE MOTION.DEV (NOT ANIME.JS) 🚨
 
-**This project uses Anime.js v4.x.x - DO NOT use v3 syntax under any circumstances**
+**This project uses Motion.dev (motion package v12+) - DO NOT use Anime.js syntax**
 
 **If you're about to write `import anime from 'animejs'` - STOP!**
-**That's v3. This project uses v4. Use the correct import below.**
+**Use Motion.dev imports as shown below.**
 
 ## 🚀 Quick Start - Essential Setup
 
-### 1. Correct v4 Import (REQUIRED)
+### 1. Correct Import (REQUIRED)
 ```javascript
-// ✅ CORRECT v4 imports
-import { animate, createTimeline, stagger, utils, svg, eases, engine } from 'animejs';
+// ✅ CORRECT: Import from motion/mini for lightweight DOM animations (2.3kb)
+import { animate } from 'motion/mini';
 
-// ❌ WRONG v3 import - NEVER USE THIS
+// ✅ CORRECT: Import from motion for full features (SVG morphing, sequences)
+import { animate, stagger, spring } from 'motion';
+
+// ❌ WRONG: Never use Anime.js
 // import anime from 'animejs';
+// import { animate } from 'animejs';
 ```
 
-### 2. Configure Time Units to Seconds (SET ONCE IN APP ENTRY POINT)
-```javascript
-// ⚠️ IMPORTANT: Set this ONLY ONCE in your app's main entry point
-// For React: App.js/App.tsx or index.js/index.tsx
-// For Vue: main.js/main.ts
-// For vanilla JS: The main script file that loads first
+### 2. Angular Integration Pattern (REQUIRED)
+```typescript
+// ✅ CORRECT: Use ViewChildren with ElementRef.nativeElement
+import { Component, ViewChildren, QueryList, ElementRef, AfterViewInit } from '@angular/core';
+import { animate } from 'motion/mini';
 
-import { engine } from 'animejs';
+@Component({
+  template: `<div #card *ngFor="let item of items">{{ item.name }}</div>`
+})
+export class MyComponent implements AfterViewInit {
+  @ViewChildren('card') cards!: QueryList<ElementRef<HTMLElement>>;
 
-// Set ONLY in the app's entry point, NOT in components
-engine.timeUnit = 's';
+  ngAfterViewInit() {
+    this.cards.forEach((el, i) => {
+      animate(
+        el.nativeElement,
+        { opacity: [0, 1], transform: ['translateY(30px)', 'translateY(0)'] },
+        { duration: 0.5, ease: 'easeOut', delay: i * 0.1 }
+      );
+    });
+  }
+}
 
-// Now ALL durations use seconds everywhere: 1 = 1 second, 0.5 = 500ms
-// DO NOT set this in individual components - it's a global setting!
-```
-
-### 3. Single-Line Format for Simple Animations (REQUIRED)
-```javascript
-// ✅ GOOD - Clean, readable, one line for simple tweens
-animate('.element', { x: 250, duration: 1, ease: 'outQuad' });
-
-// ❌ BAD - Unnecessary multi-line for simple tweens
-animate('.element', {
-  x: 250,
-  duration: 1,
-  ease: 'outQuad'
-});
+// ❌ WRONG: Using CSS selectors (fails with Angular View Encapsulation)
+// animate('.card', { opacity: 1 });
 ```
 
 ## ✅ Quick Validation Checklist
 
-Before generating anime.js code, verify:
-- [ ] Using `import { animate, ... } from 'animejs'` NOT `import anime`
-- [ ] Set `engine.timeUnit = 's'` ONLY ONCE in app entry point (NOT in components)
-- [ ] Using seconds for all durations (1 = 1 second)
-- [ ] Simple animations on ONE LINE
-- [ ] Using `animate()` NOT `anime()`
-- [ ] Using `createTimeline()` NOT `anime.timeline()`
-- [ ] Using `ease:` NOT `easing:`
-- [ ] Using `to:` for values, NOT `value:`
-- [ ] Using `on` prefix for callbacks (onUpdate, onComplete)
-- [ ] Using `loop` and `alternate` NOT `direction`
-- [ ] Using correct v4 stagger syntax with `stagger()`
-- [ ] Using shorthand properties (x, y, z) when possible
+Before generating animation code, verify:
+- [ ] Using `import { animate } from 'motion/mini'` or `'motion'`
+- [ ] Using `ViewChildren` + `ElementRef.nativeElement` for Angular
+- [ ] Using `transform` strings for transforms (not `x`, `y`, `scale` directly with mini)
+- [ ] Using `ease:` not `easing:`
+- [ ] Using seconds for durations
+- [ ] Using proper ease names: `'easeIn'`, `'easeOut'`, `'easeInOut'`
 
 ## 🎯 Core API - Most Common Patterns
 
-### Basic Animation (single line for simple tweens)
+### Basic Animation (motion/mini)
 ```javascript
-// Simple tween - ALWAYS one line
-animate('.element', { x: 250, rotate: 180, duration: 0.8, ease: 'inOutQuad' });
+// Single element
+animate(element, { opacity: [0, 1] }, { duration: 0.5 });
 
-// Fade in - one line
-animate('.element', { opacity: [0, 1], y: [20, 0], duration: 0.6, ease: 'outQuad' });
+// With transform (use transform string for motion/mini)
+animate(element, { 
+  opacity: [0, 1], 
+  transform: ['translateY(30px)', 'translateY(0)'] 
+}, { duration: 0.5, ease: 'easeOut' });
 
-// Scale bounce - one line
-animate('.element', { scale: [0, 1], duration: 0.8, ease: 'outElastic(1, 0.5)' });
-
-// Infinite loop - one line
-animate('.element', { rotate: 360, duration: 2, loop: true, ease: 'linear' });
+// Scale animation
+animate(element, { 
+  transform: ['scale(0.95)', 'scale(1)'] 
+}, { duration: 0.3 });
 ```
 
-### Timeline Creation
+### Staggered Animations (manual stagger with motion/mini)
 ```javascript
-const tl = createTimeline({ defaults: { duration: 1, ease: 'outQuad' } });
+// With forEach loop (motion/mini)
+elements.forEach((el, i) => {
+  animate(el, { 
+    opacity: [0, 1], 
+    transform: ['translateY(30px)', 'translateY(0)'] 
+  }, { duration: 0.5, ease: 'easeOut', delay: i * 0.1 });
+});
 
-tl.add('.element1', { x: 250 })
-  .add('.element2', { y: 100 }, '+=0.2')  // 0.2s after previous
-  .add('.element3', { rotate: 180 }, '<'); // at start of previous
+// With full motion package stagger helper
+import { animate, stagger } from 'motion';
+animate(elements, { x: [0, 100] }, { delay: stagger(0.1) });
 ```
 
-### Stagger Animations (single line)
+### Spring Animations
 ```javascript
-animate('.elements', { x: 250, delay: stagger(0.1) });  // 0.1s between each
-animate('.elements', { x: 250, delay: stagger(0.1, { from: 'center' }) });
+animate(element, { 
+  transform: ['scale(1)', 'scale(1.1)'] 
+}, { type: 'spring', stiffness: 400, damping: 20 });
 ```
 
 ## ❌ Common AI Mistakes to Avoid
 
-### MISTAKE #1: Using v3 Import Pattern
+### MISTAKE #1: Using Anime.js Import
 ```javascript
-// ❌ WRONG - This is v3
+// ❌ WRONG - This is Anime.js
 import anime from 'animejs';
 anime({ targets: '.element', translateX: 250 });
 
-// ✅ CORRECT - Always use v4
-import { animate } from 'animejs';
-animate('.element', { x: 250 });
+// ✅ CORRECT - Use Motion.dev
+import { animate } from 'motion/mini';
+animate(element, { transform: ['translateX(0)', 'translateX(250px)'] });
 ```
 
-### MISTAKE #2: Using 'targets' Property
+### MISTAKE #2: Using CSS Selectors in Angular
 ```javascript
-// ❌ WRONG - 'targets' is v3
-animate({ targets: '.element', translateX: 250 });
+// ❌ WRONG - Fails with Angular's View Encapsulation
+animate('.card', { opacity: 1 });
 
-// ✅ CORRECT - First parameter is the target
-animate('.element', { x: 250 });
+// ✅ CORRECT - Use ElementRef.nativeElement
+animate(cardElement.nativeElement, { opacity: [0, 1] });
 ```
 
-### MISTAKE #3: Using 'easing' Instead of 'ease'
+### MISTAKE #3: Using x/y/scale with motion/mini
+```javascript
+// ❌ WRONG - motion/mini doesn't support these shorthands
+animate(el, { y: 30, scale: 0.95 });
+
+// ✅ CORRECT - Use transform string
+animate(el, { transform: ['translateY(30px) scale(0.95)', 'translateY(0) scale(1)'] });
+```
+
+### MISTAKE #4: Using Wrong Ease Names
 ```javascript
 // ❌ WRONG
-animate('.element', { x: 250, easing: 'easeInOutQuad' });
+animate(el, { opacity: 1 }, { ease: 'ease-out' });
+animate(el, { opacity: 1 }, { easing: 'easeOut' });
+animate(el, { opacity: 1 }, { ease: 'outQuad' });
 
 // ✅ CORRECT
-animate('.element', { x: 250, ease: 'inOutQuad' });
+animate(el, { opacity: 1 }, { ease: 'easeOut' });
+animate(el, { opacity: 1 }, { ease: 'easeInOut' });
+animate(el, { opacity: 1 }, { ease: [0.4, 0, 0.2, 1] }); // cubic-bezier
 ```
 
-### MISTAKE #4: Using 'value' for Animation Values
+## 📋 Property Reference
+
+### Animation Options
 ```javascript
-// ❌ WRONG - 'value' is v3
-animate('.element', { x: { value: 250 } });
-
-// ✅ CORRECT - Use 'to' for values
-animate('.element', { x: { to: 250 } });
-```
-
-### MISTAKE #5: Wrong Timeline Syntax
-```javascript
-// ❌ WRONG - anime.timeline() is v3
-const tl = anime.timeline();
-
-// ✅ CORRECT - Use createTimeline
-import { createTimeline } from 'animejs';
-const tl = createTimeline();
-```
-
-## 📋 Property Syntax Reference (v3 → v4)
-
-### Animation Values
-```javascript
-// ✅ v4: Use 'to' for target values
-{ opacity: { to: 0.5 } }
-{ x: { to: [0, 100] } }
-
-// ❌ v3: DON'T use 'value'
-// { opacity: { value: 0.5 } }
+animate(element, keyframes, {
+  duration: 0.5,           // seconds
+  delay: 0.1,              // seconds
+  ease: 'easeOut',         // easing function
+  type: 'spring',          // optional: use spring physics
+  stiffness: 400,          // spring stiffness
+  damping: 20,             // spring damping
+  repeat: Infinity,        // repeat count
+  repeatType: 'reverse',   // 'loop' | 'reverse' | 'mirror'
+});
 ```
 
 ### Easing Functions
 ```javascript
-// ✅ v4: Use 'ease' (no 'ease' prefix)
-{ ease: 'inOutQuad' }
-{ ease: 'outElastic(1, 0.5)' }
-{ ease: 'cubicBezier(0.4, 0, 0.2, 1)' }
+// Built-in easings
+'linear'
+'easeIn'
+'easeOut'
+'easeInOut'
 
-// ❌ v3: DON'T use 'easing' or 'ease' prefix
-// { easing: 'easeInOutQuad' }
+// Cubic bezier
+[0.4, 0, 0.2, 1]  // ease-out like
+[0.16, 1, 0.3, 1] // ease-out-expo
 ```
 
-### Direction & Looping
+### Keyframes
 ```javascript
-// ✅ v4
-{
-  loop: true,        // infinite loop
-  loop: 3,          // loop 3 times
-  alternate: true,   // alternate direction
-  reversed: true     // play in reverse
-}
+// From/To values
+{ opacity: [0, 1] }
+{ transform: ['translateY(30px)', 'translateY(0)'] }
 
-// ❌ v3: DON'T use 'direction'
-// { direction: 'alternate' }
-```
+// Multiple keyframes
+{ opacity: [0, 1, 0.5] }  // 0 → 1 → 0.5
 
-### Transform Properties (Shorthand Preferred)
-```javascript
-// ✅ Both syntaxes work in v4:
-animate('.element', { x: 100, y: 50, z: 25 });           // shorthand (preferred)
-animate('.element', { translateX: 100, translateY: 50, translateZ: 25 }); // explicit
-```
-
-### Callbacks (ALL prefixed with 'on')
-```javascript
-// ✅ v4: Simple callback - keep on one line
-animate('.element', { x: 250, duration: 1, onComplete: () => console.log('Done!') });
-
-// ✅ v4: Multiple callbacks - use multi-line
-animate('.element', {
-  x: 250,
-  duration: 1,
-  onBegin: (anim) => console.log('Started'),
-  onUpdate: (anim) => console.log('Progress:', anim.progress),
-  onComplete: (anim) => console.log('Finished')
-});
-
-// ❌ v3: DON'T use unprefixed callbacks
-// { update: () => {}, complete: () => {} }
-```
-
-## 📝 Code Formatting Guidelines
-
-### ALWAYS Use Single-Line Format for Simple Animations
-**This is mandatory for readability** - Use for animations with ≤4 properties:
-```javascript
-// ✅ GOOD - Clean, readable, one line
-animate('.element', { x: 250, duration: 1, ease: 'outQuad' });
-animate('.box', { opacity: 0.5, scale: 0.8, duration: 0.3 });
-
-// ❌ BAD - Unnecessary multi-line for simple tweens
-animate('.element', {
-  x: 250,
-  duration: 1,
-  ease: 'outQuad'
-});
-```
-
-### Multi-Line Format (Only for Complex Animations)
-Use for animations with >4 properties or callbacks:
-```javascript
-// Complex animation with callbacks - multi-line is appropriate
-animate('.element', {
-  x: { to: [0, 100, 50], duration: 2 },
-  y: { to: [0, -50, 0], duration: 2 },
-  scale: [0, 1.2, 1],
-  ease: 'outElastic(1, 0.5)',
-  onComplete: () => console.log('Done!')
-});
+// Single value (animate from current to this)
+{ opacity: 1 }
 ```
 
 ## 🎨 Common Animation Patterns
 
-### Hover Animation (single line per animation)
+### Entrance Animation
 ```javascript
-element.addEventListener('mouseenter', () => animate(element, { scale: 1.1, duration: 0.3, ease: 'outQuad' }));
-element.addEventListener('mouseleave', () => animate(element, { scale: 1, duration: 0.3, ease: 'outQuad' }));
+animate(element, { 
+  opacity: [0, 1], 
+  transform: ['translateY(20px)', 'translateY(0)'] 
+}, { duration: 0.5, ease: 'easeOut' });
 ```
 
-### Sequential Timeline
+### Hover Effect
 ```javascript
-const tl = createTimeline({ defaults: { duration: 0.5 } });
-tl.add('.step1', { x: 100 })
-  .add('.step2', { y: 100 })
-  .add('.step3', { scale: 2 });
-```
-
-### Scroll-triggered Animation
-```javascript
-import { createScrollObserver } from 'animejs';
-
-createScrollObserver({
-  target: '.scroll-element',
-  root: document.querySelector('.scroll-container'),
-  play: () => animate('.element', { x: 250, duration: 1 }),
-  visibility: 0.5
+element.addEventListener('mouseenter', () => {
+  animate(element, { transform: ['translateY(0)', 'translateY(-4px)'] }, { duration: 0.2 });
+});
+element.addEventListener('mouseleave', () => {
+  animate(element, { transform: ['translateY(-4px)', 'translateY(0)'] }, { duration: 0.2 });
 });
 ```
 
-## 🔧 Advanced Features
-
-### SVG Animations
+### Button Press
 ```javascript
-import { animate, svg } from 'animejs';
-
-// Morph path (single line)
-animate('#path1', { d: svg.morphTo('#path2'), duration: 1 });
-
-// Draw SVG line
-const drawable = svg.createDrawable('.svg-path');
-animate(drawable, { draw: '0% 100%', duration: 2 });
-
-// Motion path (single line for simple usage)
-const motionPath = svg.createMotionPath('#motion-path');
-animate('.element', { x: motionPath.translateX, y: motionPath.translateY, rotate: motionPath.rotate });
+animate(button, { 
+  transform: ['scale(1)', 'scale(0.95)', 'scale(1)'] 
+}, { duration: 0.15 });
 ```
 
-### Utility Functions
+### Loading Pulse
 ```javascript
-import { utils } from 'animejs';
-
-// DOM selection
-const elements = utils.$('.elements');
-
-// Get current value
-const currentX = utils.get('.element', 'translateX');
-
-// Set values immediately
-utils.set('.element', { x: 100, opacity: 0.5 });
-
-// Remove animations
-utils.remove('.element');
-
-// Math utilities
-utils.random(0, 100);
-utils.shuffle([1, 2, 3, 4]);
-utils.lerp(0, 100, 0.5); // 50
-utils.clamp(150, 0, 100); // 100
+animate(element, { opacity: [0.5, 1] }, { 
+  duration: 1, 
+  repeat: Infinity, 
+  repeatType: 'reverse' 
+});
 ```
 
-### TypeScript Support
+## 🔧 ngx-lottie for Complex Animations
+
+For complex vector animations (mascot, rich icons), use ngx-lottie:
+
 ```typescript
-import { animate, createTimeline, JSAnimation, Timeline, AnimationParams, TimelineParams } from 'animejs';
+// app.config.ts - Configure with lazy loading
+import { provideLottieOptions } from 'ngx-lottie';
 
-// Single line for simple animations
-const animation: JSAnimation = animate('.element', { x: 250, duration: 1 } as AnimationParams);
+export const appConfig = {
+  providers: [
+    provideLottieOptions({
+      player: () => import('lottie-web'),
+    }),
+  ],
+};
+```
 
-const timeline: Timeline = createTimeline({ defaults: { duration: 0.8 } } as TimelineParams);
+```typescript
+// Component usage
+import { LottieComponent, AnimationOptions } from 'ngx-lottie';
+
+@Component({
+  imports: [LottieComponent],
+  template: `<ng-lottie [options]="options" (animationCreated)="onCreated($event)" />`
+})
+export class MyComponent implements OnDestroy {
+  private animation?: AnimationItem;
+  
+  options: AnimationOptions = {
+    path: '/assets/animations/mascot.json',
+    loop: true,
+    autoplay: true,
+  };
+
+  onCreated(animation: AnimationItem) {
+    this.animation = animation;
+  }
+
+  ngOnDestroy() {
+    this.animation?.destroy(); // Prevent memory leaks
+  }
+}
 ```
 
 ## ⚡ Performance Tips
 
-1. **Use transforms over position properties**
-   ```javascript
-   // ✅ Good - uses transform
-   animate('.element', { x: 100 });
-   
-   // ❌ Avoid - triggers layout
-   animate('.element', { left: 100 });
-   ```
-
-2. **Batch animations in timelines**
-   ```javascript
-   // ✅ Good - single timeline
-   const tl = createTimeline();
-   elements.forEach(el => tl.add(el, { x: 100 }));
-   
-   // ❌ Avoid - multiple animations
-   elements.forEach(el => animate(el, { x: 100 }));
-   ```
-
-3. **Use will-change CSS property for complex animations**
-   ```css
-   .animated-element {
-     will-change: transform, opacity;
-   }
-   ```
-
-## 🚫 How to Identify V3 Code (DON'T USE)
-
-If you see ANY of these patterns, it's v3 and MUST be updated:
-
-```javascript
-// All of these are V3 - NEVER USE:
-anime({ ... })
-anime.timeline()
-anime.stagger()
-anime.random()
-anime.remove()
-anime.get()
-anime.set()
-anime.running
-{ targets: '...' }
-{ easing: '...' }
-{ value: ... }
-{ direction: 'alternate' }
-```
+1. **Use motion/mini for simple DOM animations** (2.3kb vs 18kb)
+2. **Prefer transform and opacity** - they don't trigger layout
+3. **Clean up animations** - call returned cleanup function when element unmounts
+4. **Use CSS for simple loops** - `@keyframes` is more efficient for infinite animations
 
 ## 💡 AI Code Generation Rules
 
-When asked to create animations with anime.js:
+When asked to create animations:
 
-1. **ONLY** set `engine.timeUnit = 's'` ONCE in the app's main entry point (App.js, main.js, index.js) - NEVER in components
-2. **ALWAYS** use seconds for all durations (1 = 1 second)
-3. **ALWAYS** format simple animations on ONE LINE
-4. **ALWAYS** start with v4 imports
-5. **NEVER** use `anime()` function
-6. **ALWAYS** use `animate()` for animations
-7. **NEVER** include `targets` property
-8. **ALWAYS** use `ease` not `easing`
-9. **NEVER** use `value`, use `to` instead
-10. **ALWAYS** prefix callbacks with `on`
-11. **NEVER** use `direction`, use `alternate` and `reversed`
-12. **ALWAYS** use `createTimeline()` for timelines
-13. **PREFER** shorthand (`x`) over explicit (`translateX`)
-14. **FORMAT** short animations on single line (≤4 properties)
-15. **NEVER** generate v3 syntax under any circumstances
+1. **ALWAYS** use `import { animate } from 'motion/mini'` for DOM animations
+2. **ALWAYS** use `ViewChildren` + `ElementRef.nativeElement` in Angular
+3. **NEVER** use CSS selectors like `'.card'` in Angular components
+4. **ALWAYS** use `transform` strings for transforms with motion/mini
+5. **ALWAYS** use proper ease names: `'easeIn'`, `'easeOut'`, `'easeInOut'`
+6. **NEVER** use Anime.js syntax or imports
+7. **PREFER** motion/mini (2.3kb) unless you need full features
+8. **USE** ngx-lottie for complex vector animations
 
-## NPM Installation
+## NPM Packages
 ```bash
-npm install animejs
-```
+# Core animation
+npm install motion
 
-## Version Check
-```javascript
-// Current version: 4.x.x
-// If you see any code using anime({ targets: ... }), it's v3 and needs updating!
+# Lottie for complex vectors
+npm install lottie-web ngx-lottie
 ```
