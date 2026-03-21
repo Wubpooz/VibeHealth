@@ -4,6 +4,7 @@ import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/
 import { provideTranslateService } from '@ngx-translate/core';
 import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
 import { provideLottieOptions } from 'ngx-lottie';
+import { provideAnimations } from '@angular/platform-browser/animations';
 
 import { routes } from './app.routes';
 import { provideServiceWorker } from '@angular/service-worker';
@@ -18,6 +19,8 @@ export const appConfig: ApplicationConfig = {
       withFetch(),
       withInterceptors([authInterceptor])
     ),
+    // Enable Angular animations for page transitions and micro-animations
+    provideAnimations(),
     provideTranslateService({ fallbackLang: 'en' }),
     provideTranslateHttpLoader(),
     // Lottie animations - lazy-loaded for bundle optimization

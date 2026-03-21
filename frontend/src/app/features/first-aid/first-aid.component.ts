@@ -6,11 +6,13 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { FirstAidService } from './first-aid.service';
 import { FirstAidCategory, SeverityLevel } from './first-aid.types';
 import { FIRST_AID_CATEGORIES } from './first-aid.data';
+import { fadeInOut, slideInUp, scaleIn } from '../../shared/animations';
 
 @Component({
   selector: 'app-first-aid',
   imports: [CommonModule, RouterLink, FormsModule, TranslateModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  animations: [fadeInOut, slideInUp, scaleIn],
   template: `
     <div class="min-h-screen bg-gradient-to-br from-rose-50 via-white to-sage-50 dark:from-gray-950 dark:via-gray-900 dark:to-gray-950">
 
@@ -43,7 +45,7 @@ import { FIRST_AID_CATEGORIES } from './first-aid.data';
 
         <!-- Emergency Numbers Quick Access -->
         @if (service.userEmergencyNumber(); as emergency) {
-          <div class="mb-6 p-4 bg-red-50 dark:bg-red-900/20 rounded-2xl border border-red-100 dark:border-red-800">
+          <div @slideInUp class="mb-6 p-4 bg-red-50 dark:bg-red-900/20 rounded-2xl border border-red-100 dark:border-red-800">
             <div class="flex items-center justify-between flex-wrap gap-4">
               <div class="flex items-center gap-3">
                 <span class="text-2xl">{{ emergency.flag }}</span>
@@ -66,7 +68,7 @@ import { FIRST_AID_CATEGORIES } from './first-aid.data';
         }
 
         <!-- Search -->
-        <div class="mb-6">
+        <div @fadeInOut class="mb-6">
           <div class="relative">
             <svg class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -107,11 +109,13 @@ import { FIRST_AID_CATEGORIES } from './first-aid.data';
         <!-- Cards Grid -->
         @if (filteredCards().length > 0) {
           <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            @for (card of filteredCards(); track card.id) {
+            @for (card of filteredCards(); track card.id; let i = $index) {
               <a
+                @scaleIn
                 [routerLink]="['/first-aid', card.id]"
                 class="first-aid-card group"
                 [attr.data-severity]="card.severity"
+                [style.animation-delay.ms]="i * 50"
               >
                 <!-- Severity Badge -->
                 <div class="severity-badge" [attr.data-severity]="card.severity">
@@ -142,7 +146,7 @@ import { FIRST_AID_CATEGORIES } from './first-aid.data';
             }
           </div>
         } @else {
-          <div class="text-center py-16">
+          <div @fadeInOut class="text-center py-16">
             <div class="text-6xl mb-4">🔍</div>
             <p class="text-gray-500 dark:text-gray-400">{{ 'FIRST_AID.NO_RESULTS' | translate }}</p>
           </div>
@@ -155,7 +159,7 @@ import { FIRST_AID_CATEGORIES } from './first-aid.data';
 
           <div class="grid sm:grid-cols-2 gap-4">
             @for (helpline of service.userHelplines(); track helpline.id) {
-              <div class="bg-white dark:bg-gray-800 rounded-2xl p-5 border border-gray-100 dark:border-gray-700 shadow-sm">
+              <div @slideInUp class="bg-white dark:bg-gray-800 rounded-2xl p-5 border border-gray-100 dark:border-gray-700 shadow-sm helpline-card">
                 <div class="flex items-start gap-3">
                   <span class="text-2xl">{{ helpline.icon }}</span>
                   <div class="flex-1">
@@ -193,7 +197,7 @@ import { FIRST_AID_CATEGORIES } from './first-aid.data';
         </section>
 
         <!-- Disclaimer -->
-        <div class="mt-12 p-4 bg-amber-50 dark:bg-amber-900/20 rounded-xl border border-amber-100 dark:border-amber-800">
+        <div @fadeInOut class="mt-12 p-4 bg-amber-50 dark:bg-amber-900/20 rounded-xl border border-amber-100 dark:border-amber-800">
           <p class="text-sm text-amber-800 dark:text-amber-200 flex items-start gap-2">
             <span class="text-lg">⚠️</span>
             {{ 'FIRST_AID.DISCLAIMER' | translate }}
@@ -339,6 +343,15 @@ import { FIRST_AID_CATEGORIES } from './first-aid.data';
       -webkit-line-clamp: 2;
       -webkit-box-orient: vertical;
       overflow: hidden;
+    }
+
+    .helpline-card {
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .helpline-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
     }
   `],
 })

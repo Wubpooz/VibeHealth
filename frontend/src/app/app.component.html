@@ -1,8 +1,10 @@
 <!-- Global Noise Texture -->
 <div class="noise-texture"></div>
 
-<!-- Main Content -->
-<router-outlet />
+<!-- Main Content with Page Transitions -->
+<div class="route-container" [@routeAnimations]="getRouteAnimationData()">
+  <router-outlet />
+</div>
 
 <!-- Global UX primitives -->
 <app-goey-toast />
