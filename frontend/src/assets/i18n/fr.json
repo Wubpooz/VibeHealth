@@ -82,7 +82,17 @@
     "YOUR_PROFILE": "Votre Profil",
     "EMAIL_VERIFIED": "Email vérifié",
     "ROLE": "Rôle",
-    "VERIFY_EMAIL_BANNER": "Veuillez vérifier votre email pour accéder à toutes les fonctionnalités."
+    "VERIFY_EMAIL_BANNER": "Veuillez vérifier votre email pour accéder à toutes les fonctionnalités.",
+    "COMPLETE_PROFILE_TITLE": "Complétez votre profil !",
+    "COMPLETE_PROFILE_DESC": "Parlez-moi davantage de vous pour que je puisse mieux vous aider.",
+    "START_ONBOARDING": "Commencer l'onboarding",
+    "QUICK_ACTIONS": "Actions rapides",
+    "QUICK_MEDICAL_ID_DESC": "Carte d'urgence",
+    "QUICK_FIRST_AID_DESC": "Procédures d'urgence",
+    "QUICK_JOURNAL_DESC": "Réflexions quotidiennes",
+    "QUICK_PROFILE_DESC": "Paramètres de santé",
+    "COMING_SOON": "Bientôt disponible...",
+    "TEST_EARN_CARROTS": "Test : gagner 5 carottes"
   },
   "ONBOARDING": {
     "SKIP": "Passer pour l'instant",
@@ -534,6 +544,18 @@
     "TO_NEXT_LEVEL": "carottes pour le prochain niveau",
     "RECENT_ACTIVITY": "Activité récente",
     "NO_ACTIVITY_YET": "Aucune activité pour le moment",
-    "START_EARNING": "Commencez à enregistrer pour gagner des carottes !"
+    "START_EARNING": "Commencez à enregistrer pour gagner des carottes !",
+    "THERE": "vous",
+    "GREETING_MORNING": "Bonjour",
+    "GREETING_AFTERNOON": "Bon après-midi",
+    "GREETING_EVENING": "Bonsoir",
+    "GREETING_NIGHT": "Bonne nuit",
+    "SUBTITLE_FIRE": "Vous êtes en feu ! Continuez cette superbe série ! 🔥",
+    "SUBTITLE_CONSISTENCY": "Belle régularité ! Vous construisez de bonnes habitudes.",
+    "SUBTITLE_WELCOME_BACK": "Bon retour ! Prêt(e) à faire de cette journée une réussite ?",
+    "SUBTITLE_START": "Commençons à construire de bonnes habitudes ensemble !",
+    "TIME_JUST_NOW": "À l'instant",
+    "TIME_MIN_AGO": "il y a {{count}} min",
+    "TIME_HOUR_AGO": "il y a {{count}} h"
   }
 }

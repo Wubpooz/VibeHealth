@@ -5,7 +5,7 @@ import {
   computed,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { RewardsService, CarrotReward } from '../../../core/rewards/rewards.service';
 
 @Component({
@@ -244,6 +244,7 @@ import { RewardsService, CarrotReward } from '../../../core/rewards/rewards.serv
 })
 export class CarrotFeedComponent {
   private readonly rewards = inject(RewardsService);
+  private readonly translate = inject(TranslateService);
 
   readonly recentRewards = computed(() => {
     return this.rewards.recentRewards().slice(0, 5);
@@ -272,9 +273,9 @@ export class CarrotFeedComponent {
     const diffMins = Math.floor(diffMs / 60000);
     const diffHours = Math.floor(diffMins / 60);
 
-    if (diffMins < 1) return 'Just now';
-    if (diffMins < 60) return `${diffMins}m ago`;
-    if (diffHours < 24) return `${diffHours}h ago`;
+    if (diffMins < 1) return this.translate.instant('STATS.TIME_JUST_NOW');
+    if (diffMins < 60) return this.translate.instant('STATS.TIME_MIN_AGO', { count: diffMins });
+    if (diffHours < 24) return this.translate.instant('STATS.TIME_HOUR_AGO', { count: diffHours });
     return date.toLocaleDateString();
   }
 }

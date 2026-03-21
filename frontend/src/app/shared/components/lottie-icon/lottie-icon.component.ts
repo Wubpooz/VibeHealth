@@ -65,6 +65,10 @@ export type LottieIconName =
 export class LottieIconComponent implements OnDestroy {
   private readonly ngZone = inject(NgZone);
   private animationInstance: AnimationItem | null = null;
+  private readonly prefersReducedMotion =
+    typeof window !== 'undefined' &&
+    typeof window.matchMedia === 'function' &&
+    window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   /** Icon name - maps to /assets/animations/{name}.json */
   readonly name = input.required<LottieIconName>();
@@ -93,8 +97,8 @@ export class LottieIconComponent implements OnDestroy {
   /** Computed animation options */
   readonly animationOptions = computed<AnimationOptions>(() => ({
     path: `/assets/animations/${this.name()}.json`,
-    loop: this.loop(),
-    autoplay: this.autoplay() && !this.playOnHover(),
+    loop: this.prefersReducedMotion ? false : this.loop(),
+    autoplay: !this.prefersReducedMotion && this.autoplay() && !this.playOnHover(),
     rendererSettings: {
       preserveAspectRatio: 'xMidYMid slice',
     },
@@ -124,7 +128,13 @@ export class LottieIconComponent implements OnDestroy {
     this.animationInstance = animation;
     
     // Set initial speed
-    animation.setSpeed(this.speed());
+    animation.setSpeed(this.prefersReducedMotion ? 0 : this.speed());
+
+    if (this.prefersReducedMotion) {
+      animation.goToAndStop(0, true);
+      this.isPlaying.set(false);
+      return;
+    }
 
     // If playOnHover, stop the animation initially
     if (this.playOnHover()) {
@@ -146,7 +156,7 @@ export class LottieIconComponent implements OnDestroy {
   }
 
   onMouseEnter(): void {
-    if (this.playOnHover() && this.animationInstance) {
+    if (!this.prefersReducedMotion && this.playOnHover() && this.animationInstance) {
       this.animationInstance.goToAndPlay(0);
     }
   }

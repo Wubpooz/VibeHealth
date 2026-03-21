@@ -87,15 +87,15 @@ import { animate } from 'motion/mini';
                 <app-bunny-mascot [mood]="'wave'" [size]="48" />
               </div>
               <div>
-                <p class="text-sm font-bold text-gray-900 dark:text-white">Complete your profile!</p>
-                <p class="text-xs text-gray-600 dark:text-gray-400">Tell me more about yourself so I can help you better.</p>
+                <p class="text-sm font-bold text-gray-900 dark:text-white">{{ 'DASHBOARD.COMPLETE_PROFILE_TITLE' | translate }}</p>
+                <p class="text-xs text-gray-600 dark:text-gray-400">{{ 'DASHBOARD.COMPLETE_PROFILE_DESC' | translate }}</p>
               </div>
             </div>
             <a
               routerLink="/onboarding"
               class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-primary-500 text-white font-semibold text-sm shadow-lg shadow-primary-500/25 hover:bg-primary-600 transition-all hover:scale-[1.02] active:scale-[0.98]"
             >
-              Start Onboarding
+              {{ 'DASHBOARD.START_ONBOARDING' | translate }}
               <span>→</span>
             </a>
           </div>
@@ -139,7 +139,7 @@ import { animate } from 'motion/mini';
         </div>
 
         <!-- Quick Actions Grid -->
-        <h3 class="text-2xl font-bold text-gray-900 mb-6 px-2 dark:text-white font-heading">Quick Actions</h3>
+        <h3 class="text-2xl font-bold text-gray-900 mb-6 px-2 dark:text-white font-heading">{{ 'DASHBOARD.QUICK_ACTIONS' | translate }}</h3>
         <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
           <!-- Medical ID Card -->
           <a 
@@ -155,7 +155,7 @@ import { animate } from 'motion/mini';
                 </svg>
               </div>
               <h3 class="text-base font-bold text-gray-900 mb-1 dark:text-white font-heading">{{ 'nav.medical_id' | translate }}</h3>
-              <p class="text-xs text-gray-500 dark:text-gray-400">Emergency info card</p>
+              <p class="text-xs text-gray-500 dark:text-gray-400">{{ 'DASHBOARD.QUICK_MEDICAL_ID_DESC' | translate }}</p>
             </div>
           </a>
 
@@ -171,14 +171,14 @@ import { animate } from 'motion/mini';
                 🩹
               </div>
               <h3 class="text-base font-bold text-gray-900 mb-1 dark:text-white font-heading">{{ 'nav.first_aid' | translate }}</h3>
-              <p class="text-xs text-gray-500 dark:text-gray-400">Emergency procedures</p>
+              <p class="text-xs text-gray-500 dark:text-gray-400">{{ 'DASHBOARD.QUICK_FIRST_AID_DESC' | translate }}</p>
             </div>
           </a>
 
           <!-- Journal Card -->
           <a 
             #actionCard
-            routerLink="/journal"
+            routerLink="/onboarding"
             class="action-card group relative glass-panel rounded-3xl p-6 transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl hover:shadow-purple-500/10 cursor-pointer"
           >
             <div class="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-transparent rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
@@ -187,7 +187,7 @@ import { animate } from 'motion/mini';
                 📔
               </div>
               <h3 class="text-base font-bold text-gray-900 mb-1 dark:text-white font-heading">{{ 'nav.journal' | translate }}</h3>
-              <p class="text-xs text-gray-500 dark:text-gray-400">Daily reflections</p>
+              <p class="text-xs text-gray-500 dark:text-gray-400">{{ 'DASHBOARD.QUICK_JOURNAL_DESC' | translate }}</p>
             </div>
           </a>
 
@@ -202,8 +202,8 @@ import { animate } from 'motion/mini';
               <div class="w-12 h-12 rounded-xl bg-white shadow-lg shadow-gray-200/50 flex items-center justify-center text-xl mb-4 group-hover:scale-110 transition-transform dark:bg-gray-800 dark:shadow-none">
                 👤
               </div>
-              <h3 class="text-base font-bold text-gray-900 mb-1 dark:text-white font-heading">Profile</h3>
-              <p class="text-xs text-gray-500 dark:text-gray-400">Health settings</p>
+              <h3 class="text-base font-bold text-gray-900 mb-1 dark:text-white font-heading">{{ 'nav.profile' | translate }}</h3>
+              <p class="text-xs text-gray-500 dark:text-gray-400">{{ 'DASHBOARD.QUICK_PROFILE_DESC' | translate }}</p>
             </div>
           </a>
         </div>
@@ -220,7 +220,7 @@ import { animate } from 'motion/mini';
               ❤️
             </div>
             <h4 class="font-bold text-gray-900 mb-2 dark:text-white">{{ 'METRICS.VITALS.TITLE' | translate }}</h4>
-            <p class="text-sm text-gray-500 dark:text-gray-400">Coming soon...</p>
+            <p class="text-sm text-gray-500 dark:text-gray-400">{{ 'DASHBOARD.COMING_SOON' | translate }}</p>
           </div>
           
           <div class="glass-panel rounded-3xl p-8 flex flex-col items-center justify-center text-center opacity-60">
@@ -228,7 +228,7 @@ import { animate } from 'motion/mini';
               📊
             </div>
             <h4 class="font-bold text-gray-900 mb-2 dark:text-white">{{ 'METRICS.TRENDS' | translate }}</h4>
-            <p class="text-sm text-gray-500 dark:text-gray-400">Coming soon...</p>
+            <p class="text-sm text-gray-500 dark:text-gray-400">{{ 'DASHBOARD.COMING_SOON' | translate }}</p>
           </div>
         </div>
 
@@ -238,7 +238,7 @@ import { animate } from 'motion/mini';
             (click)="awardTestCarrots()"
             class="px-6 py-3 bg-orange-100 text-orange-700 rounded-xl font-semibold text-sm hover:bg-orange-200 transition-all dark:bg-orange-900/20 dark:text-orange-400"
           >
-            🥕 Test: Earn 5 Carrots
+            🥕 {{ 'DASHBOARD.TEST_EARN_CARROTS' | translate }}
           </button>
         </div>
       </main>

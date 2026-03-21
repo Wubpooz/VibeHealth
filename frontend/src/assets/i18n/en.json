@@ -82,7 +82,17 @@
     "YOUR_PROFILE": "Your Profile",
     "EMAIL_VERIFIED": "Email verified",
     "ROLE": "Role",
-    "VERIFY_EMAIL_BANNER": "Please verify your email to access all features."
+    "VERIFY_EMAIL_BANNER": "Please verify your email to access all features.",
+    "COMPLETE_PROFILE_TITLE": "Complete your profile!",
+    "COMPLETE_PROFILE_DESC": "Tell me more about yourself so I can help you better.",
+    "START_ONBOARDING": "Start Onboarding",
+    "QUICK_ACTIONS": "Quick Actions",
+    "QUICK_MEDICAL_ID_DESC": "Emergency info card",
+    "QUICK_FIRST_AID_DESC": "Emergency procedures",
+    "QUICK_JOURNAL_DESC": "Daily reflections",
+    "QUICK_PROFILE_DESC": "Health settings",
+    "COMING_SOON": "Coming soon...",
+    "TEST_EARN_CARROTS": "Test: Earn 5 Carrots"
   },
   "ONBOARDING": {
     "SKIP": "Skip for now",
@@ -534,6 +544,18 @@
     "TO_NEXT_LEVEL": "carrots to next level",
     "RECENT_ACTIVITY": "Recent Activity",
     "NO_ACTIVITY_YET": "No activity yet",
-    "START_EARNING": "Start logging to earn carrots!"
+    "START_EARNING": "Start logging to earn carrots!",
+    "THERE": "there",
+    "GREETING_MORNING": "Good morning",
+    "GREETING_AFTERNOON": "Good afternoon",
+    "GREETING_EVENING": "Good evening",
+    "GREETING_NIGHT": "Good night",
+    "SUBTITLE_FIRE": "You're on fire! Keep up the amazing streak! 🔥",
+    "SUBTITLE_CONSISTENCY": "Great consistency! You're building healthy habits.",
+    "SUBTITLE_WELCOME_BACK": "Welcome back! Ready to make today count?",
+    "SUBTITLE_START": "Let's start building healthy habits together!",
+    "TIME_JUST_NOW": "Just now",
+    "TIME_MIN_AGO": "{{count}}m ago",
+    "TIME_HOUR_AGO": "{{count}}h ago"
   }
 }

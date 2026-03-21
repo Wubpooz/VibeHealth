@@ -20,8 +20,8 @@ import { LottieIconComponent } from '../lottie-icon/lottie-icon.component';
       <div class="greeting-section">
         <span class="greeting-emoji">{{ greetingEmoji() }}</span>
         <div class="greeting-text">
-          <h2 class="greeting">{{ greeting() }}, {{ userName() }}!</h2>
-          <p class="greeting-subtitle">{{ greetingSubtitle() }}</p>
+          <h2 class="greeting">{{ greetingKey() | translate }}, {{ userName() || ('STATS.THERE' | translate) }}!</h2>
+          <p class="greeting-subtitle">{{ greetingSubtitleKey() | translate }}</p>
         </div>
       </div>
 
@@ -340,15 +340,15 @@ export class StatsGridComponent {
     if (user?.name) {
       return user.name.split(' ')[0]; // First name only
     }
-    return 'there';
+    return '';
   });
 
-  readonly greeting = computed(() => {
+  readonly greetingKey = computed(() => {
     const hour = new Date().getHours();
-    if (hour < 12) return 'Good morning';
-    if (hour < 17) return 'Good afternoon';
-    if (hour < 21) return 'Good evening';
-    return 'Good night';
+    if (hour < 12) return 'STATS.GREETING_MORNING';
+    if (hour < 17) return 'STATS.GREETING_AFTERNOON';
+    if (hour < 21) return 'STATS.GREETING_EVENING';
+    return 'STATS.GREETING_NIGHT';
   });
 
   readonly greetingEmoji = computed(() => {
@@ -360,12 +360,12 @@ export class StatsGridComponent {
     return '🌙';
   });
 
-  readonly greetingSubtitle = computed(() => {
+  readonly greetingSubtitleKey = computed(() => {
     const streak = this.rewards.streak();
-    if (streak >= 7) return "You're on fire! Keep up the amazing streak! 🔥";
-    if (streak >= 3) return "Great consistency! You're building healthy habits.";
-    if (streak >= 1) return "Welcome back! Ready to make today count?";
-    return "Let's start building healthy habits together!";
+    if (streak >= 7) return 'STATS.SUBTITLE_FIRE';
+    if (streak >= 3) return 'STATS.SUBTITLE_CONSISTENCY';
+    if (streak >= 1) return 'STATS.SUBTITLE_WELCOME_BACK';
+    return 'STATS.SUBTITLE_START';
   });
 
   readonly streakBadge = computed(() => {
