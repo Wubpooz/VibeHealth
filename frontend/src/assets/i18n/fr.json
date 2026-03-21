@@ -525,5 +525,15 @@
     "QUICK_LOG": "Enregistrement rapide",
     "VIEW_HISTORY": "Voir l'historique",
     "TRENDS": "Tendances"
+  },
+  "STATS": {
+    "DAY_STREAK": "Jours consécutifs",
+    "LEVEL": "Niveau",
+    "CARROTS": "Carottes",
+    "LEVEL_PROGRESS": "Progression du niveau",
+    "TO_NEXT_LEVEL": "carottes pour le prochain niveau",
+    "RECENT_ACTIVITY": "Activité récente",
+    "NO_ACTIVITY_YET": "Aucune activité pour le moment",
+    "START_EARNING": "Commencez à enregistrer pour gagner des carottes !"
   }
 }

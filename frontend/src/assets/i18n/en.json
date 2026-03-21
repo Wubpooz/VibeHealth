@@ -525,5 +525,15 @@
     "QUICK_LOG": "Quick Log",
     "VIEW_HISTORY": "View History",
     "TRENDS": "Trends"
+  },
+  "STATS": {
+    "DAY_STREAK": "Day Streak",
+    "LEVEL": "Level",
+    "CARROTS": "Carrots",
+    "LEVEL_PROGRESS": "Level Progress",
+    "TO_NEXT_LEVEL": "carrots to next level",
+    "RECENT_ACTIVITY": "Recent Activity",
+    "NO_ACTIVITY_YET": "No activity yet",
+    "START_EARNING": "Start logging to earn carrots!"
   }
 }

@@ -8,6 +8,8 @@ import { RewardsService } from '../../core/rewards/rewards.service';
 import { BunnyMascotComponent } from '../../shared/components/bunny-mascot/bunny-mascot.component';
 import { CarrotCounterComponent } from '../../shared/components/carrot-counter/carrot-counter.component';
 import { ThemeToggleComponent } from '../../shared/components/theme-toggle/theme-toggle.component';
+import { StatsGridComponent } from '../../shared/components/stats-grid/stats-grid.component';
+import { CarrotFeedComponent } from '../../shared/components/carrot-feed/carrot-feed.component';
 import { HydrationTrackerComponent } from '../metrics/hydration-tracker.component';
 import { animate } from 'motion/mini';
 
@@ -20,6 +22,8 @@ import { animate } from 'motion/mini';
     BunnyMascotComponent, 
     CarrotCounterComponent,
     ThemeToggleComponent,
+    StatsGridComponent,
+    CarrotFeedComponent,
     HydrationTrackerComponent
   ],
   styles: [`
@@ -121,127 +125,85 @@ import { animate } from 'motion/mini';
       <!-- Main content -->
       <main class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 pb-24">
         
-        <!-- Welcome Section -->
-        <div class="glass-panel rounded-3xl p-8 sm:p-12 mb-12 animate-fade-in-up">
-          <div class="max-w-3xl mx-auto text-center space-y-6">
-            <div class="inline-flex items-center justify-center w-20 h-20 rounded-full bg-primary-50 text-4xl mb-2 animate-float dark:bg-primary-900/20">
-              🎉
-            </div>
-            <h2 class="text-4xl sm:text-5xl font-bold text-gray-900 dark:text-white font-heading leading-tight">
-              {{ 'DASHBOARD.WELCOME' | translate }}
-            </h2>
-            <p class="text-xl text-gray-600 dark:text-gray-300">
-              {{ 'DASHBOARD.SETUP_COMPLETE' | translate }}
-            </p>
-
-            @if (auth.user(); as user) {
-              <div class="mt-8 bg-white/50 rounded-2xl p-6 border border-white/60 shadow-inner backdrop-blur-sm text-left max-w-lg mx-auto dark:bg-gray-800/50 dark:border-gray-700">
-                <h3 class="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2 dark:text-white">
-                  <span class="w-1 h-6 bg-primary-500 rounded-full"></span>
-                  {{ 'DASHBOARD.YOUR_PROFILE' | translate }}
-                </h3>
-                <dl class="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-4 text-sm">
-                  <div>
-                    <dt class="text-gray-500 font-medium mb-1 dark:text-gray-400">{{ 'AUTH.EMAIL' | translate }}</dt>
-                    <dd class="text-gray-900 font-semibold truncate dark:text-white">{{ user.email }}</dd>
-                  </div>
-                  @if (user.name) {
-                    <div>
-                      <dt class="text-gray-500 font-medium mb-1 dark:text-gray-400">{{ 'AUTH.NAME' | translate }}</dt>
-                      <dd class="text-gray-900 font-semibold dark:text-white">{{ user.name }}</dd>
-                    </div>
-                  }
-                  <div>
-                    <dt class="text-gray-500 font-medium mb-1 dark:text-gray-400">{{ 'DASHBOARD.EMAIL_VERIFIED' | translate }}</dt>
-                    <dd class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold"
-                      [ngClass]="user.emailVerified ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400' : 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400'">
-                      {{ user.emailVerified ? 'Verified' : 'Unverified' }}
-                    </dd>
-                  </div>
-                  <div>
-                    <dt class="text-gray-500 font-medium mb-1 dark:text-gray-400">{{ 'DASHBOARD.ROLE' | translate }}</dt>
-                    <dd class="text-gray-900 font-semibold dark:text-white">{{ user.role || 'USER' }}</dd>
-                  </div>
-                </dl>
-              </div>
-            }
+        <!-- Stats & Activity Row -->
+        <div class="grid lg:grid-cols-3 gap-6 mb-12">
+          <!-- Stats Grid (spans 2 columns on large screens) -->
+          <div class="lg:col-span-2">
+            <app-stats-grid />
+          </div>
+          
+          <!-- Carrot Activity Feed -->
+          <div class="lg:col-span-1">
+            <app-carrot-feed />
           </div>
         </div>
 
         <!-- Quick Actions Grid -->
         <h3 class="text-2xl font-bold text-gray-900 mb-6 px-2 dark:text-white font-heading">Quick Actions</h3>
-        <div class="grid md:grid-cols-3 gap-6 mb-12">
-          <!-- Medical ID Card - Now Active! -->
+        <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+          <!-- Medical ID Card -->
           <a 
             #actionCard
             routerLink="/medical-id"
-            class="action-card group relative glass-panel rounded-3xl p-8 transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl hover:shadow-red-500/10 cursor-pointer"
+            class="action-card group relative glass-panel rounded-3xl p-6 transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl hover:shadow-red-500/10 cursor-pointer"
           >
             <div class="absolute inset-0 bg-gradient-to-br from-red-500/5 to-transparent rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
-            <div class="absolute top-4 right-4 px-2.5 py-1 bg-red-100 text-red-600 text-xs font-bold rounded-full dark:bg-red-900/30 dark:text-red-400">
-              NEW
-            </div>
             <div class="relative z-10">
-              <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-red-500 to-red-600 shadow-lg shadow-red-500/30 flex items-center justify-center text-2xl mb-6 group-hover:scale-110 transition-transform text-white">
-                <svg class="w-7 h-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-red-500 to-red-600 shadow-lg shadow-red-500/30 flex items-center justify-center text-xl mb-4 group-hover:scale-110 transition-transform text-white">
+                <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
                 </svg>
               </div>
-              <h3 class="text-xl font-bold text-gray-900 mb-2 dark:text-white font-heading">{{ 'nav.medical_id' | translate }}</h3>
-              <p class="text-gray-500 font-medium dark:text-gray-400">Your emergency medical information card.</p>
-              <div class="mt-6 flex items-center text-sm font-bold text-red-600 dark:text-red-400">
-                Open Medical ID
-                <svg class="w-4 h-4 ml-2 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                </svg>
-              </div>
+              <h3 class="text-base font-bold text-gray-900 mb-1 dark:text-white font-heading">{{ 'nav.medical_id' | translate }}</h3>
+              <p class="text-xs text-gray-500 dark:text-gray-400">Emergency info card</p>
             </div>
           </a>
 
-          <!-- Onboarding Card -->
-          <a 
-            #actionCard
-            routerLink="/onboarding"
-            class="action-card group relative glass-panel rounded-3xl p-8 transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl hover:shadow-sage-500/10 cursor-pointer"
-          >
-            <div class="absolute inset-0 bg-gradient-to-br from-sage-500/5 to-transparent rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
-            <div class="relative z-10">
-              <div class="w-14 h-14 rounded-2xl bg-white shadow-lg shadow-gray-200/50 flex items-center justify-center text-3xl mb-6 group-hover:scale-110 transition-transform dark:bg-gray-800 dark:shadow-none">
-                📋
-              </div>
-              <h3 class="text-xl font-bold text-gray-900 mb-2 dark:text-white font-heading">Edit Profile</h3>
-              <p class="text-gray-500 font-medium dark:text-gray-400">Update your health profile and goals.</p>
-              <div class="mt-6 flex items-center text-sm font-bold text-sage-600 dark:text-sage-400">
-                Go to Profile
-                <svg class="w-4 h-4 ml-2 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                </svg>
-              </div>
-            </div>
-          </a>
-
-          <!-- First Aid Card - Now Active! -->
+          <!-- First Aid Card -->
           <a 
             #actionCard
             routerLink="/first-aid"
-            class="action-card group relative glass-panel rounded-3xl p-8 transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl hover:shadow-green-500/10 cursor-pointer"
+            class="action-card group relative glass-panel rounded-3xl p-6 transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl hover:shadow-green-500/10 cursor-pointer"
           >
             <div class="absolute inset-0 bg-gradient-to-br from-green-500/5 to-transparent rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
-            <div class="absolute top-4 right-4 px-2.5 py-1 bg-green-100 text-green-600 text-xs font-bold rounded-full dark:bg-green-900/30 dark:text-green-400">
-              NEW
-            </div>
             <div class="relative z-10">
-              <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-green-500 to-emerald-600 shadow-lg shadow-green-500/30 flex items-center justify-center text-2xl mb-6 group-hover:scale-110 transition-transform text-white">
+              <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-green-500 to-emerald-600 shadow-lg shadow-green-500/30 flex items-center justify-center text-xl mb-4 group-hover:scale-110 transition-transform text-white">
                 🩹
               </div>
-              <h3 class="text-xl font-bold text-gray-900 mb-2 dark:text-white font-heading">{{ 'nav.first_aid' | translate }}</h3>
-              <p class="text-gray-500 font-medium dark:text-gray-400">{{ 'LANDING.FEATURE_FIRST_AID_DESC' | translate }}</p>
-              <div class="mt-6 flex items-center text-sm font-bold text-green-600 dark:text-green-400">
-                Open First Aid
-                <svg class="w-4 h-4 ml-2 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                </svg>
+              <h3 class="text-base font-bold text-gray-900 mb-1 dark:text-white font-heading">{{ 'nav.first_aid' | translate }}</h3>
+              <p class="text-xs text-gray-500 dark:text-gray-400">Emergency procedures</p>
+            </div>
+          </a>
+
+          <!-- Journal Card -->
+          <a 
+            #actionCard
+            routerLink="/journal"
+            class="action-card group relative glass-panel rounded-3xl p-6 transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl hover:shadow-purple-500/10 cursor-pointer"
+          >
+            <div class="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-transparent rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
+            <div class="relative z-10">
+              <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-500 to-violet-600 shadow-lg shadow-purple-500/30 flex items-center justify-center text-xl mb-4 group-hover:scale-110 transition-transform text-white">
+                📔
               </div>
+              <h3 class="text-base font-bold text-gray-900 mb-1 dark:text-white font-heading">{{ 'nav.journal' | translate }}</h3>
+              <p class="text-xs text-gray-500 dark:text-gray-400">Daily reflections</p>
+            </div>
+          </a>
+
+          <!-- Profile Card -->
+          <a 
+            #actionCard
+            routerLink="/onboarding"
+            class="action-card group relative glass-panel rounded-3xl p-6 transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl hover:shadow-sage-500/10 cursor-pointer"
+          >
+            <div class="absolute inset-0 bg-gradient-to-br from-sage-500/5 to-transparent rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
+            <div class="relative z-10">
+              <div class="w-12 h-12 rounded-xl bg-white shadow-lg shadow-gray-200/50 flex items-center justify-center text-xl mb-4 group-hover:scale-110 transition-transform dark:bg-gray-800 dark:shadow-none">
+                👤
+              </div>
+              <h3 class="text-base font-bold text-gray-900 mb-1 dark:text-white font-heading">Profile</h3>
+              <p class="text-xs text-gray-500 dark:text-gray-400">Health settings</p>
             </div>
           </a>
         </div>

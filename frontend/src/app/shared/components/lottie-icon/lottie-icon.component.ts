@@ -10,7 +10,8 @@ import {
   effect,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { LottieComponent, AnimationOptions, AnimationItem } from 'ngx-lottie';
+import { LottieComponent, AnimationOptions } from 'ngx-lottie';
+import type { AnimationItem } from 'lottie-web';
 
 /**
  * Available Lottie animated icons.
