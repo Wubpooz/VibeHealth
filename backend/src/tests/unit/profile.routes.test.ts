@@ -22,6 +22,7 @@ const existingProfile = {
   height: 180,
   weight: 80,
   fitnessLevel: 'intermediate',
+  preferredActivityKey: 'RUN_5MPH',
   goals: ['weight_loss', 'endurance'],
   medicalConditions: [],
   allergies: ['peanuts'],
@@ -351,6 +352,54 @@ describe('POST /profile', () => {
 
     expect(res.status).toBe(500);
     expect(body.error).toBeDefined();
+  });
+});
+
+// ─── PATCH /profile/preferred-workout ────────────────────────────────────────
+describe('PATCH /profile/preferred-workout', () => {
+  let upsertSpy: ReturnType<typeof spyOn>;
+
+  beforeEach(() => {
+    upsertSpy = spyOn(prisma.profile, 'upsert');
+    upsertSpy.mockResolvedValue({ ...existingProfile, preferredActivityKey: 'YOGA_VINYASA' } as never);
+  });
+
+  afterEach(() => {
+    upsertSpy?.mockRestore();
+  });
+
+  it('stores the preferred workout key and returns success', async () => {
+    const app = buildApp();
+    const res = await app.request('/profile/preferred-workout', {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ preferredActivityKey: 'YOGA_VINYASA' }),
+    });
+    const body: any = await res.json();
+
+    expect(res.status).toBe(200);
+    expect(body.success).toBe(true);
+    expect(upsertSpy).toHaveBeenCalledWith(
+      expect.objectContaining({
+        where: { userId: mockUser.id },
+        update: { preferredActivityKey: 'YOGA_VINYASA' },
+      }),
+    );
+  });
+
+  it('accepts clearing the preferred workout with null', async () => {
+    const app = buildApp();
+    await app.request('/profile/preferred-workout', {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ preferredActivityKey: null }),
+    });
+
+    expect(upsertSpy).toHaveBeenCalledWith(
+      expect.objectContaining({
+        update: { preferredActivityKey: null },
+      }),
+    );
   });
 });
 

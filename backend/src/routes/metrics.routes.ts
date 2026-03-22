@@ -67,7 +67,7 @@ async function resolveActivityCalories(params: {
   activityCatalogKey?: string;
 }): Promise<{ calories: number | null; activityCatalogId?: string | null; metValue?: number | null }> {
   const { userId, duration, calories, activityCatalogId, activityCatalogKey } = params;
-  const activityCatalog = (prisma as any).activityCatalog;
+  const activityCatalog = prisma.activityCatalog;
 
   let catalogItem = null;
   if (activityCatalogId) {
@@ -142,7 +142,7 @@ async function resolveMealCatalogNutrition(params: {
   sodium?: number;
   servingSize?: string | null;
 }> {
-  const mealCatalog = (prisma as any).mealCatalog;
+  const mealCatalog = prisma.mealCatalog;
 
   let catalogItem = null;
   if (params.mealCatalogId) {
@@ -388,7 +388,7 @@ metricsRoutes.get('/hydration/today', async (c) => {
       orderBy: { loggedAt: 'desc' },
     });
 
-    const totalMl = logs.reduce((sum, log) => sum + log.amount, 0);
+    const totalMl = logs.reduce((sum: number, log: { amount: number }) => sum + log.amount, 0);
     const goalMl = 2500; // Default daily goal (can be personalized later)
 
     return c.json({
@@ -441,7 +441,7 @@ metricsRoutes.post('/hydration/quick', async (c) => {
       },
     });
 
-    const totalMl = todayLogs.reduce((sum, l) => sum + l.amount, 0);
+    const totalMl = todayLogs.reduce((sum: number, l: { amount: number }) => sum + l.amount, 0);
     const goalMl = 2500;
 
     return c.json({
@@ -584,9 +584,9 @@ metricsRoutes.get('/activities/today', async (c) => {
     });
 
     const summary = {
-      totalMinutes: logs.reduce((sum, l) => sum + l.duration, 0),
-      totalCalories: logs.reduce((sum, l) => sum + (l.calories || 0), 0),
-      totalDistance: logs.reduce((sum, l) => sum + (l.distance || 0), 0),
+      totalMinutes: logs.reduce((sum: number, l: { duration: number }) => sum + l.duration, 0),
+      totalCalories: logs.reduce((sum: number, l: { calories?: number | null }) => sum + (l.calories || 0), 0),
+      totalDistance: logs.reduce((sum: number, l: { distance?: number | null }) => sum + (l.distance || 0), 0),
       activitiesCount: logs.length,
       byType: {} as Record<string, { count: number; minutes: number; calories: number }>,
     };
@@ -642,8 +642,8 @@ metricsRoutes.get('/activities/week', async (c) => {
 
     return c.json({
       dailySummary,
-      totalMinutes: logs.reduce((sum, l) => sum + l.duration, 0),
-      totalCalories: logs.reduce((sum, l) => sum + (l.calories || 0), 0),
+      totalMinutes: logs.reduce((sum: number, l: { duration: number }) => sum + l.duration, 0),
+      totalCalories: logs.reduce((sum: number, l: { calories?: number }) => sum + (l.calories || 0), 0),
       activeDays: Object.values(dailySummary).filter((d) => d.count > 0).length,
     });
   } catch (error) {
@@ -786,12 +786,12 @@ metricsRoutes.get('/meals/today', async (c) => {
     });
 
     const summary = {
-      totalCalories: logs.reduce((sum, l) => sum + (l.calories || 0), 0),
-      totalProtein: logs.reduce((sum, l) => sum + (l.protein || 0), 0),
-      totalCarbs: logs.reduce((sum, l) => sum + (l.carbs || 0), 0),
-      totalFat: logs.reduce((sum, l) => sum + (l.fat || 0), 0),
-      totalFiber: logs.reduce((sum, l) => sum + (l.fiber || 0), 0),
-      totalSugar: logs.reduce((sum, l) => sum + (l.sugar || 0), 0),
+      totalCalories: logs.reduce((sum: number, l: { calories?: number }) => sum + (l.calories || 0), 0),
+      totalProtein: logs.reduce((sum: number, l: { protein?: number }) => sum + (l.protein || 0), 0),
+      totalCarbs: logs.reduce((sum: number, l: { carbs?: number }) => sum + (l.carbs || 0), 0),
+      totalFat: logs.reduce((sum: number, l: { fat?: number }) => sum + (l.fat || 0), 0),
+      totalFiber: logs.reduce((sum: number, l: { fiber?: number }) => sum + (l.fiber || 0), 0),
+      totalSugar: logs.reduce((sum: number, l: { sugar?: number }) => sum + (l.sugar || 0), 0),
       mealsCount: logs.length,
       byMealType: {} as Record<string, { count: number; calories: number }>,
     };
@@ -848,7 +848,7 @@ metricsRoutes.get('/meals/week', async (c) => {
 
     return c.json({
       dailySummary,
-      averageCalories: Math.round(logs.reduce((sum, l) => sum + (l.calories || 0), 0) / 7),
+      averageCalories: Math.round(logs.reduce((sum: number, l: { calories?: number }) => sum + (l.calories || 0), 0) / 7),
       totalMeals: logs.length,
     });
   } catch (error) {

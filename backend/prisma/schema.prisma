@@ -81,6 +81,7 @@ model Profile {
   height                  Float?
   weight                  Float?
   fitnessLevel            String?
+  preferredActivityKey    String?
   goals                   String[]
   medicalConditions       String[]
   allergies               String[]

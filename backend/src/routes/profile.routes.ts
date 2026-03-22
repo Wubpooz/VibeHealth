@@ -31,6 +31,11 @@ const onboardingProfileSchema = z.object({
   allergies: z.array(z.string().trim().min(1).max(120)).max(100).optional(),
   currentMedications: z.array(z.string().trim().min(1).max(120)).max(100).optional(),
   notificationPreferences: z.record(z.boolean()).optional(),
+  preferredActivityKey: z.string().trim().min(1).max(120).optional(),
+});
+
+const preferredActivitySchema = z.object({
+  preferredActivityKey: z.string().trim().min(1).max(120).nullable(),
 });
 
 // All profile routes require authentication
@@ -88,12 +93,13 @@ profileRoutes.post('/', async (c) => {
       height: convertHeight(payload.height, payload.heightUnit),
       weight: convertWeight(payload.weight, payload.weightUnit),
       fitnessLevel: payload.fitnessLevel || null,
+      preferredActivityKey: payload.preferredActivityKey || null,
       goals: payload.goals || [],
       medicalConditions: payload.medicalConditions || [],
       allergies: payload.allergies || [],
       currentMedications: payload.currentMedications || [],
       notificationPreferences: payload.notificationPreferences || {},
-    };
+    } as any;
     
     // Upsert profile (create if not exists, update if exists)
     const profile = await prisma.profile.upsert({
@@ -119,6 +125,45 @@ profileRoutes.post('/', async (c) => {
   } catch (error) {
     console.error('Error saving profile:', error);
     return c.json({ error: 'Failed to save profile' }, 500);
+  }
+});
+
+profileRoutes.patch('/preferred-workout', async (c) => {
+  const user = c.get('user');
+  const body = await c.req.json();
+
+  const parsed = preferredActivitySchema.safeParse(body);
+  if (!parsed.success) {
+    return c.json({
+      error: 'Invalid profile payload',
+      details: parsed.error.flatten(),
+    }, 400);
+  }
+
+  try {
+    const profile = await prisma.profile.upsert({
+      where: { userId: user.id },
+      update: { preferredActivityKey: parsed.data.preferredActivityKey },
+      create: {
+        userId: user.id,
+        dateOfBirth: null,
+        biologicalSex: null,
+        height: null,
+        weight: null,
+        fitnessLevel: null,
+        preferredActivityKey: parsed.data.preferredActivityKey,
+        goals: [],
+        medicalConditions: [],
+        allergies: [],
+        currentMedications: [],
+        notificationPreferences: {},
+      },
+    });
+
+    return c.json({ success: true, profile });
+  } catch (error) {
+    console.error('Error updating preferred workout:', error);
+    return c.json({ error: 'Failed to update preferred workout' }, 500);
   }
 });
 

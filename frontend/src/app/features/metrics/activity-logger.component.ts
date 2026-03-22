@@ -11,6 +11,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { MetricsService } from '../../core/metrics/metrics.service';
+import { ProfileService } from '../../core/profile/profile.service';
 import { RewardsService } from '../../core/rewards/rewards.service';
 import { AutocompleteComponent } from '../../shared/components/autocomplete/autocomplete.component';
 import {
@@ -60,7 +61,7 @@ import {
       @if (topCatalogActivities().length > 0) {
         <div class="catalog-strip">
           @for (activity of topCatalogActivities(); track activity.key) {
-            <button class="catalog-pill" type="button" (click)="selectedType.set(activity.category)">
+            <button class="catalog-pill" type="button" (click)="selectCatalogActivity(activity.key)">
               <span class="emoji">{{ activity.emoji }}</span>
               <span class="meta">
                 <strong>{{ activity.name }}</strong>
@@ -99,7 +100,7 @@ import {
                   type="button"
                   class="type-btn"
                   [class.selected]="selectedType() === activity.type"
-                  (click)="selectedType.set(activity.type)"
+                  (click)="onActivityTypeChange(activity.type)"
                 >
                   <span class="emoji">{{ activity.emoji }}</span>
                   <span class="name">{{ activity.label }}</span>
@@ -794,6 +795,7 @@ import {
 })
 export class ActivityLoggerComponent implements OnDestroy {
   private readonly metricsService = inject(MetricsService);
+  private readonly profileService = inject(ProfileService);
   private readonly rewardsService = inject(RewardsService);
   private readonly translate = inject(TranslateService);
 
@@ -824,6 +826,8 @@ export class ActivityLoggerComponent implements OnDestroy {
     if (!selectedName) return null;
     return this.activityCatalog().find((activity) => activity.name === selectedName) ?? null;
   });
+
+  readonly resolvedCatalogActivity = computed(() => this.selectedCatalogActivity() ?? this.bestCatalogMatch());
 
   readonly activitySuggestions = computed(() =>
     this.activityCatalog()
@@ -865,7 +869,7 @@ export class ActivityLoggerComponent implements OnDestroy {
   readonly durationPresets = [15, 30, 45, 60, 90];
 
   readonly estimatedCalories = computed(() => {
-    const catalogMatch = this.bestCatalogMatch();
+    const catalogMatch = this.resolvedCatalogActivity();
     const preset = ACTIVITY_PRESETS[this.selectedType()];
     const intensityMultiplier = INTENSITY_LABELS[this.intensity()].multiplier;
     const caloriesPerMin = catalogMatch ? (catalogMatch.metValue * 70) / 60 : preset.caloriesPerMin;
@@ -878,8 +882,11 @@ export class ActivityLoggerComponent implements OnDestroy {
 
   constructor() {
     afterNextRender(() => {
-      this.metricsService.loadActivityToday();
-      this.metricsService.loadActivityCatalog();
+      void Promise.all([
+        this.metricsService.loadActivityToday(),
+        this.metricsService.loadActivityCatalog(),
+        this.profileService.loadProfile(),
+      ]).then(() => this.applyRememberedWorkout());
     });
     this.syncTimerFromDuration();
   }
@@ -902,6 +909,38 @@ export class ActivityLoggerComponent implements OnDestroy {
 
     this.selectedType.set(catalogItem.category);
     this.activityName.set(catalogItem.name);
+  }
+
+  onActivityTypeChange(type: ActivityType): void {
+    this.selectedType.set(type);
+    this.selectedActivitySearch.set([]);
+  }
+
+  selectCatalogActivity(activityKey: string): void {
+    const catalogItem = this.activityCatalog().find((activity) => activity.key === activityKey);
+    if (!catalogItem) return;
+
+    this.selectedType.set(catalogItem.category);
+    this.activityName.set(catalogItem.name);
+    this.selectedActivitySearch.set([catalogItem.name]);
+  }
+
+  private bestCatalogActivityForType(type: ActivityType) {
+    const matches = this.activityCatalog().filter((activity) => activity.category === type);
+    const sortedMatches = [...matches].sort((a, b) => b.metValue - a.metValue);
+    return sortedMatches[0] ?? null;
+  }
+
+  private applyRememberedWorkout(): void {
+    const rememberedKey = this.profileService.profile()?.preferredActivityKey;
+    if (!rememberedKey) return;
+
+    const catalogItem = this.activityCatalog().find((activity) => activity.key === rememberedKey);
+    if (!catalogItem) return;
+
+    this.selectedType.set(catalogItem.category);
+    this.activityName.set(catalogItem.name);
+    this.selectedActivitySearch.set([catalogItem.name]);
   }
 
   timerDisplay(): string {
@@ -953,13 +992,17 @@ export class ActivityLoggerComponent implements OnDestroy {
   async quickLog(type: ActivityType): Promise<void> {
     this.logging.set(true);
     const preset = ACTIVITY_PRESETS[type];
+    const catalogActivity = this.selectedCatalogActivity()?.category === type
+      ? this.selectedCatalogActivity()
+      : this.bestCatalogActivityForType(type);
+    const preferredKey = catalogActivity?.key ?? null;
     
     const result = await this.metricsService.logActivity({
       type,
       name: `Quick ${preset.label}`,
       duration: 30,
       intensity: 'MODERATE',
-      activityCatalogKey: this.bestCatalogMatch()?.key,
+      activityCatalogKey: preferredKey ?? undefined,
     });
 
     if (result.success && result.carrots) {
@@ -970,6 +1013,10 @@ export class ActivityLoggerComponent implements OnDestroy {
       );
     }
 
+    if (preferredKey) {
+      await this.profileService.updatePreferredWorkout(preferredKey);
+    }
+
     this.logging.set(false);
   }
 
@@ -977,6 +1024,7 @@ export class ActivityLoggerComponent implements OnDestroy {
     if (!this.canSubmit()) return;
 
     this.logging.set(true);
+    const preferredKey = this.resolvedCatalogActivity()?.key ?? null;
 
     const result = await this.metricsService.logActivity({
       type: this.selectedType(),
@@ -984,7 +1032,7 @@ export class ActivityLoggerComponent implements OnDestroy {
       duration: this.duration(),
       intensity: this.intensity(),
       calories: this.estimatedCalories(),
-      activityCatalogKey: this.bestCatalogMatch()?.key,
+      activityCatalogKey: preferredKey ?? undefined,
     });
 
     if (result.success && result.carrots) {
@@ -993,6 +1041,10 @@ export class ActivityLoggerComponent implements OnDestroy {
         this.translate.instant('METRICS.ACTIVITY.REWARD_MSG'),
         'activity'
       );
+    }
+
+    if (preferredKey) {
+      await this.profileService.updatePreferredWorkout(preferredKey);
     }
 
     // Reset form

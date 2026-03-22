@@ -1,5 +1,6 @@
 import { Injectable, signal, computed, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { firstValueFrom } from 'rxjs';
 import { MedicalIdData, EmergencyContact, BloodType } from '../../features/medical-id/medical-id.types';
 import { ProfileService } from '../profile/profile.service';
 import { AuthService } from '../auth/auth.service';
@@ -41,9 +42,11 @@ export class MedicalIdService {
     this._error.set(null);
 
     try {
-      const response = await this.http.get<{ medicalId: MedicalIdData | null }>('/api/v1/medical-id', {
-        withCredentials: true
-      }).toPromise();
+      const response = await firstValueFrom(
+        this.http.get<{ medicalId: MedicalIdData | null }>('/api/v1/medical-id', {
+          withCredentials: true
+        })
+      );
 
       if (response?.medicalId) {
         this._medicalId.set({
@@ -73,9 +76,11 @@ export class MedicalIdService {
     this._error.set(null);
 
     try {
-      const response = await this.http.post<{ medicalId: MedicalIdData }>('/api/v1/medical-id', data, {
-        withCredentials: true
-      }).toPromise();
+      const response = await firstValueFrom(
+        this.http.post<{ medicalId: MedicalIdData }>('/api/v1/medical-id', data, {
+          withCredentials: true
+        })
+      );
 
       if (response?.medicalId) {
         this._medicalId.set({

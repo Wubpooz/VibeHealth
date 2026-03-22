@@ -274,7 +274,7 @@ export class VitalsDashboardComponent {
   readonly weeklySleepData = computed<TrendDataPoint[]>(() => {
     const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
     const todayIdx = (new Date().getDay() + 6) % 7;
-    const placeholders = [7.5, 6.0, 8.0, 7.0, 6.5, 9.0, 7.5];
+    const placeholders = [7.5, 6, 8, 7, 6.5, 9, 7.5];
 
     return days.map((label, i) => ({
       label,
