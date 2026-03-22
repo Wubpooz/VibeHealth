@@ -45,7 +45,7 @@ const hydrationLogSchema = z.object({
 });
 
 const activityLogSchema = z.object({
-  type: z.enum(['WALK', 'RUN', 'CYCLE', 'SWIM', 'YOGA', 'STRENGTH', 'HIIT', 'SPORTS', 'DANCE', 'OTHER']),
+  type: z.enum(['WALK', 'RUN', 'CYCLE', 'SWIM', 'YOGA', 'STRENGTH', 'HIIT', 'SPORTS', 'DANCE', 'OTHER', 'ROWING', 'CLIMB', 'MARTIAL_ARTS', 'WINTER_SPORTS', 'WATER_SPORTS', 'RACKET_SPORTS', 'TEAM_SPORTS', 'MINDFULNESS']),
   name: z.string().min(1).max(100),
   duration: z.number().int().positive().max(1440), // max 24 hours
   calories: z.number().int().positive().optional(),
@@ -55,7 +55,49 @@ const activityLogSchema = z.object({
   notes: z.string().max(500).optional(),
   source: z.string().max(50).optional(),
   loggedAt: z.string().datetime().optional(),
+  activityCatalogId: z.string().min(1).optional(),
+  activityCatalogKey: z.string().min(1).optional(),
 });
+
+async function resolveActivityCalories(params: {
+  userId: string;
+  duration: number;
+  calories?: number;
+  activityCatalogId?: string;
+  activityCatalogKey?: string;
+}): Promise<{ calories: number | null; activityCatalogId?: string | null; metValue?: number | null }> {
+  const { userId, duration, calories, activityCatalogId, activityCatalogKey } = params;
+  const activityCatalog = (prisma as any).activityCatalog;
+
+  let catalogItem = null;
+  if (activityCatalogId) {
+    catalogItem = await activityCatalog.findFirst({ where: { id: activityCatalogId, isActive: true } });
+  } else if (activityCatalogKey) {
+    catalogItem = await activityCatalog.findFirst({ where: { key: activityCatalogKey, isActive: true } });
+  }
+
+  if (catalogItem) {
+    const profile = await prisma.profile.findUnique({
+      where: { userId },
+      select: { weight: true },
+    });
+
+    const weightKg = profile?.weight ?? 70;
+    const derivedCalories = Math.round(catalogItem.metValue * weightKg * (duration / 60));
+
+    return {
+      calories: derivedCalories,
+      activityCatalogId: catalogItem.id,
+      metValue: catalogItem.metValue,
+    };
+  }
+
+  if (calories) {
+    return { calories, activityCatalogId: null, metValue: null };
+  }
+
+  return { calories: null, activityCatalogId: null, metValue: null };
+}
 
 const mealLogSchema = z.object({
   mealType: z.enum(['BREAKFAST', 'LUNCH', 'DINNER', 'SNACK']),
@@ -73,7 +115,68 @@ const mealLogSchema = z.object({
   imageUrl: z.string().url().optional(),
   source: z.string().max(50).optional(),
   loggedAt: z.string().datetime().optional(),
+  mealCatalogId: z.string().min(1).optional(),
+  mealCatalogKey: z.string().min(1).optional(),
 });
+
+async function resolveMealCatalogNutrition(params: {
+  mealType: MealType;
+  calories?: number;
+  protein?: number;
+  carbs?: number;
+  fat?: number;
+  fiber?: number;
+  sugar?: number;
+  sodium?: number;
+  servingSize?: string;
+  mealCatalogId?: string;
+  mealCatalogKey?: string;
+}): Promise<{
+  mealCatalogId: string | null;
+  calories?: number;
+  protein?: number;
+  carbs?: number;
+  fat?: number;
+  fiber?: number;
+  sugar?: number;
+  sodium?: number;
+  servingSize?: string | null;
+}> {
+  const mealCatalog = (prisma as any).mealCatalog;
+
+  let catalogItem = null;
+  if (params.mealCatalogId) {
+    catalogItem = await mealCatalog.findFirst({ where: { id: params.mealCatalogId, isActive: true } });
+  } else if (params.mealCatalogKey) {
+    catalogItem = await mealCatalog.findFirst({ where: { key: params.mealCatalogKey, isActive: true } });
+  }
+
+  if (!catalogItem) {
+    return {
+      mealCatalogId: null,
+      calories: params.calories,
+      protein: params.protein,
+      carbs: params.carbs,
+      fat: params.fat,
+      fiber: params.fiber,
+      sugar: params.sugar,
+      sodium: params.sodium,
+      servingSize: params.servingSize,
+    };
+  }
+
+  return {
+    mealCatalogId: catalogItem.id,
+    calories: params.calories ?? catalogItem.calories,
+    protein: params.protein ?? catalogItem.protein ?? undefined,
+    carbs: params.carbs ?? catalogItem.carbs ?? undefined,
+    fat: params.fat ?? catalogItem.fat ?? undefined,
+    fiber: params.fiber ?? catalogItem.fiber ?? undefined,
+    sugar: params.sugar ?? catalogItem.sugar ?? undefined,
+    sodium: params.sodium ?? catalogItem.sodium ?? undefined,
+    servingSize: params.servingSize ?? catalogItem.servingSize ?? undefined,
+  };
+}
 
 // =============================================================================
 // Vital Logs CRUD
@@ -393,22 +496,32 @@ metricsRoutes.post('/activities', async (c) => {
     return c.json({ error: 'Invalid activity log', details: parsed.error.flatten() }, 400);
   }
 
-  const { type, name, duration, calories, distance, intensity, heartRateAvg, notes, source, loggedAt } = parsed.data;
+  const { type, name, duration, calories, distance, intensity, heartRateAvg, notes, source, loggedAt, activityCatalogId, activityCatalogKey } = parsed.data;
 
   try {
+    const resolved = await resolveActivityCalories({
+      userId: user.id,
+      duration,
+      calories,
+      activityCatalogId,
+      activityCatalogKey,
+    });
+
     const log = await prisma.activityLog.create({
       data: {
         userId: user.id,
         type: type as ActivityType,
         name,
         duration,
-        calories,
+        calories: resolved.calories ?? calories,
         distance,
         intensity: (intensity || 'MODERATE') as Intensity,
         heartRateAvg,
         notes,
         source: source || 'manual',
         loggedAt: loggedAt ? new Date(loggedAt) : new Date(),
+        activityCatalogId: resolved.activityCatalogId ?? null,
+        metValue: resolved.metValue ?? null,
       },
     });
 
@@ -575,27 +688,42 @@ metricsRoutes.post('/meals', async (c) => {
     return c.json({ error: 'Invalid meal log', details: parsed.error.flatten() }, 400);
   }
 
-  const { mealType, name, calories, protein, carbs, fat, fiber, sugar, sodium, servingSize, barcode, notes, imageUrl, source, loggedAt } = parsed.data;
+  const { mealType, name, calories, protein, carbs, fat, fiber, sugar, sodium, servingSize, barcode, notes, imageUrl, source, loggedAt, mealCatalogId, mealCatalogKey } = parsed.data;
 
   try {
+    const resolved = await resolveMealCatalogNutrition({
+      mealType: mealType as MealType,
+      calories,
+      protein,
+      carbs,
+      fat,
+      fiber,
+      sugar,
+      sodium,
+      servingSize,
+      mealCatalogId,
+      mealCatalogKey,
+    });
+
     const log = await prisma.mealLog.create({
       data: {
         userId: user.id,
         mealType: mealType as MealType,
         name,
-        calories,
-        protein,
-        carbs,
-        fat,
-        fiber,
-        sugar,
-        sodium,
-        servingSize,
+        calories: resolved.calories,
+        protein: resolved.protein,
+        carbs: resolved.carbs,
+        fat: resolved.fat,
+        fiber: resolved.fiber,
+        sugar: resolved.sugar,
+        sodium: resolved.sodium,
+        servingSize: resolved.servingSize ?? undefined,
         barcode,
         notes,
         imageUrl,
         source: source || 'manual',
         loggedAt: loggedAt ? new Date(loggedAt) : new Date(),
+        mealCatalogId: resolved.mealCatalogId,
       },
     });
 

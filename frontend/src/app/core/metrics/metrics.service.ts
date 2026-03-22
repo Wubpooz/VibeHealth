@@ -9,6 +9,8 @@ import type {
   VitalLog,
   VitalsSummary,
   VitalType,
+  ActivityCatalogEntry,
+  MealCatalogEntry,
   ActivityLog,
   ActivitySummary,
   WeeklyActivitySummary,
@@ -37,6 +39,8 @@ export class MetricsService {
   private readonly _activityToday = signal<ActivitySummary | null>(null);
   private readonly _activityWeek = signal<WeeklyActivitySummary | null>(null);
   private readonly _activityLoading = signal(false);
+  private readonly _activityCatalog = signal<ActivityCatalogEntry[]>([]);
+  private readonly _mealCatalog = signal<MealCatalogEntry[]>([]);
 
   // Nutrition state
   private readonly _nutritionToday = signal<NutritionSummary | null>(null);
@@ -51,6 +55,8 @@ export class MetricsService {
   readonly activityToday = this._activityToday.asReadonly();
   readonly activityWeek = this._activityWeek.asReadonly();
   readonly activityLoading = this._activityLoading.asReadonly();
+  readonly activityCatalog = this._activityCatalog.asReadonly();
+  readonly mealCatalog = this._mealCatalog.asReadonly();
   readonly nutritionToday = this._nutritionToday.asReadonly();
   readonly nutritionWeek = this._nutritionWeek.asReadonly();
   readonly nutritionLoading = this._nutritionLoading.asReadonly();
@@ -66,6 +72,22 @@ export class MetricsService {
   readonly activityCaloriesToday = computed(() => this._activityToday()?.totalCalories ?? 0);
   readonly activeDaysThisWeek = computed(() => this._activityWeek()?.activeDays ?? 0);
 
+  readonly activityCatalogByKey = computed(() => {
+    const map = new Map<string, ActivityCatalogEntry>();
+    for (const activity of this._activityCatalog()) {
+      map.set(activity.key, activity);
+    }
+    return map;
+  });
+
+  readonly mealCatalogByKey = computed(() => {
+    const map = new Map<string, MealCatalogEntry>();
+    for (const meal of this._mealCatalog()) {
+      map.set(meal.key, meal);
+    }
+    return map;
+  });
+
   // Computed values - Nutrition
   readonly caloriesToday = computed(() => this._nutritionToday()?.totalCalories ?? 0);
   readonly proteinToday = computed(() => this._nutritionToday()?.totalProtein ?? 0);
@@ -75,6 +97,34 @@ export class MetricsService {
   // =============================================================================
   // Hydration Methods
   // =============================================================================
+
+  async loadActivityCatalog(): Promise<void> {
+    try {
+      const response = await firstValueFrom(
+        this.http.get<ActivityCatalogEntry[]>(`${environment.apiUrl}/api/v1/references/activities`, {
+          withCredentials: true,
+        })
+      );
+      this._activityCatalog.set(response);
+    } catch (error) {
+      console.error('Failed to load activity catalog:', error);
+      this._activityCatalog.set([]);
+    }
+  }
+
+  async loadMealCatalog(): Promise<void> {
+    try {
+      const response = await firstValueFrom(
+        this.http.get<MealCatalogEntry[]>(`${environment.apiUrl}/api/v1/references/meals`, {
+          withCredentials: true,
+        })
+      );
+      this._mealCatalog.set(response);
+    } catch (error) {
+      console.error('Failed to load meal catalog:', error);
+      this._mealCatalog.set([]);
+    }
+  }
 
   async loadHydrationToday(): Promise<void> {
     this._hydrationLoading.set(true);
@@ -252,6 +302,8 @@ export class MetricsService {
     intensity?: Intensity;
     heartRateAvg?: number;
     notes?: string;
+    activityCatalogId?: string;
+    activityCatalogKey?: string;
   }): Promise<{ success: boolean; carrots?: number }> {
     try {
       await firstValueFrom(
@@ -369,6 +421,8 @@ export class MetricsService {
     barcode?: string;
     notes?: string;
     imageUrl?: string;
+    mealCatalogId?: string;
+    mealCatalogKey?: string;
   }): Promise<{ success: boolean; carrots?: number }> {
     try {
       await firstValueFrom(
@@ -438,6 +492,8 @@ export class MetricsService {
       this.loadHydrationToday(),
       this.loadVitalsToday(),
       this.loadActivityToday(),
+      this.loadActivityCatalog(),
+      this.loadMealCatalog(),
       this.loadNutritionToday(),
     ]);
   }

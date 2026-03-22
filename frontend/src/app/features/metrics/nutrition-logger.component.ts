@@ -12,6 +12,7 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { MetricsService } from '../../core/metrics/metrics.service';
 import { RewardsService } from '../../core/rewards/rewards.service';
 import { BarcodeScannerComponent, type ScannedFood } from '../../shared/components/barcode-scanner/barcode-scanner.component';
+import { AutocompleteComponent } from '../../shared/components/autocomplete/autocomplete.component';
 import {
   MEAL_TYPE_INFO,
   DAILY_GOALS,
@@ -20,7 +21,7 @@ import {
 
 @Component({
   selector: 'app-nutrition-logger',
-  imports: [CommonModule, FormsModule, TranslateModule, BarcodeScannerComponent],
+  imports: [CommonModule, FormsModule, TranslateModule, BarcodeScannerComponent, AutocompleteComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="nutrition-card">
@@ -113,6 +114,32 @@ import {
               }
             </div>
           </div>
+
+          <!-- Meal Catalog Search -->
+          <div class="form-group">
+            <div class="form-label">Search the meal catalog</div>
+            <app-autocomplete
+              [suggestions]="mealSuggestions()"
+              [selectedItems]="selectedMealSearch()"
+              [placeholder]="'Search common meals or snacks'"
+              [allowCustom]="false"
+              [multiple]="false"
+              (itemsChange)="onMealSearchChange($event)"
+            />
+          </div>
+
+          @if (selectedCatalogMeal()) {
+            <div class="catalog-detail">
+              <div class="catalog-detail-header">
+                <span class="emoji">{{ selectedCatalogMeal()!.emoji }}</span>
+                <div>
+                  <strong>{{ selectedCatalogMeal()!.name }}</strong>
+                  <p>{{ selectedCatalogMeal()!.mealType }} · {{ selectedCatalogMeal()!.calories }} kcal</p>
+                </div>
+              </div>
+              <p class="catalog-detail-description">{{ selectedCatalogMeal()!.servingSize }}</p>
+            </div>
+          }
 
           <!-- Barcode Scanner -->
           <div class="form-group">
@@ -496,6 +523,48 @@ import {
       gap: 0.5rem;
     }
 
+    .catalog-detail {
+      padding: 0.85rem;
+      border-radius: 1rem;
+      background: rgba(255, 255, 255, 0.55);
+      border: 1px solid rgba(76, 175, 80, 0.15);
+    }
+
+    :host-context([data-theme="dark"]) .catalog-detail {
+      background: rgba(30, 41, 31, 0.75);
+      border-color: rgba(165, 214, 167, 0.18);
+    }
+
+    .catalog-detail-header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .catalog-detail-header .emoji {
+      font-size: 1.6rem;
+    }
+
+    .catalog-detail-header strong {
+      display: block;
+      color: #37474f;
+    }
+
+    :host-context([data-theme="dark"]) .catalog-detail-header strong {
+      color: #eceff1;
+    }
+
+    .catalog-detail-header p,
+    .catalog-detail-description {
+      margin: 0;
+      font-size: 0.85rem;
+      color: #78909c;
+    }
+
+    .catalog-detail-description {
+      margin-top: 0.5rem;
+    }
+
     .type-btn {
       display: flex;
       flex-direction: column;
@@ -732,6 +801,7 @@ export class NutritionLoggerComponent {
   readonly protein = signal<number | null>(null);
   readonly carbs = signal<number | null>(null);
   readonly fat = signal<number | null>(null);
+  readonly selectedMealSearch = signal<string[]>([]);
 
   // Data
   readonly caloriesToday = this.metricsService.caloriesToday;
@@ -739,6 +809,7 @@ export class NutritionLoggerComponent {
   readonly carbsToday = computed(() => Math.round(this.metricsService.carbsToday()));
   readonly fatToday = computed(() => Math.round(this.metricsService.fatToday()));
   readonly caloriesGoal = DAILY_GOALS.calories;
+  readonly mealCatalog = this.metricsService.mealCatalog;
 
   readonly caloriesPercentage = computed(() => {
     return Math.min(120, Math.round((this.caloriesToday() / this.caloriesGoal) * 100));
@@ -747,6 +818,18 @@ export class NutritionLoggerComponent {
   readonly recentMeals = computed(() => {
     const today = this.metricsService.nutritionToday();
     return today?.logs?.slice(0, 4) ?? [];
+  });
+
+  readonly mealSuggestions = computed(() =>
+    this.mealCatalog()
+      .map((meal) => meal.name)
+      .sort((a, b) => a.localeCompare(b)),
+  );
+
+  readonly selectedCatalogMeal = computed(() => {
+    const selectedName = this.selectedMealSearch()[0];
+    if (!selectedName) return null;
+    return this.mealCatalog().find((meal) => meal.name === selectedName) ?? null;
   });
 
   readonly loggedMealTypes = computed(() => {
@@ -766,6 +849,7 @@ export class NutritionLoggerComponent {
   constructor() {
     afterNextRender(() => {
       this.metricsService.loadNutritionToday();
+      this.metricsService.loadMealCatalog();
     });
   }
 
@@ -792,6 +876,23 @@ export class NutritionLoggerComponent {
     this.showMacros.set(true); // Expand macros section
   }
 
+  onMealSearchChange(items: string[]): void {
+    this.selectedMealSearch.set(items);
+    const selectedName = items[0];
+    if (!selectedName) return;
+
+    const catalogItem = this.mealCatalog().find((meal) => meal.name === selectedName);
+    if (!catalogItem) return;
+
+    this.selectedMealType.set(catalogItem.mealType);
+    this.mealName.set(catalogItem.name);
+    this.calories.set(catalogItem.calories);
+    this.protein.set(catalogItem.protein ?? null);
+    this.carbs.set(catalogItem.carbs ?? null);
+    this.fat.set(catalogItem.fat ?? null);
+    this.showForm.set(true);
+  }
+
   async submitForm(): Promise<void> {
     if (!this.canSubmit()) return;
 
@@ -804,6 +905,7 @@ export class NutritionLoggerComponent {
       protein: this.protein() ?? undefined,
       carbs: this.carbs() ?? undefined,
       fat: this.fat() ?? undefined,
+      mealCatalogKey: this.selectedCatalogMeal()?.key,
     });
 
     if (result.success && result.carrots) {
@@ -820,6 +922,7 @@ export class NutritionLoggerComponent {
     this.protein.set(null);
     this.carbs.set(null);
     this.fat.set(null);
+    this.selectedMealSearch.set([]);
     this.showForm.set(false);
     this.showMacros.set(false);
     this.logging.set(false);

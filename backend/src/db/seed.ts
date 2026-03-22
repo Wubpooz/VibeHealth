@@ -3,9 +3,14 @@
  * Creates a test user for quick login
  */
 import { prisma } from '../lib/prisma';
+import { seedActivityCatalog } from './activity-catalog.seed';
+import { seedMealCatalog } from './meal-catalog.seed';
 
 async function seed(): Promise<void> {
   console.log('🌱 Seeding database...');
+
+  await seedActivityCatalog();
+  await seedMealCatalog();
 
   // Check if test user already exists
   const existingUser = await prisma.user.findUnique({
@@ -39,7 +44,9 @@ async function seed(): Promise<void> {
   await prisma.$disconnect();
 }
 
-seed().catch((e) => {
+try {
+  await seed();
+} catch (e) {
   console.error('❌ Seeding failed:', e);
   process.exit(1);
-});
+}

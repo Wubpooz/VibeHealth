@@ -106,6 +106,36 @@ export type ActivityType =
 
 export type Intensity = 'LOW' | 'MODERATE' | 'HIGH' | 'VERY_HIGH';
 
+export interface ActivityCatalogEntry {
+  id: string;
+  key: string;
+  name: string;
+  category: ActivityType;
+  metValue: number;
+  emoji: string;
+  description?: string | null;
+  tags: string[];
+  isActive: boolean;
+}
+
+export interface MealCatalogEntry {
+  id: string;
+  key: string;
+  mealType: MealType;
+  name: string;
+  calories: number;
+  protein?: number | null;
+  carbs?: number | null;
+  fat?: number | null;
+  fiber?: number | null;
+  sugar?: number | null;
+  sodium?: number | null;
+  servingSize?: string | null;
+  emoji: string;
+  tags: string[];
+  isActive: boolean;
+}
+
 export interface ActivityLog {
   id: string;
   userId: string;
@@ -182,6 +212,7 @@ export interface MealLog {
   notes?: string;
   imageUrl?: string;
   source: string;
+  mealCatalogId?: string | null;
   loggedAt: string;
   createdAt: string;
   updatedAt: string;

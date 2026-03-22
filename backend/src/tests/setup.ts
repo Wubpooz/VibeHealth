@@ -12,7 +12,7 @@
  * the same stub.
  */
 import { mock } from 'bun:test';
-import path from 'path';
+import path from 'node:path';
 
 // Absolute path to the src/lib directory (stable regardless of caller)
 const libDir = path.resolve(import.meta.dir, '../lib');
@@ -37,6 +37,16 @@ const prismaMock = {
       update:     () => Promise.resolve(null),
       delete:     () => Promise.resolve(null),
       findMany:   () => Promise.resolve([]),
+    },
+    activityCatalog: {
+      findMany:   () => Promise.resolve([]),
+      findFirst:  () => Promise.resolve(null),
+      findUnique: () => Promise.resolve(null),
+    },
+    mealCatalog: {
+      findMany:   () => Promise.resolve([]),
+      findFirst:  () => Promise.resolve(null),
+      findUnique: () => Promise.resolve(null),
     },
     user: {
       findUnique: () => Promise.resolve(null),

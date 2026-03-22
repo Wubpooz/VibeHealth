@@ -5,12 +5,14 @@ import {
   signal,
   computed,
   afterNextRender,
+  OnDestroy,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { MetricsService } from '../../core/metrics/metrics.service';
 import { RewardsService } from '../../core/rewards/rewards.service';
+import { AutocompleteComponent } from '../../shared/components/autocomplete/autocomplete.component';
 import {
   ACTIVITY_PRESETS,
   INTENSITY_LABELS,
@@ -20,7 +22,7 @@ import {
 
 @Component({
   selector: 'app-activity-logger',
-  imports: [CommonModule, FormsModule, TranslateModule],
+  imports: [CommonModule, FormsModule, TranslateModule, AutocompleteComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="activity-card">
@@ -54,6 +56,20 @@ import {
           <span class="label">{{ 'METRICS.ACTIVITY.SESSIONS' | translate }}</span>
         </div>
       </div>
+
+      @if (topCatalogActivities().length > 0) {
+        <div class="catalog-strip">
+          @for (activity of topCatalogActivities(); track activity.key) {
+            <button class="catalog-pill" type="button" (click)="selectedType.set(activity.category)">
+              <span class="emoji">{{ activity.emoji }}</span>
+              <span class="meta">
+                <strong>{{ activity.name }}</strong>
+                <small>{{ activity.metValue }} MET</small>
+              </span>
+            </button>
+          }
+        </div>
+      }
 
       <!-- Quick Activity Buttons -->
       @if (!showForm()) {
@@ -92,6 +108,34 @@ import {
             </div>
           </div>
 
+          <!-- Activity Catalog Search -->
+          <div class="form-group">
+            <div class="form-label">Search the activity catalog</div>
+            <app-autocomplete
+              [suggestions]="activitySuggestions()"
+              [selectedItems]="selectedActivitySearch()"
+              [placeholder]="'Search activities by name'"
+              [allowCustom]="false"
+              [multiple]="false"
+              (itemsChange)="onActivitySearchChange($event)"
+            />
+          </div>
+
+          @if (selectedCatalogActivity()) {
+            <div class="catalog-detail">
+              <div class="catalog-detail-header">
+                <span class="emoji">{{ selectedCatalogActivity()!.emoji }}</span>
+                <div>
+                  <strong>{{ selectedCatalogActivity()!.name }}</strong>
+                  <p>{{ selectedCatalogActivity()!.category }} · {{ selectedCatalogActivity()!.metValue }} MET</p>
+                </div>
+              </div>
+              @if (selectedCatalogActivity()!.description) {
+                <p class="catalog-detail-description">{{ selectedCatalogActivity()!.description }}</p>
+              }
+            </div>
+          }
+
           <!-- Activity Name -->
           <div class="form-group">
             <label for="activityName">{{ 'METRICS.ACTIVITY.NAME' | translate }}</label>
@@ -119,6 +163,15 @@ import {
                   {{ preset }}min
                 </button>
               }
+            </div>
+            <div class="timer-row">
+              <button type="button" class="timer-btn" (click)="toggleTimer()">
+                {{ timerRunning() ? '⏸ Stop timer' : '⏱ Start timer' }}
+              </button>
+              <button type="button" class="timer-btn secondary" (click)="resetTimer()">
+                ↺ Reset
+              </button>
+              <span class="timer-display">{{ timerDisplay() }}</span>
             </div>
             <input
               type="number"
@@ -297,6 +350,55 @@ import {
       margin-bottom: 1rem;
     }
 
+    .catalog-strip {
+      display: grid;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .catalog-pill {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.75rem 0.9rem;
+      border: 0;
+      border-radius: 1rem;
+      background: rgba(255, 255, 255, 0.78);
+      cursor: pointer;
+      text-align: left;
+      box-shadow: 0 2px 10px rgba(255, 152, 0, 0.08);
+    }
+
+    :host-context([data-theme="dark"]) .catalog-pill {
+      background: rgba(38, 50, 56, 0.9);
+      color: #eceff1;
+    }
+
+    .catalog-pill .emoji {
+      font-size: 1.3rem;
+      flex: 0 0 auto;
+    }
+
+    .catalog-pill .meta {
+      display: flex;
+      flex-direction: column;
+      line-height: 1.2;
+      gap: 0.1rem;
+    }
+
+    .catalog-pill strong {
+      font-size: 0.9rem;
+    }
+
+    .catalog-pill small {
+      color: #bf360c;
+      font-size: 0.72rem;
+    }
+
+    :host-context([data-theme="dark"]) .catalog-pill small {
+      color: #ffcc80;
+    }
+
     .quick-btn {
       display: flex;
       flex-direction: column;
@@ -369,6 +471,48 @@ import {
       gap: 0.5rem;
     }
 
+    .catalog-detail {
+      padding: 0.85rem;
+      border-radius: 1rem;
+      background: rgba(255, 255, 255, 0.55);
+      border: 1px solid rgba(255, 152, 0, 0.15);
+    }
+
+    :host-context([data-theme="dark"]) .catalog-detail {
+      background: rgba(38, 50, 56, 0.7);
+      border-color: rgba(255, 183, 77, 0.18);
+    }
+
+    .catalog-detail-header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .catalog-detail-header .emoji {
+      font-size: 1.6rem;
+    }
+
+    .catalog-detail-header strong {
+      display: block;
+      color: #37474f;
+    }
+
+    :host-context([data-theme="dark"]) .catalog-detail-header strong {
+      color: #eceff1;
+    }
+
+    .catalog-detail-header p,
+    .catalog-detail-description {
+      margin: 0;
+      font-size: 0.85rem;
+      color: #78909c;
+    }
+
+    .catalog-detail-description {
+      margin-top: 0.5rem;
+    }
+
     .type-btn {
       display: flex;
       flex-direction: column;
@@ -427,6 +571,42 @@ import {
       display: flex;
       gap: 0.5rem;
       flex-wrap: wrap;
+    }
+
+    .timer-row {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin: 0.25rem 0;
+    }
+
+    .timer-btn {
+      padding: 0.5rem 0.8rem;
+      background: #fff3e0;
+      border: 1px solid rgba(255, 152, 0, 0.3);
+      border-radius: 999px;
+      cursor: pointer;
+      font-size: 0.8rem;
+    }
+
+    .timer-btn.secondary {
+      background: rgba(255, 255, 255, 0.7);
+    }
+
+    :host-context([data-theme="dark"]) .timer-btn {
+      background: rgba(255, 152, 0, 0.18);
+      color: #eceff1;
+    }
+
+    .timer-display {
+      font-family: 'Satoshi', sans-serif;
+      font-weight: 700;
+      color: #e65100;
+    }
+
+    :host-context([data-theme="dark"]) .timer-display {
+      color: #ffcc80;
     }
 
     .preset-btn {
@@ -612,7 +792,7 @@ import {
     }
   `],
 })
-export class ActivityLoggerComponent {
+export class ActivityLoggerComponent implements OnDestroy {
   private readonly metricsService = inject(MetricsService);
   private readonly rewardsService = inject(RewardsService);
   private readonly translate = inject(TranslateService);
@@ -624,15 +804,43 @@ export class ActivityLoggerComponent {
   readonly activityName = signal('');
   readonly duration = signal(30);
   readonly intensity = signal<Intensity>('MODERATE');
+  readonly timerRunning = signal(false);
+  readonly elapsedSeconds = signal(30 * 60);
+  readonly selectedActivitySearch = signal<string[]>([]);
 
   // Data
   readonly activityMinutes = this.metricsService.activityMinutesToday;
   readonly activityCalories = this.metricsService.activityCaloriesToday;
   readonly activitiesCount = computed(() => this.metricsService.activityToday()?.activitiesCount ?? 0);
+  readonly activityCatalog = this.metricsService.activityCatalog;
 
   readonly recentActivities = computed(() => {
     const today = this.metricsService.activityToday();
     return today?.logs?.slice(0, 3) ?? [];
+  });
+
+  readonly selectedCatalogActivity = computed(() => {
+    const selectedName = this.selectedActivitySearch()[0];
+    if (!selectedName) return null;
+    return this.activityCatalog().find((activity) => activity.name === selectedName) ?? null;
+  });
+
+  readonly activitySuggestions = computed(() =>
+    this.activityCatalog()
+      .map((activity) => activity.name)
+      .sort((a, b) => a.localeCompare(b)),
+  );
+
+  readonly topCatalogActivities = computed(() =>
+    [...this.activityCatalog()]
+      .sort((a, b) => b.metValue - a.metValue)
+      .slice(0, 6),
+  );
+
+  readonly bestCatalogMatch = computed(() => {
+    const matches = this.activityCatalog().filter((activity) => activity.category === this.selectedType());
+    const sortedMatches = [...matches].sort((a, b) => b.metValue - a.metValue);
+    return sortedMatches[0] ?? null;
   });
 
   readonly quickActivities = [
@@ -657,10 +865,11 @@ export class ActivityLoggerComponent {
   readonly durationPresets = [15, 30, 45, 60, 90];
 
   readonly estimatedCalories = computed(() => {
-    const type = this.selectedType();
-    const preset = ACTIVITY_PRESETS[type];
+    const catalogMatch = this.bestCatalogMatch();
+    const preset = ACTIVITY_PRESETS[this.selectedType()];
     const intensityMultiplier = INTENSITY_LABELS[this.intensity()].multiplier;
-    return Math.round(this.duration() * preset.caloriesPerMin * intensityMultiplier);
+    const caloriesPerMin = catalogMatch ? (catalogMatch.metValue * 70) / 60 : preset.caloriesPerMin;
+    return Math.round(this.duration() * caloriesPerMin * intensityMultiplier);
   });
 
   readonly canSubmit = computed(() => {
@@ -670,11 +879,75 @@ export class ActivityLoggerComponent {
   constructor() {
     afterNextRender(() => {
       this.metricsService.loadActivityToday();
+      this.metricsService.loadActivityCatalog();
     });
+    this.syncTimerFromDuration();
+  }
+
+  ngOnDestroy(): void {
+    this.stopTimer();
   }
 
   getActivityEmoji(type: string): string {
     return ACTIVITY_PRESETS[type as ActivityType]?.emoji ?? '🎯';
+  }
+
+  onActivitySearchChange(items: string[]): void {
+    this.selectedActivitySearch.set(items);
+    const selectedName = items[0];
+    if (!selectedName) return;
+
+    const catalogItem = this.activityCatalog().find((activity) => activity.name === selectedName);
+    if (!catalogItem) return;
+
+    this.selectedType.set(catalogItem.category);
+    this.activityName.set(catalogItem.name);
+  }
+
+  timerDisplay(): string {
+    const totalSeconds = this.elapsedSeconds();
+    const minutes = Math.floor(totalSeconds / 60);
+    const seconds = totalSeconds % 60;
+    return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+  }
+
+  toggleTimer(): void {
+    if (this.timerRunning()) {
+      this.stopTimer();
+      return;
+    }
+
+    this.timerRunning.set(true);
+    this.syncTimerFromDuration();
+
+    const startedAt = Date.now() - this.elapsedSeconds() * 1000;
+    const tick = () => {
+      const nextSeconds = Math.max(0, Math.floor((Date.now() - startedAt) / 1000));
+      this.elapsedSeconds.set(nextSeconds);
+      this.duration.set(Math.max(1, Math.round(nextSeconds / 60)));
+    };
+
+    tick();
+    const handle = setInterval(tick, 1000);
+    this.timerHandle = handle;
+  }
+
+  resetTimer(): void {
+    this.stopTimer();
+    this.duration.set(30);
+    this.elapsedSeconds.set(30 * 60);
+  }
+
+  private stopTimer(): void {
+    this.timerRunning.set(false);
+    if (this.timerHandle) {
+      clearInterval(this.timerHandle);
+      this.timerHandle = null;
+    }
+  }
+
+  private syncTimerFromDuration(): void {
+    this.elapsedSeconds.set(this.duration() * 60);
   }
 
   async quickLog(type: ActivityType): Promise<void> {
@@ -686,7 +959,7 @@ export class ActivityLoggerComponent {
       name: `Quick ${preset.label}`,
       duration: 30,
       intensity: 'MODERATE',
-      calories: Math.round(30 * preset.caloriesPerMin),
+      activityCatalogKey: this.bestCatalogMatch()?.key,
     });
 
     if (result.success && result.carrots) {
@@ -711,6 +984,7 @@ export class ActivityLoggerComponent {
       duration: this.duration(),
       intensity: this.intensity(),
       calories: this.estimatedCalories(),
+      activityCatalogKey: this.bestCatalogMatch()?.key,
     });
 
     if (result.success && result.carrots) {
@@ -725,7 +999,11 @@ export class ActivityLoggerComponent {
     this.activityName.set('');
     this.duration.set(30);
     this.intensity.set('MODERATE');
+    this.elapsedSeconds.set(30 * 60);
+    this.selectedActivitySearch.set([]);
     this.showForm.set(false);
     this.logging.set(false);
   }
+
+  private timerHandle: ReturnType<typeof setInterval> | null = null;
 }

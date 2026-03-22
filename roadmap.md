@@ -124,12 +124,14 @@ gantt
 - Automatic activity detection placeholders (walk, run, cycle)
 - Manual activity logging (type, duration, intensity, notes)
 - Daily active minutes & calorie burn estimation
+- Database-backed searchable activity catalog with MET values, expanded sports coverage, and timer-friendly duration capture
 
 ### 1.3 Nutrition & Calories Tracking
 - Food diary with meal categories (breakfast, lunch, dinner, snacks)
 - Calorie, macro (protein/carbs/fat), and micro-nutrient tracking
 - Barcode scanner placeholder for packaged foods
 - Daily/weekly nutritional summaries and goal comparison
+- Database-backed meal catalog templates for common meals/snacks with autofill for calories and macros
 
 ### 1.4 Hydration Tracking
 - Quick-log buttons (glass, bottle, custom amount)

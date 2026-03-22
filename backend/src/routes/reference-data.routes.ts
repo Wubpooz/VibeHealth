@@ -1,4 +1,6 @@
 import { Hono } from 'hono';
+import { prisma } from '../lib/prisma';
+import type { ActivityType, MealType } from '@prisma/client';
 
 const app = new Hono();
 
@@ -134,6 +136,59 @@ app.get('/medications', (c) => {
     return c.json(filtered);
   }
   return c.json(COMMON_MEDICATIONS);
+});
+
+app.get('/activities', async (c) => {
+  const query = c.req.query('q')?.toLowerCase();
+  const category = c.req.query('category')?.toUpperCase();
+  const activityCatalog = (prisma as any).activityCatalog;
+
+  const activities = await activityCatalog.findMany({
+    where: {
+      isActive: true,
+      ...(category ? { category: category as ActivityType } : {}),
+      ...(query
+        ? {
+            OR: [
+              { key: { contains: query, mode: 'insensitive' } },
+              { name: { contains: query, mode: 'insensitive' } },
+              { description: { contains: query, mode: 'insensitive' } },
+              { tags: { hasSome: [query] } },
+            ],
+          }
+        : {}),
+    },
+    orderBy: [{ category: 'asc' }, { metValue: 'desc' }, { name: 'asc' }],
+    take: 250,
+  });
+
+  return c.json(activities);
+});
+
+app.get('/meals', async (c) => {
+  const query = c.req.query('q')?.toLowerCase();
+  const mealType = c.req.query('mealType')?.toUpperCase();
+  const mealCatalog = (prisma as any).mealCatalog;
+
+  const meals = await mealCatalog.findMany({
+    where: {
+      isActive: true,
+      ...(mealType ? { mealType: mealType as MealType } : {}),
+      ...(query
+        ? {
+            OR: [
+              { key: { contains: query, mode: 'insensitive' } },
+              { name: { contains: query, mode: 'insensitive' } },
+              { tags: { hasSome: [query] } },
+            ],
+          }
+        : {}),
+    },
+    orderBy: [{ mealType: 'asc' }, { calories: 'asc' }, { name: 'asc' }],
+    take: 200,
+  });
+
+  return c.json(meals);
 });
 
 export default app;

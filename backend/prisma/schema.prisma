@@ -166,22 +166,46 @@ model HydrationLog {
   @@map("hydration_logs")
 }
 
+// Activity Catalog (reference table — seeded, rarely changes)
+model ActivityCatalog {
+  id          String       @id @default(cuid())
+  key         String       @unique // e.g. "RUN_5MPH", "YOGA_VINYASA"
+  name        String // Human-readable name
+  category    ActivityType // Maps to the enum for grouping
+  metValue    Float // MET = Metabolic Equivalent of Task (from Compendium of Physical Activities)
+  emoji       String
+  description String?
+  tags        String[] // e.g. ["cardio", "outdoor", "high-impact"]
+  isActive    Boolean      @default(true)
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  activityLogs ActivityLog[]
+
+  @@index([category])
+  @@map("activity_catalog")
+}
+
 // Activity Log (exercise and movement tracking)
 model ActivityLog {
-  id           String       @id @default(cuid())
-  userId       String
-  type         ActivityType
-  name         String // e.g., "Morning Run", "Gym Session"
-  duration     Int // in minutes
-  calories     Int? // estimated calories burned
-  distance     Float? // in km (for runs, walks, cycling)
-  intensity    Intensity    @default(MODERATE)
-  heartRateAvg Int? // average heart rate during activity
-  notes        String?
-  source       String?      @default("manual") // manual, google_fit, apple_health
-  loggedAt     DateTime     @default(now())
-  createdAt    DateTime     @default(now())
-  updatedAt    DateTime     @updatedAt
+  id                String           @id @default(cuid())
+  userId            String
+  type              ActivityType
+  name              String // e.g., "Morning Run", "Gym Session"
+  duration          Int // in minutes
+  calories          Int? // estimated calories burned (MET × weight_kg × hours)
+  distance          Float? // in km (for runs, walks, cycling)
+  intensity         Intensity        @default(MODERATE)
+  heartRateAvg      Int? // average heart rate during activity
+  notes             String?
+  source            String?          @default("manual") // manual, google_fit, apple_health, timer
+  metValue          Float? // MET value used for calorie calculation
+  activityCatalogId String? // FK to ActivityCatalog (optional — allows free-text too)
+  loggedAt          DateTime         @default(now())
+  createdAt         DateTime         @default(now())
+  updatedAt         DateTime         @updatedAt
+
+  activityCatalog ActivityCatalog? @relation(fields: [activityCatalogId], references: [id])
 
   @@index([userId, type, loggedAt])
   @@map("activity_logs")
@@ -198,6 +222,15 @@ enum ActivityType {
   SPORTS
   DANCE
   OTHER
+  // Extended categories
+  ROWING
+  CLIMB
+  MARTIAL_ARTS
+  WINTER_SPORTS
+  WATER_SPORTS
+  RACKET_SPORTS
+  TEAM_SPORTS
+  MINDFULNESS
 }
 
 enum Intensity {
@@ -225,12 +258,41 @@ model MealLog {
   notes       String?
   imageUrl    String? // photo of meal
   source      String?  @default("manual") // manual, barcode_scan, photo_ai
+  mealCatalogId String?
   loggedAt    DateTime @default(now())
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
+  mealCatalog MealCatalog? @relation(fields: [mealCatalogId], references: [id])
+
   @@index([userId, mealType, loggedAt])
   @@map("meal_logs")
+}
+
+// Meal Catalog (reference table — seeded, rarely changes)
+model MealCatalog {
+  id          String   @id @default(cuid())
+  key         String   @unique // e.g. "BREAKFAST_OATMEAL", "LUNCH_GREEK_BOWL"
+  mealType    MealType
+  name        String
+  calories    Int
+  protein     Float? // grams
+  carbs       Float? // grams
+  fat         Float? // grams
+  fiber       Float? // grams
+  sugar       Float? // grams
+  sodium      Float? // mg
+  servingSize String? // e.g. "1 bowl", "200g"
+  emoji       String
+  tags        String[] // e.g. ["high-protein", "vegetarian", "quick"]
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  mealLogs MealLog[]
+
+  @@index([mealType])
+  @@map("meal_catalog")
 }
 
 enum MealType {
