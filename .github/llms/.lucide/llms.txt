@@ -1,0 +1,123 @@
+# Lucide Angular llms.txt reference
+
+This file is a quick machine-readable reference for `@lucide/angular` (Lucide v1 RC). It mirrors the format used by `.animated-icons` in this repo.
+
+## Project snapshot
+
+- Package name: `@lucide/angular`
+- Version in repo: `^1.0.0-rc.0`
+- Homepage: `https://lucide.dev/`
+- Repository: `https://github.com/lucide-icons/lucide`
+- License: MIT
+- Framework: Angular standalone components (signals-first)
+- Peer dependencies: `@angular/core` `17.x - 21.x`, `@angular/common` `17.x - 21.x`
+
+## Installation
+
+- `npm install @lucide/angular`
+- `pnpm add @lucide/angular`
+- `yarn add @lucide/angular`
+- `bun add @lucide/angular`
+
+## Basic usage
+
+Standalone icon import:
+
+- `import { LucideCarrot } from '@lucide/angular';`
+- `@Component({ imports: [LucideCarrot], template: '<svg lucideCarrot></svg>' })` 
+
+Dynamic icons:
+
+- `import { LucideDynamicIcon, LucideCircleCheck, LucideCircleX } from '@lucide/angular';`
+- `template: '<svg [lucideIcon]="icon()"></svg>'`
+
+## Icon API
+
+All Lucide icons implement:
+
+- `title` (string | null)
+- `size` (number | string, default `24`)
+- `color` (string, default `currentColor`)
+- `strokeWidth` (number, default `2`)
+- `absoluteStrokeWidth` (boolean, default `false`)
+
+Accessibility:
+
+- `title` adds an SVG `<title>` element and removes `aria-hidden`.
+- If no title is provided, `aria-hidden="true"` is added automatically.
+- For interactive icons, pair with button/aria-label on the interactive parent.
+
+## Utility exports
+
+- `LucideIconBase` (abstract base class)
+- `LucideDynamicIcon` (runtime icon lookup by component definition)
+- `isLucideIconComponent`, `isLucideIconData` type guards
+
+## Component naming conventions
+
+- Angular component class names are PascalCase with `Lucide` prefix.
+- Template attribute selectors are `lucide<IconName>` (camelCase after prefix).
+- Example: `LucideFileText` -> `<svg lucideFileText></svg>`.
+
+## Existing icons (export counts)
+
+- Total component icons exported: **1686** (as of currently installed package).
+- A sample subset (first 150 names):
+  - LucideAArrowDown
+  - LucideALargeSmall
+  - LucideAArrowUp
+  - LucideAccessibility
+  - LucideActivity
+  - LucideAirVent
+  - LucideAirplay
+  - LucideAlarmClockCheck
+  - LucideAlarmClock
+  - LucideAlarmClockPlus
+  - LucideAlarmClockOff
+  - LucideAlarmSmoke
+  - LucideAlignCenterHorizontal
+  - LucideAlignCenterVertical
+  - LucideAlarmClockMinus
+  - LucideAlbum
+  - LucideAlignHorizontalDistributeCenter
+  - LucideAlignEndVertical
+  - LucideAlignHorizontalDistributeEnd
+  - LucideAlignEndHorizontal
+  - LucideAlignHorizontalDistributeStart
+  - LucideAlignHorizontalJustifyCenter
+  - LucideAlignHorizontalSpaceAround
+  - LucideAlignHorizontalJustifyStart
+  - LucideAlignHorizontalJustifyEnd
+  - LucideAlignHorizontalSpaceBetween
+  - LucideAlignStartHorizontal
+  - LucideAlignStartVertical
+  - LucideAlignVerticalDistributeEnd
+  - LucideAlignVerticalDistributeStart
+  - LucideAlignVerticalJustifyCenter
+  - LucideAlignVerticalDistributeCenter
+  - LucideAlignVerticalJustifyEnd
+  - LucideAmbulance
+  - LucideAmpersand
+  - LucideAlignVerticalSpaceAround
+  - LucideAmpersands
+  - LucideAmphora
+  - LucideAnchor
+  - LucideAnnoyed
+  - LucideAngry
+  - LucideAlignVerticalJustifyStart
+  - LucideAntenna
+  - LucideAnvil
+  - LucideAperture
+  - LucideAppWindow
+  - LucideAppWindowMac
+  - LucideArchiveRestore
+  - LucideArchiveX
+  - LucideArchive
+  - LucideApple
+  - ... (and 1,636 more)
+
+## Notes
+
+- Prefer using tree-shakeable per-component imports to keep bundle size minimal.
+- For massive icon sets in dynamic lists, use `LucideDynamicIcon` and avoid importing all icons at once.
+- Keep code consistent with existing repo usage of `@lucide/angular` in `frontend/src/app/shared/components/stats-grid/stats-grid.component.ts`.

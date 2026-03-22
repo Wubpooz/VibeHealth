@@ -52,6 +52,9 @@ VibeHealth combines medical essentials, lifestyle tracking, and a bunny-powered 
 - Input experiences implemented:
   - vitals/activity/nutrition loggers
   - goals wizard modal/overlay
+- Reference data is now database-backed for key Phase 1 flows:
+  - searchable activity catalog with MET values, calorie estimates, and timer-based duration capture
+  - nutrition meal catalog templates for autofill and smarter meal logging
 - Barcode scanner UI currently shows a "coming soon" overlay (camera scan not yet implemented).
 
 See [roadmap.md](./roadmap.md) for phase planning.

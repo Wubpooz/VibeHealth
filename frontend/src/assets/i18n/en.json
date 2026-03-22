@@ -610,6 +610,21 @@
       "PROTEIN": "Protein",
       "CARBS": "Carbs",
       "FAT": "Fat"
+    },
+    "ACTIVITY": {
+      "TITLE": "Activity",
+      "MINUTES": "Minutes",
+      "CALORIES": "Calories",
+      "SESSIONS": "Sessions",
+      "TYPE": "Type",
+      "NAME": "Activity Name",
+      "NAME_PLACEHOLDER": "e.g., Morning Run",
+      "DURATION": "Duration",
+      "INTENSITY": "Intensity",
+      "EST_CALORIES": "Est. Calories",
+      "LOG_ACTIVITY": "Log Activity",
+      "RECENT": "Recent",
+      "REWARD_MSG": "Great job! Keep up the active streak!"
     }
   },
   "STATS": {

@@ -62,6 +62,7 @@ When asked to review a PR, file, or code snippet, follow these structured steps:
 *   **User scoping:** Confirm all metrics queries are constrained by authenticated `userId`.
 *   **Accessibility:** Ensure modal/overlay interactions in metrics pages are keyboard operable and avoid non-focusable click handlers.
 *   **Feature truthfulness:** If barcode scan UI is present but not yet implemented, copy and UX must clearly indicate placeholder status.
+*   **Icon usage:** Prefer `@lucide/angular` tree-shakeable imports and discourage large wildcard/namespace imports in feature branches.
 *   **Dependencies:** Keep docs aligned with Angular 21, `@lucide/angular` (RC), and `ng-animated-icons` when reviewing dependency updates.
 
 ## Output Format

@@ -36,6 +36,13 @@ frontend/src/app/
 
 ---
 
+## 🖼️ Icon System
+
+- Use `@lucide/angular` as the primary icon library.
+- Prefer per-icon tree-shakeable imports, e.g. `import { LucideCarrot } from '@lucide/angular';`.
+- Use `LucideDynamicIcon` for runtime icon selection and prevent importing full icon set.
+- Maintain consistency with established visual language (stroke style, 24px default size, robust `prefers-reduced-motion` fallback).
+
 ## ⚡ Angular 21 Essentials
 
 ### Standalone Components (Default)

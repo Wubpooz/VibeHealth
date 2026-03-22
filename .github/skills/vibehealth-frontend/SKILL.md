@@ -586,7 +586,21 @@ export class MyComponent implements OnDestroy {
 
 ---
 
-## 🔔 Global Feedback & Navigation UX
+## �️ Lucide Icons (Angular)
+
+- Preferred icon library: `@lucide/angular` (`1.0.0-rc.0` in repo).
+- Import components individually to preserve tree-shaking:
+  - `import { LucideCarrot } from '@lucide/angular';`
+  - `@Component({ imports:[LucideCarrot], template: '<svg lucideCarrot></svg>' })`
+- Dynamic rendering:
+  - `import { LucideDynamicIcon, LucideCircleCheck, LucideCircleX } from '@lucide/angular';`
+  - `template: '<svg [lucideIcon]="icon()"></svg>'`
+- Canonical props: `title`, `size`, `color`, `strokeWidth`, `absoluteStrokeWidth`.
+- Accessibility: decorative icons use `aria-hidden`; interactive icons should use semantic labels.
+
+---
+
+## �🔔 Global Feedback & Navigation UX
 
 - Use the global **goey-toast** host mounted in `AppComponent` for async success/error/info feedback.
 - Trigger toasts from feature components via a shared `ToastService` instead of local alert banners when action outcomes are transient.

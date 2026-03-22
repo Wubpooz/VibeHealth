@@ -610,6 +610,21 @@
       "PROTEIN": "Protéines",
       "CARBS": "Glucides",
       "FAT": "Lipides"
+    },
+    "ACTIVITY": {
+      "TITLE": "Activité",
+      "MINUTES": "Minutes",
+      "CALORIES": "Calories",
+      "SESSIONS": "Sessions",
+      "TYPE": "Type",
+      "NAME": "Nom de l'activité",
+      "NAME_PLACEHOLDER": "ex: Course matinale",
+      "DURATION": "Durée",
+      "INTENSITY": "Intensité",
+      "EST_CALORIES": "Calories estimées",
+      "LOG_ACTIVITY": "Enregistrer l'activité",
+      "RECENT": "Récent",
+      "REWARD_MSG": "Bravo ! Continuez sur cette dynamique active !"
     }
   },
   "STATS": {
