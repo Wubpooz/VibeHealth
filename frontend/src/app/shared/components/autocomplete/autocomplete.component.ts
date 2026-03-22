@@ -693,6 +693,11 @@ export class AutocompleteComponent implements AfterViewInit, OnDestroy {
   }
 
   selectSuggestion(suggestion: string) {
+    if (this.multiple && this.isSelected(suggestion)) {
+      this.removeItem(suggestion);
+      return;
+    }
+
     this.addItem(suggestion);
   }
 
@@ -704,8 +709,20 @@ export class AutocompleteComponent implements AfterViewInit, OnDestroy {
   }
 
   private addItem(item: string) {
+    if (!item) {
+      return;
+    }
+
+    if (this.multiple && this.selectedItems.includes(item)) {
+      // Prevent duplicates when user clicks quickly or UI update is delayed
+      this.searchQuery.set('');
+      this.debouncedQuery.set('');
+      this.highlightedIndex.set(-1);
+      return;
+    }
+
     if (this.multiple) {
-      const newItems = [...this.selectedItems, item];
+      const newItems = Array.from(new Set([...this.selectedItems, item]));
       this.itemsChange.emit(newItems);
       this.itemAdded.emit(item);
     } else {
