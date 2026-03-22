@@ -42,7 +42,7 @@ import { animate } from 'motion/mini';
           (keydown.enter)="sidebarOpen.set(false)"
           tabindex="0"
           role="button"
-          aria-label="Close sidebar overlay"
+          aria-label="{{ 'DASHBOARD.CLOSE_SIDEBAR_OVERLAY' | translate }}"
         ></div>
       }
 
@@ -66,7 +66,7 @@ import { animate } from 'motion/mini';
               <app-bunny-mascot [mood]="'happy'" [size]="40" />
             </div>
             <div class="flex-1 min-w-0">
-              <p class="font-bold text-gray-900 dark:text-white truncate">{{ user.name || 'User' }} 🐰</p>
+              <p class="font-bold text-gray-900 dark:text-white truncate">{{ user.name || ('DASHBOARD.USER_DEFAULT_NAME' | translate) }} 🐰</p>
               <p class="text-xs text-gray-500 dark:text-gray-400 font-medium">{{ 'DASHBOARD.PREMIUM_MEMBER' | translate }}</p>
             </div>
           </div>
@@ -197,16 +197,16 @@ import { animate } from 'motion/mini';
           <section class="flex flex-col md:flex-row md:items-center justify-between gap-6">
             <div class="space-y-2">
               <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white font-heading tracking-tight">
-                {{ greeting() }}, {{ (auth.user()?.name || 'Friend').split(' ')[0] }}! 🐰
+                {{ greeting() | translate }}, {{ (auth.user()?.name || ('DASHBOARD.FRIEND' | translate)).split(' ')[0] }}! 🐰
               </h2>
               <p class="text-lg text-gray-500 dark:text-gray-400 font-medium">{{ 'DASHBOARD.GREETING_SUBTITLE' | translate }}</p>
             </div>
 
             <!-- Mascot Widget -->
             <div class="relative group hidden md:block">
-              <div class="absolute -top-12 -right-2 bg-white dark:bg-gray-800 px-4 py-2.5 rounded-2xl shadow-xl border border-gray-100 dark:border-gray-700 animate-bounce z-10">
-                <p class="text-sm font-bold text-primary-500 italic">"{{ mascotMessage() }}"</p>
-                <div class="absolute -bottom-2 right-6 w-4 h-4 bg-white dark:bg-gray-800 border-b border-r border-gray-100 dark:border-gray-700 rotate-45"></div>
+              <div class="absolute top-full right-0 mt-3 bg-white dark:bg-gray-800 px-4 py-2.5 rounded-2xl shadow-xl border border-gray-100 dark:border-gray-700 animate-bounce z-10 w-64">
+                <p class="text-sm font-bold text-primary-500 italic">"{{ mascotMessage() | translate }}"</p>
+                <div class="absolute -top-2 right-8 w-4 h-4 bg-white dark:bg-gray-800 border-b border-r border-gray-100 dark:border-gray-700 rotate-45"></div>
               </div>
               <div class="w-32 h-32 bg-primary-50 dark:bg-primary-900/30 rounded-3xl flex items-center justify-center p-4 shadow-2xl shadow-primary-500/10 group-hover:scale-105 transition-transform cursor-pointer">
                 <app-bunny-mascot [mood]="'happy'" [size]="96" />
@@ -277,7 +277,7 @@ import { animate } from 'motion/mini';
               <div>
                 <div class="flex items-baseline gap-2 mb-4">
                   <span class="text-4xl font-bold text-gray-900 dark:text-white font-heading">{{ heartRate() }}</span>
-                  <span class="text-gray-500 dark:text-gray-400 font-medium">BPM</span>
+                  <span class="text-gray-500 dark:text-gray-400 font-medium">{{ 'DASHBOARD.BPM' | translate }}</span>
                 </div>
                 <div class="h-16 w-full bg-gray-50 dark:bg-gray-800 rounded-2xl flex items-end gap-1.5 px-3 pb-3">
                   @for (bar of heartBars; track $index) {
@@ -363,8 +363,8 @@ import { animate } from 'motion/mini';
                       {{ item.icon }}
                     </div>
                     <div class="flex-1 min-w-0">
-                      <p class="font-bold text-gray-900 dark:text-white text-sm">{{ item.title }}</p>
-                      <p class="text-xs text-gray-500 dark:text-gray-400 truncate">{{ item.subtitle }}</p>
+                      <p class="font-bold text-gray-900 dark:text-white text-sm">{{ item.title | translate }}</p>
+                      <p class="text-xs text-gray-500 dark:text-gray-400 truncate">{{ item.subtitle | translate }}</p>
                       <p class="text-xs text-gray-400 dark:text-gray-500 mt-1">{{ item.time }}</p>
                     </div>
                     @if (item.status === 'done') {
@@ -392,8 +392,8 @@ import { animate } from 'motion/mini';
                     {{ log.icon }}
                   </div>
                   <div>
-                    <p class="font-bold text-gray-900 dark:text-white text-sm">{{ log.title }}</p>
-                    <p class="text-xs text-gray-500 dark:text-gray-400">{{ log.subtitle }}</p>
+                    <p class="font-bold text-gray-900 dark:text-white text-sm">{{ log.title | translate }}</p>
+                    <p class="text-xs text-gray-500 dark:text-gray-400">{{ log.subtitle | translate }}</p>
                   </div>
                 </div>
               }
@@ -451,9 +451,9 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   // Computed greeting based on time of day
   greeting = computed(() => {
     const hour = new Date().getHours();
-    if (hour < 12) return this.translate.instant('DASHBOARD.GOOD_MORNING');
-    if (hour < 18) return this.translate.instant('DASHBOARD.GOOD_AFTERNOON');
-    return this.translate.instant('DASHBOARD.GOOD_EVENING');
+    if (hour < 12) return 'DASHBOARD.GOOD_MORNING';
+    if (hour < 18) return 'DASHBOARD.GOOD_AFTERNOON';
+    return 'DASHBOARD.GOOD_EVENING';
   });
 
   // Mascot messages
@@ -465,7 +465,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   ];
   mascotMessage = computed(() => {
     const msg = this.mascotMessages[Math.floor(Math.random() * this.mascotMessages.length)];
-    return this.translate.instant(msg);
+    return msg;
   });
 
   // Current date formatted
@@ -506,17 +506,17 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 
   // Schedule items
   scheduleItems = [
-    { icon: '💊', iconBg: 'rgba(255, 107, 107, 0.15)', title: 'Morning Meds', subtitle: 'Omega-3 & Multivitamin', time: '09:00 AM', status: 'done' },
-    { icon: '🦷', iconBg: 'rgba(197, 180, 227, 0.15)', title: 'Dental Cleaning', subtitle: 'BrightSmile Clinic', time: '02:30 PM', status: 'pending' },
-    { icon: '💊', iconBg: 'rgba(184, 230, 212, 0.15)', title: 'Evening Supplement', subtitle: 'Magnesium', time: '09:00 PM', status: 'pending' }
+    { icon: '💊', iconBg: 'rgba(255, 107, 107, 0.15)', title: 'DASHBOARD.SCHEDULE_MORNING_MEDS', subtitle: 'DASHBOARD.SCHEDULE_MORNING_MEDS_SUBTITLE', time: '09:00 AM', status: 'done' },
+    { icon: '🦷', iconBg: 'rgba(197, 180, 227, 0.15)', title: 'DASHBOARD.SCHEDULE_DENTAL_CLEANING', subtitle: 'DASHBOARD.SCHEDULE_DENTAL_CLEANING_SUBTITLE', time: '02:30 PM', status: 'pending' },
+    { icon: '💊', iconBg: 'rgba(184, 230, 212, 0.15)', title: 'DASHBOARD.SCHEDULE_EVENING_SUPPLEMENT', subtitle: 'DASHBOARD.SCHEDULE_EVENING_SUPPLEMENT_SUBTITLE', time: '09:00 PM', status: 'pending' }
   ];
 
   // Activity log
   activityLogs = [
-    { icon: '🧘', iconBg: 'rgba(255, 107, 107, 0.15)', title: 'Morning Yoga', subtitle: '45 min • 240 kcal burned' },
-    { icon: '🍽️', iconBg: 'rgba(255, 107, 107, 0.15)', title: 'Breakfast Logged', subtitle: 'Açaí Bowl • 420 kcal' },
-    { icon: '🌙', iconBg: 'rgba(96, 165, 250, 0.15)', title: 'Sleep Sync', subtitle: 'Auto-recorded via Watch' },
-    { icon: '💧', iconBg: 'rgba(96, 165, 250, 0.15)', title: 'Hydration Goal', subtitle: '8/8 glasses completed' }
+    { icon: '🧘', iconBg: 'rgba(255, 107, 107, 0.15)', title: 'DASHBOARD.ACTIVITY_LOG_MORNING_YOGA', subtitle: 'DASHBOARD.ACTIVITY_LOG_MORNING_YOGA_SUBTITLE' },
+    { icon: '🍽️', iconBg: 'rgba(255, 107, 107, 0.15)', title: 'DASHBOARD.ACTIVITY_LOG_BREAKFAST_LOGGED', subtitle: 'DASHBOARD.ACTIVITY_LOG_BREAKFAST_LOGGED_SUBTITLE' },
+    { icon: '🌙', iconBg: 'rgba(96, 165, 250, 0.15)', title: 'DASHBOARD.ACTIVITY_LOG_SLEEP_SYNC', subtitle: 'DASHBOARD.ACTIVITY_LOG_SLEEP_SYNC_SUBTITLE' },
+    { icon: '💧', iconBg: 'rgba(96, 165, 250, 0.15)', title: 'DASHBOARD.ACTIVITY_LOG_HYDRATION_GOAL', subtitle: 'DASHBOARD.ACTIVITY_LOG_HYDRATION_GOAL_SUBTITLE' }
   ];
 
   constructor() {
