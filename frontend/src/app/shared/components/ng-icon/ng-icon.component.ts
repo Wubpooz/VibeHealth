@@ -219,179 +219,179 @@ export type NgIconName =
     >
       @switch (icon()) {
         @case ('check') {
-          <i-check [size]="size()" [color]="color()" [animate]="shouldAnimate()" />
+          <i-check [size]="size()" [color]="color()" [strokeWidth]="strokeWidth()" [animate]="shouldAnimate()" />
         }
         @case ('check-check') {
-          <i-check-check [size]="size()" [color]="color()" [animate]="shouldAnimate()" />
+          <i-check-check [size]="size()" [color]="color()" [strokeWidth]="strokeWidth()" [animate]="shouldAnimate()" />
         }
         @case ('heart') {
-          <i-heart [size]="size()" [color]="color()" [animate]="shouldAnimate()" />
+          <i-heart [size]="size()" [color]="color()" [strokeWidth]="strokeWidth()" [animate]="shouldAnimate()" />
         }
         @case ('heart-off') {
-          <i-heart-off [size]="size()" [color]="color()" [animate]="shouldAnimate()" />
+          <i-heart-off [size]="size()" [color]="color()" [strokeWidth]="strokeWidth()" [animate]="shouldAnimate()" />
         }
         @case ('bell') {
-          <i-bell [size]="size()" [color]="color()" [animate]="shouldAnimate()" />
+          <i-bell [size]="size()" [color]="color()" [strokeWidth]="strokeWidth()" [animate]="shouldAnimate()" />
         }
         @case ('bell-ring') {
-          <i-bell-ring [size]="size()" [color]="color()" [animate]="shouldAnimate()" />
+          <i-bell-ring [size]="size()" [color]="color()" [strokeWidth]="strokeWidth()" [animate]="shouldAnimate()" />
         }
         @case ('star') {
-          <i-star [size]="size()" [color]="color()" [animate]="shouldAnimate()" />
+          <i-star [size]="size()" [color]="color()" [strokeWidth]="strokeWidth()" [animate]="shouldAnimate()" />
         }
         @case ('download') {
-          <i-download [size]="size()" [color]="color()" [animate]="shouldAnimate()" />
+          <i-download [size]="size()" [color]="color()" [strokeWidth]="strokeWidth()" [animate]="shouldAnimate()" />
         }
         @case ('upload') {
-          <i-upload [size]="size()" [color]="color()" [animate]="shouldAnimate()" />
+          <i-upload [size]="size()" [color]="color()" [strokeWidth]="strokeWidth()" [animate]="shouldAnimate()" />
         }
         @case ('arrow-right') {
-          <i-arrow-right [size]="size()" [color]="color()" [animate]="shouldAnimate()" />
+          <i-arrow-right [size]="size()" [color]="color()" [strokeWidth]="strokeWidth()" [animate]="shouldAnimate()" />
         }
         @case ('arrow-left') {
-          <i-arrow-left [size]="size()" [color]="color()" [animate]="shouldAnimate()" />
+          <i-arrow-left [size]="size()" [color]="color()" [strokeWidth]="strokeWidth()" [animate]="shouldAnimate()" />
         }
         @case ('arrow-up') {
-          <i-arrow-up [size]="size()" [color]="color()" [animate]="shouldAnimate()" />
+          <i-arrow-up [size]="size()" [color]="color()" [strokeWidth]="strokeWidth()" [animate]="shouldAnimate()" />
         }
         @case ('arrow-down') {
-          <i-arrow-down [size]="size()" [color]="color()" [animate]="shouldAnimate()" />
+          <i-arrow-down [size]="size()" [color]="color()" [strokeWidth]="strokeWidth()" [animate]="shouldAnimate()" />
         }
         @case ('sparkles') {
-          <i-sparkles [size]="size()" [color]="color()" [animate]="shouldAnimate()" />
+          <i-sparkles [size]="size()" [color]="color()" [strokeWidth]="strokeWidth()" [animate]="shouldAnimate()" />
         }
         @case ('sparkle') {
-          <i-sparkle [size]="size()" [color]="color()" [animate]="shouldAnimate()" />
+          <i-sparkle [size]="size()" [color]="color()" [strokeWidth]="strokeWidth()" [animate]="shouldAnimate()" />
         }
         @case ('plus') {
-          <i-plus [size]="size()" [color]="color()" [animate]="shouldAnimate()" />
+          <i-plus [size]="size()" [color]="color()" [strokeWidth]="strokeWidth()" [animate]="shouldAnimate()" />
         }
         @case ('minus') {
-          <i-minus [size]="size()" [color]="color()" [animate]="shouldAnimate()" />
+          <i-minus [size]="size()" [color]="color()" [strokeWidth]="strokeWidth()" [animate]="shouldAnimate()" />
         }
         @case ('trash') {
-          <i-trash-2 [size]="size()" [color]="color()" [animate]="shouldAnimate()" />
+          <i-trash-2 [size]="size()" [color]="color()" [strokeWidth]="strokeWidth()" [animate]="shouldAnimate()" />
         }
         @case ('settings') {
-          <i-settings [size]="size()" [color]="color()" [animate]="shouldAnimate()" />
+          <i-settings [size]="size()" [color]="color()" [strokeWidth]="strokeWidth()" [animate]="shouldAnimate()" />
         }
         @case ('user') {
-          <i-user [size]="size()" [color]="color()" [animate]="shouldAnimate()" />
+          <i-user [size]="size()" [color]="color()" [strokeWidth]="strokeWidth()" [animate]="shouldAnimate()" />
         }
         @case ('user-check') {
-          <i-user-check [size]="size()" [color]="color()" [animate]="shouldAnimate()" />
+          <i-user-check [size]="size()" [color]="color()" [strokeWidth]="strokeWidth()" [animate]="shouldAnimate()" />
         }
         @case ('home') {
-          <i-house [size]="size()" [color]="color()" [animate]="shouldAnimate()" />
+          <i-house [size]="size()" [color]="color()" [strokeWidth]="strokeWidth()" [animate]="shouldAnimate()" />
         }
         @case ('search') {
-          <i-search [size]="size()" [color]="color()" [animate]="shouldAnimate()" />
+          <i-search [size]="size()" [color]="color()" [strokeWidth]="strokeWidth()" [animate]="shouldAnimate()" />
         }
         @case ('menu') {
-          <i-grip [size]="size()" [color]="color()" [animate]="shouldAnimate()" />
+          <i-grip [size]="size()" [color]="color()" [strokeWidth]="strokeWidth()" [animate]="shouldAnimate()" />
         }
         @case ('close') {
-          <i-x [size]="size()" [color]="color()" [animate]="shouldAnimate()" />
+          <i-x [size]="size()" [color]="color()" [strokeWidth]="strokeWidth()" [animate]="shouldAnimate()" />
         }
         @case ('activity') {
-          <i-activity [size]="size()" [color]="color()" [animate]="shouldAnimate()" />
+          <i-activity [size]="size()" [color]="color()" [strokeWidth]="strokeWidth()" [animate]="shouldAnimate()" />
         }
         @case ('calendar') {
-          <i-calendar-check [size]="size()" [color]="color()" [animate]="shouldAnimate()" />
+          <i-calendar-check [size]="size()" [color]="color()" [strokeWidth]="strokeWidth()" [animate]="shouldAnimate()" />
         }
         @case ('shield-check') {
-          <i-shield-check [size]="size()" [color]="color()" [animate]="shouldAnimate()" />
+          <i-shield-check [size]="size()" [color]="color()" [strokeWidth]="strokeWidth()" [animate]="shouldAnimate()" />
         }
         @case ('circle-check') {
-          <i-circle-check [size]="size()" [color]="color()" [animate]="shouldAnimate()" />
+          <i-circle-check [size]="size()" [color]="color()" [strokeWidth]="strokeWidth()" [animate]="shouldAnimate()" />
         }
         @case ('droplet') {
-          <i-droplet-off [size]="size()" [color]="color()" [animate]="shouldAnimate()" />
+          <i-droplet-off [size]="size()" [color]="color()" [strokeWidth]="strokeWidth()" [animate]="shouldAnimate()" />
         }
         @case ('rabbit') {
-          <i-rabbit [size]="size()" [color]="color()" [animate]="shouldAnimate()" />
+          <i-rabbit [size]="size()" [color]="color()" [strokeWidth]="strokeWidth()" [animate]="shouldAnimate()" />
         }
         @case ('loader') {
-          <i-loader-pinwheel [size]="size()" [color]="color()" animate />
+          <i-loader-pinwheel [size]="size()" [color]="color()" [strokeWidth]="strokeWidth()" animate />
         }
         @case ('refresh') {
-          <i-refresh-cw [size]="size()" [color]="color()" [animate]="shouldAnimate()" />
+          <i-refresh-cw [size]="size()" [color]="color()" [strokeWidth]="strokeWidth()" [animate]="shouldAnimate()" />
         }
         @case ('copy') {
-          <i-copy [size]="size()" [color]="color()" [animate]="shouldAnimate()" />
+          <i-copy [size]="size()" [color]="color()" [strokeWidth]="strokeWidth()" [animate]="shouldAnimate()" />
         }
         @case ('copy-check') {
-          <i-copy-check [size]="size()" [color]="color()" [animate]="shouldAnimate()" />
+          <i-copy-check [size]="size()" [color]="color()" [strokeWidth]="strokeWidth()" [animate]="shouldAnimate()" />
         }
         @case ('bookmark') {
-          <i-bookmark [size]="size()" [color]="color()" [animate]="shouldAnimate()" />
+          <i-bookmark [size]="size()" [color]="color()" [strokeWidth]="strokeWidth()" [animate]="shouldAnimate()" />
         }
         @case ('bookmark-check') {
-          <i-bookmark-check [size]="size()" [color]="color()" [animate]="shouldAnimate()" />
+          <i-bookmark-check [size]="size()" [color]="color()" [strokeWidth]="strokeWidth()" [animate]="shouldAnimate()" />
         }
         @case ('clipboard') {
-          <i-clipboard [size]="size()" [color]="color()" [animate]="shouldAnimate()" />
+          <i-clipboard [size]="size()" [color]="color()" [strokeWidth]="strokeWidth()" [animate]="shouldAnimate()" />
         }
         @case ('clipboard-check') {
-          <i-clipboard-check [size]="size()" [color]="color()" [animate]="shouldAnimate()" />
+          <i-clipboard-check [size]="size()" [color]="color()" [strokeWidth]="strokeWidth()" [animate]="shouldAnimate()" />
         }
         @case ('message') {
-          <i-message-circle [size]="size()" [color]="color()" [animate]="shouldAnimate()" />
+          <i-message-circle [size]="size()" [color]="color()" [strokeWidth]="strokeWidth()" [animate]="shouldAnimate()" />
         }
         @case ('send') {
-          <i-send [size]="size()" [color]="color()" [animate]="shouldAnimate()" />
+          <i-send [size]="size()" [color]="color()" [strokeWidth]="strokeWidth()" [animate]="shouldAnimate()" />
         }
         @case ('mail-check') {
-          <i-mail-check [size]="size()" [color]="color()" [animate]="shouldAnimate()" />
+          <i-mail-check [size]="size()" [color]="color()" [strokeWidth]="strokeWidth()" [animate]="shouldAnimate()" />
         }
         @case ('thumbs-up') {
-          <i-thumbs-up [size]="size()" [color]="color()" [animate]="shouldAnimate()" />
+          <i-thumbs-up [size]="size()" [color]="color()" [strokeWidth]="strokeWidth()" [animate]="shouldAnimate()" />
         }
         @case ('thumbs-down') {
-          <i-thumbs-down [size]="size()" [color]="color()" [animate]="shouldAnimate()" />
+          <i-thumbs-down [size]="size()" [color]="color()" [strokeWidth]="strokeWidth()" [animate]="shouldAnimate()" />
         }
         @case ('eye-off') {
-          <i-eye-off [size]="size()" [color]="color()" [animate]="shouldAnimate()" />
+          <i-eye-off [size]="size()" [color]="color()" [strokeWidth]="strokeWidth()" [animate]="shouldAnimate()" />
         }
         @case ('lightbulb') {
-          <i-lightbulb [size]="size()" [color]="color()" [animate]="shouldAnimate()" />
+          <i-lightbulb [size]="size()" [color]="color()" [strokeWidth]="strokeWidth()" [animate]="shouldAnimate()" />
         }
         @case ('lightbulb-off') {
-          <i-lightbulb-off [size]="size()" [color]="color()" [animate]="shouldAnimate()" />
+          <i-lightbulb-off [size]="size()" [color]="color()" [strokeWidth]="strokeWidth()" [animate]="shouldAnimate()" />
         }
         @case ('play') {
-          <i-play [size]="size()" [color]="color()" [animate]="shouldAnimate()" />
+          <i-play [size]="size()" [color]="color()" [strokeWidth]="strokeWidth()" [animate]="shouldAnimate()" />
         }
         @case ('waves') {
-          <i-waves [size]="size()" [color]="color()" [animate]="shouldAnimate()" />
+          <i-waves [size]="size()" [color]="color()" [strokeWidth]="strokeWidth()" [animate]="shouldAnimate()" />
         }
         @case ('chart-bar') {
-          <i-chart-bar [size]="size()" [color]="color()" [animate]="shouldAnimate()" />
+          <i-chart-bar [size]="size()" [color]="color()" [strokeWidth]="strokeWidth()" [animate]="shouldAnimate()" />
         }
         @case ('chart-line') {
-          <i-chart-line [size]="size()" [color]="color()" [animate]="shouldAnimate()" />
+          <i-chart-line [size]="size()" [color]="color()" [strokeWidth]="strokeWidth()" [animate]="shouldAnimate()" />
         }
         @case ('chart-pie') {
-          <i-chart-pie [size]="size()" [color]="color()" [animate]="shouldAnimate()" />
+          <i-chart-pie [size]="size()" [color]="color()" [strokeWidth]="strokeWidth()" [animate]="shouldAnimate()" />
         }
         @case ('gauge') {
-          <i-gauge [size]="size()" [color]="color()" [animate]="shouldAnimate()" />
+          <i-gauge [size]="size()" [color]="color()" [strokeWidth]="strokeWidth()" [animate]="shouldAnimate()" />
         }
         @case ('timer') {
-          <i-timer [size]="size()" [color]="color()" [animate]="shouldAnimate()" />
+          <i-timer [size]="size()" [color]="color()" [strokeWidth]="strokeWidth()" [animate]="shouldAnimate()" />
         }
         @case ('clock') {
-          <i-clock [size]="size()" [color]="color()" [animate]="shouldAnimate()" />
+          <i-clock [size]="size()" [color]="color()" [strokeWidth]="strokeWidth()" [animate]="shouldAnimate()" />
         }
         @case ('medical') {
-          <i-briefcase-medical [size]="size()" [color]="color()" [animate]="shouldAnimate()" />
+          <i-briefcase-medical [size]="size()" [color]="color()" [strokeWidth]="strokeWidth()" [animate]="shouldAnimate()" />
         }
         @case ('thermometer') {
-          <i-thermometer [size]="size()" [color]="color()" [animate]="shouldAnimate()" />
+          <i-thermometer [size]="size()" [color]="color()" [strokeWidth]="strokeWidth()" [animate]="shouldAnimate()" />
         }
         @default {
           <!-- Fallback: use check icon -->
-          <i-check [size]="size()" [color]="color()" [animate]="shouldAnimate()" />
+          <i-check [size]="size()" [color]="color()" [strokeWidth]="strokeWidth()" [animate]="shouldAnimate()" />
         }
       }
     </span>
@@ -443,3 +443,4 @@ export class NgIconComponent {
     this.hovering.set(false);
   }
 }
+
