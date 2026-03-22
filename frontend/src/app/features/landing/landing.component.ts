@@ -7,6 +7,7 @@ import {
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { BunnyMascotComponent, ThemeToggleComponent } from '../../shared/components';
+import { ArrowRightIcon, ShieldCheckIcon, CheckIcon, HeartIcon } from 'ng-animated-icons';
 
 interface Feature {
   icon: string;
@@ -18,7 +19,7 @@ interface Feature {
 @Component({
   selector: 'app-landing',
   standalone: true,
-  imports: [CommonModule, RouterLink, BunnyMascotComponent, ThemeToggleComponent],
+  imports: [CommonModule, RouterLink, BunnyMascotComponent, ThemeToggleComponent, ArrowRightIcon, ShieldCheckIcon, CheckIcon, HeartIcon],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './landing.component.html',
   styles: [`
@@ -150,23 +151,6 @@ interface Feature {
       transform: scale(1.05);
     }
 
-    .trust-icon--shield .icon-check {
-      stroke-dasharray: 16;
-      stroke-dashoffset: 16;
-    }
-
-    .trust-item:hover .trust-icon--shield .icon-check {
-      animation: drawCheck 0.45s ease forwards;
-    }
-
-    .trust-item:hover .trust-icon--offline {
-      animation: iconFloat 0.7s ease-in-out;
-    }
-
-    .trust-item:hover .trust-icon--heart {
-      animation: iconBeat 0.7s ease-in-out;
-      color: #e11d48;
-    }
 
     @keyframes fadeInUp {
       from {
@@ -179,20 +163,6 @@ interface Feature {
       }
     }
 
-    @keyframes drawCheck {
-      to { stroke-dashoffset: 0; }
-    }
-
-    @keyframes iconFloat {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-2px); }
-    }
-
-    @keyframes iconBeat {
-      0%, 100% { transform: scale(1); }
-      25% { transform: scale(1.12); }
-      65% { transform: scale(0.98); }
-    }
 
     /* Reduce motion for accessibility */
     @media (prefers-reduced-motion: reduce) {
@@ -223,6 +193,11 @@ interface Feature {
 export class LandingComponent {
   readonly isVisible = signal(false);
   readonly currentYear = new Date().getFullYear();
+
+  // Hover states for animations
+  readonly btn1Hover = signal(false);
+  readonly btn2Hover = signal(false);
+  readonly btn3Hover = signal(false);
 
   readonly features: Feature[] = [
     {

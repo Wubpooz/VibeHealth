@@ -1,0 +1,362 @@
+import {
+  Component,
+  ChangeDetectionStrategy,
+  input,
+  computed,
+  ViewChildren,
+  QueryList,
+  ElementRef,
+  AfterViewInit,
+} from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { TranslateModule } from '@ngx-translate/core';
+import { animate } from 'motion/mini';
+
+export interface TrendDataPoint {
+  label: string; // e.g., "Mon", "Tue", etc.
+  value: number; // Actual value
+  target?: number; // Optional goal/target line
+}
+
+@Component({
+  selector: 'app-trend-chart',
+  imports: [CommonModule, TranslateModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: `
+    <div class="trend-chart">
+      <!-- Chart Header -->
+      <div class="chart-header">
+        <h3 class="chart-title">{{ title() }}</h3>
+        @if (subtitle()) {
+          <p class="chart-subtitle">{{ subtitle() }}</p>
+        }
+      </div>
+
+      <!-- Chart Canvas -->
+      <div class="chart-container">
+        <!-- Y-axis labels -->
+        <div class="y-axis">
+          @for (tick of yAxisTicks(); track tick) {
+            <span class="y-tick">{{ tick }}{{ unit() }}</span>
+          }
+        </div>
+
+        <!-- Bars -->
+        <div class="bars-container">
+          @for (point of data(); track point.label; let i = $index) {
+            <div class="bar-wrapper">
+              <!-- Target line (if provided) -->
+              @if (point.target !== undefined && maxValue() > 0) {
+                <div 
+                  class="target-line"
+                  [style.bottom.%]="(point.target / maxValue()) * 100"
+                ></div>
+              }
+              
+              <!-- Bar -->
+              <div 
+                #bar
+                class="bar"
+                [class.above-target]="point.target !== undefined && point.value >= point.target"
+                [class.below-target]="point.target !== undefined && point.value < point.target"
+                [style.height.%]="(point.value / maxValue()) * 100"
+                [style.animation-delay.s]="i * 0.05"
+              >
+                <div class="bar-value">{{ point.value }}{{ unit() }}</div>
+              </div>
+              
+              <!-- X-axis label -->
+              <span class="x-label">{{ point.label }}</span>
+            </div>
+          }
+        </div>
+      </div>
+
+      <!-- Legend (if target exists) -->
+      @if (hasTargets()) {
+        <div class="chart-legend">
+          <div class="legend-item">
+            <span class="legend-dot above"></span>
+            <span class="legend-text">{{ 'METRICS.CHARTS.GOAL_MET' | translate }}</span>
+          </div>
+          <div class="legend-item">
+            <span class="legend-dot below"></span>
+            <span class="legend-text">{{ 'METRICS.CHARTS.BELOW_GOAL' | translate }}</span>
+          </div>
+        </div>
+      }
+    </div>
+  `,
+  styles: [`
+    .trend-chart {
+      width: 100%;
+      padding: 1.5rem;
+      background: white;
+      border-radius: 1.5rem;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    }
+
+    :host-context([data-theme="dark"]) .trend-chart {
+      background: #1f2937;
+    }
+
+    .chart-header {
+      margin-bottom: 1.5rem;
+    }
+
+    .chart-title {
+      font-family: 'Satoshi', sans-serif;
+      font-weight: 600;
+      font-size: 1.25rem;
+      color: #1f2937;
+      margin: 0 0 0.25rem 0;
+    }
+
+    :host-context([data-theme="dark"]) .chart-title {
+      color: #f3f4f6;
+    }
+
+    .chart-subtitle {
+      font-size: 0.875rem;
+      color: #6b7280;
+      margin: 0;
+    }
+
+    :host-context([data-theme="dark"]) .chart-subtitle {
+      color: #9ca3af;
+    }
+
+    .chart-container {
+      display: flex;
+      gap: 1rem;
+      height: 200px;
+      position: relative;
+    }
+
+    .y-axis {
+      display: flex;
+      flex-direction: column-reverse;
+      justify-content: space-between;
+      min-width: 3rem;
+      padding: 0.5rem 0;
+    }
+
+    .y-tick {
+      font-size: 0.75rem;
+      color: #9ca3af;
+      text-align: right;
+    }
+
+    :host-context([data-theme="dark"]) .y-tick {
+      color: #6b7280;
+    }
+
+    .bars-container {
+      flex: 1;
+      display: flex;
+      align-items: flex-end;
+      gap: 0.5rem;
+      padding: 0.5rem 0;
+      border-left: 1px solid #e5e7eb;
+      border-bottom: 1px solid #e5e7eb;
+      padding-left: 0.5rem;
+    }
+
+    :host-context([data-theme="dark"]) .bars-container {
+      border-color: #374151;
+    }
+
+    .bar-wrapper {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+      height: 100%;
+    }
+
+    .target-line {
+      position: absolute;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: #f59e0b;
+      border-radius: 2px;
+      z-index: 1;
+      opacity: 0.6;
+    }
+
+    :host-context([data-theme="dark"]) .target-line {
+      background: #fbbf24;
+    }
+
+    .bar {
+      width: 100%;
+      min-height: 4px;
+      background: linear-gradient(135deg, #10b981 0%, #34d399 100%);
+      border-radius: 0.5rem 0.5rem 0 0;
+      position: relative;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      cursor: pointer;
+      animation: barGrow 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+      transform-origin: bottom;
+    }
+
+    @keyframes barGrow {
+      from {
+        transform: scaleY(0);
+        opacity: 0;
+      }
+      to {
+        transform: scaleY(1);
+        opacity: 1;
+      }
+    }
+
+    .bar:hover {
+      transform: scaleY(1.05);
+      box-shadow: 0 4px 20px rgba(16, 185, 129, 0.3);
+    }
+
+    .bar.below-target {
+      background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%);
+    }
+
+    .bar.below-target:hover {
+      box-shadow: 0 4px 20px rgba(245, 158, 11, 0.3);
+    }
+
+    .bar-value {
+      position: absolute;
+      top: -1.5rem;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: #10b981;
+      white-space: nowrap;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    :host-context([data-theme="dark"]) .bar-value {
+      color: #34d399;
+    }
+
+    .bar.below-target .bar-value {
+      color: #f59e0b;
+    }
+
+    :host-context([data-theme="dark"]) .bar.below-target .bar-value {
+      color: #fbbf24;
+    }
+
+    .bar:hover .bar-value {
+      opacity: 1;
+    }
+
+    .x-label {
+      font-size: 0.75rem;
+      color: #6b7280;
+      margin-top: 0.5rem;
+      text-align: center;
+    }
+
+    :host-context([data-theme="dark"]) .x-label {
+      color: #9ca3af;
+    }
+
+    .chart-legend {
+      display: flex;
+      gap: 1.5rem;
+      justify-content: center;
+      margin-top: 1.5rem;
+      padding-top: 1rem;
+      border-top: 1px solid #e5e7eb;
+    }
+
+    :host-context([data-theme="dark"]) .chart-legend {
+      border-color: #374151;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .legend-dot {
+      width: 0.75rem;
+      height: 0.75rem;
+      border-radius: 0.25rem;
+    }
+
+    .legend-dot.above {
+      background: linear-gradient(135deg, #10b981 0%, #34d399 100%);
+    }
+
+    .legend-dot.below {
+      background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%);
+    }
+
+    .legend-text {
+      font-size: 0.875rem;
+      color: #6b7280;
+    }
+
+    :host-context([data-theme="dark"]) .legend-text {
+      color: #9ca3af;
+    }
+  `],
+})
+export class TrendChartComponent implements AfterViewInit {
+  @ViewChildren('bar') bars!: QueryList<ElementRef<HTMLElement>>;
+
+  // Inputs
+  readonly title = input.required<string>();
+  readonly subtitle = input<string>('');
+  readonly data = input.required<TrendDataPoint[]>();
+  readonly unit = input<string>('');
+
+  // Computed values
+  readonly maxValue = computed(() => {
+    const dataPoints = this.data();
+    if (dataPoints.length === 0) return 100;
+    
+    const values = dataPoints.map(d => d.value);
+    const targets = dataPoints
+      .filter(d => d.target !== undefined)
+      .map(d => d.target!);
+    
+    const allValues = [...values, ...targets];
+    const max = Math.max(...allValues);
+    
+    // Round up to nearest nice number
+    return Math.ceil(max * 1.1);
+  });
+
+  readonly hasTargets = computed(() => {
+    return this.data().some(d => d.target !== undefined);
+  });
+
+  readonly yAxisTicks = computed(() => {
+    const max = this.maxValue();
+    const step = Math.ceil(max / 4);
+    return [0, step, step * 2, step * 3, max];
+  });
+
+  ngAfterViewInit(): void {
+    // Animate bars on load
+    this.bars.forEach((bar, index) => {
+      animate(
+        bar.nativeElement,
+        { opacity: [0, 1], transform: ['scaleY(0)', 'scaleY(1)'] },
+        { 
+          duration: 0.6, 
+          delay: index * 0.05,
+          ease: [0.4, 0, 0.2, 1]
+        }
+      );
+    });
+  }
+}

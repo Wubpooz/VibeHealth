@@ -1,0 +1,46 @@
+# ng-animated-icons mini reference
+
+Compact context file for AI/tooling.
+
+## Package
+- Name: `ng-animated-icons`
+- Framework: Angular standalone components (signals-first)
+- Peer dependency: `@angular/core` `^19.0.0 || ^20.0.0 || ^21.0.0`
+- Homepage: `https://icons.ajitpanigrahi.com/`
+- Repo: `https://github.com/ajitzero/animated-icons`
+
+## Install
+- `npm i ng-animated-icons`
+- `pnpm i ng-animated-icons`
+- `yarn add ng-animated-icons`
+- `bun add ng-animated-icons`
+
+## Import + usage
+- Import: `import { ActivityIcon, StarIcon } from 'ng-animated-icons';`
+- Selectors: `<i-activity />`, `<i-star />`
+- Naming: PascalCase import names with `Icon` suffix; selectors are `i-` + lowercase kebab-case.
+
+## Inputs
+- `color: string` (default `currentColor`)
+- `size: number` (default `24`)
+- `strokeWidth: number` (default `2`)
+- `class: string` (optional)
+- `animate: boolean` (default `false`)
+
+## Global defaults
+- `provideAnimatedIcons({ color, size, strokeWidth })`
+
+## Notes / pitfalls
+- Prefer immutable state updates when changing icon options.
+- Bind `animate` to explicit hover/focus/touch state for controlled behavior.
+- Keep ARIA/text labels for interactive icon-only controls.
+- If template type errors appear around signal inputs (Angular internals brand fields), ensure only one `@angular/core` identity is present in the app and avoid consuming raw library source via TS path alias.
+
+## Dev commands
+- Docs dev: `bunx nx serve docs`
+- Docs build: `bunx nx build docs`
+- Library build: `bunx nx build ng-animated-icons`
+
+## Full catalog
+- Full alphabetical icon import list is in `llms.txt`.
+- Current source-export count in this repo: `507` icons.

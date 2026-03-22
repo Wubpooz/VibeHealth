@@ -12,7 +12,8 @@
     "dismiss_notification": "Dismiss notification",
     "loading": "Loading...",
     "error": "An error occurred",
-    "success": "Success"
+    "success": "Success",
+    "understood": "Understood"
   },
   "nav": {
     "home": "Home",
@@ -568,7 +569,25 @@
     "WEEKLY_TRENDS": "Weekly Trends",
     "CONSISTENCY_KEY": "Consistency is key to results",
     "LAST_7_DAYS": "Last 7 Days",
-    "LAST_30_DAYS": "Last 30 Days"
+    "LAST_30_DAYS": "Last 30 Days",
+    "CHARTS": {
+      "GOAL_MET": "Goal Met",
+      "BELOW_GOAL": "Below Goal"
+    },
+    "NUTRITION": {
+      "SCAN_BARCODE": "Scan Barcode",
+      "ALIGN_BARCODE": "Align barcode within the frame",
+      "SCANNER_COMING_SOON": "Barcode Scanner Coming Soon!",
+      "SCANNER_DESCRIPTION": "We're working on integrating barcode scanning to make logging nutrition even faster. For now, please enter food details manually.",
+      "MEAL_TYPE": "Meal Type",
+      "MEAL_NAME": "Meal Name",
+      "MEAL_NAME_PLACEHOLDER": "e.g., Chicken Salad",
+      "CALORIES": "Calories",
+      "ADD_MACROS": "Add Macros (optional)",
+      "PROTEIN": "Protein",
+      "CARBS": "Carbs",
+      "FAT": "Fat"
+    }
   },
   "STATS": {
     "DAY_STREAK": "Day Streak",

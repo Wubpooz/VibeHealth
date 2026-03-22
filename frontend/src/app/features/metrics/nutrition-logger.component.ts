@@ -11,6 +11,7 @@ import { FormsModule } from '@angular/forms';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { MetricsService } from '../../core/metrics/metrics.service';
 import { RewardsService } from '../../core/rewards/rewards.service';
+import { BarcodeScannerComponent, type ScannedFood } from '../../shared/components/barcode-scanner/barcode-scanner.component';
 import {
   MEAL_TYPE_INFO,
   DAILY_GOALS,
@@ -19,7 +20,7 @@ import {
 
 @Component({
   selector: 'app-nutrition-logger',
-  imports: [CommonModule, FormsModule, TranslateModule],
+  imports: [CommonModule, FormsModule, TranslateModule, BarcodeScannerComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="nutrition-card">
@@ -111,6 +112,13 @@ import {
                 </button>
               }
             </div>
+          </div>
+
+          <!-- Barcode Scanner -->
+          <div class="form-group">
+            <app-barcode-scanner 
+              (foodScanned)="onFoodScanned($event)"
+            />
           </div>
 
           <!-- Meal Name -->
@@ -772,6 +780,16 @@ export class NutritionLoggerComponent {
   selectMealType(type: MealType): void {
     this.selectedMealType.set(type);
     this.showForm.set(true);
+  }
+
+  onFoodScanned(food: ScannedFood): void {
+    // Pre-fill form with scanned data
+    this.mealName.set(food.brand ? `${food.brand} - ${food.name}` : food.name);
+    this.calories.set(food.calories);
+    this.protein.set(food.protein);
+    this.carbs.set(food.carbs);
+    this.fat.set(food.fat);
+    this.showMacros.set(true); // Expand macros section
   }
 
   async submitForm(): Promise<void> {

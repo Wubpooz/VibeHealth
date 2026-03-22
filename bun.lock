@@ -4,6 +4,9 @@
   "workspaces": {
     "": {
       "name": "vibehealth",
+      "dependencies": {
+        "ng-animated-icons": "^1.9.0",
+      },
       "devDependencies": {
         "@types/bun": "latest",
         "concurrently": "^8.2.2",
@@ -14,6 +17,8 @@
     },
   },
   "packages": {
+    "@angular/core": ["@angular/core@21.2.5", "", { "dependencies": { "tslib": "^2.3.0" }, "peerDependencies": { "@angular/compiler": "21.2.5", "rxjs": "^6.5.3 || ^7.4.0", "zone.js": "~0.15.0 || ~0.16.0" }, "optionalPeers": ["@angular/compiler", "zone.js"] }, "sha512-JgHU134Adb1wrpyGC9ozcv3hiRAgaFTvJFn1u9OU/AVXyxu4meMmVh2hp5QhAvPnv8XQdKWWIkAY+dbpPE6zKA=="],
+
     "@babel/runtime": ["@babel/runtime@7.29.2", "", {}, "sha512-JiDShH45zKHWyGe4ZNVRrCjBz8Nh9TMmZG1kh4QTK8hCBTWBi8Da+i7s1fJw7/lYpM4ccepSNfqzZ/QvABBi5g=="],
 
     "@types/bun": ["@types/bun@1.3.11", "", { "dependencies": { "bun-types": "1.3.11" } }, "sha512-5vPne5QvtpjGpsGYXiFyycfpDF2ECyPcTSsFBMa0fraoxiQyMJ3SmuQIGhzPg2WJuWxVBoxWJ2kClYTcw/4fAg=="],
@@ -49,6 +54,8 @@
     "is-fullwidth-code-point": ["is-fullwidth-code-point@3.0.0", "", {}, "sha512-zymm5+u+sCsSWyD9qNaejV3DFvhCKclKdizYaJUuHA83RLjb7nSuGnddCHGv0hk+KY7BMAlsWeK4Ueg6EV6XQg=="],
 
     "lodash": ["lodash@4.17.23", "", {}, "sha512-LgVTMpQtIopCi79SJeDiP0TfWi5CNEc/L/aRdTh3yIvmZXTnheWpKjSZhnvMl8iXbC1tFg9gdHHDMLoV7CnG+w=="],
+
+    "ng-animated-icons": ["ng-animated-icons@1.9.0", "", { "dependencies": { "tslib": "^2.3.0" }, "peerDependencies": { "@angular/core": "^19.0.0 || ^20.0.0 || ^21.0.0" } }, "sha512-/8c1P4EK+QUGyQ3hoZHl5pX3J80LaROBETiAqPpNPDyG1WCUVMEyFYl4/nIUWfy08L9wnOGh8w8T0rLOGqGZGw=="],
 
     "require-directory": ["require-directory@2.1.1", "", {}, "sha512-fGxEI7+wsG9xrvdjsrlmL22OMTTiHRwAMroiEeMgq8gzoLC/PQr7RsRDSTLUg/bZAZtF+TVIkHc6/4RIKrui+Q=="],
 

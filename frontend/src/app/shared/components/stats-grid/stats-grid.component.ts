@@ -3,16 +3,17 @@ import {
   ChangeDetectionStrategy,
   inject,
   computed,
+  signal,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 import { RewardsService } from '../../../core/rewards/rewards.service';
 import { AuthService } from '../../../core/auth/auth.service';
-import { LottieIconComponent } from '../lottie-icon/lottie-icon.component';
+import { CarrotIcon } from 'ng-animated-icons';
 
 @Component({
   selector: 'app-stats-grid',
-  imports: [CommonModule, TranslateModule, LottieIconComponent],
+  imports: [CommonModule, TranslateModule, CarrotIcon],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="stats-container">
@@ -49,9 +50,9 @@ import { LottieIconComponent } from '../lottie-icon/lottie-icon.component';
         </div>
 
         <!-- Carrots -->
-        <div class="stat-card carrot-card">
+        <div class="stat-card carrot-card" (mouseenter)="carrotHover.set(true)" (mouseleave)="carrotHover.set(false)">
           <div class="stat-icon">
-            <app-lottie-icon name="carrot" [size]="28" [loop]="false" [playOnHover]="true" />
+            <i-carrot size="28" [animate]="$any(carrotHover())" />
           </div>
           <div class="stat-content">
             <span class="stat-value">{{ rewards.carrots() }}</span>
@@ -332,6 +333,7 @@ import { LottieIconComponent } from '../lottie-icon/lottie-icon.component';
   `],
 })
 export class StatsGridComponent {
+  readonly carrotHover = signal(false);
   readonly rewards = inject(RewardsService);
   private readonly auth = inject(AuthService);
 

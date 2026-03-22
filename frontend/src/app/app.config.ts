@@ -1,10 +1,10 @@
 import { ApplicationConfig, provideZonelessChangeDetection, isDevMode } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/http';
+import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideTranslateService } from '@ngx-translate/core';
 import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
-import { provideLottieOptions } from 'ngx-lottie';
-import { provideAnimations } from '@angular/platform-browser/animations';
+import { provideAnimatedIcons } from 'ng-animated-icons';
 
 import { routes } from './app.routes';
 import { provideServiceWorker } from '@angular/service-worker';
@@ -19,14 +19,10 @@ export const appConfig: ApplicationConfig = {
       withFetch(),
       withInterceptors([authInterceptor])
     ),
-    // Enable Angular animations for page transitions and micro-animations
     provideAnimations(),
     provideTranslateService({ fallbackLang: 'en' }),
     provideTranslateHttpLoader(),
-    // Lottie animations - lazy-loaded for bundle optimization
-    provideLottieOptions({
-      player: () => import('lottie-web'),
-    }),
+    provideAnimatedIcons({ color: 'currentColor', size: 24, strokeWidth: 2 }),
     provideServiceWorker('ngsw-worker.js', {
       enabled: !isDevMode(),
       registrationStrategy: 'registerWhenStable:30000'

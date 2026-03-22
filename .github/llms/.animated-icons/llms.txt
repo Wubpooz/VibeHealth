@@ -1,0 +1,582 @@
+# ng-animated-icons llms.txt reference
+
+This file is a quick machine-readable reference for `ng-animated-icons`.
+
+## Project snapshot
+
+- Package name: `ng-animated-icons`
+- Homepage: `https://icons.ajitpanigrahi.com/`
+- Repository: `https://github.com/ajitzero/animated-icons`
+- Framework: Angular standalone components (signals-first)
+- Peer dependency: `@angular/core` `^19.0.0 || ^20.0.0 || ^21.0.0`
+- License: MIT
+
+## Installation
+
+Install with your package manager:
+
+- `npm i ng-animated-icons`
+- `pnpm i ng-animated-icons`
+- `yarn add ng-animated-icons`
+- `bun add ng-animated-icons`
+
+## Basic usage
+
+Import icons from the package root:
+
+- `import { ActivityIcon, StarIcon } from 'ng-animated-icons';`
+
+Use icon selectors in templates:
+
+- `<i-activity />`
+- `<i-star />`
+
+Naming conventions:
+
+- Import names are PascalCase and end in `Icon`.
+- Template selectors are lowercase and prefixed with `i-`.
+- Example: `ThumbsUpIcon` => `<i-thumbs-up />`.
+
+## Props
+
+Each icon component supports:
+
+- `color: string` (default `currentColor`)
+- `size: number` (default `24`)
+- `strokeWidth: number` (default `2`)
+- `class: string` (optional)
+- `animate: boolean` (default `false`)
+
+## Global configuration
+
+Set default icon props globally:
+
+- `provideAnimatedIcons({ color, size, strokeWidth })`
+
+## Warnings and pitfalls
+
+- Keep icon options immutable when updating state (prefer replacing objects/signals over mutating nested fields).
+- For animation interactions (hover/focus/touch), bind `animate` to explicit UI state.
+- Prefer running frequent animation triggers outside Angular zone when wiring custom animation engines.
+- Keep accessibility in mind: always pair icons with labels/text/ARIA when used as interactive controls.
+- Do not assume all historical docs list exactly the same icon count; always derive export names from source for current branch/version.
+
+## Development notes
+
+- Local docs app: `bunx nx serve docs`
+- Build docs: `bunx nx build docs`
+- Build library: `bunx nx build ng-animated-icons`
+
+## Animated icon import names (alphabetical)
+
+Source of truth: exports detected from `packages/animated-icons/src/icons/*.ts` on current branch.
+
+Total currently exported icon import names: **507** (this satisfies “at least 500”).
+
+- AccessibilityIcon
+- ActivityIcon
+- AirplayIcon
+- AlarmClockCheckIcon
+- AlarmClockIcon
+- AlarmClockOffIcon
+- AlignHorizontalSpaceAroundIcon
+- AlignVerticalSpaceAroundIcon
+- AnvilIcon
+- ArchiveIcon
+- ArrowBigDownDashIcon
+- ArrowBigDownIcon
+- ArrowBigLeftDashIcon
+- ArrowBigLeftIcon
+- ArrowBigRightDashIcon
+- ArrowBigRightIcon
+- ArrowBigUpDashIcon
+- ArrowBigUpIcon
+- ArrowDown01Icon
+- ArrowDown10Icon
+- ArrowDownAZIcon
+- ArrowDownIcon
+- ArrowDownLeftIcon
+- ArrowDownRightIcon
+- ArrowDownZAIcon
+- ArrowLeftIcon
+- ArrowLeftRightIcon
+- ArrowRightIcon
+- ArrowRightLeftIcon
+- ArrowUp01Icon
+- ArrowUp10Icon
+- ArrowUpAZIcon
+- ArrowUpIcon
+- ArrowUpLeftIcon
+- ArrowUpRightIcon
+- ArrowUpZAIcon
+- AudioLinesIcon
+- AwardIcon
+- AxeIcon
+- Axis3dIcon
+- BadgeAlertIcon
+- BadgeCheckIcon
+- BadgeQuestionMarkIcon
+- BatteryChargingIcon
+- BatteryFullIcon
+- BatteryIcon
+- BatteryLowIcon
+- BatteryMediumIcon
+- BatteryWarningIcon
+- BeanOffIcon
+- BeerOffIcon
+- BellIcon
+- BellOffIcon
+- BellRingIcon
+- BetweenHorizontalEndIcon
+- BetweenHorizontalStartIcon
+- BetweenVerticalEndIcon
+- BetweenVerticalStartIcon
+- BinaryIcon
+- BlendIcon
+- BlocksIcon
+- BluetoothOffIcon
+- BoldIcon
+- BoltIcon
+- BoneIcon
+- BookAIcon
+- BookAudioIcon
+- BookCheckIcon
+- BookDashedIcon
+- BookDownIcon
+- BookHeadphonesIcon
+- BookHeartIcon
+- BookIcon
+- BookImageIcon
+- BookKeyIcon
+- BookLockIcon
+- BookmarkCheckIcon
+- BookMarkedIcon
+- BookmarkIcon
+- BookmarkMinusIcon
+- BookmarkPlusIcon
+- BookmarkXIcon
+- BookMinusIcon
+- BookOpenCheckIcon
+- BookOpenTextIcon
+- BookPlusIcon
+- BookTextIcon
+- BookTypeIcon
+- BookUp2Icon
+- BookUpIcon
+- BookUserIcon
+- BookXIcon
+- BotIcon
+- BotOffIcon
+- BoxesIcon
+- BrainCogIcon
+- BriefcaseBusinessIcon
+- BriefcaseConveyorBeltIcon
+- BriefcaseIcon
+- BriefcaseMedicalIcon
+- BrushCleaningIcon
+- BrushIcon
+- BugOffIcon
+- CalendarCheck2Icon
+- CalendarCheckIcon
+- CalendarCogIcon
+- CalendarDaysIcon
+- CalendarOffIcon
+- CalendarSyncIcon
+- CameraOffIcon
+- CandyOffIcon
+- CaptionsOffIcon
+- CastIcon
+- CctvIcon
+- ChartBarDecreasingIcon
+- ChartBarIcon
+- ChartBarIncreasingIcon
+- ChartColumnDecreasingIcon
+- ChartColumnIcon
+- ChartColumnIncreasingIcon
+- ChartGanttIcon
+- ChartLineIcon
+- ChartNoAxesColumnDecreasingIcon
+- ChartNoAxesColumnIcon
+- ChartNoAxesColumnIncreasingIcon
+- ChartNoAxesCombinedIcon
+- ChartNoAxesGanttIcon
+- ChartPieIcon
+- ChartScatterIcon
+- ChartSplineIcon
+- CheckCheckIcon
+- CheckIcon
+- CherryIcon
+- ChevronDownIcon
+- ChevronLeftIcon
+- ChevronRightIcon
+- ChevronsDownIcon
+- ChevronsDownUpIcon
+- ChevronsLeftIcon
+- ChevronsLeftRightIcon
+- ChevronsRightIcon
+- ChevronsRightLeftIcon
+- ChevronsUpDownIcon
+- ChevronsUpIcon
+- ChevronUpIcon
+- CigaretteOffIcon
+- CircleAlertIcon
+- CircleArrowDownIcon
+- CircleArrowLeftIcon
+- CircleArrowOutDownLeftIcon
+- CircleArrowOutDownRightIcon
+- CircleArrowOutUpLeftIcon
+- CircleArrowOutUpRightIcon
+- CircleArrowRightIcon
+- CircleArrowUpIcon
+- CircleCheckBigIcon
+- CircleCheckIcon
+- CircleChevronDownIcon
+- CircleChevronLeftIcon
+- CircleChevronRightIcon
+- CircleChevronUpIcon
+- CircleOffIcon
+- CircleParkingOffIcon
+- CirclePlusIcon
+- CircleQuestionMarkIcon
+- ClapperboardIcon
+- ClipboardCheckIcon
+- ClipboardIcon
+- ClipboardListIcon
+- ClipboardPenIcon
+- ClipboardPenLineIcon
+- ClipboardXIcon
+- Clock10Icon
+- Clock11Icon
+- Clock12Icon
+- Clock1Icon
+- Clock2Icon
+- Clock3Icon
+- Clock4Icon
+- Clock5Icon
+- Clock6Icon
+- Clock7Icon
+- Clock8Icon
+- Clock9Icon
+- ClockIcon
+- CloudCogIcon
+- CloudDownloadIcon
+- CloudMoonIcon
+- CloudOffIcon
+- CloudUploadIcon
+- CogIcon
+- CompassIcon
+- ContrastIcon
+- CopyCheckIcon
+- CopyIcon
+- CpuIcon
+- CropIcon
+- DiamondPlusIcon
+- Dice1Icon
+- Dice2Icon
+- Dice3Icon
+- Dice4Icon
+- Dice5Icon
+- Dice6Icon
+- DiffIcon
+- DnaOffIcon
+- DownloadIcon
+- DropletOffIcon
+- DrumIcon
+- EarOffIcon
+- EclipseIcon
+- EggOffIcon
+- ExpandIcon
+- EyeOffIcon
+- FileChartColumnIcon
+- FileChartColumnIncreasingIcon
+- FileChartLineIcon
+- FileCheckCornerIcon
+- FileCheckIcon
+- FileCogIcon
+- FileDownIcon
+- FileExclamationPointIcon
+- FileMinusIcon
+- FilePenIcon
+- FilePenLineIcon
+- FilePlusIcon
+- FileQuestionMarkIcon
+- FileSlidersIcon
+- FileStackIcon
+- FileTerminalIcon
+- FileUpIcon
+- FishOffIcon
+- FlagOffIcon
+- FlashlightOffIcon
+- FlaskConicalOffIcon
+- FolderCheckIcon
+- FolderCogIcon
+- FolderDownIcon
+- FolderKanbanIcon
+- FolderPenIcon
+- FolderPlusIcon
+- FolderSyncIcon
+- FolderUpIcon
+- FolderXIcon
+- FrameIcon
+- FunnelXIcon
+- GalleryHorizontalEndIcon
+- GalleryHorizontalIcon
+- GalleryThumbnailsIcon
+- GalleryVerticalEndIcon
+- GalleryVerticalIcon
+- GaugeIcon
+- GavelIcon
+- Grid2x2CheckIcon
+- GripHorizontalIcon
+- GripIcon
+- GripVerticalIcon
+- HammerIcon
+- HandCoinsIcon
+- HandHeartIcon
+- HardDriveDownloadIcon
+- HardDriveUploadIcon
+- HeadphoneOffIcon
+- HeartIcon
+- HeartOffIcon
+- HistoryIcon
+- HopOffIcon
+- HouseIcon
+- HouseWifiIcon
+- ImageDownIcon
+- ImageOffIcon
+- ImagesIcon
+- ImageUpIcon
+- InfinityIcon
+- KanbanIcon
+- KeyboardIcon
+- KeyboardOffIcon
+- KeyIcon
+- KeyRoundIcon
+- KeySquareIcon
+- LandmarkIcon
+- LayersIcon
+- LayoutDashboardIcon
+- LayoutGridIcon
+- LayoutPanelLeftIcon
+- LayoutPanelTopIcon
+- LayoutTemplateIcon
+- LightbulbIcon
+- LightbulbOffIcon
+- Link2OffIcon
+- ListCheckIcon
+- ListChecksIcon
+- ListRestartIcon
+- ListTodoIcon
+- LoaderPinwheelIcon
+- LocateOffIcon
+- LogOutIcon
+- MailCheckIcon
+- MapPinCheckIcon
+- MapPinCheckInsideIcon
+- MapPinOffIcon
+- Maximize2Icon
+- MaximizeIcon
+- MegaphoneOffIcon
+- MessageCircleIcon
+- MessageCircleMoreIcon
+- MessageCircleOffIcon
+- MessageCircleQuestionMarkIcon
+- MessageCircleWarningIcon
+- MessageSquareIcon
+- MessageSquareMoreIcon
+- MessageSquareOffIcon
+- MicOffIcon
+- MilkOffIcon
+- Minimize2Icon
+- MinimizeIcon
+- MinusIcon
+- MonitorCheckIcon
+- MonitorCogIcon
+- MonitorDownIcon
+- MonitorOffIcon
+- MonitorUpIcon
+- MouseOffIcon
+- MousePointer2Icon
+- MousePointerIcon
+- MoveDiagonal2Icon
+- MoveDiagonalIcon
+- MoveDownIcon
+- MoveDownLeftIcon
+- MoveDownRightIcon
+- MoveHorizontalIcon
+- MoveLeftIcon
+- MoveRightIcon
+- MoveUpIcon
+- MoveUpLeftIcon
+- MoveUpRightIcon
+- MoveVerticalIcon
+- Navigation2OffIcon
+- NavigationOffIcon
+- NfcIcon
+- NotebookPenIcon
+- NutOffIcon
+- OctagonAlertIcon
+- OrbitIcon
+- PackageCheckIcon
+- PaintbrushIcon
+- PanelBottomCloseIcon
+- PanelBottomOpenIcon
+- PanelLeftCloseIcon
+- PanelLeftOpenIcon
+- PanelRightCloseIcon
+- PanelRightOpenIcon
+- PanelTopCloseIcon
+- PanelTopOpenIcon
+- PaperclipIcon
+- PencilIcon
+- PencilLineIcon
+- PencilOffIcon
+- PenIcon
+- PenLineIcon
+- PenOffIcon
+- PhoneOffIcon
+- PickaxeIcon
+- PinOffIcon
+- PlaneIcon
+- PlayIcon
+- PlusIcon
+- PointerOffIcon
+- PowerOffIcon
+- PrinterCheckIcon
+- RabbitIcon
+- RadarIcon
+- RadioIcon
+- RadioTowerIcon
+- RainbowIcon
+- RedoDotIcon
+- RedoIcon
+- RefreshCcwDotIcon
+- RefreshCcwIcon
+- RefreshCwIcon
+- RefreshCwOffIcon
+- RocketIcon
+- RockingChairIcon
+- RotateCcwIcon
+- RotateCcwKeyIcon
+- RotateCwIcon
+- RouteIcon
+- RouteOffIcon
+- RssIcon
+- SaveOffIcon
+- ScanTextIcon
+- ScissorsIcon
+- SearchCheckIcon
+- SearchIcon
+- SendHorizontalIcon
+- SendIcon
+- ServerCogIcon
+- ServerOffIcon
+- SettingsIcon
+- ShieldAlertIcon
+- ShieldCheckIcon
+- ShieldOffIcon
+- ShieldPlusIcon
+- ShieldQuestionMarkIcon
+- ShipIcon
+- ShipWheelIcon
+- ShoppingCartIcon
+- ShovelIcon
+- ShowerHeadIcon
+- ShrinkIcon
+- SignalHighIcon
+- SignalIcon
+- SignalLowIcon
+- SignalMediumIcon
+- SignalZeroIcon
+- SignatureIcon
+- SlidersHorizontalIcon
+- SlidersVerticalIcon
+- SmartphoneNfcIcon
+- SnowflakeIcon
+- SparkleIcon
+- SparklesIcon
+- SpeechIcon
+- SpellCheckIcon
+- SquareArrowDownIcon
+- SquareArrowDownLeftIcon
+- SquareArrowDownRightIcon
+- SquareArrowLeftIcon
+- SquareArrowOutDownLeftIcon
+- SquareArrowOutDownRightIcon
+- SquareArrowOutUpLeftIcon
+- SquareArrowOutUpRightIcon
+- SquareArrowRightIcon
+- SquareArrowUpIcon
+- SquareArrowUpLeftIcon
+- SquareArrowUpRightIcon
+- SquareChartGanttIcon
+- SquareCheckBigIcon
+- SquareCheckIcon
+- SquareChevronDownIcon
+- SquareChevronLeftIcon
+- SquareChevronRightIcon
+- SquareChevronUpIcon
+- SquareDashedKanbanIcon
+- SquareKanbanIcon
+- SquareParkingOffIcon
+- SquarePenIcon
+- SquarePlusIcon
+- SquareScissorsIcon
+- SquareStackIcon
+- SquareTerminalIcon
+- StarIcon
+- StarOffIcon
+- SunIcon
+- SwordIcon
+- TagIcon
+- TelescopeIcon
+- TerminalIcon
+- TextAlignCenterIcon
+- TextCursorIcon
+- TextCursorInputIcon
+- TextSearchIcon
+- ThermometerIcon
+- ThumbsDownIcon
+- ThumbsUpIcon
+- TicketCheckIcon
+- TimerIcon
+- TimerOffIcon
+- ToggleLeftIcon
+- ToggleRightIcon
+- TornadoIcon
+- TouchpadOffIcon
+- Trash2Icon
+- TrashIcon
+- TriangleAlertIcon
+- UmbrellaOffIcon
+- UndoDotIcon
+- UndoIcon
+- UnfoldHorizontalIcon
+- UnfoldVerticalIcon
+- UnplugIcon
+- UploadIcon
+- UserCheckIcon
+- UserCogIcon
+- UserIcon
+- UserPenIcon
+- UserRoundCheckIcon
+- UserRoundCogIcon
+- UserRoundIcon
+- UserRoundPenIcon
+- VibrateIcon
+- VibrateOffIcon
+- VideoOffIcon
+- VolumeOffIcon
+- VoteIcon
+- WavesIcon
+- WebhookOffIcon
+- WheatOffIcon
+- WifiHighIcon
+- WifiIcon
+- WifiLowIcon
+- WifiOffIcon
+- WifiPenIcon
+- WifiZeroIcon
+- WineOffIcon
+- XIcon
+- ZapOffIcon

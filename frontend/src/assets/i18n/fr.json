@@ -12,7 +12,8 @@
     "dismiss_notification": "Fermer la notification",
     "loading": "Chargement...",
     "error": "Une erreur s'est produite",
-    "success": "Succès"
+    "success": "Succès",
+    "understood": "Compris"
   },
   "nav": {
     "home": "Accueil",
@@ -568,7 +569,25 @@
     "WEEKLY_TRENDS": "Tendances hebdomadaires",
     "CONSISTENCY_KEY": "La régularité est la clé du succès",
     "LAST_7_DAYS": "7 derniers jours",
-    "LAST_30_DAYS": "30 derniers jours"
+    "LAST_30_DAYS": "30 derniers jours",
+    "CHARTS": {
+      "GOAL_MET": "Objectif atteint",
+      "BELOW_GOAL": "Sous l'objectif"
+    },
+    "NUTRITION": {
+      "SCAN_BARCODE": "Scanner le code-barres",
+      "ALIGN_BARCODE": "Alignez le code-barres dans le cadre",
+      "SCANNER_COMING_SOON": "Lecteur de code-barres bientôt disponible !",
+      "SCANNER_DESCRIPTION": "Nous travaillons sur l'intégration du scan de code-barres pour rendre l'enregistrement nutritionnel encore plus rapide. Pour l'instant, veuillez saisir les détails manuellement.",
+      "MEAL_TYPE": "Type de repas",
+      "MEAL_NAME": "Nom du repas",
+      "MEAL_NAME_PLACEHOLDER": "ex: Salade de poulet",
+      "CALORIES": "Calories",
+      "ADD_MACROS": "Ajouter les macros (optionnel)",
+      "PROTEIN": "Protéines",
+      "CARBS": "Glucides",
+      "FAT": "Lipides"
+    }
   },
   "STATS": {
     "DAY_STREAK": "Jours consécutifs",

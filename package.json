@@ -29,5 +29,8 @@
   },
   "peerDependencies": {
     "typescript": "^5"
+  },
+  "dependencies": {
+    "ng-animated-icons": "^1.9.0"
   }
 }
