@@ -15,7 +15,7 @@
     "db:migrate": "bunx prisma migrate dev",
     "db:studio": "bunx prisma studio",
     "db:seed": "bun run src/db/seed.ts",
-    "setup:db": "docker run --name vibehealth-db -e POSTGRES_USER=vibehealth -e POSTGRES_PASSWORD=vibehealth_dev -e POSTGRES_DB=vibehealth -p 5432:5432 -d postgres:16-alpine || docker start vibehealth-db",
+    "setup:db": "bun run src/scripts/setup-db.ts",
     "setup:wait": "bun run src/scripts/wait-for-db.ts",
     "dev:stack": "bun run setup:db && bun run setup:wait && bun run db:generate && bun run db:push && bun run db:seed && bun run dev"
   },
