@@ -5,7 +5,7 @@ export interface CarrotReward {
   amount: number;
   reason: string;
   earnedAt: Date;
-  category: 'logging' | 'streak' | 'milestone' | 'achievement' | 'bonus' | 'hydration' | 'activity';
+  category: 'logging' | 'streak' | 'milestone' | 'achievement' | 'bonus' | 'hydration' | 'activity' | 'nutrition';
 }
 
 export interface RewardStats {

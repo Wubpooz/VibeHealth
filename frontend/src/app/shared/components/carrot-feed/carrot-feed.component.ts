@@ -267,6 +267,7 @@ export class CarrotFeedComponent {
       bonus: '🎁',
       hydration: '💧',
       activity: '🏃',
+      nutrition: '🥗',
     };
     return icons[category] || '🥕';
   }
