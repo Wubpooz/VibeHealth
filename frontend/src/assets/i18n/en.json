@@ -21,7 +21,10 @@
     "settings": "Settings",
     "dashboard": "Dashboard",
     "first_aid": "First Aid",
-    "journal": "Journal"
+    "journal": "Journal",
+    "vitals": "Vitals",
+    "wellness": "Wellness",
+    "medical": "Medical"
   },
   "AUTH": {
     "LOGIN": "Log in",
@@ -92,7 +95,26 @@
     "QUICK_JOURNAL_DESC": "Daily reflections",
     "QUICK_PROFILE_DESC": "Health settings",
     "COMING_SOON": "Coming soon...",
-    "TEST_EARN_CARROTS": "Test: Earn 5 Carrots"
+    "TEST_EARN_CARROTS": "Test: Earn 5 Carrots",
+    "PREMIUM_MEMBER": "Premium Member",
+    "BOOK_CHECKUP": "Book Checkup",
+    "WEATHER_PLACEHOLDER": "24°C London",
+    "GOOD_MORNING": "Good morning",
+    "GOOD_AFTERNOON": "Good afternoon",
+    "GOOD_EVENING": "Good evening",
+    "GREETING_SUBTITLE": "Ready to crush your wellness goals today?",
+    "MASCOT_WATER": "Drink some water!",
+    "MASCOT_STRETCH": "Time to stretch!",
+    "MASCOT_GREAT_JOB": "Great job today!",
+    "MASCOT_KEEP_GOING": "Keep going!",
+    "LOG_MEAL": "Log Meal",
+    "LOG_WATER": "Log Water",
+    "LOG_MOOD": "Log Mood",
+    "START_WORKOUT": "Start Workout",
+    "SCHEDULE": "Schedule",
+    "DONE": "Done",
+    "ACTIVITY_LOG": "Activity Log",
+    "SEE_ALL_HISTORY": "See all history"
   },
   "ONBOARDING": {
     "SKIP": "Skip for now",
@@ -126,7 +148,9 @@
     "PICK_ANY": "pick any",
     "ALL_SET": "You're All Set!",
     "ALL_SET_DESC": "Your health journey starts now. I'll be here cheering you on every step of the way!",
-    "GO_TO_DASHBOARD": "Go to Dashboard"
+    "GO_TO_DASHBOARD": "Go to Dashboard",
+    "REWARD_EARNED": "Onboarding Reward!",
+    "FIRST_CARROTS": "Your first carrots earned"
   },
   "MEDICAL_ID": {
     "TITLE": "Medical ID",
@@ -534,7 +558,17 @@
     },
     "QUICK_LOG": "Quick Log",
     "VIEW_HISTORY": "View History",
-    "TRENDS": "Trends"
+    "TRENDS": "Trends",
+    "DAILY_ACTIVITY": "Daily Activity",
+    "STEPS_GOAL": "Steps / {{goal}} Goal",
+    "HEART_HEALTH": "Heart Health",
+    "SLEEP_QUALITY": "Sleep Quality",
+    "EXCELLENT": "Excellent",
+    "YESTERDAY": "yesterday",
+    "WEEKLY_TRENDS": "Weekly Trends",
+    "CONSISTENCY_KEY": "Consistency is key to results",
+    "LAST_7_DAYS": "Last 7 Days",
+    "LAST_30_DAYS": "Last 30 Days"
   },
   "STATS": {
     "DAY_STREAK": "Day Streak",

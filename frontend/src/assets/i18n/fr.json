@@ -21,7 +21,10 @@
     "settings": "Paramètres",
     "dashboard": "Tableau de bord",
     "first_aid": "Premiers secours",
-    "journal": "Journal"
+    "journal": "Journal",
+    "vitals": "Signes vitaux",
+    "wellness": "Bien-être",
+    "medical": "Médical"
   },
   "AUTH": {
     "LOGIN": "Se connecter",
@@ -92,7 +95,26 @@
     "QUICK_JOURNAL_DESC": "Réflexions quotidiennes",
     "QUICK_PROFILE_DESC": "Paramètres de santé",
     "COMING_SOON": "Bientôt disponible...",
-    "TEST_EARN_CARROTS": "Test : gagner 5 carottes"
+    "TEST_EARN_CARROTS": "Test : gagner 5 carottes",
+    "PREMIUM_MEMBER": "Membre Premium",
+    "BOOK_CHECKUP": "Réserver un bilan",
+    "WEATHER_PLACEHOLDER": "24°C Paris",
+    "GOOD_MORNING": "Bonjour",
+    "GOOD_AFTERNOON": "Bon après-midi",
+    "GOOD_EVENING": "Bonsoir",
+    "GREETING_SUBTITLE": "Prêt(e) à atteindre vos objectifs bien-être ?",
+    "MASCOT_WATER": "Bois un peu d'eau !",
+    "MASCOT_STRETCH": "C'est l'heure de s'étirer !",
+    "MASCOT_GREAT_JOB": "Super travail aujourd'hui !",
+    "MASCOT_KEEP_GOING": "Continue comme ça !",
+    "LOG_MEAL": "Repas",
+    "LOG_WATER": "Eau",
+    "LOG_MOOD": "Humeur",
+    "START_WORKOUT": "Entraînement",
+    "SCHEDULE": "Agenda",
+    "DONE": "Fait",
+    "ACTIVITY_LOG": "Journal d'activité",
+    "SEE_ALL_HISTORY": "Voir tout l'historique"
   },
   "ONBOARDING": {
     "SKIP": "Passer pour l'instant",
@@ -126,7 +148,9 @@
     "PICK_ANY": "choisissez en",
     "ALL_SET": "Tout est prêt !",
     "ALL_SET_DESC": "Votre parcours santé commence maintenant. Je serai là pour vous encourager à chaque étape !",
-    "GO_TO_DASHBOARD": "Aller au tableau de bord"
+    "GO_TO_DASHBOARD": "Aller au tableau de bord",
+    "REWARD_EARNED": "Récompense d'inscription !",
+    "FIRST_CARROTS": "Vos premières carottes gagnées"
   },
   "MEDICAL_ID": {
     "TITLE": "Carte Médicale",
@@ -534,7 +558,17 @@
     },
     "QUICK_LOG": "Enregistrement rapide",
     "VIEW_HISTORY": "Voir l'historique",
-    "TRENDS": "Tendances"
+    "TRENDS": "Tendances",
+    "DAILY_ACTIVITY": "Activité quotidienne",
+    "STEPS_GOAL": "Pas / Objectif {{goal}}",
+    "HEART_HEALTH": "Santé cardiaque",
+    "SLEEP_QUALITY": "Qualité du sommeil",
+    "EXCELLENT": "Excellent",
+    "YESTERDAY": "hier",
+    "WEEKLY_TRENDS": "Tendances hebdomadaires",
+    "CONSISTENCY_KEY": "La régularité est la clé du succès",
+    "LAST_7_DAYS": "7 derniers jours",
+    "LAST_30_DAYS": "30 derniers jours"
   },
   "STATS": {
     "DAY_STREAK": "Jours consécutifs",

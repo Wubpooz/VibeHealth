@@ -48,6 +48,15 @@
   ::-webkit-scrollbar-thumb:hover {
     @apply bg-gray-400 dark:bg-gray-500;
   }
+
+  /* Scrollbar hide utility */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
 }
 
 /* Global styles */

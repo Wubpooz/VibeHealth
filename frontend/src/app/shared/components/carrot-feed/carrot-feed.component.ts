@@ -191,39 +191,47 @@ import { RewardsService, CarrotReward } from '../../../core/rewards/rewards.serv
       50% { transform: scale(1.15); }
     }
 
-    @media (prefers-color-scheme: dark) {
-      .feed-container {
-        background: rgba(255, 255, 255, 0.05);
-        border-color: rgba(255, 255, 255, 0.1);
-      }
+    /* Dark mode - using :host-context for theme-aware styles */
+    :host-context([data-theme="dark"]) .feed-container {
+      background: rgba(31, 41, 55, 0.5);
+      border-color: rgba(55, 65, 81, 0.5);
+    }
 
-      .feed-title {
-        color: #f5f5f5;
-      }
+    :host-context([data-theme="dark"]) .feed-title {
+      color: #f5f5f5;
+    }
 
-      .empty-text {
-        color: #a0a0a0;
-      }
+    :host-context([data-theme="dark"]) .empty-text {
+      color: #a0a0a0;
+    }
 
-      .empty-hint {
-        color: #636e72;
-      }
+    :host-context([data-theme="dark"]) .empty-hint {
+      color: #636e72;
+    }
 
-      .feed-item {
-        background: rgba(255, 255, 255, 0.05);
-      }
+    :host-context([data-theme="dark"]) .feed-item {
+      background: rgba(55, 65, 81, 0.3);
+      transition: background 0.2s ease;
+    }
 
-      .feed-item.new {
-        background: linear-gradient(135deg, rgba(255, 107, 107, 0.1) 0%, rgba(255, 159, 67, 0.1) 100%);
-      }
+    :host-context([data-theme="dark"]) .feed-item:hover {
+      background: rgba(55, 65, 81, 0.5);
+    }
 
-      .item-reason {
-        color: #f5f5f5;
-      }
+    :host-context([data-theme="dark"]) .feed-item.new {
+      background: linear-gradient(135deg, rgba(255, 107, 107, 0.15) 0%, rgba(255, 159, 67, 0.15) 100%);
+    }
 
-      .item-time {
-        color: #636e72;
-      }
+    :host-context([data-theme="dark"]) .feed-item.new:hover {
+      background: linear-gradient(135deg, rgba(255, 107, 107, 0.2) 0%, rgba(255, 159, 67, 0.2) 100%);
+    }
+
+    :host-context([data-theme="dark"]) .item-reason {
+      color: #f5f5f5;
+    }
+
+    :host-context([data-theme="dark"]) .item-time {
+      color: #9ca3af;
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -258,6 +266,7 @@ export class CarrotFeedComponent {
       achievement: '⭐',
       bonus: '🎁',
       hydration: '💧',
+      activity: '🏃',
     };
     return icons[category] || '🥕';
   }

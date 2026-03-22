@@ -489,9 +489,19 @@ import { ReferenceDataService } from '../../core/reference-data/reference-data.s
                   <h1 class="text-4xl font-heading font-bold text-gray-900 dark:text-white mb-4">
                     You're All Set!
                   </h1>
-                  <p class="text-lg text-gray-600 dark:text-gray-300 mb-8 max-w-md mx-auto">
+                  <p class="text-lg text-gray-600 dark:text-gray-300 mb-6 max-w-md mx-auto">
                     Awesome, {{ profile.name }}! Your health journey starts now. I'll be here cheering you on every step of the way!
                   </p>
+
+                  <!-- Carrot Reward Summary -->
+                  <div class="inline-flex items-center gap-2 px-6 py-3 bg-orange-50 dark:bg-orange-900/20 rounded-2xl mb-8">
+                    <span class="text-3xl">🥕</span>
+                    <div class="text-left">
+                      <p class="text-sm font-semibold text-orange-600 dark:text-orange-400">{{ 'ONBOARDING.REWARD_EARNED' | translate }}</p>
+                      <p class="text-xs text-orange-500 dark:text-orange-300">{{ 'ONBOARDING.FIRST_CARROTS' | translate }}</p>
+                    </div>
+                    <span class="text-2xl font-bold text-orange-600 dark:text-orange-400 ml-2">+10</span>
+                  </div>
 
                   <button
                     (click)="goToDashboard()"

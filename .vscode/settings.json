@@ -4,5 +4,6 @@
   "sonarlint.connectedMode.project": {
     "connectionId": "wubpooz",
     "projectKey": "Wubpooz_VibeHealth"
-  }
+  },
+  "prisma.pinToPrisma6": true
 }

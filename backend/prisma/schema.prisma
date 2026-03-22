@@ -12,21 +12,21 @@ datasource db {
 
 // User and Authentication
 model User {
-  id            String    @id @default(cuid())
-  email         String    @unique
-  emailVerified Boolean   @default(false)
+  id            String   @id @default(cuid())
+  email         String   @unique
+  emailVerified Boolean  @default(false)
   password      String?
   name          String?
   image         String?
-  role          Role      @default(USER)
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  role          Role     @default(USER)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 
   // Relations
-  profile       Profile?
-  medicalId     MedicalId?
-  sessions      Session[]
-  accounts      Account[]
+  profile   Profile?
+  medicalId MedicalId?
+  sessions  Session[]
+  accounts  Account[]
 
   @@map("users")
 }
@@ -53,19 +53,19 @@ model Session {
 }
 
 model Account {
-  id                String    @id @default(cuid())
-  userId            String
-  accountId         String
-  providerId        String
-  accessToken       String?
-  refreshToken      String?
+  id                    String    @id @default(cuid())
+  userId                String
+  accountId             String
+  providerId            String
+  accessToken           String?
+  refreshToken          String?
   accessTokenExpiresAt  DateTime?
   refreshTokenExpiresAt DateTime?
-  scope             String?
-  idToken           String?
-  password          String?
-  createdAt         DateTime  @default(now())
-  updatedAt         DateTime  @updatedAt
+  scope                 String?
+  idToken               String?
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -74,20 +74,20 @@ model Account {
 
 // Profile (from onboarding)
 model Profile {
-  id          String   @id @default(cuid())
-  userId      String   @unique
-  dateOfBirth DateTime?
-  biologicalSex String?
-  height      Float?
-  weight      Float?
-  fitnessLevel String?
-  goals       String[]
-  medicalConditions String[]
-  allergies   String[]
-  currentMedications String[]
+  id                      String    @id @default(cuid())
+  userId                  String    @unique
+  dateOfBirth             DateTime?
+  biologicalSex           String?
+  height                  Float?
+  weight                  Float?
+  fitnessLevel            String?
+  goals                   String[]
+  medicalConditions       String[]
+  allergies               String[]
+  currentMedications      String[]
   notificationPreferences Json?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  createdAt               DateTime  @default(now())
+  updatedAt               DateTime  @updatedAt
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -125,7 +125,7 @@ model Verification {
 
 // Vitals Log (heart rate, blood pressure, sleep, steps, weight)
 model VitalLog {
-  id        String   @id @default(cuid())
+  id        String    @id @default(cuid())
   userId    String
   type      VitalType
   value     Float
@@ -155,7 +155,7 @@ enum VitalType {
 model HydrationLog {
   id        String   @id @default(cuid())
   userId    String
-  amount    Float    // in ml
+  amount    Float // in ml
   unit      String   @default("ml") // ml or oz
   source    String?  @default("manual")
   loggedAt  DateTime @default(now())
@@ -164,4 +164,134 @@ model HydrationLog {
 
   @@index([userId, loggedAt])
   @@map("hydration_logs")
+}
+
+// Activity Log (exercise and movement tracking)
+model ActivityLog {
+  id           String       @id @default(cuid())
+  userId       String
+  type         ActivityType
+  name         String // e.g., "Morning Run", "Gym Session"
+  duration     Int // in minutes
+  calories     Int? // estimated calories burned
+  distance     Float? // in km (for runs, walks, cycling)
+  intensity    Intensity    @default(MODERATE)
+  heartRateAvg Int? // average heart rate during activity
+  notes        String?
+  source       String?      @default("manual") // manual, google_fit, apple_health
+  loggedAt     DateTime     @default(now())
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+
+  @@index([userId, type, loggedAt])
+  @@map("activity_logs")
+}
+
+enum ActivityType {
+  WALK
+  RUN
+  CYCLE
+  SWIM
+  YOGA
+  STRENGTH
+  HIIT
+  SPORTS
+  DANCE
+  OTHER
+}
+
+enum Intensity {
+  LOW
+  MODERATE
+  HIGH
+  VERY_HIGH
+}
+
+// Meal Log (food and nutrition tracking)
+model MealLog {
+  id          String   @id @default(cuid())
+  userId      String
+  mealType    MealType
+  name        String // e.g., "Chicken Salad", "Oatmeal Breakfast"
+  calories    Int?
+  protein     Float? // grams
+  carbs       Float? // grams
+  fat         Float? // grams
+  fiber       Float? // grams
+  sugar       Float? // grams
+  sodium      Float? // mg
+  servingSize String? // e.g., "1 cup", "200g"
+  barcode     String? // for scanned products
+  notes       String?
+  imageUrl    String? // photo of meal
+  source      String?  @default("manual") // manual, barcode_scan, photo_ai
+  loggedAt    DateTime @default(now())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([userId, mealType, loggedAt])
+  @@map("meal_logs")
+}
+
+enum MealType {
+  BREAKFAST
+  LUNCH
+  DINNER
+  SNACK
+}
+
+// Goal tracking (SMART goals)
+model Goal {
+  id          String    @id @default(cuid())
+  userId      String
+  type        GoalType
+  title       String
+  description String?
+  targetValue Float // e.g., 10000 steps, 2.5L water
+  targetUnit  String // e.g., "steps", "ml", "minutes"
+  frequency   GoalFreq  @default(DAILY)
+  startDate   DateTime  @default(now())
+  endDate     DateTime?
+  isActive    Boolean   @default(true)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  progress GoalProgress[]
+
+  @@index([userId, type, isActive])
+  @@map("goals")
+}
+
+enum GoalType {
+  STEPS
+  HYDRATION
+  CALORIES_IN
+  CALORIES_OUT
+  SLEEP
+  ACTIVITY_MINUTES
+  WEIGHT
+  CUSTOM
+}
+
+enum GoalFreq {
+  DAILY
+  WEEKLY
+  MONTHLY
+}
+
+// Goal Progress tracking
+model GoalProgress {
+  id        String   @id @default(cuid())
+  goalId    String
+  date      DateTime @default(now()) // Date for this progress entry
+  value     Float // Progress value for this period
+  notes     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  goal Goal @relation(fields: [goalId], references: [id], onDelete: Cascade)
+
+  @@unique([goalId, date])
+  @@index([goalId, date])
+  @@map("goal_progress")
 }

@@ -87,3 +87,142 @@ export const VITAL_ICONS: Record<VitalType, string> = {
   BODY_TEMPERATURE: '🌡️',
   OXYGEN_SATURATION: '🫁',
 };
+
+// =============================================================================
+// Activity Types
+// =============================================================================
+
+export type ActivityType =
+  | 'WALK'
+  | 'RUN'
+  | 'CYCLE'
+  | 'SWIM'
+  | 'YOGA'
+  | 'STRENGTH'
+  | 'HIIT'
+  | 'SPORTS'
+  | 'DANCE'
+  | 'OTHER';
+
+export type Intensity = 'LOW' | 'MODERATE' | 'HIGH' | 'VERY_HIGH';
+
+export interface ActivityLog {
+  id: string;
+  userId: string;
+  type: ActivityType;
+  name: string;
+  duration: number; // minutes
+  calories?: number;
+  distance?: number; // km
+  intensity: Intensity;
+  heartRateAvg?: number;
+  notes?: string;
+  source: string;
+  loggedAt: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface ActivitySummary {
+  totalMinutes: number;
+  totalCalories: number;
+  totalDistance: number;
+  activitiesCount: number;
+  byType: Record<string, { count: number; minutes: number; calories: number }>;
+  logs: ActivityLog[];
+}
+
+export interface WeeklyActivitySummary {
+  dailySummary: Record<string, { minutes: number; calories: number; count: number }>;
+  totalMinutes: number;
+  totalCalories: number;
+  activeDays: number;
+}
+
+export const ACTIVITY_PRESETS: Record<ActivityType, { label: string; emoji: string; caloriesPerMin: number }> = {
+  WALK: { label: 'Walk', emoji: '🚶', caloriesPerMin: 4 },
+  RUN: { label: 'Run', emoji: '🏃', caloriesPerMin: 10 },
+  CYCLE: { label: 'Cycle', emoji: '🚴', caloriesPerMin: 8 },
+  SWIM: { label: 'Swim', emoji: '🏊', caloriesPerMin: 9 },
+  YOGA: { label: 'Yoga', emoji: '🧘', caloriesPerMin: 3 },
+  STRENGTH: { label: 'Strength', emoji: '🏋️', caloriesPerMin: 6 },
+  HIIT: { label: 'HIIT', emoji: '⚡', caloriesPerMin: 12 },
+  SPORTS: { label: 'Sports', emoji: '⚽', caloriesPerMin: 7 },
+  DANCE: { label: 'Dance', emoji: '💃', caloriesPerMin: 6 },
+  OTHER: { label: 'Other', emoji: '🎯', caloriesPerMin: 5 },
+};
+
+export const INTENSITY_LABELS: Record<Intensity, { label: string; multiplier: number }> = {
+  LOW: { label: 'Low', multiplier: 0.8 },
+  MODERATE: { label: 'Moderate', multiplier: 1 },
+  HIGH: { label: 'High', multiplier: 1.2 },
+  VERY_HIGH: { label: 'Very High', multiplier: 1.4 },
+};
+
+// =============================================================================
+// Meal/Nutrition Types
+// =============================================================================
+
+export type MealType = 'BREAKFAST' | 'LUNCH' | 'DINNER' | 'SNACK';
+
+export interface MealLog {
+  id: string;
+  userId: string;
+  mealType: MealType;
+  name: string;
+  calories?: number;
+  protein?: number; // grams
+  carbs?: number;   // grams
+  fat?: number;     // grams
+  fiber?: number;   // grams
+  sugar?: number;   // grams
+  sodium?: number;  // mg
+  servingSize?: string;
+  barcode?: string;
+  notes?: string;
+  imageUrl?: string;
+  source: string;
+  loggedAt: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface NutritionSummary {
+  totalCalories: number;
+  totalProtein: number;
+  totalCarbs: number;
+  totalFat: number;
+  totalFiber: number;
+  totalSugar: number;
+  mealsCount: number;
+  byMealType: Record<string, { count: number; calories: number }>;
+  logs: MealLog[];
+}
+
+export interface WeeklyNutritionSummary {
+  dailySummary: Record<string, { calories: number; protein: number; carbs: number; fat: number; count: number }>;
+  averageCalories: number;
+  totalMeals: number;
+}
+
+export const MEAL_TYPE_INFO: Record<MealType, { label: string; emoji: string; defaultTime: string }> = {
+  BREAKFAST: { label: 'Breakfast', emoji: '🍳', defaultTime: '08:00' },
+  LUNCH: { label: 'Lunch', emoji: '🥗', defaultTime: '12:00' },
+  DINNER: { label: 'Dinner', emoji: '🍽️', defaultTime: '19:00' },
+  SNACK: { label: 'Snack', emoji: '🍎', defaultTime: '15:00' },
+};
+
+// Recommended daily values for reference
+export const DAILY_GOALS = {
+  calories: 2000,
+  protein: 50, // grams
+  carbs: 300,  // grams
+  fat: 65,     // grams
+  fiber: 25,   // grams
+  sugar: 50,   // grams
+  sodium: 2300, // mg
+  water: 2500,  // ml
+  steps: 10000,
+  activityMinutes: 30,
+  sleepHours: 8,
+};

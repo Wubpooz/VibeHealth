@@ -327,7 +327,8 @@ export class FirstAidDetailComponent implements OnInit {
       if (foundCard) {
         this.card.set(foundCard);
       } else {
-        this.router.navigate(['/first-aid']);
+        // Redirect to 404 page for non-existent procedures
+        this.router.navigate(['/not-found']);
       }
     }
   }
