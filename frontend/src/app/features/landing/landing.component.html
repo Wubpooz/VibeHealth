@@ -89,23 +89,19 @@
               routerLink="/register" 
               class="slide-in-cta" 
               aria-label="Create your free VibeHealth account"
-              (mouseenter)="btn1Hover.set(true)"
-              (mouseleave)="btn1Hover.set(false)"
             >
               <span class="slide-in-cta__label">Get Started Free</span>
               <span class="slide-in-cta__icon" aria-hidden="true">
-                <i-arrow-right size="20" [animate]="$any(btn1Hover())" />
+                <i-arrow-right [size]="20" />
               </span>
             </a>
             <a
               routerLink="/login"
               class="group flex items-center gap-2 px-6 py-3.5 rounded-xl border border-gray-200 dark:border-gray-800 bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl hover:bg-white dark:hover:bg-gray-800 transition-all font-medium text-gray-900 dark:text-white shadow-sm hover:shadow-md"
-              (mouseenter)="btn2Hover.set(true)"
-              (mouseleave)="btn2Hover.set(false)"
             >
               Sign In
               <div class="transition-transform group-hover:translate-x-1 text-gray-400 group-hover:text-primary-500 flex">
-                <i-arrow-right size="20" [animate]="$any(btn2Hover())" />
+                <i-arrow-right [size]="20" />
               </div>
             </a>
           </div>
@@ -118,19 +114,19 @@
             <div class="flex flex-wrap items-center justify-center lg:justify-start gap-4 text-sm text-gray-500 dark:text-gray-400">
               <div class="trust-item">
                 <div class="trust-icon text-emerald-600 dark:text-emerald-400">
-                  <i-shield-check size="20" color="#059669" animate />
+                  <i-shield-check [size]="20" color="#059669" />
                 </div>
                 <span>HIPAA Compliant</span>
               </div>
               <div class="trust-item">
                 <div class="trust-icon text-emerald-600 dark:text-emerald-400">
-                  <i-check size="20" color="#059669" animate />
+                  <i-check [size]="20" color="#059669" />
                 </div>
                 <span>Works Offline</span>
               </div>
               <div class="trust-item">
                 <div class="trust-icon text-rose-600 dark:text-rose-400">
-                  <i-heart size="20" color="#e11d48" animate />
+                  <i-heart [size]="20" color="#e11d48" />
                 </div>
                 <span>Free Forever</span>
               </div>
@@ -274,12 +270,10 @@
         <a
           routerLink="/register"
           class="group inline-flex items-center gap-2 px-8 py-4 rounded-xl bg-gray-900 dark:bg-white text-white dark:text-gray-900 font-medium hover:scale-105 transition-all shadow-xl shadow-gray-900/20 dark:shadow-white/20"
-          (mouseenter)="btn3Hover.set(true)"
-          (mouseleave)="btn3Hover.set(false)"
         >
           Create Free Account
           <div class="transition-transform group-hover:translate-x-1 flex">
-            <i-arrow-right size="24" [animate]="$any(btn3Hover())" />
+            <i-arrow-right [size]="24" />
           </div>
         </a>
         <a

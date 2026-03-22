@@ -49,6 +49,15 @@ interface Feature {
       box-shadow: 0 25px 50px -12px rgba(139, 92, 246, 0.15);
     }
 
+    /* Dark mode: consistent shadow intensity */
+    :host-context([data-theme="dark"]) .feature-card.hover-rose:hover,
+    :host-context([data-theme="dark"]) .feature-card.hover-sage:hover,
+    :host-context([data-theme="dark"]) .feature-card.hover-amber:hover,
+    :host-context([data-theme="dark"]) .feature-card.hover-violet:hover {
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+      border-color: rgba(255, 255, 255, 0.1);
+    }
+
     /* Animation utilities - only apply when visible */
     .animate-fade-in-up {
       animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
@@ -194,11 +203,6 @@ export class LandingComponent {
   readonly isVisible = signal(false);
   readonly currentYear = new Date().getFullYear();
 
-  // Hover states for animations
-  readonly btn1Hover = signal(false);
-  readonly btn2Hover = signal(false);
-  readonly btn3Hover = signal(false);
-
   readonly features: Feature[] = [
     {
       icon: '🆔',
@@ -267,10 +271,10 @@ export class LandingComponent {
 
   getFeatureGradientClass(color: Feature['color']): string {
     const classes: Record<Feature['color'], string> = {
-      rose: 'bg-gradient-to-br from-primary-50 to-white dark:from-primary-900/10 dark:to-gray-800',
-      sage: 'bg-gradient-to-br from-sage-50 to-white dark:from-sage-900/10 dark:to-gray-800',
-      amber: 'bg-gradient-to-br from-amber-50 to-white dark:from-amber-900/10 dark:to-gray-800',
-      violet: 'bg-gradient-to-br from-violet-50 to-white dark:from-violet-900/10 dark:to-gray-800',
+      rose: 'bg-gradient-to-br from-primary-50 to-white dark:from-primary-950/50 dark:to-gray-800/80',
+      sage: 'bg-gradient-to-br from-sage-50 to-white dark:from-sage-950/50 dark:to-gray-800/80',
+      amber: 'bg-gradient-to-br from-amber-50 to-white dark:from-amber-950/50 dark:to-gray-800/80',
+      violet: 'bg-gradient-to-br from-violet-50 to-white dark:from-violet-950/50 dark:to-gray-800/80',
     };
     return classes[color];
   }
