@@ -18,6 +18,7 @@ backend/
 │   │   ├── auth.routes.ts      # Authentication endpoints
 │   │   ├── profile.routes.ts   # User profile CRUD
 │   │   ├── medical-id.routes.ts# Medical ID management
+│   │   ├── metrics.routes.ts   # Vitals/hydration/activity/nutrition/goals APIs
 │   │   └── reference-data.routes.ts # Autocomplete data
 │   │
 │   ├── middleware/
@@ -37,6 +38,31 @@ backend/
 ├── tests/                      # Test files
 └── package.json                # Scripts & dependencies
 ```
+
+---
+
+## 📈 Metrics API & Data Conventions
+
+### Route groups (all under `/api/v1/metrics`)
+- `/vitals`
+- `/hydration`
+- `/activities`
+- `/meals`
+- `/goals`
+- `/goals/:id/progress`
+
+### Prisma models used by metrics
+- `VitalLog`
+- `HydrationLog`
+- `ActivityLog`
+- `MealLog`
+- `Goal`
+- `GoalProgress`
+
+### Validation and auth expectations
+- Metrics routes must enforce `requireAuth` so user-scoped data cannot leak.
+- Validate request body/query params with Zod before Prisma calls.
+- Always include `userId` filtering in read/update/delete operations.
 
 ---
 

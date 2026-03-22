@@ -62,9 +62,11 @@ vibehealth/
 | **Database** | PostgreSQL | 16 | Primary data store |
 | **Auth** | BetterAuth | 1.x | Email/password, OAuth, magic links |
 | **Frontend** | Angular | 21.x | Standalone components + signals |
-| **Styling** | Tailwind CSS | 4.x | Utility-first CSS |
+| **Styling** | Tailwind CSS | 3.4.x | Utility-first CSS |
 | **Animation** | Anime.js | 4.x | See `.gsap/CLAUDE.md` for v4 syntax |
-| **i18n** | ngx-translate | 16.x | FR + EN locales |
+| **Icons** | @lucide/angular | 1.0.0-rc | Lucide icon set for Angular |
+| **Animated Icons** | ng-animated-icons | 1.9.x | Interactive icon animations |
+| **i18n** | ngx-translate | 17.x | FR + EN locales |
 | **PWA** | Service Worker | - | Offline caching via ngsw |
 
 ---
@@ -182,10 +184,16 @@ When working on specific technologies, refer to these embedded docs:
 - ✅ Bunny mascot + carrot rewards
 - ✅ Medical ID with QR code
 - ✅ Design system + shared components
-- ⏳ First Aid guide (offline-first)
+- ✅ First Aid guide (offline-first)
+
+### Phase 1 — Health Tracking 🚧 (Active)
+- ✅ Backend metrics routes under `/api/v1/metrics` for vitals, hydration, activities, meals, goals, and goal progress
+- ✅ Prisma metrics models: `VitalLog`, `HydrationLog`, `ActivityLog`, `MealLog`, `Goal`, `GoalProgress`
+- ✅ Frontend protected routes: `/vitals`, `/activity`, `/nutrition`, `/goals`
+- ✅ Data input UIs: vitals logger, activity logger, nutrition logger, goals wizard modal + inline progress logger
+- ⏳ Barcode scan is currently a placeholder UX (coming-soon modal)
 
 ### Next Phases (See roadmap.md)
-- Phase 1: Vitals, Activity, Nutrition, Hydration, Goals
 - Phase 2: Medicines, Health Checks, Vaccines, Guides
 - Phase 3: Mood, Periods, Journal, Workouts, Relaxation
 - Phase 4: Sharing, Export, Calendar Sync

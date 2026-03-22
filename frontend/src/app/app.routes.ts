@@ -1,84 +1,126 @@
-import { Routes } from '@angular/router';
-import { authGuard, guestGuard } from './core/auth/auth.guard';
+import { Routes } from "@angular/router";
+import { authGuard, guestGuard } from "./core/auth/auth.guard";
 
 export const routes: Routes = [
   {
-    path: '',
+    path: "",
     loadComponent: () =>
-      import('./features/landing/landing.component').then((m) => m.LandingComponent),
+      import("./features/landing/landing.component").then(
+        (m) => m.LandingComponent,
+      ),
   },
   {
-    path: 'login',
+    path: "login",
     loadComponent: () =>
-      import('./features/auth/login/login.component').then((m) => m.LoginComponent),
+      import("./features/auth/login/login.component").then(
+        (m) => m.LoginComponent,
+      ),
     canActivate: [guestGuard],
   },
   {
-    path: 'register',
+    path: "register",
     loadComponent: () =>
-      import('./features/auth/register/register.component').then((m) => m.RegisterComponent),
+      import("./features/auth/register/register.component").then(
+        (m) => m.RegisterComponent,
+      ),
     canActivate: [guestGuard],
   },
   {
-    path: 'verify-email',
+    path: "verify-email",
     loadComponent: () =>
-      import('./features/auth/verify-email/verify-email.component').then((m) => m.VerifyEmailComponent),
+      import("./features/auth/verify-email/verify-email.component").then(
+        (m) => m.VerifyEmailComponent,
+      ),
   },
   {
-    path: 'onboarding',
+    path: "onboarding",
     loadComponent: () =>
-      import('./features/onboarding/onboarding.component').then((m) => m.OnboardingComponent),
+      import("./features/onboarding/onboarding.component").then(
+        (m) => m.OnboardingComponent,
+      ),
     canActivate: [authGuard],
   },
   {
-    path: 'dashboard',
+    path: "dashboard",
     loadComponent: () =>
-      import('./features/dashboard/dashboard.component').then((m) => m.DashboardComponent),
+      import("./features/dashboard/dashboard.component").then(
+        (m) => m.DashboardComponent,
+      ),
     canActivate: [authGuard],
   },
   {
-    path: 'medical-id',
+    path: "medical-id",
     loadComponent: () =>
-      import('./features/medical-id/medical-id.component').then((m) => m.MedicalIdComponent),
+      import("./features/medical-id/medical-id.component").then(
+        (m) => m.MedicalIdComponent,
+      ),
     canActivate: [authGuard],
   },
   {
-    path: 'first-aid',
+    path: "first-aid",
     loadComponent: () =>
-      import('./features/first-aid/first-aid.component').then((m) => m.FirstAidComponent),
+      import("./features/first-aid/first-aid.component").then(
+        (m) => m.FirstAidComponent,
+      ),
     canActivate: [authGuard],
   },
   {
-    path: 'first-aid/:id',
+    path: "first-aid/:id",
     loadComponent: () =>
-      import('./features/first-aid/first-aid-detail.component').then((m) => m.FirstAidDetailComponent),
+      import("./features/first-aid/first-aid-detail.component").then(
+        (m) => m.FirstAidDetailComponent,
+      ),
     canActivate: [authGuard],
   },
   {
-    path: 'nutrition',
+    path: "vitals",
     loadComponent: () =>
-      import('./features/dashboard/dashboard.component').then((m) => m.DashboardComponent),
+      import("./features/metrics/vitals-dashboard.component").then(
+        (m) => m.VitalsDashboardComponent,
+      ),
     canActivate: [authGuard],
   },
   {
-    path: 'activity',
+    path: "activity",
     loadComponent: () =>
-      import('./features/dashboard/dashboard.component').then((m) => m.DashboardComponent),
+      import("./features/metrics/activity-page.component").then(
+        (m) => m.ActivityPageComponent,
+      ),
     canActivate: [authGuard],
   },
   {
-    path: 'journal',
+    path: "nutrition",
     loadComponent: () =>
-      import('./features/dashboard/dashboard.component').then((m) => m.DashboardComponent),
+      import("./features/metrics/nutrition-page.component").then(
+        (m) => m.NutritionPageComponent,
+      ),
     canActivate: [authGuard],
   },
   {
-    path: 'not-found',
+    path: "goals",
     loadComponent: () =>
-      import('./features/not-found/not-found.component').then((m) => m.NotFoundComponent),
+      import("./features/metrics/goals-page.component").then(
+        (m) => m.GoalsPageComponent,
+      ),
+    canActivate: [authGuard],
   },
   {
-    path: '**',
-    redirectTo: '/not-found',
+    path: "journal",
+    loadComponent: () =>
+      import("./features/dashboard/dashboard.component").then(
+        (m) => m.DashboardComponent,
+      ),
+    canActivate: [authGuard],
+  },
+  {
+    path: "not-found",
+    loadComponent: () =>
+      import("./features/not-found/not-found.component").then(
+        (m) => m.NotFoundComponent,
+      ),
+  },
+  {
+    path: "**",
+    redirectTo: "/not-found",
   },
 ];

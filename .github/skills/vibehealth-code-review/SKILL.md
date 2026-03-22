@@ -55,6 +55,15 @@ When asked to review a PR, file, or code snippet, follow these structured steps:
 *   **Frontend:** Ensure Jasmine specs cover both positive and negative cases. Mock services appropriately to avoid deep integration tests in unit test suites.
 *   **Backend:** Ensure `bun test` is utilized. Verify isolated DB state for integration tests (or mock Prisma if strictly unit testing).
 
+---
+
+## 5. Metrics-Specific Review Focus
+*   **Coverage of new scope:** Verify vitals, hydration, activity, nutrition/meals, goals, and goals progress flows are represented end-to-end (route → service → UI).
+*   **User scoping:** Confirm all metrics queries are constrained by authenticated `userId`.
+*   **Accessibility:** Ensure modal/overlay interactions in metrics pages are keyboard operable and avoid non-focusable click handlers.
+*   **Feature truthfulness:** If barcode scan UI is present but not yet implemented, copy and UX must clearly indicate placeholder status.
+*   **Dependencies:** Keep docs aligned with Angular 21, `@lucide/angular` (RC), and `ng-animated-icons` when reviewing dependency updates.
+
 ## Output Format
 When generating the code review output, format it beautifully:
 1.  **Summary of Changes:** (1-sentence overview)

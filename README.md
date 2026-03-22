@@ -1,242 +1,119 @@
 # 🐰 VibeHealth
 
-> Your personal health companion - A comprehensive health tracking and wellness application
+> Your personal health companion — a delightful full-stack PWA for tracking health, habits, and wellness.
 
-VibeHealth is a modern, full-stack Progressive Web Application (PWA) designed to help users track their health, manage medications, monitor vitals, and maintain overall wellness. Built with a friendly bunny mascot to encourage healthy habits!
+VibeHealth combines medical essentials, lifestyle tracking, and a bunny-powered motivation loop into one app. It is designed with bilingual support (EN/FR), strong type safety, and an offline-first mindset for critical flows.
 
 ## 🚀 Tech Stack
 
 ### Backend
-- **Runtime**: [Bun](https://bun.sh) - Fast JavaScript runtime
-- **API Framework**: [Hono](https://hono.dev) - Lightweight web framework
-- **ORM**: [Prisma](https://www.prisma.io) - Type-safe database client
+- **Runtime**: [Bun](https://bun.sh)
+- **API Framework**: [Hono](https://hono.dev)
+- **ORM**: [Prisma](https://www.prisma.io)
 - **Database**: PostgreSQL 16
-- **Validation**: [Zod](https://zod.dev) - TypeScript-first schema validation
+- **Validation**: [Zod](https://zod.dev)
 - **Authentication**: BetterAuth
 
 ### Frontend
-- **Framework**: [Angular 18](https://angular.io) - Modern web framework
-- **Styling**: [Tailwind CSS](https://tailwindcss.com) - Utility-first CSS
-- **Animations**: animate.js
-- **PWA**: Service Worker with offline support
-- **i18n**: ngx-translate (French & English)
+- **Framework**: [Angular 21](https://angular.dev) (standalone + signals)
+- **Styling**: [Tailwind CSS](https://tailwindcss.com)
+- **Animations**: [motion](https://motion.dev), `ng-animated-icons`
+- **Icons**: `@lucide/angular` (RC)
+- **PWA**: Angular Service Worker
+- **i18n**: `ngx-translate` (EN + FR)
 
 ### Infrastructure
-- **Containerization**: Docker & Docker Compose
-- **CI/CD**: GitHub Actions
-- **Reverse Proxy**: nginx (production)
+- Docker + Docker Compose
+- GitHub Actions
+- nginx (production)
 
-## 📋 Features Roadmap
+## 📋 Feature Status
 
-### Phase 0 — Foundation (Current Phase)
-- ✅ Project scaffold with Bun + Hono + Angular PWA
-- ✅ Docker Compose setup with PostgreSQL
-- ✅ CI pipeline (lint → typecheck → test → build)
-- ✅ i18n support (FR + EN)
-- ✅ Service Worker for offline capabilities
-- ✅ Authentication & user accounts
-- ✅ Onboarding wizard with smart autocomplete
-- ✅ Bunny mascot system
-- ✅ Medical ID with QR code
-- ✅ Design system & shared UI components
-- ⏳ First aid guide (offline-first)
+### Phase 0 — Foundation ✅
+- Auth + accounts
+- Onboarding wizard with autocomplete
+- Medical ID + QR
+- First Aid guide
+- Bunny mascot and rewards
+- Shared design system + i18n
 
-### Future Phases
-See [roadmap.md](./roadmap.md) for complete feature breakdown.
+### Phase 1 — Health Tracking (in progress) 🚧
+- Metrics API and Prisma data models for:
+  - vitals
+  - hydration
+  - activity
+  - meals/nutrition
+  - goals + goal progress
+- Frontend pages/routes implemented:
+  - `/vitals`
+  - `/activity`
+  - `/nutrition`
+  - `/goals`
+- Input experiences implemented:
+  - vitals/activity/nutrition loggers
+  - goals wizard modal/overlay
+- Barcode scanner UI currently shows a "coming soon" overlay (camera scan not yet implemented).
 
-## 🏗️ Project Structure
+See [roadmap.md](./roadmap.md) for phase planning.
 
-\`\`\`
+## 🧭 Project Structure
+
+```text
 vibehealth/
 ├── backend/
-│   ├── src/
-│   │   ├── routes/       # API route handlers
-│   │   ├── services/     # Business logic
-│   │   ├── schemas/      # Zod validation schemas
-│   │   ├── middleware/   # Custom middleware
-│   │   └── index.ts      # Application entry point
-│   ├── prisma/
-│   │   └── schema.prisma # Database schema
-│   ├── tests/            # Backend tests
-│   └── package.json
+│   ├── prisma/schema.prisma
+│   └── src/
+│       ├── index.ts
+│       ├── middleware/
+│       └── routes/
 ├── frontend/
-│   ├── src/
-│   │   ├── app/          # Angular components
-│   │   └── assets/
-│   │       └── i18n/     # Translation files (en.json, fr.json)
-│   └── package.json
-├── docker-compose.yml    # Development environment
+│   └── src/app/
+│       ├── core/
+│       ├── features/
+│       └── shared/
+├── docker-compose.yml
 └── .github/
-    └── workflows/        # CI/CD pipelines
-\`\`\`
+```
 
-## 🤖 AI Agent Discovery & Auto-Load Context
+## 📈 Metrics API Snapshot
 
-VibeHealth includes an LLM context system for consistent multi-agent collaboration.
+All metrics endpoints are under `/api/v1/metrics`:
+- `GET/POST /vitals`
+- `GET/POST /hydration`
+- `GET/POST /activities`
+- `GET/POST /meals`
+- `GET/POST/PATCH/DELETE /goals`
+- `GET/POST /goals/:id/progress`
 
-- Entry point: `.github/.vibehealth/SKILL.md`
-- Index: `.github/.vibehealth/README.md`
-- Subskills:
-  - `.github/.vibehealth/frontend.md`
-  - `.github/.vibehealth/backend.md`
-  - `.github/.vibehealth/design.md`
-  - `.github/.vibehealth/testing.md`
-  - `.github/.vibehealth/prompts.md`
-  - `.github/.vibehealth/claude.md`
+## 🛠️ Quick Start
 
-Framework references for deep lookup:
-- Angular 21: `.github/.angular/llms-full.txt`
-- Hono: `.github/.hono/llms-full.txt`
-- Animation refs: `.github/.gsap/CLAUDE.md`, `.github/.gsap/llms.txt`
+1. Clone repository
+2. Set up backend environment file (`backend/.env`)
+3. Start containers (`npm run docker:up`) or run services locally
 
-Agent behavior convention: load `.github/.vibehealth/SKILL.md` first, then load task-specific subskills.
-
-## 🛠️ Development Setup
-
-### Prerequisites
-- [Bun](https://bun.sh) >= 1.0
-- [Node.js](https://nodejs.org) >= 20
-- [Docker](https://www.docker.com) & Docker Compose
-- [PostgreSQL](https://www.postgresql.org) (or use Docker)
-
-### Quick Start
-
-1. **Clone the repository**
-\`\`\`bash
-git clone https://github.com/Wubpooz/VibeHealth.git
-cd VibeHealth
-\`\`\`
-
-2. **Set up environment variables**
-\`\`\`bash
-cp backend/.env.example backend/.env
-# Edit backend/.env with your configuration
-\`\`\`
-
-3. **Start with Docker Compose** (Recommended)
-\`\`\`bash
-npm run docker:up
-\`\`\`
-
-This will start:
-- PostgreSQL database on port 5432
-- Backend API on http://localhost:3000
-- Frontend on http://localhost:4200
-
-4. **Or run locally**
+### Local development
 
 Backend:
-\`\`\`bash
-cd backend
-bun install
-bun run db:generate
-bun run db:push
-bun run dev
-\`\`\`
+- `cd backend`
+- `bun install`
+- `bun run db:generate`
+- `bun run db:push`
+- `bun run dev`
 
 Frontend:
-\`\`\`bash
-cd frontend
-npm install
-npm start
-\`\`\`
+- `cd frontend`
+- `npm install`
+- `npm start`
 
-### Available Scripts
+## ✅ Quality Gates
 
-Root level:
-- \`npm run dev\` - Start both backend and frontend
-- \`npm run build\` - Build both projects
-- \`npm test\` - Run all tests
-- \`npm run docker:up\` - Start Docker services
-- \`npm run docker:down\` - Stop Docker services
-- \`npm run docker:logs\` - View Docker logs
-
-Backend:
-- \`bun run dev\` - Start development server
-- \`bun run build\` - Build for production
-- \`bun test\` - Run tests
-- \`bun run lint\` - Lint code
-- \`bun run db:generate\` - Generate Prisma client
-- \`bun run db:push\` - Push schema to database
-- \`bun run db:studio\` - Open Prisma Studio
-
-Frontend:
-- \`npm start\` - Start development server
-- \`npm run build\` - Build for production
-- \`npm test\` - Run tests
-- \`npm run lint\` - Lint code
-
-## 🔒 Environment Variables
-
-Create a \`backend/.env\` file based on \`.env.example\`:
-
-\`\`\`env
-DATABASE_URL=postgresql://vibehealth:vibehealth_dev@localhost:5432/vibehealth
-PORT=3000
-NODE_ENV=development
-AUTH_SECRET=your-secret-key
-AUTH_URL=http://localhost:3000
-FRONTEND_URL=http://localhost:4200
-\`\`\`
-
-## 🧪 Testing
-
-\`\`\`bash
-# Run all tests
-npm test
-
-# Backend tests only
-cd backend && bun test
-
-# Frontend tests only
-cd frontend && npm test
-\`\`\`
-
-## 📦 Building for Production
-
-\`\`\`bash
-# Build both projects
-npm run build
-
-# Or build individually
-npm run build:backend
-npm run build:frontend
-\`\`\`
-
-## 🚢 Deployment
-
-The application can be deployed using Docker:
-
-\`\`\`bash
-# Build production images
-docker-compose -f docker-compose.prod.yml build
-
-# Start production services
-docker-compose -f docker-compose.prod.yml up -d
-\`\`\`
+- Backend: `bun run lint && bun run typecheck && bun test && bun run build`
+- Frontend: `npm run lint && npm run test -- --watch=false --browsers=ChromeHeadless && npm run build`
 
 ## 🌍 Internationalization
 
-VibeHealth supports multiple languages from day one:
-- 🇬🇧 English (en)
-- 🇫🇷 French (fr)
+Translations live in `frontend/src/assets/i18n/`:
+- `en.json`
+- `fr.json`
 
-Translation files are located in \`frontend/src/assets/i18n/\`.
-
-## 🤝 Contributing
-
-This is a personal project, but suggestions and feedback are welcome! Please open an issue to discuss proposed changes.
-
-## 📄 License
-
-This project is private and for portfolio purposes.
-
-## 🙏 Acknowledgments
-
-- Health data sources: OpenFDA, ANSM open data
-- Icons and assets: To be determined
-- Bunny mascot: Custom design
-
----
-
-Built with ❤️ using modern web technologies
+Both locales must stay in sync for user-facing strings.

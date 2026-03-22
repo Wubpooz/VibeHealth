@@ -95,6 +95,10 @@
     "QUICK_FIRST_AID_DESC": "Emergency procedures",
     "QUICK_JOURNAL_DESC": "Daily reflections",
     "QUICK_PROFILE_DESC": "Health settings",
+    "QUICK_MEDICAL_ID": "Medical ID",
+    "QUICK_FIRST_AID": "First Aid",
+    "QUICK_GOALS": "My Goals",
+    "QUICK_PROFILE": "Profile",
     "COMING_SOON": "Coming soon...",
     "TEST_EARN_CARROTS": "Test: Earn 5 Carrots",
     "PREMIUM_MEMBER": "Premium Member",
@@ -628,5 +632,45 @@
     "TIME_JUST_NOW": "Just now",
     "TIME_MIN_AGO": "{{count}}m ago",
     "TIME_HOUR_AGO": "{{count}}h ago"
+  },
+  "ACTIVITY": {
+    "TITLE": "Activity",
+    "SUBTITLE": "Track your workouts and movement"
+  },
+  "NUTRITION": {
+    "TITLE": "Food Diary",
+    "SUBTITLE": "Log meals and track macros"
+  },
+  "GOALS": {
+    "TITLE": "My Goals",
+    "SUBTITLE": "SMART goals to keep you on track",
+    "NEW_GOAL": "New Goal",
+    "ACTIVE": "Active",
+    "COMPLETED_TODAY": "Done Today",
+    "ACTIVE_GOALS": "Active Goals",
+    "PAST_GOALS": "Past & Archived",
+    "EMPTY_TITLE": "No goals yet!",
+    "EMPTY_SUBTITLE": "Set your first SMART goal and the bunny will cheer you on 🐰",
+    "CREATE_FIRST": "Create my first goal",
+    "WIZARD": {
+      "STEP1_TITLE": "What do you want to achieve?",
+      "STEP1_SUBTITLE": "Pick a category to get started",
+      "STEP2_TITLE": "Configure your goal",
+      "STEP3_TITLE": "Ready to commit?",
+      "STEP3_SUBTITLE": "Review your goal before saving",
+      "GOAL_TITLE": "Goal name",
+      "TARGET": "Target value",
+      "FREQUENCY": "How often?",
+      "END_DATE": "End date",
+      "OPTIONAL": "optional",
+      "BACK": "Back",
+      "NEXT": "Next",
+      "CANCEL": "Cancel",
+      "CREATE_GOAL": "Create Goal",
+      "DONE": "All done",
+      "CELEBRATE_TITLE": "Goal created! 🎉",
+      "CELEBRATE_SUBTITLE": "Your bunny believes in you. Keep showing up every day!",
+      "CARROTS_EARNED": "carrots earned for setting a goal!"
+    }
   }
 }

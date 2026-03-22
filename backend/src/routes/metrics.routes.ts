@@ -751,4 +751,217 @@ metricsRoutes.delete('/meals/:id', async (c) => {
   }
 });
 
+// =============================================================================
+// Goals CRUD
+// =============================================================================
+
+const goalSchema = z.object({
+  type: z.enum(['STEPS', 'HYDRATION', 'CALORIES_IN', 'CALORIES_OUT', 'SLEEP', 'ACTIVITY_MINUTES', 'WEIGHT', 'CUSTOM']),
+  title: z.string().min(1).max(100),
+  description: z.string().max(500).optional(),
+  targetValue: z.number().positive(),
+  targetUnit: z.string().min(1).max(30),
+  frequency: z.enum(['DAILY', 'WEEKLY', 'MONTHLY']).optional(),
+  startDate: z.string().datetime().optional(),
+  endDate: z.string().datetime().optional(),
+});
+
+const goalUpdateSchema = goalSchema.partial();
+
+const goalProgressSchema = z.object({
+  value: z.number().nonnegative(),
+  notes: z.string().max(300).optional(),
+  date: z.string().datetime().optional(),
+});
+
+// List all active goals for the user
+metricsRoutes.get('/goals', async (c) => {
+  const user = c.get('user');
+  const { type, active } = c.req.query();
+
+  try {
+    const where: Record<string, unknown> = { userId: user.id };
+    if (type) where['type'] = type;
+    if (active !== undefined) where['isActive'] = active === 'true';
+
+    const goals = await prisma.goal.findMany({
+      where,
+      include: {
+        progress: {
+          orderBy: { date: 'desc' },
+          take: 30,
+        },
+      },
+      orderBy: { createdAt: 'desc' },
+    });
+
+    return c.json({ goals });
+  } catch (error) {
+    console.error('Error fetching goals:', error);
+    return c.json({ error: 'Failed to fetch goals' }, 500);
+  }
+});
+
+// Create a new goal
+metricsRoutes.post('/goals', async (c) => {
+  const user = c.get('user');
+  const body = await c.req.json();
+
+  const parsed = goalSchema.safeParse(body);
+  if (!parsed.success) {
+    return c.json({ error: 'Invalid goal data', details: parsed.error.flatten() }, 400);
+  }
+
+  const { type, title, description, targetValue, targetUnit, frequency, startDate, endDate } = parsed.data;
+
+  try {
+    const goal = await prisma.goal.create({
+      data: {
+        userId: user.id,
+        type,
+        title,
+        description,
+        targetValue,
+        targetUnit,
+        frequency: frequency ?? 'DAILY',
+        startDate: startDate ? new Date(startDate) : new Date(),
+        endDate: endDate ? new Date(endDate) : undefined,
+        isActive: true,
+      },
+    });
+
+    return c.json({ success: true, goal });
+  } catch (error) {
+    console.error('Error creating goal:', error);
+    return c.json({ error: 'Failed to create goal' }, 500);
+  }
+});
+
+// Get a single goal with progress
+metricsRoutes.get('/goals/:id', async (c) => {
+  const user = c.get('user');
+  const id = c.req.param('id');
+
+  try {
+    const goal = await prisma.goal.findFirst({
+      where: { id, userId: user.id },
+      include: {
+        progress: {
+          orderBy: { date: 'desc' },
+          take: 90,
+        },
+      },
+    });
+
+    if (!goal) {
+      return c.json({ error: 'Goal not found' }, 404);
+    }
+
+    // Compute progress percentage based on most recent entry
+    const latestProgress = goal.progress[0];
+    const currentValue = latestProgress?.value ?? 0;
+    const progressPercentage = Math.min(
+      Math.round((currentValue / goal.targetValue) * 100),
+      100,
+    );
+    const isCompleted = progressPercentage >= 100;
+
+    return c.json({
+      goal: {
+        ...goal,
+        currentValue,
+        progressPercentage,
+        isCompleted,
+      },
+    });
+  } catch (error) {
+    console.error("Error fetching goal:", error);
+    return c.json({ error: "Failed to fetch goal" }, 500);
+  }
+});
+
+// Update a goal
+metricsRoutes.patch("/goals/:id", async (c) => {
+  const user = c.get("user");
+  const id = c.req.param("id");
+  const body = await c.req.json();
+  const parsed = goalUpdateSchema.safeParse(body);
+  if (!parsed.success) return c.json({ error: "Invalid update data", details: parsed.error.flatten() }, 400);
+  try {
+    const existing = await prisma.goal.findFirst({ where: { id, userId: user.id } });
+    if (!existing) return c.json({ error: "Goal not found" }, 404);
+    const goal = await prisma.goal.update({
+      where: { id },
+      data: {
+        ...parsed.data,
+        startDate: parsed.data.startDate ? new Date(parsed.data.startDate) : undefined,
+        endDate:   parsed.data.endDate   ? new Date(parsed.data.endDate)   : undefined,
+      },
+    });
+    return c.json({ success: true, goal });
+  } catch (error) {
+    console.error("Error updating goal:", error);
+    return c.json({ error: "Failed to update goal" }, 500);
+  }
+});
+
+// Soft-delete a goal
+metricsRoutes.delete("/goals/:id", async (c) => {
+  const user = c.get("user");
+  const id = c.req.param("id");
+  try {
+    const existing = await prisma.goal.findFirst({ where: { id, userId: user.id } });
+    if (!existing) return c.json({ error: "Goal not found" }, 404);
+    await prisma.goal.update({ where: { id }, data: { isActive: false } });
+    return c.json({ success: true });
+  } catch (error) {
+    console.error("Error deleting goal:", error);
+    return c.json({ error: "Failed to delete goal" }, 500);
+  }
+});
+
+// Log progress for a goal
+metricsRoutes.post("/goals/:id/progress", async (c) => {
+  const user = c.get("user");
+  const goalId = c.req.param("id");
+  const body = await c.req.json();
+  const parsed = goalProgressSchema.safeParse(body);
+  if (!parsed.success) return c.json({ error: "Invalid progress data", details: parsed.error.flatten() }, 400);
+  try {
+    const goal = await prisma.goal.findFirst({ where: { id: goalId, userId: user.id } });
+    if (!goal) return c.json({ error: "Goal not found" }, 404);
+    const progressDate = parsed.data.date ? new Date(parsed.data.date) : new Date();
+    const progress = await prisma.goalProgress.upsert({
+      where: { goalId_date: { goalId, date: progressDate } },
+      update: { value: parsed.data.value, notes: parsed.data.notes },
+      create: { goalId, date: progressDate, value: parsed.data.value, notes: parsed.data.notes },
+    });
+    const isCompleted = parsed.data.value >= goal.targetValue;
+    return c.json({ success: true, progress, isCompleted });
+  } catch (error) {
+    console.error("Error logging goal progress:", error);
+    return c.json({ error: "Failed to log progress" }, 500);
+  }
+});
+
+// Get progress history for a goal
+metricsRoutes.get("/goals/:id/progress", async (c) => {
+  const user = c.get("user");
+  const goalId = c.req.param("id");
+  const { limit } = c.req.query();
+  try {
+    const goal = await prisma.goal.findFirst({ where: { id: goalId, userId: user.id } });
+    if (!goal) return c.json({ error: "Goal not found" }, 404);
+    const progress = await prisma.goalProgress.findMany({
+      where: { goalId },
+      orderBy: { date: "desc" },
+      take: limit ? Number.parseInt(limit, 10) : 30,
+    });
+    return c.json({ progress });
+  } catch (error) {
+    console.error("Error fetching goal progress:", error);
+    return c.json({ error: "Failed to fetch progress" }, 500);
+  }
+});
+
 export { metricsRoutes };

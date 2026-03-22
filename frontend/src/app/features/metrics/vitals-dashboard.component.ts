@@ -1,0 +1,249 @@
+import {
+  Component,
+  ChangeDetectionStrategy,
+  inject,
+  computed,
+} from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { TranslateModule } from '@ngx-translate/core';
+import { RouterModule } from '@angular/router';
+import { MetricsService } from '../../core/metrics/metrics.service';
+import { StatsGridComponent } from '../../shared/components/stats-grid/stats-grid.component';
+import { CarrotFeedComponent } from '../../shared/components/carrot-feed/carrot-feed.component';
+import { TrendChartComponent, type TrendDataPoint } from '../../shared/components/trend-chart/trend-chart.component';
+import { HydrationTrackerComponent } from './hydration-tracker.component';
+import { VitalsLoggerComponent } from './vitals-logger.component';
+
+@Component({
+  selector: 'app-vitals-dashboard',
+  imports: [
+    CommonModule,
+    TranslateModule,
+    RouterModule,
+    StatsGridComponent,
+    CarrotFeedComponent,
+    TrendChartComponent,
+    HydrationTrackerComponent,
+    VitalsLoggerComponent,
+  ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: `
+    <div class="min-h-screen bg-[#fdf8f8] dark:bg-gray-950 transition-colors duration-300">
+      <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pb-28 space-y-6">
+
+        <!-- Page Header -->
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center shadow-lg shadow-purple-500/20">
+              <span class="text-2xl">💓</span>
+            </div>
+            <div>
+              <h1 class="text-2xl font-bold text-gray-900 dark:text-white font-heading">
+                {{ 'METRICS.TITLE' | translate }}
+              </h1>
+              <p class="text-sm text-gray-500 dark:text-gray-400">
+                {{ 'METRICS.CONSISTENCY_KEY' | translate }}
+              </p>
+            </div>
+          </div>
+
+          <!-- Quick-action tiles: Medical ID, First Aid, Journal, Profile -->
+          <div class="hidden sm:flex items-center gap-2">
+            @for (action of quickActions; track action.label) {
+              <a
+                [routerLink]="action.route"
+                class="quick-tile group"
+                [style.--tile-color]="action.color"
+              >
+                <span class="tile-emoji">{{ action.emoji }}</span>
+                <span class="tile-label">{{ action.label }}</span>
+              </a>
+            }
+          </div>
+        </div>
+
+        <!-- Mobile quick-action row -->
+        <div class="flex gap-3 sm:hidden overflow-x-auto pb-1 -mx-4 px-4 scrollbar-hide">
+          @for (action of quickActions; track action.label) {
+            <a
+              [routerLink]="action.route"
+              class="quick-tile-mobile flex-shrink-0"
+              [style.background]="action.gradient"
+            >
+              <span class="text-2xl">{{ action.emoji }}</span>
+              <span class="text-xs font-semibold text-white mt-1">{{ action.label }}</span>
+            </a>
+          }
+        </div>
+
+        <!-- Stats Grid + Carrot Feed -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <app-stats-grid />
+          <app-carrot-feed />
+        </div>
+
+        <!-- Vitals Logger + Hydration Tracker -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <app-vitals-logger />
+          <app-hydration-tracker />
+        </div>
+
+        <!-- 7-Day Steps Trend -->
+        <app-trend-chart
+          [title]="'METRICS.VITALS.STEPS' | translate"
+          [subtitle]="'METRICS.LAST_7_DAYS' | translate"
+          [data]="weeklyStepsData()"
+          unit=" steps"
+        />
+
+        <!-- 7-Day Sleep Trend -->
+        <app-trend-chart
+          [title]="'METRICS.VITALS.SLEEP' | translate"
+          [subtitle]="'METRICS.LAST_7_DAYS' | translate"
+          [data]="weeklySleepData()"
+          unit="h"
+        />
+
+      </div>
+    </div>
+  `,
+  styles: [`
+    /* Quick-action gradient tiles (desktop) */
+    .quick-tile {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.25rem;
+      padding: 0.625rem 0.875rem;
+      border-radius: 1rem;
+      background: white;
+      border: 2px solid transparent;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    }
+
+    .quick-tile:hover {
+      transform: translateY(-2px);
+      border-color: var(--tile-color, #7c4dff);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+    }
+
+    :host-context([data-theme="dark"]) .quick-tile {
+      background: rgba(31, 41, 55, 0.8);
+    }
+
+    .tile-emoji {
+      font-size: 1.5rem;
+    }
+
+    .tile-label {
+      font-family: 'Satoshi', sans-serif;
+      font-size: 0.625rem;
+      font-weight: 700;
+      color: #637074;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    :host-context([data-theme="dark"]) .tile-label {
+      color: #9ca3af;
+    }
+
+    /* Quick-action tiles (mobile) */
+    .quick-tile-mobile {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 5rem;
+      height: 5rem;
+      border-radius: 1.25rem;
+      text-decoration: none;
+      transition: transform 0.2s ease;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .quick-tile-mobile:active {
+      transform: scale(0.95);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .quick-tile,
+      .quick-tile-mobile {
+        transition: none;
+      }
+    }
+  `],
+})
+export class VitalsDashboardComponent {
+  private readonly metricsService = inject(MetricsService);
+
+  // Quick-action grid: Medical ID, First Aid, Journal, Profile
+  readonly quickActions = [
+    {
+      emoji: '💓',
+      label: 'Medical ID',
+      route: '/medical-id',
+      color: '#ef4444',
+      gradient: 'linear-gradient(135deg, #ef4444, #b91c1c)',
+    },
+    {
+      emoji: '🚑',
+      label: 'First Aid',
+      route: '/first-aid',
+      color: '#f97316',
+      gradient: 'linear-gradient(135deg, #f97316, #c2410c)',
+    },
+    {
+      emoji: '📓',
+      label: 'Journal',
+      route: '/journal',
+      color: '#10b981',
+      gradient: 'linear-gradient(135deg, #10b981, #047857)',
+    },
+    {
+      emoji: '👤',
+      label: 'Profile',
+      route: '/onboarding',
+      color: '#6366f1',
+      gradient: 'linear-gradient(135deg, #6366f1, #4338ca)',
+    },
+  ];
+
+  // ── 7-day trend data ──────────────────────────────────────────────────────
+
+  /**
+   * TODO: wire to real weekly vitals API (GET /api/v1/metrics/vitals?type=STEPS&startDate=...)
+   * For now uses today's step count on the current day and placeholders for the rest.
+   */
+  readonly weeklyStepsData = computed<TrendDataPoint[]>(() => {
+    const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+    const todayIdx = (new Date().getDay() + 6) % 7; // 0 = Mon
+
+    // Seed with plausible placeholder values
+    const placeholders = [7200, 8500, 9100, 6800, 10300, 5400, 7800];
+
+    return days.map((label, i) => ({
+      label,
+      value: i === todayIdx ? 0 : placeholders[i],
+      target: 10000,
+    }));
+  });
+
+  /**
+   * TODO: wire to real weekly vitals API (GET /api/v1/metrics/vitals?type=SLEEP_HOURS&startDate=...)
+   */
+  readonly weeklySleepData = computed<TrendDataPoint[]>(() => {
+    const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+    const todayIdx = (new Date().getDay() + 6) % 7;
+    const placeholders = [7.5, 6.0, 8.0, 7.0, 6.5, 9.0, 7.5];
+
+    return days.map((label, i) => ({
+      label,
+      value: i === todayIdx ? 0 : placeholders[i],
+      target: 8,
+    }));
+  });
+}

@@ -17,6 +17,7 @@ frontend/src/app/
 │   ├── auth/                   # AuthService, guards
 │   ├── profile/                # ProfileService
 │   ├── medical-id/             # MedicalIdService
+│   ├── metrics/                # MetricsService + GoalsService
 │   ├── rewards/                # RewardsService (carrots!)
 │   ├── reference-data/         # ReferenceDataService (autocomplete data)
 │   └── api/                    # API client utilities
@@ -24,8 +25,10 @@ frontend/src/app/
 ├── features/                   # Feature-specific components
 │   ├── auth/                   # Login, Register, VerifyEmail
 │   ├── dashboard/              # Main dashboard
+│   ├── first-aid/              # Offline-first first aid library
 │   ├── landing/                # Public landing page
 │   ├── medical-id/             # Medical ID card & editor
+│   ├── metrics/                # Vitals, activity, nutrition, goals pages
 │   └── onboarding/             # Multi-step wizard
 │
 ├── shared/                     # Reusable components
@@ -328,6 +331,19 @@ Available icons: `check-circle`, `shield-check`, `heart`, `bell`, `download`, `l
 
 Icons animate on hover by default and support programmatic triggering via the `[animate]` input.
 ```
+
+---
+
+## 📊 Metrics Feature Conventions
+
+- Routes are lazy-loaded and protected by `authGuard`:
+  - `/vitals` → `VitalsDashboardComponent`
+  - `/activity` → `ActivityPageComponent`
+  - `/nutrition` → `NutritionPageComponent`
+  - `/goals` → `GoalsPageComponent`
+- Keep data operations in `core/metrics` services and expose read-only signals to components.
+- Use modal/overlay interactions with keyboard support (`tabindex`, Enter/Space handlers) for accessibility.
+- `barcode-scanner` currently provides a placeholder overlay UX; avoid presenting it as a live camera scanner until implemented.
 
 ---
 

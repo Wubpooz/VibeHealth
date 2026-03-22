@@ -95,6 +95,10 @@
     "QUICK_FIRST_AID_DESC": "Procédures d'urgence",
     "QUICK_JOURNAL_DESC": "Réflexions quotidiennes",
     "QUICK_PROFILE_DESC": "Paramètres de santé",
+    "QUICK_MEDICAL_ID": "Carte médicale",
+    "QUICK_FIRST_AID": "Premiers secours",
+    "QUICK_GOALS": "Mes objectifs",
+    "QUICK_PROFILE": "Profil",
     "COMING_SOON": "Bientôt disponible...",
     "TEST_EARN_CARROTS": "Test : gagner 5 carottes",
     "PREMIUM_MEMBER": "Membre Premium",
@@ -628,5 +632,45 @@
     "TIME_JUST_NOW": "À l'instant",
     "TIME_MIN_AGO": "il y a {{count}} min",
     "TIME_HOUR_AGO": "il y a {{count}} h"
+  },
+  "ACTIVITY": {
+    "TITLE": "Activité",
+    "SUBTITLE": "Suivez vos entraînements et vos mouvements"
+  },
+  "NUTRITION": {
+    "TITLE": "Journal alimentaire",
+    "SUBTITLE": "Enregistrez vos repas et suivez vos macros"
+  },
+  "GOALS": {
+    "TITLE": "Mes objectifs",
+    "SUBTITLE": "Des objectifs SMART pour rester sur la bonne voie",
+    "NEW_GOAL": "Nouvel objectif",
+    "ACTIVE": "Actifs",
+    "COMPLETED_TODAY": "Accomplis aujourd'hui",
+    "ACTIVE_GOALS": "Objectifs actifs",
+    "PAST_GOALS": "Passés et archivés",
+    "EMPTY_TITLE": "Aucun objectif pour le moment !",
+    "EMPTY_SUBTITLE": "Fixez votre premier objectif SMART et le lapin vous encouragera 🐰",
+    "CREATE_FIRST": "Créer mon premier objectif",
+    "WIZARD": {
+      "STEP1_TITLE": "Que voulez-vous accomplir ?",
+      "STEP1_SUBTITLE": "Choisissez une catégorie pour commencer",
+      "STEP2_TITLE": "Configurez votre objectif",
+      "STEP3_TITLE": "Prêt(e) à vous engager ?",
+      "STEP3_SUBTITLE": "Vérifiez votre objectif avant de l'enregistrer",
+      "GOAL_TITLE": "Nom de l'objectif",
+      "TARGET": "Valeur cible",
+      "FREQUENCY": "À quelle fréquence ?",
+      "END_DATE": "Date de fin",
+      "OPTIONAL": "optionnel",
+      "BACK": "Retour",
+      "NEXT": "Suivant",
+      "CANCEL": "Annuler",
+      "CREATE_GOAL": "Créer l'objectif",
+      "DONE": "Terminé",
+      "CELEBRATE_TITLE": "Objectif créé ! 🎉",
+      "CELEBRATE_SUBTITLE": "Votre lapin croit en vous. Continuez à vous montrer chaque jour !",
+      "CARROTS_EARNED": "carottes gagnées pour avoir fixé un objectif !"
+    }
   }
 }
