@@ -6,6 +6,7 @@
   "common": {
     "save": "Save",
     "cancel": "Cancel",
+    "back_to_dashboard": "Back to dashboard",
     "delete": "Delete",
     "edit": "Edit",
     "close": "Close",
@@ -635,7 +636,15 @@
   },
   "ACTIVITY": {
     "TITLE": "Activity",
-    "SUBTITLE": "Track your workouts and movement"
+    "SUBTITLE": "Track your workouts and movement",
+    "MIN": "min",
+    "KCAL": "kcal",
+    "ACTIVE_DAYS": "active days",
+    "MIN_TODAY": "min today",
+    "KCAL_BURNED": "kcal burned",
+    "TODAY_BY_TYPE": "Today by Type",
+    "CHART_ACTIVE_MINUTES": "Active Minutes",
+    "CHART_CALORIES_BURNED": "Calories Burned"
   },
   "NUTRITION": {
     "TITLE": "Food Diary",

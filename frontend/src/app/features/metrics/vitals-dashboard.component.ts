@@ -28,7 +28,7 @@ import { VitalsLoggerComponent } from './vitals-logger.component';
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="min-h-screen bg-[#fdf8f8] dark:bg-gray-950 transition-colors duration-300">
+    <div class="min-h-screen bg-[#fdf8f8] dark:bg-gray-950 transition-colors duration-300 no-select">
       <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pb-28 space-y-6">
 
         <!-- Page Header -->
@@ -46,6 +46,9 @@ import { VitalsLoggerComponent } from './vitals-logger.component';
               </p>
             </div>
           </div>
+          <a routerLink="/dashboard" class="btn-go-back">
+            {{ 'common.back_to_dashboard' | translate }}
+          </a>
 
           <!-- Quick-action tiles: Medical ID, First Aid, Journal, Profile -->
           <div class="hidden sm:flex items-center gap-2">
@@ -108,6 +111,39 @@ import { VitalsLoggerComponent } from './vitals-logger.component';
     </div>
   `,
   styles: [`
+    .no-select {
+      user-select: none;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+    }
+
+    .btn-go-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.45rem 0.8rem;
+      border-radius: 9999px;
+      font-weight: 700;
+      font-size: 0.8125rem;
+      color: #4b5563;
+      background: #ffffff;
+      border: 1px solid #d1d5db;
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+
+    .btn-go-back:hover {
+      background: #f8fafc;
+      color: #4338ca;
+      border-color: #c7d2fe;
+    }
+
+    .btn-go-back:focus-visible {
+      outline: 2px solid #a78bfa;
+      outline-offset: 2px;
+    }
+
     /* Quick-action gradient tiles (desktop) */
     .quick-tile {
       display: flex;

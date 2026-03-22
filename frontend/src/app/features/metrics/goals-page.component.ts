@@ -32,10 +32,11 @@ import { GoalWizardComponent } from "./goal-wizard.component";
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div
-      class="min-h-screen bg-[#fdf8f8] dark:bg-gray-950 px-4 sm:px-6 lg:px-8 py-8 pb-24 space-y-6"
+      class="min-h-screen bg-[#fdf8f8] dark:bg-gray-950 px-4 sm:px-6 lg:px-8 py-8 pb-24 space-y-6 no-select"
     >
       <!-- Page Header -->
       <div class="flex items-center justify-between flex-wrap gap-4">
+        <a routerLink="/dashboard" class="btn-go-back">{{ 'common.back_to_dashboard' | translate }}</a>
         <div class="flex items-center gap-3">
           <div
             class="w-12 h-12 rounded-2xl bg-gradient-to-br from-violet-500 to-purple-700 flex items-center justify-center shadow-lg shadow-violet-500/20"

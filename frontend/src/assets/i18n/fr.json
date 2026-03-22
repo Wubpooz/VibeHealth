@@ -7,6 +7,7 @@
     "save": "Enregistrer",
     "cancel": "Annuler",
     "delete": "Supprimer",
+    "back_to_dashboard": "Retour au tableau de bord",
     "edit": "Modifier",
     "close": "Fermer",
     "dismiss_notification": "Fermer la notification",
@@ -635,7 +636,15 @@
   },
   "ACTIVITY": {
     "TITLE": "Activité",
-    "SUBTITLE": "Suivez vos entraînements et vos mouvements"
+    "SUBTITLE": "Suivez vos entraînements et vos mouvements",
+    "MIN": "min",
+    "KCAL": "kcal",
+    "ACTIVE_DAYS": "jours actifs",
+    "MIN_TODAY": "min aujourd'hui",
+    "KCAL_BURNED": "kcal brûlées",
+    "TODAY_BY_TYPE": "Aujourd'hui par type",
+    "CHART_ACTIVE_MINUTES": "Minutes actives",
+    "CHART_CALORIES_BURNED": "Calories brûlées"
   },
   "NUTRITION": {
     "TITLE": "Journal alimentaire",

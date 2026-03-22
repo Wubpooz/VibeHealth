@@ -6,6 +6,7 @@ import {
   afterNextRender,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { MetricsService } from '../../core/metrics/metrics.service';
 import { RewardsService } from '../../core/rewards/rewards.service';
@@ -16,13 +17,14 @@ import { ACTIVITY_PRESETS } from '../../core/metrics/metrics.types';
 
 @Component({
   selector: 'app-activity-page',
-  imports: [CommonModule, TranslateModule, ActivityLoggerComponent, TrendChartComponent, StatsGridComponent],
+  imports: [CommonModule, RouterModule, TranslateModule, ActivityLoggerComponent, TrendChartComponent, StatsGridComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="min-h-screen bg-[#fdf8f8] dark:bg-gray-950 px-4 sm:px-6 lg:px-8 py-8 pb-24 space-y-6">
+    <div class="min-h-screen bg-[#fdf8f8] dark:bg-gray-950 px-4 sm:px-6 lg:px-8 py-8 pb-24 space-y-6 no-select">
 
       <!-- Page Header -->
       <div class="flex items-center justify-between">
+        <a routerLink="/dashboard" class="btn-go-back">{{ 'common.back_to_dashboard' | translate }}</a>
         <div class="flex items-center gap-3">
           <span class="text-3xl">🏃</span>
           <div>
@@ -39,17 +41,17 @@ import { ACTIVITY_PRESETS } from '../../core/metrics/metrics.types';
         <div class="hidden sm:flex items-center gap-3 px-4 py-2 bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700">
           <div class="text-center">
             <p class="text-lg font-bold text-gray-900 dark:text-white font-heading">{{ minutesToday() }}</p>
-            <p class="text-xs text-gray-400 font-medium">min</p>
+            <p class="text-xs text-gray-400 font-medium">{{ 'ACTIVITY.MIN' | translate }}</p>
           </div>
           <div class="w-px h-8 bg-gray-100 dark:bg-gray-700"></div>
           <div class="text-center">
             <p class="text-lg font-bold text-orange-500 font-heading">{{ caloriesToday() }}</p>
-            <p class="text-xs text-gray-400 font-medium">kcal</p>
+            <p class="text-xs text-gray-400 font-medium">{{ 'ACTIVITY.KCAL' | translate }}</p>
           </div>
           <div class="w-px h-8 bg-gray-100 dark:bg-gray-700"></div>
           <div class="text-center">
             <p class="text-lg font-bold text-primary-500 font-heading">{{ activeDays() }}</p>
-            <p class="text-xs text-gray-400 font-medium">active days</p>
+            <p class="text-xs text-gray-400 font-medium">{{ 'ACTIVITY.ACTIVE_DAYS' | translate }}</p>
           </div>
         </div>
       </div>
@@ -58,15 +60,15 @@ import { ACTIVITY_PRESETS } from '../../core/metrics/metrics.types';
       <div class="sm:hidden grid grid-cols-3 gap-3">
         <div class="bg-white dark:bg-gray-800 rounded-2xl p-3 text-center border border-gray-100 dark:border-gray-700">
           <p class="text-xl font-bold text-gray-900 dark:text-white font-heading">{{ minutesToday() }}</p>
-          <p class="text-xs text-gray-400">min today</p>
+          <p class="text-xs text-gray-400">{{ 'ACTIVITY.MIN_TODAY' | translate }}</p>
         </div>
         <div class="bg-white dark:bg-gray-800 rounded-2xl p-3 text-center border border-gray-100 dark:border-gray-700">
           <p class="text-xl font-bold text-orange-500 font-heading">{{ caloriesToday() }}</p>
-          <p class="text-xs text-gray-400">kcal burned</p>
+          <p class="text-xs text-gray-400">{{ 'ACTIVITY.KCAL_BURNED' | translate }}</p>
         </div>
         <div class="bg-white dark:bg-gray-800 rounded-2xl p-3 text-center border border-gray-100 dark:border-gray-700">
           <p class="text-xl font-bold text-primary-500 font-heading">{{ activeDays() }}</p>
-          <p class="text-xs text-gray-400">active days</p>
+          <p class="text-xs text-gray-400">{{ 'ACTIVITY.ACTIVE_DAYS' | translate }}</p>
         </div>
       </div>
 
@@ -84,7 +86,7 @@ import { ACTIVITY_PRESETS } from '../../core/metrics/metrics.types';
           <!-- Activity breakdown by type -->
           @if (typeBreakdown().length > 0) {
             <div class="bg-white dark:bg-gray-800 rounded-2xl p-4 border border-gray-100 dark:border-gray-700 space-y-3">
-              <h3 class="text-sm font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest">Today by Type</h3>
+              <h3 class="text-sm font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest">{{ 'ACTIVITY.TODAY_BY_TYPE' | translate }}</h3>
               @for (entry of typeBreakdown(); track entry.type) {
                 <div class="flex items-center gap-3">
                   <span class="text-xl">{{ entry.emoji }}</span>
@@ -110,13 +112,13 @@ import { ACTIVITY_PRESETS } from '../../core/metrics/metrics.types';
       <!-- Weekly Trend Charts -->
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <app-trend-chart
-          [title]="'Active Minutes'"
+          [title]="'ACTIVITY.CHART_ACTIVE_MINUTES' | translate"
           [subtitle]="'METRICS.LAST_7_DAYS' | translate"
           [data]="weeklyMinutesData()"
           unit="min"
         />
         <app-trend-chart
-          [title]="'Calories Burned'"
+          [title]="'ACTIVITY.CHART_CALORIES_BURNED' | translate"
           [subtitle]="'METRICS.LAST_7_DAYS' | translate"
           [data]="weeklyCaloriesData()"
           unit="kcal"
