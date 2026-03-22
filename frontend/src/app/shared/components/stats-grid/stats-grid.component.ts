@@ -9,11 +9,11 @@ import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 import { RewardsService } from '../../../core/rewards/rewards.service';
 import { AuthService } from '../../../core/auth/auth.service';
-import { CarrotIcon } from 'ng-animated-icons';
+import { LucideCarrot } from '@lucide/angular';
 
 @Component({
   selector: 'app-stats-grid',
-  imports: [CommonModule, TranslateModule, CarrotIcon],
+  imports: [CommonModule, TranslateModule, LucideCarrot],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="stats-container">
@@ -52,7 +52,7 @@ import { CarrotIcon } from 'ng-animated-icons';
         <!-- Carrots -->
         <div class="stat-card carrot-card" (mouseenter)="carrotHover.set(true)" (mouseleave)="carrotHover.set(false)">
           <div class="stat-icon">
-            <i-carrot size="28" [animate]="$any(carrotHover())" />
+            <svg lucideCarrot [size]="28" [strokeWidth]="2" [color]="carrotHover() ? '#ff6b6b' : '#f09a52'" [class.animated]="$any(carrotHover())"></svg>
           </div>
           <div class="stat-content">
             <span class="stat-value">{{ rewards.carrots() }}</span>
@@ -159,6 +159,11 @@ import { CarrotIcon } from 'ng-animated-icons';
     .stat-icon {
       font-size: 1.75rem;
       margin-bottom: 0.5rem;
+    }
+
+    .lucide-carrot.animated {
+      transform: translateY(-3px) scale(1.15);
+      transition: transform 0.25s ease;
     }
 
     .stat-content {
