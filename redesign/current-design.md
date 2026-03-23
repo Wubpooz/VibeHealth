@@ -1,5 +1,22 @@
 # Current Design
 
+## Table of Contents
+- [Current Design](#current-design)
+  - [Table of Contents](#table-of-contents)
+  - [Landing Page](#landing-page)
+  - [Login](#login)
+  - [Register](#register)
+  - [Onboarding Wizard](#onboarding-wizard)
+  - [Dashboard](#dashboard)
+  - [Tracking Pages](#tracking-pages)
+    - [Activity](#activity)
+    - [Goals](#goals)
+    - [Vitals](#vitals)
+  - [First Aid](#first-aid)
+  - [Medical ID](#medical-id)
+  - [404 Page](#404-page)
+
+
 ## Landing Page
 ![landing](screencapture-localhost-4200-2026-03-23-00_49_37.png)
 ![landing_detail_1](image-1.png)
