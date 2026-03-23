@@ -141,7 +141,7 @@ app.get('/medications', (c) => {
 app.get('/activities', async (c) => {
   const query = c.req.query('q')?.toLowerCase();
   const category = c.req.query('category')?.toUpperCase();
-  const activityCatalog = (prisma as any).activityCatalog;
+  const activityCatalog = prisma.activityCatalog;
 
   const activities = await activityCatalog.findMany({
     where: {
@@ -168,7 +168,7 @@ app.get('/activities', async (c) => {
 app.get('/meals', async (c) => {
   const query = c.req.query('q')?.toLowerCase();
   const mealType = c.req.query('mealType')?.toUpperCase();
-  const mealCatalog = (prisma as any).mealCatalog;
+  const mealCatalog = prisma.mealCatalog;
 
   const meals = await mealCatalog.findMany({
     where: {

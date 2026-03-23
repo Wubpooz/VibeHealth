@@ -623,12 +623,12 @@ export class AutocompleteComponent implements AfterViewInit, OnDestroy {
     switch (event.key) {
       case 'ArrowDown':
         event.preventDefault();
-        if (!this.isOpen()) {
-          this.isOpen.set(true);
-        } else {
+        if (this.isOpen()) {
           this.highlightedIndex.update(i =>
             i < totalOptions - 1 ? i + 1 : 0
           );
+        } else {
+          this.isOpen.set(true);
         }
         this.scrollToHighlighted();
         break;
@@ -735,11 +735,11 @@ export class AutocompleteComponent implements AfterViewInit, OnDestroy {
     this.debouncedQuery.set('');
     this.highlightedIndex.set(-1);
 
-    if (!this.multiple) {
-      this.closeDropdown();
-    } else {
+    if (this.multiple) {
       // Keep focus for multi-select
       this.inputElement.nativeElement.focus();
+    } else {
+      this.closeDropdown();
     }
   }
 
