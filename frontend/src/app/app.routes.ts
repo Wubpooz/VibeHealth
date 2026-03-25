@@ -33,6 +33,14 @@ export const routes: Routes = [
       ),
   },
   {
+    path: "forgot-password",
+    loadComponent: () =>
+      import("./features/auth/forgot-password/forgot-password.component").then(
+        (m) => m.ForgotPasswordComponent,
+      ),
+    canActivate: [guestGuard],
+  },
+  {
     path: "onboarding",
     loadComponent: () =>
       import("./features/onboarding/onboarding.component").then(
@@ -101,6 +109,14 @@ export const routes: Routes = [
     loadComponent: () =>
       import("./features/metrics/goals-page.component").then(
         (m) => m.GoalsPageComponent,
+      ),
+    canActivate: [authGuard],
+  },
+  {
+    path: "workouts",
+    loadComponent: () =>
+      import("./features/metrics/workouts-page.component").then(
+        (m) => m.WorkoutsPageComponent,
       ),
     canActivate: [authGuard],
   },

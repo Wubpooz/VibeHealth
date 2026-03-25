@@ -160,11 +160,13 @@ import { BackButtonComponent } from '../../../shared/components/back-button/back
           </div>
 
           <!-- Social Login -->
-          <app-social-buttons
-            [providers]="['google', 'github', 'apple']"
-            [loading]="auth.isLoading()"
-            (onProviderClick)="onOAuthClick($event)"
-          />
+          @if (socialProviders().length > 0) {
+            <app-social-buttons
+              [providers]="socialProviders()"
+              [loading]="auth.isLoading()"
+              (onProviderClick)="onOAuthClick($event)"
+            />
+          }
         </div>
 
         <!-- Footer -->
@@ -188,6 +190,7 @@ export class RegisterComponent {
   password = '';
   confirmPassword = '';
   nameError = signal(false);
+  readonly socialProviders = this.auth.enabledProviders;
 
   validateName(): void {
     this.nameError.set(!this.name.trim());

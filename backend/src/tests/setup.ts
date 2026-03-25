@@ -47,6 +47,24 @@ const prismaMock = {
       create:     () => Promise.resolve(null),
       delete:     () => Promise.resolve(null),
     },
+    workoutPlan: {
+      findMany:   () => Promise.resolve([]),
+      create:     () => Promise.resolve(null),
+      findFirst:  () => Promise.resolve(null),
+      update:     () => Promise.resolve(null),
+    },
+    exerciseCatalog: {
+      findMany:   () => Promise.resolve([]),
+      createMany: () => Promise.resolve({ count: 0 }),
+    },
+    workoutPlanExercise: {
+      findFirst: () => Promise.resolve(null),
+    },
+    healthSyncConnection: {
+      findMany:   () => Promise.resolve([]),
+      upsert:     () => Promise.resolve(null),
+      update:     () => Promise.resolve(null),
+    },
     $disconnect:  () => Promise.resolve(),
     $transaction: (fn: (prisma: unknown) => unknown) => fn({}),
   },

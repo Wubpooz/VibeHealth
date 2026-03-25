@@ -49,6 +49,7 @@ VibeHealth combines medical essentials, lifestyle tracking, and a bunny-powered 
   - `/activity`
   - `/nutrition`
   - `/goals`
+  - `/workouts` (profile-based suggestions + rep/rest workflow)
 - Input experiences implemented:
   - vitals/activity/nutrition loggers
   - goals wizard modal/overlay
@@ -56,6 +57,7 @@ VibeHealth combines medical essentials, lifestyle tracking, and a bunny-powered 
   - searchable activity catalog with MET values, calorie estimates, and timer-based duration capture
   - nutrition meal catalog templates for autofill and smarter meal logging
 - Barcode scanner UI currently shows a "coming soon" overlay (camera scan not yet implemented).
+- Health platform sync currently uses a persisted placeholder contract (`Google Fit` / `Samsung Health` connect + auto-sync flags + manual pull endpoint). Full OAuth ingestion/conflict resolution is not yet implemented.
 
 See [roadmap.md](./roadmap.md) for phase planning.
 

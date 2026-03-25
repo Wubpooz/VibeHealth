@@ -25,6 +25,8 @@ model User {
   // Relations
   profile   Profile?
   medicalId MedicalId?
+  workoutPlans WorkoutPlan[]
+  healthSyncConnections HealthSyncConnection[]
   sessions  Session[]
   accounts  Account[]
 
@@ -357,4 +359,99 @@ model GoalProgress {
   @@unique([goalId, date])
   @@index([goalId, date])
   @@map("goal_progress")
+}
+
+enum ExerciseCategory {
+  STRENGTH
+  CARDIO
+  MOBILITY
+  FLEXIBILITY
+  RECOVERY
+}
+
+enum WorkoutDifficulty {
+  BEGINNER
+  INTERMEDIATE
+  ADVANCED
+}
+
+enum HealthSyncProvider {
+  GOOGLE_FIT
+  SAMSUNG_HEALTH
+}
+
+model ExerciseCatalog {
+  id                 String             @id @default(cuid())
+  key                String             @unique
+  name               String
+  category           ExerciseCategory
+  difficulty         WorkoutDifficulty
+  defaultSets        Int                @default(3)
+  defaultRepsMin     Int                @default(8)
+  defaultRepsMax     Int                @default(12)
+  defaultRestSeconds Int                @default(60)
+  instructions       String?
+  tags               String[]
+  isActive           Boolean            @default(true)
+  createdAt          DateTime           @default(now())
+  updatedAt          DateTime           @updatedAt
+
+  workoutExercises WorkoutPlanExercise[]
+
+  @@index([category, difficulty])
+  @@map("exercise_catalog")
+}
+
+model WorkoutPlan {
+  id          String             @id @default(cuid())
+  userId      String
+  name        String
+  description String?
+  difficulty  WorkoutDifficulty
+  isActive    Boolean            @default(true)
+  createdAt   DateTime           @default(now())
+  updatedAt   DateTime           @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  exercises WorkoutPlanExercise[]
+
+  @@index([userId, isActive])
+  @@map("workout_plans")
+}
+
+model WorkoutPlanExercise {
+  id               String      @id @default(cuid())
+  workoutPlanId    String
+  exerciseCatalogId String
+  orderIndex       Int
+  sets             Int
+  repsMin          Int
+  repsMax          Int
+  restSeconds      Int
+  createdAt        DateTime    @default(now())
+  updatedAt        DateTime    @updatedAt
+
+  workoutPlan WorkoutPlan   @relation(fields: [workoutPlanId], references: [id], onDelete: Cascade)
+  exercise    ExerciseCatalog @relation(fields: [exerciseCatalogId], references: [id])
+
+  @@unique([workoutPlanId, orderIndex])
+  @@index([exerciseCatalogId])
+  @@map("workout_plan_exercises")
+}
+
+model HealthSyncConnection {
+  id          String             @id @default(cuid())
+  userId      String
+  provider    HealthSyncProvider
+  connected   Boolean            @default(false)
+  autoSync    Boolean            @default(false)
+  lastSyncAt  DateTime?
+  createdAt   DateTime           @default(now())
+  updatedAt   DateTime           @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, provider])
+  @@index([userId])
+  @@map("health_sync_connections")
 }

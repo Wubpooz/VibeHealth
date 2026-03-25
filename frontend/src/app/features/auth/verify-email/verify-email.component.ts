@@ -1,7 +1,8 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { AuthService } from '../../../core/auth/auth.service';
 import { ToastService } from '../../../core/toast/toast.service';
 import { SpinnerComponent } from '../../../shared/components/spinner/spinner.component';
@@ -10,7 +11,7 @@ import { BackButtonComponent } from '../../../shared/components/back-button/back
 @Component({
   selector: 'app-verify-email',
   standalone: true,
-  imports: [CommonModule, RouterModule, TranslateModule, SpinnerComponent, BackButtonComponent],
+  imports: [CommonModule, FormsModule, RouterModule, TranslateModule, SpinnerComponent, BackButtonComponent],
   template: `
     <div class="relative min-h-screen flex items-center justify-center overflow-hidden bg-gray-50 dark:bg-gray-950 px-4 py-12 transition-colors duration-500">
       
@@ -52,6 +53,34 @@ import { BackButtonComponent } from '../../../shared/components/back-button/back
           }
 
           <div class="space-y-6">
+            <div class="space-y-3">
+              <label for="verificationOtp" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 text-left">
+                {{ 'AUTH.VERIFIED_CODE' | translate }}
+              </label>
+              <input
+                id="verificationOtp"
+                type="text"
+                [(ngModel)]="otpCode"
+                inputmode="numeric"
+                autocomplete="one-time-code"
+                class="input-field text-center tracking-[0.45em] uppercase"
+                maxlength="8"
+                placeholder="123456"
+              />
+              <button
+                (click)="verifyOtp()"
+                [disabled]="auth.isLoading() || !otpCode.trim()"
+                class="w-full btn-primary flex items-center justify-center gap-2 group"
+              >
+                @if (auth.isLoading()) {
+                  <app-spinner size="sm" containerClass="text-white" />
+                  <span>{{ 'common.loading' | translate }}</span>
+                } @else {
+                  <span>{{ 'AUTH.VERIFY_CODE' | translate }}</span>
+                }
+              </button>
+            </div>
+
             <button
               (click)="resendEmail()"
               [disabled]="auth.isLoading()"
@@ -101,15 +130,35 @@ import { BackButtonComponent } from '../../../shared/components/back-button/back
 export class VerifyEmailComponent {
   readonly auth = inject(AuthService);
   private readonly toast = inject(ToastService);
+  private readonly translate = inject(TranslateService);
   resent = false;
+  otpCode = '';
+
+  async verifyOtp(): Promise<void> {
+    const code = this.otpCode.trim();
+    if (!code) return;
+
+    const success = await this.auth.verifyEmailWithOtp(code);
+    if (success) {
+      this.toast.success(
+        this.translate.instant('AUTH.VERIFIED_SUCCESS'),
+        this.translate.instant('AUTH.VERIFICATION_COMPLETE')
+      );
+    } else if (this.auth.error()) {
+      this.toast.error(this.auth.error()!, this.translate.instant('AUTH.VERIFICATION_FAILED'));
+    }
+  }
 
   async resendEmail(): Promise<void> {
     const success = await this.auth.resendVerificationEmail();
     if (success) {
       this.resent = true;
-      this.toast.success('Verification email resent.', 'Email sent');
+      this.toast.success(
+        this.translate.instant('AUTH.VERIFICATION_SENT'),
+        this.translate.instant('AUTH.EMAIL_SENT')
+      );
     } else if (this.auth.error()) {
-      this.toast.error(this.auth.error()!, 'Unable to resend verification');
+      this.toast.error(this.auth.error()!, this.translate.instant('AUTH.VERIFICATION_FAILED'));
     }
   }
 }

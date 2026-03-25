@@ -77,9 +77,12 @@
 
 ## Milestone 4: Workouts & Hardware Sync
 
-- [ ] Add `WORKOUT_PLAN` / Exercise logic to Backend.
-- [ ] Build the Workouts Tab matching profile to exercise suggestions and providing rep counters/rest timers.
-- [ ] Integrate Health Platform Sync (Google Fit / Samsung Health web APIs) to automatically pull/push metrics continuously.
+- [x] Add `WORKOUT_PLAN` / Exercise logic to Backend.
+  > Added workout data models to Prisma (`WorkoutPlan`, `WorkoutPlanExercise`, `ExerciseCatalog`) with enums for exercise category and difficulty. Added authenticated `/api/v1/metrics/workout-plans`, `/workouts/suggestions`, and `/workout-logs` endpoints with profile-aware suggestion logic and rep/rest payloads.
+- [x] Build the Workouts Tab matching profile to exercise suggestions and providing rep counters/rest timers.
+  > Added frontend `/workouts` page (`workouts-page.component.ts`) with profile-matched suggestions, workout plan creation, per-exercise rep counter inputs, and live per-exercise rest countdown timers after each logged set.
+- [x] Integrate Health Platform Sync (Google Fit / Samsung Health web APIs) to automatically pull/push metrics continuously.
+  > Added metrics sync contracts and UI for Google Fit / Samsung Health: `/sync/connections`, `/sync/connect`, `/sync/:provider/auto`, and `/sync/:provider/pull`, plus sync controls in the Workouts tab. Current implementation is clearly marked placeholder mode (safe contract + state persistence) pending provider OAuth/webhook pipeline.
 
 ---
 
