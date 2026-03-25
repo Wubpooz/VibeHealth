@@ -37,19 +37,24 @@ export interface TrendDataPoint {
         <!-- Y-axis labels -->
         <div class="y-axis">
           @for (tick of yAxisTicks(); track tick) {
-            <span class="y-tick">{{ tick }}{{ unit() }}</span>
+            <span class="y-tick">{{ formatTick(tick) }}{{ unit() }}</span>
           }
         </div>
 
         <!-- Bars -->
         <div class="bars-container">
+          <div class="grid-lines">
+            @for (tick of yAxisTicks(); track tick) {
+              <span class="grid-line" [style.bottom.%]="(tick / maxValue()) * 100"></span>
+            }
+          </div>
           @for (point of data(); track point.label; let i = $index) {
             <div class="bar-wrapper">
               <!-- Target line (if provided) -->
-              @if (point.target !== undefined && maxValue() > 0) {
+              @if (point.target !== undefined) {
                 <div 
                   class="target-line"
-                  [style.bottom.%]="(point.target / maxValue()) * 100"
+                  [style.bottom.%]="getTargetPercent(point.target)"
                 ></div>
               }
               
@@ -59,7 +64,7 @@ export interface TrendDataPoint {
                 class="bar"
                 [class.above-target]="point.target !== undefined && point.value >= point.target"
                 [class.below-target]="point.target !== undefined && point.value < point.target"
-                [style.height.%]="maxValue() > 0 ? (point.value / maxValue()) * 100 : 0"
+                [style.height.%]="getValuePercent(point.value)"
                 [style.animation-delay.s]="i * 0.05"
               >
                 <div class="bar-value">{{ point.value }}{{ unit() }}</div>
@@ -152,6 +157,7 @@ export interface TrendDataPoint {
     }
 
     .bars-container {
+      position: relative;
       flex: 1;
       display: flex;
       align-items: flex-end;
@@ -160,6 +166,28 @@ export interface TrendDataPoint {
       border-left: 1px solid #e5e7eb;
       border-bottom: 1px solid #e5e7eb;
       padding-left: 0.5rem;
+    }
+
+    .grid-lines {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      pointer-events: none;
+    }
+
+    .grid-line {
+      position: absolute;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: rgba(156, 163, 175, 0.3);
+      transform: translateY(0.5px);
+    }
+
+    :host-context(.dark) .grid-line {
+      background: rgba(113, 128, 150, 0.35);
     }
 
     :host-context(.dark) .bars-container {
@@ -370,12 +398,29 @@ export class TrendChartComponent implements AfterViewInit {
 
   readonly yAxisTicks = computed(() => {
     const max = this.maxValue();
-    const rawStep = max / 4;
-    const roundedStep = this.getNiceNumber(rawStep);
-    const finalMax = roundedStep * 4;
+    const step = max / 4;
 
-    return [0, roundedStep, roundedStep * 2, roundedStep * 3, finalMax];
+    return [0, step, step * 2, step * 3, max];
   });
+
+  formatTick(value: number): string {
+    const rounded = Number.isInteger(value) ? value : Number(value.toFixed(1));
+    return rounded.toLocaleString();
+  }
+
+  private valueToPercent(value: number): number {
+    const max = this.maxValue();
+    if (max <= 0) return 0;
+    return Math.min(100, Math.max(0, (value / max) * 100));
+  }
+
+  getValuePercent(value: number): number {
+    return this.valueToPercent(value);
+  }
+
+  getTargetPercent(value: number): number {
+    return this.valueToPercent(value);
+  }
 
   ngAfterViewInit(): void {
     // Animate bars on load
