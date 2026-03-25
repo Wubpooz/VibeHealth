@@ -939,6 +939,66 @@ const healthSyncAutoSchema = z.object({
   autoSync: z.boolean(),
 });
 
+const healthSyncOAuthCallbackSchema = z.object({
+  state: z.string().trim().min(1),
+  code: z.string().trim().min(1).optional(),
+  error: z.string().trim().min(1).optional(),
+});
+
+const OAUTH_STATE_TIME_TO_LIVE_MS = 10 * 60 * 1000;
+const OAUTH_STATE_CLEANUP_INTERVAL_MS = 60_000;
+// Placeholder-mode state store:
+// - in-memory only (cleared on restart, not shared across multiple instances)
+// - requires a single-instance deployment (or sticky sessions) until moved to Redis/DB-backed shared storage
+// - intentionally lightweight until full OAuth token exchange/persistence is implemented
+const healthSyncOAuthStates = new Map<string, { userId: string; provider: 'GOOGLE_FIT' | 'SAMSUNG_HEALTH'; expiresAt: number }>();
+const healthSyncOAuthCleanupTimer = setInterval(() => {
+  const now = Date.now();
+  for (const [state, value] of healthSyncOAuthStates.entries()) {
+    if (value.expiresAt <= now) {
+      healthSyncOAuthStates.delete(state);
+    }
+  }
+}, OAUTH_STATE_CLEANUP_INTERVAL_MS);
+if ('unref' in healthSyncOAuthCleanupTimer && typeof healthSyncOAuthCleanupTimer.unref === 'function') {
+  healthSyncOAuthCleanupTimer.unref();
+}
+
+if (process.env.NODE_ENV !== 'test' && process.env.NODE_ENV !== 'production') {
+  console.warn(
+    '[metrics.sync.oauth] Using in-memory OAuth state store (single-instance/sticky-session placeholder mode only).',
+  );
+}
+
+function getHealthSyncOAuthConfig(provider: 'GOOGLE_FIT' | 'SAMSUNG_HEALTH') {
+  if (provider === 'GOOGLE_FIT') {
+    const clientId = process.env.GOOGLE_FIT_OAUTH_CLIENT_ID;
+    const redirectUri = process.env.GOOGLE_FIT_OAUTH_REDIRECT_URI;
+    const authorizeUrl = process.env.GOOGLE_FIT_OAUTH_AUTHORIZE_URL || 'https://accounts.google.com/o/oauth2/v2/auth';
+    if (!clientId || !redirectUri) return null;
+    return {
+      clientId,
+      redirectUri,
+      authorizeUrl,
+      scope:
+        process.env.GOOGLE_FIT_OAUTH_SCOPE ||
+        'https://www.googleapis.com/auth/fitness.activity.read https://www.googleapis.com/auth/fitness.heart_rate.read',
+    };
+  }
+
+  const clientId = process.env.SAMSUNG_HEALTH_OAUTH_CLIENT_ID;
+  const redirectUri = process.env.SAMSUNG_HEALTH_OAUTH_REDIRECT_URI;
+  const authorizeUrl =
+    process.env.SAMSUNG_HEALTH_OAUTH_AUTHORIZE_URL || 'https://account.samsung.com/accounts/v1/OAUTH2/authorize';
+  if (!clientId || !redirectUri) return null;
+  return {
+    clientId,
+    redirectUri,
+    authorizeUrl,
+    scope: process.env.SAMSUNG_HEALTH_OAUTH_SCOPE || 'health',
+  };
+}
+
 type ExerciseDefaults = {
   id: string;
   defaultSets: number;
@@ -1397,6 +1457,107 @@ metricsRoutes.post('/sync/connect', async (c) => {
   } catch (error) {
     console.error('Error connecting provider:', error);
     return c.json({ error: 'Failed to connect provider' }, 500);
+  }
+});
+
+metricsRoutes.post('/sync/oauth/start', async (c) => {
+  const user = c.get('user');
+  const body = await c.req.json();
+  const parsed = healthSyncConnectSchema.safeParse(body);
+
+  if (!parsed.success) {
+    return c.json({ error: 'Invalid sync provider', details: parsed.error.flatten() }, 400);
+  }
+
+  const provider = parsed.data.provider;
+  const oauthConfig = getHealthSyncOAuthConfig(provider);
+  if (!oauthConfig) {
+    return c.json({ error: 'OAuth provider is not configured' }, 400);
+  }
+
+  const stateBytes = new Uint8Array(32);
+  crypto.getRandomValues(stateBytes);
+  const state = Buffer.from(stateBytes).toString('base64url');
+  healthSyncOAuthStates.set(state, {
+    userId: user.id,
+    provider,
+    expiresAt: Date.now() + OAUTH_STATE_TIME_TO_LIVE_MS,
+  });
+
+  const authUrl = new URL(oauthConfig.authorizeUrl);
+  authUrl.searchParams.set('response_type', 'code');
+  authUrl.searchParams.set('client_id', oauthConfig.clientId);
+  authUrl.searchParams.set('redirect_uri', oauthConfig.redirectUri);
+  authUrl.searchParams.set('scope', oauthConfig.scope);
+  authUrl.searchParams.set('state', state);
+
+  return c.json({
+    success: true,
+    provider,
+    mode: 'oauth_placeholder',
+    authUrl: authUrl.toString(),
+    expiresInSeconds: Math.floor(OAUTH_STATE_TIME_TO_LIVE_MS / 1000),
+  });
+});
+
+metricsRoutes.post('/sync/oauth/callback', async (c) => {
+  const user = c.get('user');
+  const body = await c.req.json();
+  const parsed = healthSyncOAuthCallbackSchema.safeParse(body);
+
+  if (!parsed.success) {
+    return c.json({ error: 'Invalid OAuth callback payload', details: parsed.error.flatten() }, 400);
+  }
+
+  const stateRecord = healthSyncOAuthStates.get(parsed.data.state);
+
+  if (!stateRecord || stateRecord.expiresAt <= Date.now()) {
+    console.warn('[metrics.sync.oauth] callback rejected: invalid or expired state');
+    return c.json({ error: 'OAuth state is invalid or expired' }, 400);
+  }
+
+  if (stateRecord.userId !== user.id) {
+    return c.json({ error: 'OAuth state does not belong to current user' }, 403);
+  }
+
+  if (parsed.data.error) {
+    return c.json({ error: 'OAuth provider returned an error', providerError: parsed.data.error }, 400);
+  }
+
+  if (!parsed.data.code) {
+    return c.json({ error: 'OAuth callback is missing authorization code' }, 400);
+  }
+
+  healthSyncOAuthStates.delete(parsed.data.state);
+
+  try {
+    const connection = await prisma.healthSyncConnection.upsert({
+      where: {
+        userId_provider: {
+          userId: user.id,
+          provider: stateRecord.provider,
+        },
+      },
+      update: {
+        connected: true,
+      },
+      create: {
+        userId: user.id,
+        provider: stateRecord.provider,
+        connected: true,
+        autoSync: false,
+      },
+    });
+
+    return c.json({
+      success: true,
+      connection,
+      status: 'connected_oauth_placeholder',
+      message: 'OAuth handshake completed in placeholder mode. Token exchange/background sync will be enabled in a future release.',
+    });
+  } catch (error) {
+    console.error('Error finalizing OAuth sync provider connection:', error);
+    return c.json({ error: 'Failed to finalize OAuth sync connection' }, 500);
   }
 });
 

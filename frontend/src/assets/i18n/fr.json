@@ -202,6 +202,9 @@
     "NO_CONTACTS": "Aucun contact d'urgence ajouté",
     "AVAILABLE_OFFLINE": "Disponible hors ligne",
     "SCAN_QR": "Scanner pour accéder aux infos d'urgence",
+    "SHARE": "Partager",
+    "CONFIRM_SHARE": "Vous allez partager des informations médicales sensibles. Voulez-vous continuer ?",
+    "EXPORT_PDF": "Exporter PDF",
     "SAVE_CHANGES": "Enregistrer la carte médicale",
     "EDIT_MODE": "Modifier",
     "VIEW_MODE": "Voir la carte"

@@ -25,6 +25,7 @@ import type {
   WorkoutSetLogResult,
   HealthSyncConnection,
   HealthSyncProvider,
+  HealthSyncOAuthStartResponse,
 } from './metrics.types';
 
 @Injectable({ providedIn: 'root' })
@@ -653,6 +654,39 @@ export class MetricsService {
       return true;
     } catch (error) {
       console.error('Failed to run pull sync:', error);
+      return false;
+    }
+  }
+
+  async startSyncOAuth(provider: HealthSyncProvider): Promise<HealthSyncOAuthStartResponse | null> {
+    try {
+      const response = await firstValueFrom(
+        this.http.post<HealthSyncOAuthStartResponse>(
+          `${this.apiUrl}/sync/oauth/start`,
+          { provider },
+          { withCredentials: true }
+        )
+      );
+      return response;
+    } catch (error) {
+      console.error('Failed to start sync OAuth flow:', error);
+      return null;
+    }
+  }
+
+  async completeSyncOAuth(state: string, code: string): Promise<boolean> {
+    try {
+      await firstValueFrom(
+        this.http.post(
+          `${this.apiUrl}/sync/oauth/callback`,
+          { state, code },
+          { withCredentials: true }
+        )
+      );
+      await this.loadSyncConnections();
+      return true;
+    } catch (error) {
+      console.error('Failed to complete sync OAuth flow:', error);
       return false;
     }
   }

@@ -136,4 +136,61 @@ describe('Workout & sync metrics routes', () => {
     expect(upsertSpy).toHaveBeenCalled();
     upsertSpy.mockRestore();
   });
+
+  it('starts oauth placeholder flow when provider config exists', async () => {
+    process.env.GOOGLE_FIT_OAUTH_CLIENT_ID = 'client-id';
+    process.env.GOOGLE_FIT_OAUTH_REDIRECT_URI = 'https://example.com/oauth/google-fit/callback';
+    process.env.GOOGLE_FIT_OAUTH_AUTHORIZE_URL = 'https://accounts.google.com/o/oauth2/v2/auth';
+
+    const app = buildApp();
+    const res = await app.request('/metrics/sync/oauth/start', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ provider: 'GOOGLE_FIT' }),
+    });
+    const body = (await res.json()) as { authUrl: string; mode: string };
+
+    expect(res.status).toBe(200);
+    expect(body.mode).toBe('oauth_placeholder');
+    expect(typeof new URL(body.authUrl).searchParams.get('state')).toBe('string');
+  });
+
+  it('finalizes oauth callback by connecting provider in placeholder mode', async () => {
+    process.env.GOOGLE_FIT_OAUTH_CLIENT_ID = 'client-id';
+    process.env.GOOGLE_FIT_OAUTH_REDIRECT_URI = 'https://example.com/oauth/google-fit/callback';
+    process.env.GOOGLE_FIT_OAUTH_AUTHORIZE_URL = 'https://accounts.google.com/o/oauth2/v2/auth';
+
+    const upsertSpy = spyOn(prisma.healthSyncConnection, 'upsert').mockResolvedValue({
+      id: 'sync-1',
+      userId: mockUser.id,
+      provider: 'GOOGLE_FIT',
+      connected: true,
+      autoSync: false,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      lastSyncAt: null,
+    } as never);
+
+    const app = buildApp();
+    const start = await app.request('/metrics/sync/oauth/start', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ provider: 'GOOGLE_FIT' }),
+    });
+    const startBody = (await start.json()) as { authUrl: string };
+    const state = new URL(startBody.authUrl).searchParams.get('state');
+    expect(typeof state).toBe('string');
+
+    const callback = await app.request('/metrics/sync/oauth/callback', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ state, code: 'oauth-code-123' }),
+    });
+    const callbackBody = (await callback.json()) as { status: string };
+
+    expect(callback.status).toBe(200);
+    expect(callbackBody.status).toBe('connected_oauth_placeholder');
+    expect(upsertSpy).toHaveBeenCalled();
+    upsertSpy.mockRestore();
+  });
 });

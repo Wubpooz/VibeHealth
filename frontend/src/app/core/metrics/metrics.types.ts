@@ -327,3 +327,11 @@ export interface HealthSyncConnection {
   autoSync: boolean;
   lastSyncAt?: string | null;
 }
+
+export interface HealthSyncOAuthStartResponse {
+  success: boolean;
+  provider: HealthSyncProvider;
+  mode: 'oauth_placeholder';
+  authUrl: string;
+  expiresInSeconds: number;
+}

@@ -18,6 +18,7 @@ import { animate } from 'motion/mini';
 import { MetricsService } from '../../core/metrics/metrics.service';
 import type { WorkoutPlanExercise, HealthSyncProvider } from '../../core/metrics/metrics.types';
 import { BackButtonComponent } from '../../shared/components/back-button/back-button.component';
+import { ToastService } from '../../core/toast/toast.service';
 
 @Component({
   selector: 'app-workouts-page',
@@ -177,6 +178,7 @@ import { BackButtonComponent } from '../../shared/components/back-button/back-bu
 export class WorkoutsPageComponent implements AfterViewInit {
   private readonly metricsService = inject(MetricsService);
   private readonly destroyRef = inject(DestroyRef);
+  private readonly toast = inject(ToastService);
   readonly workoutSuggestions = this.metricsService.workoutSuggestions;
   readonly workoutPlans = this.metricsService.workoutPlans;
   readonly syncConnections = this.metricsService.syncConnections;
@@ -202,6 +204,7 @@ export class WorkoutsPageComponent implements AfterViewInit {
 
   constructor() {
     afterNextRender(() => {
+      void this.tryFinalizeSyncOAuthFromUrl();
       void this.metricsService.loadWorkoutSuggestions();
       void this.metricsService.loadWorkoutPlans();
       void this.metricsService.loadSyncConnections();
@@ -253,7 +256,15 @@ export class WorkoutsPageComponent implements AfterViewInit {
   }
 
   async connectProvider(provider: HealthSyncProvider): Promise<void> {
-    await this.metricsService.connectSyncProvider(provider);
+    const oauth = await this.metricsService.startSyncOAuth(provider);
+    if (!oauth) {
+      await this.metricsService.connectSyncProvider(provider);
+      return;
+    }
+    const popup = window.open(oauth.authUrl, '_blank', 'noopener,noreferrer');
+    if (!popup) {
+      this.toast.warning('Please allow popups to continue provider OAuth setup.');
+    }
   }
 
   async toggleAutoSync(provider: HealthSyncProvider, autoSync: boolean): Promise<void> {
@@ -302,5 +313,29 @@ export class WorkoutsPageComponent implements AfterViewInit {
       clearInterval(timer);
     }
     this.timerHandles.clear();
+  }
+
+  private async tryFinalizeSyncOAuthFromUrl(): Promise<void> {
+    if (!window.location.search) return;
+    const currentUrl = new URL(window.location.href);
+    const state = currentUrl.searchParams.get('oauth_state');
+    const code = currentUrl.searchParams.get('oauth_code');
+    if (!state || !code) return;
+
+    await this.metricsService.completeSyncOAuth(state, code);
+
+    currentUrl.searchParams.delete('oauth_state');
+    currentUrl.searchParams.delete('oauth_code');
+    const cleanedUrl = this.buildUrlFromParts(
+      currentUrl.pathname,
+      currentUrl.searchParams,
+      currentUrl.hash,
+    );
+    window.history.replaceState({}, '', cleanedUrl);
+  }
+
+  private buildUrlFromParts(pathname: string, params: URLSearchParams, hash: string): string {
+    const query = params.toString();
+    return `${pathname}${query ? `?${query}` : ''}${hash || ''}`;
   }
 }

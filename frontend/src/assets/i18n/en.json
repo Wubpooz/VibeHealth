@@ -202,6 +202,9 @@
     "NO_CONTACTS": "No emergency contacts added",
     "AVAILABLE_OFFLINE": "Available offline",
     "SCAN_QR": "Scan to access emergency info",
+    "SHARE": "Share",
+    "CONFIRM_SHARE": "You are about to share sensitive medical information. Do you want to continue?",
+    "EXPORT_PDF": "Export PDF",
     "SAVE_CHANGES": "Save Medical ID",
     "EDIT_MODE": "Edit",
     "VIEW_MODE": "View Card"
