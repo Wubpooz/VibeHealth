@@ -12,24 +12,29 @@ frontend/src/app/
 │   ├── auth/                   # AuthService, guards
 │   ├── profile/                # ProfileService
 │   ├── medical-id/             # MedicalIdService
+│   ├── metrics/                # MetricsService + GoalsService
 │   ├── rewards/                # RewardsService (carrots!)
 │   ├── reference-data/         # ReferenceDataService (autocomplete data)
+│   ├── theme/                  # ThemeService (light/dark/system)
 │   └── api/                    # API client utilities
 │
 ├── features/                   # Feature-specific components
 │   ├── auth/                   # Login, Register, VerifyEmail
 │   ├── dashboard/              # Main dashboard
+│   ├── first-aid/              # Offline-first first aid library
 │   ├── landing/                # Public landing page
 │   ├── medical-id/             # Medical ID card & editor
+│   ├── metrics/                # Vitals, activity, nutrition, goals pages
 │   └── onboarding/             # Multi-step wizard
 │
 ├── shared/                     # Reusable components
 │   └── components/
 │       ├── autocomplete/       # Smart search/select component
 │       ├── mascot/             # Bunny mascot component
+│       ├── sidebar/            # Global navigation sidebar
 │       └── ...                 # Other shared components
 │
-├── app.component.ts            # Root component
+├── app.component.ts            # Root component (includes sidebar)
 ├── app.config.ts               # Application configuration
 └── app.routes.ts               # Route definitions
 ```
@@ -230,6 +235,67 @@ export class MyComponent {
 ---
 
 ## 🔌 Reusable Components
+
+### Sidebar Component
+
+The sidebar is a global navigation component that appears on all authenticated pages. It includes:
+- Navigation links to all major features
+- Theme switcher (light/dark/system)
+- User profile section with avatar, name, settings, and logout
+
+**Usage:**
+
+The sidebar is automatically included in `app.component.ts` and conditionally shown on authenticated pages. Individual pages don't need to import it.
+
+```typescript
+// The sidebar is already set up in app.component.ts
+// It automatically appears on all authenticated pages
+```
+
+**Adding New Navigation Items:**
+
+To add a new page to the sidebar, update the `navItems` array in `sidebar.component.ts`:
+
+```typescript
+readonly navItems: NavItem[] = [
+  { route: '/dashboard', labelKey: 'nav.dashboard', icon: 'LayoutDashboard' },
+  { route: '/new-feature', labelKey: 'nav.new_feature', icon: 'IconName' },
+  // ... other items
+];
+```
+
+Then add the translation keys to both `en.json` and `fr.json`:
+
+```json
+{
+  "nav": {
+    "new_feature": "New Feature"
+  }
+}
+```
+
+**Theme Service:**
+
+The sidebar uses `ThemeService` for theme management:
+
+```typescript
+import { ThemeService } from '@core/theme/theme.service';
+
+@Component({...})
+export class MyComponent {
+  private readonly themeService = inject(ThemeService);
+  
+  readonly currentTheme = this.themeService.theme;
+  
+  changeTheme(): void {
+    this.themeService.setTheme('dark');
+  }
+}
+```
+
+**Page Layout Considerations:**
+
+Pages no longer need top-level padding for navigation—the sidebar is fixed and the main content area is automatically adjusted via `app.component.css`. Pages should use normal padding/margins for content.
 
 ### Autocomplete Component Usage
 

@@ -11,3 +11,4 @@ export * from './goey-toast/goey-toast.component';
 export * from './scroll-top-progress/scroll-top-progress.component';
 export * from './spiral-loader/spiral-loader.component';
 export * from './animated-icons/animated-icon.component';
+export * from './sidebar/sidebar.component';

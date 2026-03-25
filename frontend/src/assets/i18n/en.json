@@ -26,7 +26,19 @@
     "journal": "Journal",
     "vitals": "Vitals",
     "wellness": "Wellness",
-    "medical": "Medical"
+    "medical": "Medical",
+    "activity": "Activity",
+    "nutrition": "Nutrition",
+    "goals": "Goals",
+    "rewards": "Rewards"
+  },
+  "SIDEBAR": {
+    "BRAND_TAGLINE": "The Living Canvas",
+    "THEME_LIGHT": "Light",
+    "THEME_DARK": "Dark",
+    "THEME_SYSTEM": "System",
+    "VIEW_PROFILE": "View Profile",
+    "LOGOUT": "Log Out"
   },
   "AUTH": {
     "LOGIN": "Log in",

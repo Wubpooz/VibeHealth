@@ -1,0 +1,23 @@
+/* Route container adjusts for sidebar */
+.route-container {
+  min-height: 100vh;
+  transition: margin-left 0.3s ease;
+}
+
+.route-container.with-sidebar {
+  margin-left: 18rem; /* Match sidebar width */
+}
+
+/* Mobile: no sidebar margin */
+@media (max-width: 768px) {
+  .route-container.with-sidebar {
+    margin-left: 0;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .route-container {
+    transition: none;
+  }
+}

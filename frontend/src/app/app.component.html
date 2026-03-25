@@ -1,8 +1,13 @@
 <!-- Global Noise Texture -->
 <div class="noise-texture"></div>
 
+<!-- Sidebar (conditionally shown) -->
+@if (showSidebar()) {
+  <app-sidebar />
+}
+
 <!-- Main Content with Page Transitions -->
-<div class="route-container" [@routeAnimations]="getRouteAnimationData()">
+<div class="route-container" [class.with-sidebar]="showSidebar()" [@routeAnimations]="getRouteAnimationData()">
   <router-outlet />
 </div>
 

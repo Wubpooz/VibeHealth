@@ -26,7 +26,19 @@
     "journal": "Journal",
     "vitals": "Signes vitaux",
     "wellness": "Bien-être",
-    "medical": "Médical"
+    "medical": "Médical",
+    "activity": "Activité",
+    "nutrition": "Nutrition",
+    "goals": "Objectifs",
+    "rewards": "Récompenses"
+  },
+  "SIDEBAR": {
+    "BRAND_TAGLINE": "La Toile Vivante",
+    "THEME_LIGHT": "Clair",
+    "THEME_DARK": "Sombre",
+    "THEME_SYSTEM": "Système",
+    "VIEW_PROFILE": "Voir le profil",
+    "LOGOUT": "Se déconnecter"
   },
   "AUTH": {
     "LOGIN": "Se connecter",
