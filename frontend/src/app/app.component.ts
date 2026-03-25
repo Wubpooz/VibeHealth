@@ -1,4 +1,4 @@
-import { Component, inject, computed, signal } from '@angular/core';
+import { Component, inject, computed, signal, OnInit } from '@angular/core';
 import { RouterOutlet, ChildrenOutletContexts, Router, NavigationEnd } from '@angular/router';
 import { GoeyToastComponent, ScrollTopProgressComponent, SidebarComponent } from './shared/components';
 import { routeAnimations } from './shared/animations';
@@ -11,7 +11,7 @@ import { AuthService } from './core/auth/auth.service';
   styleUrl: './app.component.css',
   animations: [routeAnimations],
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   private readonly contexts = inject(ChildrenOutletContexts);
   private readonly authService = inject(AuthService);
   private readonly router = inject(Router);
@@ -23,6 +23,10 @@ export class AppComponent {
         this.currentUrl.set(event.urlAfterRedirects);
       }
     });
+  }
+
+  ngOnInit(): void {
+    void this.authService.initSession();
   }
 
   // Show sidebar only on authenticated pages

@@ -24,7 +24,11 @@ export class AuthService {
   readonly isEmailVerified = computed(() => this.userSignal()?.emailVerified ?? false);
 
   constructor() {
-    this.loadSession();
+    // Startup session load should be invoked explicitly by the app bootstrap flow.
+  }
+
+  async initSession(): Promise<void> {
+    await this.loadSession();
   }
 
   private async loadSession(): Promise<void> {
