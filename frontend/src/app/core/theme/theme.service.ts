@@ -19,8 +19,8 @@ export class ThemeService {
     });
     
     // Listen for system theme changes
-    if (typeof window !== 'undefined') {
-      const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    if (globalThis.window != null) {
+      const mediaQuery = globalThis.window.matchMedia('(prefers-color-scheme: dark)');
       mediaQuery.addEventListener('change', () => {
         if (this._theme() === 'system') {
           this.applyTheme('system');
@@ -34,16 +34,23 @@ export class ThemeService {
    */
   setTheme(theme: Theme): void {
     this._theme.set(theme);
-    if (typeof window !== 'undefined') {
+    if (globalThis.window != null) {
       localStorage.setItem(this.STORAGE_KEY, theme);
     }
+  }
+
+  /**
+   * Reapply the current theme (useful after route changes)
+   */
+  applyCurrentTheme(): void {
+    this.applyTheme(this._theme());
   }
   
   /**
    * Get the initial theme from localStorage or default to system
    */
   private getInitialTheme(): Theme {
-    if (typeof window === 'undefined') {
+    if (globalThis.window == null) {
       return 'system';
     }
     
@@ -70,7 +77,7 @@ export class ThemeService {
     
     if (theme === 'system') {
       // Use system preference
-      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      const prefersDark = globalThis.window?.matchMedia('(prefers-color-scheme: dark)').matches;
       root.classList.add(prefersDark ? 'dark' : 'light');
     } else {
       // Use explicit theme

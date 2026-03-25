@@ -295,35 +295,42 @@ import { LucideCarrot } from '@lucide/angular';
       }
     }
 
-    @media (prefers-color-scheme: dark) {
-      .stats-container {
-        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-        border-color: rgba(255, 107, 107, 0.2);
-      }
+    :host-context(.light) .stats-container {
+      background: linear-gradient(135deg, #fff5f2 0%, #ffffff 100%);
+      border-color: rgba(255, 107, 107, 0.1);
+    }
 
-      .greeting, .stat-value, .xp-numbers {
-        color: #f5f5f5;
-      }
+    :host-context(.dark) .stats-container {
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+      border-color: rgba(255, 107, 107, 0.2);
+    }
 
-      .greeting-subtitle, .stat-label, .xp-label {
-        color: #a0a0a0;
-      }
+    :host-context(.dark) .greeting,
+    :host-context(.dark) .stat-value,
+    :host-context(.dark) .xp-numbers {
+      color: #f5f5f5;
+    }
 
-      .stat-card, .xp-section {
-        background: rgba(255, 255, 255, 0.05);
-      }
+    :host-context(.dark) .greeting-subtitle,
+    :host-context(.dark) .stat-label,
+    :host-context(.dark) .xp-label {
+      color: #a0a0a0;
+    }
 
-      .streak-card, .level-card, .carrot-card {
-        background: rgba(255, 255, 255, 0.05);
-      }
+    :host-context(.dark) .stat-card,
+    :host-context(.dark) .xp-section,
+    :host-context(.dark) .streak-card,
+    :host-context(.dark) .level-card,
+    :host-context(.dark) .carrot-card {
+      background: rgba(255, 255, 255, 0.05);
+    }
 
-      .xp-bar-bg {
-        background: rgba(255, 255, 255, 0.1);
-      }
+    :host-context(.dark) .xp-bar-bg {
+      background: rgba(255, 255, 255, 0.1);
+    }
 
-      .xp-hint {
-        color: #636e72;
-      }
+    :host-context(.dark) .xp-hint {
+      color: #636e72;
     }
 
     @media (prefers-reduced-motion: reduce) {

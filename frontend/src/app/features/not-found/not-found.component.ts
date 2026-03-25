@@ -78,6 +78,14 @@ import { RouterLink } from '@angular/router';
       background: #fffbf5;
     }
 
+    :host-context(.light) .not-found-page {
+      background: #fffbf5;
+    }
+
+    :host-context(.dark) .not-found-page {
+      background: #090b11;
+    }
+
     .grain {
       position: absolute;
       inset: 0;
@@ -173,6 +181,34 @@ import { RouterLink } from '@angular/router';
       color: #475569;
       line-height: 1.55;
       font-size: clamp(0.95rem, 2vw, 1.1rem);
+    }
+
+    :host-context(.dark) .eyebrow {
+      color: #f9a8d4;
+    }
+
+    :host-context(.dark) .digit-zero,
+    :host-context(.dark) .title {
+      color: #e2e8f0;
+    }
+
+    :host-context(.dark) .subtitle {
+      color: #cbd5e1;
+    }
+
+    :host-context(.dark) .btn.primary {
+      background: #eab308;
+      color: #0f172a;
+      box-shadow: 0 12px 28px -12px rgba(234, 179, 8, 0.8);
+    }
+
+    :host-context(.dark) .btn.ghost {
+      color: #e2e8f0;
+      background: rgba(255, 255, 255, 0.12);
+    }
+
+    :host-context(.dark) .btn.ghost:hover {
+      background: rgba(255, 255, 255, 0.2);
     }
 
     .actions {

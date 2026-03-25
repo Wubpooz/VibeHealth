@@ -3,6 +3,7 @@ import { RouterOutlet, ChildrenOutletContexts, Router, NavigationEnd } from '@an
 import { GoeyToastComponent, ScrollTopProgressComponent, SidebarComponent } from './shared/components';
 import { routeAnimations } from './shared/animations';
 import { AuthService } from './core/auth/auth.service';
+import { ThemeService } from './core/theme/theme.service';
 
 @Component({
   selector: 'app-root',
@@ -14,6 +15,7 @@ import { AuthService } from './core/auth/auth.service';
 export class AppComponent implements OnInit {
   private readonly contexts = inject(ChildrenOutletContexts);
   private readonly authService = inject(AuthService);
+  private readonly themeService = inject(ThemeService);
   private readonly router = inject(Router);
   private readonly currentUrl = signal(this.router.url);
 
@@ -21,6 +23,7 @@ export class AppComponent implements OnInit {
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
         this.currentUrl.set(event.urlAfterRedirects);
+        this.themeService.applyCurrentTheme();
       }
     });
   }
