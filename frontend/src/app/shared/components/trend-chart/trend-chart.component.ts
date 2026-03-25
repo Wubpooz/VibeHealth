@@ -59,7 +59,7 @@ export interface TrendDataPoint {
                 class="bar"
                 [class.above-target]="point.target !== undefined && point.value >= point.target"
                 [class.below-target]="point.target !== undefined && point.value < point.target"
-                [style.height.%]="(point.value / maxValue()) * 100"
+                [style.height.%]="maxValue() > 0 ? (point.value / maxValue()) * 100 : 0"
                 [style.animation-delay.s]="i * 0.05"
               >
                 <div class="bar-value">{{ point.value }}{{ unit() }}</div>
@@ -331,20 +331,37 @@ export class TrendChartComponent implements AfterViewInit {
   readonly unit = input<string>('');
 
   // Computed values
+  private getNiceNumber(value: number): number {
+    if (value <= 0) return 1;
+    const log = Math.floor(Math.log10(value));
+    const base = Math.pow(10, log);
+    const normalized = value / base;
+
+    let niceNormalized: number;
+    if (normalized <= 1) niceNormalized = 1;
+    else if (normalized <= 2) niceNormalized = 2;
+    else if (normalized <= 5) niceNormalized = 5;
+    else niceNormalized = 10;
+
+    return niceNormalized * base;
+  }
+
   readonly maxValue = computed(() => {
     const dataPoints = this.data();
     if (dataPoints.length === 0) return 100;
-    
+
     const values = dataPoints.map(d => d.value);
     const targets = dataPoints
       .filter(d => d.target !== undefined)
       .map(d => d.target!);
-    
+
     const allValues = [...values, ...targets];
-    const max = Math.max(...allValues);
-    
-    // Round up to nearest nice number
-    return Math.ceil(max * 1.1);
+    const max = Math.max(...allValues, 1);
+
+    const rounded = this.getNiceNumber(max);
+    const step = rounded / 4;
+
+    return step > 0 ? step * 4 : 4;
   });
 
   readonly hasTargets = computed(() => {
@@ -353,8 +370,11 @@ export class TrendChartComponent implements AfterViewInit {
 
   readonly yAxisTicks = computed(() => {
     const max = this.maxValue();
-    const step = Math.ceil(max / 4);
-    return [0, step, step * 2, step * 3, max];
+    const rawStep = max / 4;
+    const roundedStep = this.getNiceNumber(rawStep);
+    const finalMax = roundedStep * 4;
+
+    return [0, roundedStep, roundedStep * 2, roundedStep * 3, finalMax];
   });
 
   ngAfterViewInit(): void {
