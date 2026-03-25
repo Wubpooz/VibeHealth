@@ -1333,20 +1333,35 @@ metricsRoutes.post('/workout-plans', async (c) => {
       restSeconds: exercise.defaultRestSeconds,
     }));
 
-    const plan = await prisma.workoutPlan.create({
-      data: {
-        userId: user.id,
-        name: parsed.data.name,
-        description: parsed.data.description,
-        difficulty,
-        exercises: { create: defaultExercises },
-      },
-      include: {
-        exercises: {
-          include: { exercise: true },
-          orderBy: { orderIndex: 'asc' },
+    const plan = await prisma.$transaction(async (tx) => {
+      // Deactivate any existing active workout plans for this user
+      await tx.workoutPlan.updateMany({
+        where: {
+          userId: user.id,
+          isActive: true,
         },
-      },
+        data: {
+          isActive: false,
+        },
+      });
+
+      // Create the new active workout plan with default exercises
+      return tx.workoutPlan.create({
+        data: {
+          userId: user.id,
+          name: parsed.data.name,
+          description: parsed.data.description,
+          difficulty,
+          isActive: true,
+          exercises: { create: defaultExercises },
+        },
+        include: {
+          exercises: {
+            include: { exercise: true },
+            orderBy: { orderIndex: 'asc' },
+          },
+        },
+      });
     });
 
     return c.json({ success: true, plan }, 201);
