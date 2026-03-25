@@ -1333,7 +1333,7 @@ metricsRoutes.post('/workout-plans', async (c) => {
       restSeconds: exercise.defaultRestSeconds,
     }));
 
-    const plan = await prisma.$transaction(async (tx) => {
+    const plan = await prisma.$transaction(async (tx: any) => {
       // Deactivate any existing active workout plans for this user
       await tx.workoutPlan.updateMany({
         where: {
