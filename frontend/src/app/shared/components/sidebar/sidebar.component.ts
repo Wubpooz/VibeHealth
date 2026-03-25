@@ -23,6 +23,7 @@ import {
 import { ThemeService, type Theme } from '../../../core/theme/theme.service';
 import { AuthService } from '../../../core/auth/auth.service';
 import { ProfileService } from '../../../core/profile/profile.service';
+import { CarrotCounterComponent } from '../carrot-counter/carrot-counter.component';
 
 interface NavItem {
   route: string;
@@ -50,7 +51,8 @@ interface NavItem {
     LucideMoon,
     LucideMonitor,
     LucideLogOut,
-    LucideUser
+    LucideUser,
+    CarrotCounterComponent
   ],
   templateUrl: './sidebar.component.html',
   styleUrl: './sidebar.component.css'
@@ -64,6 +66,8 @@ export class SidebarComponent {
   readonly currentTheme = this.themeService.theme;
   readonly user = this.authService.user;
   readonly profile = this.profileService.profile;
+
+  readonly mockAvatarUrl = 'https://api.dicebear.com/6.x/initials/svg?seed=VibeHealth';
 
   readonly userName = computed(() => {
     const userData = this.user();

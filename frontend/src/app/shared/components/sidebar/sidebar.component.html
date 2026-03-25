@@ -50,6 +50,10 @@
 
   <!-- Footer -->
   <div class="sidebar-footer">
+    <!-- Carrot Counter -->
+    <div class="sidebar-carrot-counter mb-3">
+      <app-carrot-counter variant="default"></app-carrot-counter>
+    </div>
     <!-- Theme Switcher -->
     <div class="theme-switcher">
       <button
@@ -96,7 +100,7 @@
         [attr.aria-label]="'SIDEBAR.VIEW_PROFILE' | translate"
       >
         <div class="user-avatar">
-          <svg lucideUser [size]="20" [attr.aria-hidden]="true"></svg>
+          <img class="user-avatar-img" [src]="mockAvatarUrl" alt="User avatar" />
         </div>
         <span class="user-name">{{ userName() }}</span>
       </button>
