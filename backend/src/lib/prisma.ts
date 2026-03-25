@@ -55,6 +55,7 @@ const testPrisma = {
   },
   workoutPlanExercise: {
     findFirst: () => Promise.resolve(null),
+    findUnique: () => Promise.resolve(null),
   },
   healthSyncConnection: {
     findMany: () => Promise.resolve([]),
