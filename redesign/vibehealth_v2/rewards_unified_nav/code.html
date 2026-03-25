@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>VibeHealth Rewards &amp; Achievements</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#a03a0f",
+              "tertiary": "#71563d",
+              "on-secondary-fixed": "#4b2e00",
+              "inverse-primary": "#fe7e4f",
+              "on-secondary": "#fff0e3",
+              "surface-container-high": "#ebe0dd",
+              "tertiary-container": "#fed9b8",
+              "surface": "#fef4f1",
+              "on-surface-variant": "#605a58",
+              "surface-container": "#f1e6e3",
+              "surface-dim": "#ddd2ce",
+              "background": "#fef4f1",
+              "tertiary-dim": "#644b32",
+              "surface-container-highest": "#e6dad7",
+              "on-background": "#322e2c",
+              "primary-container": "#fe7e4f",
+              "outline": "#7c7573",
+              "secondary-dim": "#704700",
+              "surface-container-low": "#f9efeb",
+              "on-error": "#ffefee",
+              "on-tertiary-container": "#644b32",
+              "primary-fixed": "#fe7e4f",
+              "on-tertiary-fixed-variant": "#6f553b",
+              "surface-tint": "#a03a0f",
+              "secondary": "#805100",
+              "error": "#b31b25",
+              "surface-bright": "#fef4f1",
+              "outline-variant": "#b4aba9",
+              "inverse-on-surface": "#a39b99",
+              "surface-variant": "#e6dad7",
+              "tertiary-fixed": "#fed9b8",
+              "secondary-container": "#ffc882",
+              "secondary-fixed-dim": "#ffb54e",
+              "on-primary-fixed": "#020000",
+              "error-container": "#fb5151",
+              "on-secondary-container": "#653f00",
+              "inverse-surface": "#110d0c",
+              "primary-dim": "#902e02",
+              "on-secondary-fixed-variant": "#714800",
+              "tertiary-fixed-dim": "#efcbab",
+              "error-dim": "#9f0519",
+              "on-primary": "#ffefeb",
+              "on-primary-container": "#491300",
+              "on-tertiary": "#fff0e5",
+              "on-tertiary-fixed": "#503921",
+              "surface-container-lowest": "#ffffff",
+              "secondary-fixed": "#ffc882",
+              "primary-fixed-dim": "#ed7244",
+              "on-error-container": "#570008",
+              "on-surface": "#322e2c",
+              "on-primary-fixed-variant": "#591800"
+            },
+            fontFamily: {
+              "headline": ["Plus Jakarta Sans"],
+              "body": ["Plus Jakarta Sans"],
+              "label": ["Plus Jakarta Sans"]
+            },
+            borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+      body { font-family: 'Plus Jakarta Sans', sans-serif; }
+      .custom-scrollbar::-webkit-scrollbar {
+          width: 4px;
+      }
+      .custom-scrollbar::-webkit-scrollbar-track {
+          background: transparent;
+      }
+      .custom-scrollbar::-webkit-scrollbar-thumb {
+          background: rgba(160, 58, 15, 0.1);
+          border-radius: 10px;
+      }
+    </style>
+</head>
+<body class="bg-background text-on-background min-h-screen flex">
+<!-- Unified Sidebar Navigation -->
+<aside class="hidden lg:flex flex-col w-72 h-screen fixed left-0 top-0 z-40 bg-surface-container-low dark:bg-[#1a1614] rounded-r-[3rem] shadow-[20px_0_40px_rgba(160,58,15,0.04)] py-8 font-headline">
+<div class="px-8 mb-8">
+<div class="text-2xl font-black text-primary tracking-tighter">VibeHealth</div>
+<div class="text-[10px] text-on-surface-variant font-bold uppercase tracking-widest mt-0.5">The Living Canvas</div>
+</div>
+<div class="flex-1 space-y-1 overflow-y-auto custom-scrollbar">
+<a class="flex items-center px-6 py-3 text-on-surface-variant hover:translate-x-1 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined mr-4 text-[20px]">grid_view</span>
+<span class="text-sm font-medium">Dashboard</span>
+</a>
+<a class="flex items-center px-6 py-3 text-on-surface-variant hover:translate-x-1 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined mr-4 text-[20px]">restaurant</span>
+<span class="text-sm font-medium">Nutrition</span>
+</a>
+<a class="flex items-center px-6 py-3 text-on-surface-variant hover:translate-x-1 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined mr-4 text-[20px]">sentiment_satisfied</span>
+<span class="text-sm font-medium">Mood</span>
+</a>
+<a class="flex items-center px-6 py-3 text-on-surface-variant hover:translate-x-1 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined mr-4 text-[20px]">calendar_today</span>
+<span class="text-sm font-medium">Period</span>
+</a>
+<a class="flex items-center px-6 py-3 text-on-surface-variant hover:translate-x-1 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined mr-4 text-[20px]">fitness_center</span>
+<span class="text-sm font-medium">Workouts</span>
+</a>
+<a class="flex items-center px-6 py-3 text-on-surface-variant hover:translate-x-1 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined mr-4 text-[20px]">self_improvement</span>
+<span class="text-sm font-medium">Meditation</span>
+</a>
+<a class="flex items-center px-6 py-3 text-on-surface-variant hover:translate-x-1 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined mr-4 text-[20px]">group</span>
+<span class="text-sm font-medium">Caregivers</span>
+</a>
+<a class="flex items-center px-6 py-3 text-on-surface-variant hover:translate-x-1 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined mr-4 text-[20px]">medical_services</span>
+<span class="text-sm font-medium">Practitioners</span>
+</a>
+<a class="flex items-center px-6 py-3 text-on-surface-variant hover:translate-x-1 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined mr-4 text-[20px]">monitor_heart</span>
+<span class="text-sm font-medium">Vitals</span>
+</a>
+<a class="flex items-center bg-surface-container-highest text-primary rounded-full mx-2 px-6 py-3 font-bold hover:translate-x-1 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined mr-4 text-[20px]" style="font-variation-settings: 'FILL' 1;">military_tech</span>
+<span class="text-sm">Rewards</span>
+</a>
+<a class="flex items-center px-6 py-3 text-on-surface-variant hover:translate-x-1 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined mr-4 text-[20px]">settings</span>
+<span class="text-sm font-medium">Settings</span>
+</a>
+</div>
+<!-- Theme Toggle Footer -->
+<div class="mt-auto px-4 pb-4">
+<div class="bg-surface-container-high/50 dark:bg-[#3d322e]/50 p-1 rounded-full flex justify-between items-center">
+<button class="flex-1 flex items-center justify-center py-2 px-1 bg-white dark:bg-[#1a1614] rounded-full text-primary shadow-sm">
+<span class="material-symbols-outlined text-[18px]">light_mode</span>
+</button>
+<button class="flex-1 flex items-center justify-center py-2 px-1 text-on-surface-variant">
+<span class="material-symbols-outlined text-[18px]">dark_mode</span>
+</button>
+<button class="flex-1 flex items-center justify-center py-2 px-1 text-on-surface-variant">
+<span class="material-symbols-outlined text-[18px]">settings_brightness</span>
+</button>
+</div>
+</div>
+</aside>
+<!-- Top Header (Modified to fit with Sidebar) -->
+<header class="fixed top-0 w-full z-30 bg-[#fef4f1]/80 backdrop-blur-xl no-line-rule bg-[#f9efeb] lg:pl-72">
+<nav class="flex justify-between items-center px-8 py-4 w-full max-w-7xl mx-auto">
+<div class="lg:hidden text-2xl font-black text-primary tracking-tighter">VibeHealth</div>
+<div class="hidden md:flex items-center gap-8">
+<a class="text-[#322e2c]/70 font-medium hover:text-[#fe7e4f] transition-colors duration-200" href="#">Discover</a>
+<a class="text-[#322e2c]/70 font-medium hover:text-[#fe7e4f] transition-colors duration-200" href="#">Journals</a>
+<a class="text-[#322e2c]/70 font-medium hover:text-[#fe7e4f] transition-colors duration-200" href="#">Community</a>
+</div>
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined text-[#322e2c]/70 hover:text-[#fe7e4f] transition-transform scale-102-hover">notifications</button>
+<button class="material-symbols-outlined text-[#322e2c]/70 hover:text-[#fe7e4f] transition-transform scale-102-hover">settings</button>
+<div class="w-10 h-10 rounded-full bg-surface-container-highest overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="close-up portrait of a smiling young woman with warm natural lighting and soft focus garden background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB6bD1WCPXdNivLHicqZsuJ7mLvjpcGuKEu-afcavoo5uUSBVLwZx9FRNDHDXD0RQ56vT1YiP9C0VXX7eUi_CrcAm5Ksgc70qegE_j7W3dEPdZex1S4xmOAOaGSYK0vww4a1LMUhEuOYc1xY-KBXy_GjcVJMEOVMFuxo-ss4EpzLPGzLMhwbQTtlO5uiLh8EFeL5xZ8CWQnGnfr0HAo42WaE9nwaWayvKyyVxxzEIX5sW3gpcemLwml6ns3kZ00dAEq0UUVXVAKWO4"/>
+</div>
+</div>
+</nav>
+</header>
+<main class="flex-1 lg:ml-72 pt-24 pb-12 px-6 max-w-7xl mx-auto w-full">
+<!-- Hero Section: Radiant Editorial Style -->
+<section class="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-12">
+<!-- Large Carrot Counter -->
+<div class="lg:col-span-7 bg-surface-container-lowest rounded-xl p-10 flex flex-col justify-center relative overflow-hidden shadow-[0_40px_40px_-15px_rgba(160,58,15,0.06)]">
+<div class="absolute -right-12 -top-12 w-64 h-64 bg-secondary-container/10 rounded-full blur-3xl"></div>
+<div class="relative z-10">
+<span class="text-label-md uppercase tracking-[0.2em] font-bold text-primary/60 mb-4 block">Your Harvest</span>
+<h1 class="text-7xl font-black text-on-background tracking-tighter mb-2">1,240 <span class="text-primary">Carrots</span></h1>
+<p class="text-on-surface-variant max-w-md body-md">You're in the top 5% of earners this month! Keep fueling your wellness journey with consistent habits.</p>
+</div>
+<div class="mt-8 flex gap-4">
+<button class="px-8 py-3 bg-gradient-to-br from-primary to-primary-container text-on-primary rounded-full font-bold scale-102-hover transition-transform">Redeem Rewards</button>
+<button class="px-8 py-3 border border-outline-variant/30 text-primary rounded-full font-bold hover:bg-surface-container-low transition-colors">Earning History</button>
+</div>
+</div>
+<!-- Weekly Progress Mini-Chart -->
+<div class="lg:col-span-5 bg-surface-container-low rounded-xl p-8 flex flex-col">
+<div class="flex justify-between items-end mb-8">
+<div>
+<h3 class="text-xl font-extrabold tracking-tight">Weekly Bloom</h3>
+<p class="text-sm text-on-surface-variant">Daily average: 145 carrots</p>
+</div>
+<span class="material-symbols-outlined text-primary text-3xl">trending_up</span>
+</div>
+<div class="flex-1 flex items-end justify-between gap-2 px-2">
+<div class="w-full bg-surface-container-highest rounded-t-lg relative group h-[40%]">
+<div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 bg-on-background text-white text-[10px] px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity">80</div>
+</div>
+<div class="w-full bg-primary-container rounded-t-lg relative group h-[70%]">
+<div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 bg-on-background text-white text-[10px] px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity">140</div>
+</div>
+<div class="w-full bg-surface-container-highest rounded-t-lg relative group h-[30%]"></div>
+<div class="w-full bg-primary rounded-t-lg relative group h-[90%]">
+<div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 bg-on-background text-white text-[10px] px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity">190</div>
+</div>
+<div class="w-full bg-primary-container rounded-t-lg relative group h-[60%]"></div>
+<div class="w-full bg-surface-container-highest rounded-t-lg relative group h-[45%]"></div>
+<div class="w-full bg-secondary-container rounded-t-lg relative group h-[85%]"></div>
+</div>
+<div class="flex justify-between mt-4 text-[10px] font-bold text-outline uppercase tracking-widest px-1">
+<span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span><span>S</span>
+</div>
+</div>
+</section>
+<!-- Active Streaks -->
+<section class="mb-12">
+<h2 class="text-2xl font-black tracking-tight mb-6">Active Streaks</h2>
+<div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+<div class="bg-surface-container-lowest p-6 rounded-lg flex items-center gap-4 shadow-sm">
+<div class="w-12 h-12 bg-secondary-container rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined text-on-secondary-container" style="font-variation-settings: 'FILL' 1;">local_fire_department</span>
+</div>
+<div>
+<div class="text-2xl font-black">12</div>
+<div class="text-[10px] uppercase tracking-widest font-bold text-outline">Days Walked</div>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-6 rounded-lg flex items-center gap-4 shadow-sm">
+<div class="w-12 h-12 bg-tertiary-container rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined text-on-tertiary-container" style="font-variation-settings: 'FILL' 1;">spa</span>
+</div>
+<div>
+<div class="text-2xl font-black">5</div>
+<div class="text-[10px] uppercase tracking-widest font-bold text-outline">Meditation</div>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-6 rounded-lg flex items-center gap-4 shadow-sm">
+<div class="w-12 h-12 bg-primary-container/20 rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">water_drop</span>
+</div>
+<div>
+<div class="text-2xl font-black">8</div>
+<div class="text-[10px] uppercase tracking-widest font-bold text-outline">Hydration</div>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-6 rounded-lg flex items-center gap-4 shadow-sm">
+<div class="w-12 h-12 bg-surface-container-high rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined text-on-surface-variant" style="font-variation-settings: 'FILL' 1;">bedtime</span>
+</div>
+<div>
+<div class="text-2xl font-black">21</div>
+<div class="text-[10px] uppercase tracking-widest font-bold text-outline">Sleep Goal</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Achievements Grid -->
+<section class="mb-12">
+<div class="flex justify-between items-end mb-8">
+<h2 class="text-3xl font-black tracking-tight">Achievements</h2>
+<a class="text-primary font-bold text-sm border-b-2 border-primary/20 hover:border-primary transition-all pb-1" href="#">View All Hall of Fame</a>
+</div>
+<div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-6">
+<!-- Unlocked -->
+<div class="bg-surface-container-lowest p-6 rounded-xl flex flex-col items-center text-center transition-transform hover:scale-105">
+<div class="w-20 h-20 mb-4 bg-gradient-to-tr from-secondary-container to-primary-container rounded-full flex items-center justify-center shadow-lg shadow-primary/10">
+<span class="material-symbols-outlined text-white text-4xl" style="font-variation-settings: 'FILL' 1;">workspace_premium</span>
+</div>
+<span class="text-xs font-bold text-on-background">Early Riser</span>
+<span class="text-[10px] text-on-surface-variant mt-1">Unlocked 2d ago</span>
+</div>
+<div class="bg-surface-container-lowest p-6 rounded-xl flex flex-col items-center text-center transition-transform hover:scale-105">
+<div class="w-20 h-20 mb-4 bg-gradient-to-tr from-primary to-primary-dim rounded-full flex items-center justify-center shadow-lg shadow-primary/10">
+<span class="material-symbols-outlined text-white text-4xl" style="font-variation-settings: 'FILL' 1;">fitness_center</span>
+</div>
+<span class="text-xs font-bold text-on-background">Iron Will</span>
+<span class="text-[10px] text-on-surface-variant mt-1">Unlocked 1w ago</span>
+</div>
+<div class="bg-surface-container-lowest p-6 rounded-xl flex flex-col items-center text-center transition-transform hover:scale-105">
+<div class="w-20 h-20 mb-4 bg-gradient-to-tr from-tertiary to-on-tertiary-container rounded-full flex items-center justify-center shadow-lg shadow-primary/10">
+<span class="material-symbols-outlined text-white text-4xl" style="font-variation-settings: 'FILL' 1;">forest</span>
+</div>
+<span class="text-xs font-bold text-on-background">Forest Walker</span>
+<span class="text-[10px] text-on-surface-variant mt-1">Unlocked 3w ago</span>
+</div>
+<!-- Locked -->
+<div class="bg-surface-container p-6 rounded-xl flex flex-col items-center text-center opacity-60 grayscale">
+<div class="w-20 h-20 mb-4 bg-surface-container-highest rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined text-outline text-4xl">lock</span>
+</div>
+<span class="text-xs font-bold text-on-background">Century Club</span>
+<div class="w-full bg-surface-container-high h-1 rounded-full mt-3 overflow-hidden">
+<div class="bg-primary h-full w-[45%]"></div>
+</div>
+<span class="text-[9px] text-on-surface-variant mt-2 font-bold uppercase tracking-widest">45/100</span>
+</div>
+<div class="bg-surface-container p-6 rounded-xl flex flex-col items-center text-center opacity-60 grayscale">
+<div class="w-20 h-20 mb-4 bg-surface-container-highest rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined text-outline text-4xl">lock</span>
+</div>
+<span class="text-xs font-bold text-on-background">Peak Performer</span>
+<div class="w-full bg-surface-container-high h-1 rounded-full mt-3 overflow-hidden">
+<div class="bg-primary h-full w-[12%]"></div>
+</div>
+<span class="text-[9px] text-on-surface-variant mt-2 font-bold uppercase tracking-widest">3/25</span>
+</div>
+<div class="bg-surface-container p-6 rounded-xl flex flex-col items-center text-center opacity-60 grayscale">
+<div class="w-20 h-20 mb-4 bg-surface-container-highest rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined text-outline text-4xl">lock</span>
+</div>
+<span class="text-xs font-bold text-on-background">Social Butterfly</span>
+<div class="w-full bg-surface-container-high h-1 rounded-full mt-3 overflow-hidden">
+<div class="bg-primary h-full w-[80%]"></div>
+</div>
+<span class="text-[9px] text-on-surface-variant mt-2 font-bold uppercase tracking-widest">8/10</span>
+</div>
+</div>
+</section>
+<!-- Transaction History Log -->
+<section class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+<div class="lg:col-span-2">
+<h2 class="text-2xl font-black tracking-tight mb-6">Recent Carrot Activities</h2>
+<div class="bg-surface-container-lowest rounded-xl overflow-hidden shadow-sm">
+<div class="divide-y divide-surface-container-low">
+<div class="flex items-center justify-between p-6 hover:bg-surface-container-low/50 transition-colors">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 bg-primary-container/10 rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined text-primary">directions_run</span>
+</div>
+<div>
+<h4 class="text-sm font-bold text-on-background">Morning 5k Run</h4>
+<p class="text-[10px] text-on-surface-variant uppercase tracking-wider font-medium">Completed Goal • Today</p>
+</div>
+</div>
+<span class="text-primary font-black text-lg">+50</span>
+</div>
+<div class="flex items-center justify-between p-6 hover:bg-surface-container-low/50 transition-colors">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 bg-secondary-container/10 rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined text-secondary">emoji_events</span>
+</div>
+<div>
+<h4 class="text-sm font-bold text-on-background">Achievement Unlocked: Early Riser</h4>
+<p class="text-[10px] text-on-surface-variant uppercase tracking-wider font-medium">Bonus • Yesterday</p>
+</div>
+</div>
+<span class="text-primary font-black text-lg">+200</span>
+</div>
+<div class="flex items-center justify-between p-6 hover:bg-surface-container-low/50 transition-colors">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 bg-tertiary-container/10 rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined text-tertiary">water_full</span>
+</div>
+<div>
+<h4 class="text-sm font-bold text-on-background">Hydration Milestone</h4>
+<p class="text-[10px] text-on-surface-variant uppercase tracking-wider font-medium">Streak • Oct 24</p>
+</div>
+</div>
+<span class="text-primary font-black text-lg">+15</span>
+</div>
+<div class="flex items-center justify-between p-6 hover:bg-surface-container-low/50 transition-colors">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 bg-error-container/10 rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined text-error">shopping_bag</span>
+</div>
+<div>
+<h4 class="text-sm font-bold text-on-background">Redeemed: Yoga Mat Discount</h4>
+<p class="text-[10px] text-on-surface-variant uppercase tracking-wider font-medium">Purchase • Oct 22</p>
+</div>
+</div>
+<span class="text-error font-black text-lg">-500</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Promotion / Engagement Sidebar -->
+<div class="lg:col-span-1">
+<div class="bg-gradient-to-br from-primary to-primary-container rounded-xl p-8 text-on-primary sticky top-24">
+<h3 class="text-2xl font-black mb-4 tracking-tighter leading-tight">Double Carrot Weekend!</h3>
+<p class="text-on-primary/80 mb-6 text-sm">Log your first activity before Saturday 9 AM to activate your booster.</p>
+<div class="w-full h-40 rounded-lg overflow-hidden mb-6">
+<img class="w-full h-full object-cover" data-alt="vibrant energetic fitness flatlay with colorful yoga mat water bottle and bright morning sunlight" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBMnGmbADaPmZazbVomiiuGvWxigQdBwUWHCccQndBBRGNZ0XIUPejFiT4K6L77VprwOCVD_Qwr442_sMVVk7AzGwgMJaXkknNt59gPU6pZ_YzQdOoC-JB8FfGfQpaGFjb7M_qXREBGJ9yUD-WMtkO1x0aDs2Msw2lbzV5IoVYTQDK9lIFNQBQarWr5h5Pqm3IPQXAYeJ1L3-kn95U72ttUmdcHrhlzkG-qP1xYzkCE7roECRLO3xT6PRqRubLkLRNecF9dr0WHRM8"/>
+</div>
+<button class="w-full py-3 bg-white text-primary rounded-full font-bold hover:bg-on-secondary transition-colors">Activate Now</button>
+</div>
+</div>
+</section>
+</main>
+<!-- Unified Bottom Navigation (Mobile Only) -->
+<div class="lg:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pt-2 pb-6 bg-[#faeeea]/80 dark:bg-stone-900/80 backdrop-blur-2xl no-border shadow-[0_-10px_40px_rgba(160,58,15,0.05)] rounded-t-[2.5rem]">
+<a class="flex flex-col items-center justify-center text-stone-400 p-2" href="#">
+<span class="material-symbols-outlined mb-1">grid_view</span>
+<span class="font-headline text-[10px] font-bold uppercase tracking-widest">Feed</span>
+</a>
+<a class="flex flex-col items-center justify-center text-stone-400 p-2" href="#">
+<span class="material-symbols-outlined mb-1">favorite</span>
+<span class="font-headline text-[10px] font-bold uppercase tracking-widest">Pulse</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-primary text-white rounded-2xl p-3 mb-2 transform -translate-y-2 shadow-lg shadow-primary/30" href="#">
+<span class="material-symbols-outlined mb-1">auto_awesome</span>
+<span class="font-headline text-[10px] font-bold uppercase tracking-widest">Studio</span>
+</a>
+<a class="flex flex-col items-center justify-center text-stone-400 p-2" href="#">
+<span class="material-symbols-outlined mb-1">person</span>
+<span class="font-headline text-[10px] font-bold uppercase tracking-widest">Profile</span>
+</a>
+</div>
+</body></html>

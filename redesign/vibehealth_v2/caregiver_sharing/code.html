@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Caregiver Sharing - VibeHealth</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Be+Vietnam+Pro:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "tertiary-fixed": "#cffeeb",
+              "surface-variant": "#e7dad5",
+              "secondary-fixed-dim": "#ffb193",
+              "tertiary-container": "#cffeeb",
+              "surface-container-lowest": "#ffffff",
+              "surface-container": "#f2e6e1",
+              "secondary-dim": "#813b1d",
+              "on-tertiary-fixed-variant": "#446e60",
+              "on-primary-container": "#4e0009",
+              "secondary-fixed": "#ffc5af",
+              "on-secondary-fixed-variant": "#823c1e",
+              "on-primary": "#ffefee",
+              "on-secondary": "#ffefeb",
+              "on-tertiary": "#cefdea",
+              "on-error-container": "#520c00",
+              "inverse-on-surface": "#a49b97",
+              "background": "#fff4f0",
+              "primary-fixed": "#ff7574",
+              "on-secondary-container": "#763316",
+              "on-surface-variant": "#615a57",
+              "error-dim": "#b92902",
+              "outline-variant": "#b5aba7",
+              "surface-container-high": "#ece0db",
+              "secondary": "#904728",
+              "surface-container-low": "#faeeea",
+              "surface-container-highest": "#e7dad5",
+              "on-tertiary-container": "#396456",
+              "primary-fixed-dim": "#f56364",
+              "error-container": "#f95630",
+              "surface-dim": "#dfd2cc",
+              "surface-tint": "#aa2c32",
+              "tertiary-dim": "#2d574a",
+              "surface-bright": "#fff4f0",
+              "inverse-surface": "#120d0b",
+              "on-tertiary-fixed": "#275144",
+              "on-primary-fixed-variant": "#60000d",
+              "primary": "#aa2c32",
+              "on-error": "#ffefec",
+              "surface": "#fff4f0",
+              "error": "#b02500",
+              "on-surface": "#332d2b",
+              "secondary-container": "#ffc5af",
+              "primary-dim": "#992027",
+              "on-primary-fixed": "#000000",
+              "tertiary": "#396355",
+              "inverse-primary": "#ff6b6b",
+              "tertiary-fixed-dim": "#c1efdd",
+              "on-background": "#332d2b",
+              "primary-container": "#ff7574",
+              "on-secondary-fixed": "#5d2105",
+              "outline": "#7d7572"
+            },
+            fontFamily: {
+              "headline": ["Plus Jakarta Sans"],
+              "body": ["Be Vietnam Pro"],
+              "label": ["Be Vietnam Pro"]
+            },
+            borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .blob-bg {
+            border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+            filter: blur(80px);
+            opacity: 0.15;
+            z-index: -1;
+        }
+        .noise-texture {
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+            opacity: 0.03;
+            pointer-events: none;
+        }
+        /* Custom scrollbar for sidebar */
+        .sidebar-scroll::-webkit-scrollbar {
+            width: 4px;
+        }
+        .sidebar-scroll::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .sidebar-scroll::-webkit-scrollbar-thumb {
+            background: #e7dad5;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body min-h-screen selection:bg-primary-container selection:text-on-primary-container overflow-x-hidden">
+<div class="fixed inset-0 noise-texture"></div>
+<!-- Decorative Blobs -->
+<div class="fixed top-[-10%] right-[-10%] w-[500px] h-[500px] bg-primary-container blob-bg"></div>
+<div class="fixed bottom-[-5%] left-[-5%] w-[400px] h-[400px] bg-tertiary-container blob-bg"></div>
+<div class="flex min-h-screen">
+<!-- Unified Side Navigation -->
+<aside class="hidden lg:flex flex-col py-8 fixed left-0 top-0 h-full w-72 bg-[#faeeea] dark:bg-[#1a1614] rounded-r-[3rem] z-40 shadow-[20px_0_40px_rgba(170,44,50,0.04)] font-['Plus_Jakarta_Sans'] font-medium text-sm">
+<div class="px-8 mb-10">
+<div class="flex items-center gap-3">
+<span class="text-xl font-black text-[#aa2c32] dark:text-[#ff7574]">VibeHealth</span>
+</div>
+<p class="text-[10px] uppercase tracking-[0.2em] text-[#6d5c58] dark:text-[#a08d89] mt-1 font-bold">The Living Canvas</p>
+</div>
+<nav class="flex-1 overflow-y-auto sidebar-scroll space-y-1">
+<a class="flex items-center gap-4 text-[#6d5c58] dark:text-[#a08d89] px-6 py-3 hover:translate-x-1 transition-transform duration-200 active:opacity-80" href="#">
+<span class="material-symbols-outlined">grid_view</span>
+<span>Dashboard</span>
+</a>
+<a class="flex items-center gap-4 text-[#6d5c58] dark:text-[#a08d89] px-6 py-3 hover:translate-x-1 transition-transform duration-200 active:opacity-80" href="#">
+<span class="material-symbols-outlined">restaurant</span>
+<span>Nutrition</span>
+</a>
+<a class="flex items-center gap-4 text-[#6d5c58] dark:text-[#a08d89] px-6 py-3 hover:translate-x-1 transition-transform duration-200 active:opacity-80" href="#">
+<span class="material-symbols-outlined">sentiment_satisfied</span>
+<span>Mood</span>
+</a>
+<a class="flex items-center gap-4 text-[#6d5c58] dark:text-[#a08d89] px-6 py-3 hover:translate-x-1 transition-transform duration-200 active:opacity-80" href="#">
+<span class="material-symbols-outlined">calendar_today</span>
+<span>Period</span>
+</a>
+<a class="flex items-center gap-4 text-[#6d5c58] dark:text-[#a08d89] px-6 py-3 hover:translate-x-1 transition-transform duration-200 active:opacity-80" href="#">
+<span class="material-symbols-outlined">fitness_center</span>
+<span>Workouts</span>
+</a>
+<a class="flex items-center gap-4 text-[#6d5c58] dark:text-[#a08d89] px-6 py-3 hover:translate-x-1 transition-transform duration-200 active:opacity-80" href="#">
+<span class="material-symbols-outlined">self_improvement</span>
+<span>Meditation</span>
+</a>
+<a class="flex items-center gap-4 bg-[#e7dad5] dark:bg-[#3d322e] text-[#aa2c32] dark:text-[#ff7574] rounded-full mx-2 px-6 py-3 font-bold hover:translate-x-1 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined">group</span>
+<span>Caregivers</span>
+</a>
+<a class="flex items-center gap-4 text-[#6d5c58] dark:text-[#a08d89] px-6 py-3 hover:translate-x-1 transition-transform duration-200 active:opacity-80" href="#">
+<span class="material-symbols-outlined">medical_services</span>
+<span>Practitioners</span>
+</a>
+<a class="flex items-center gap-4 text-[#6d5c58] dark:text-[#a08d89] px-6 py-3 hover:translate-x-1 transition-transform duration-200 active:opacity-80" href="#">
+<span class="material-symbols-outlined">monitor_heart</span>
+<span>Vitals</span>
+</a>
+<a class="flex items-center gap-4 text-[#6d5c58] dark:text-[#a08d89] px-6 py-3 hover:translate-x-1 transition-transform duration-200 active:opacity-80" href="#">
+<span class="material-symbols-outlined">military_tech</span>
+<span>Rewards</span>
+</a>
+<a class="flex items-center gap-4 text-[#6d5c58] dark:text-[#a08d89] px-6 py-3 hover:translate-x-1 transition-transform duration-200 active:opacity-80" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span>Settings</span>
+</a>
+</nav>
+<!-- Theme Toggle Footer -->
+<div class="mt-auto px-4">
+<div class="bg-[#e7dad5]/50 dark:bg-[#2d2421] rounded-2xl p-1 flex items-center justify-between">
+<button class="flex-1 flex flex-col items-center py-2 rounded-xl bg-white dark:bg-[#1a1614] shadow-sm text-[#aa2c32] dark:text-[#ff7574]">
+<span class="material-symbols-outlined text-sm">light_mode</span>
+<span class="text-[10px] font-bold">Light</span>
+</button>
+<button class="flex-1 flex flex-col items-center py-2 text-[#6d5c58] dark:text-[#a08d89] hover:bg-[#e7dad5] dark:hover:bg-[#3d322e] rounded-xl transition-colors">
+<span class="material-symbols-outlined text-sm">dark_mode</span>
+<span class="text-[10px] font-bold">Dark</span>
+</button>
+<button class="flex-1 flex flex-col items-center py-2 text-[#6d5c58] dark:text-[#a08d89] hover:bg-[#e7dad5] dark:hover:bg-[#3d322e] rounded-xl transition-colors">
+<span class="material-symbols-outlined text-sm">settings_brightness</span>
+<span class="text-[10px] font-bold">System</span>
+</button>
+</div>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 w-full max-w-7xl mx-auto px-6 py-12 lg:py-20 mb-24 lg:mb-0 lg:pl-80">
+<!-- Top App Bar (Mobile) -->
+<div class="lg:hidden flex justify-between items-center mb-10">
+<h1 class="text-2xl font-black text-[#ff6b6b] italic">VibeHealth</h1>
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-[#ff6b6b]">notifications</span>
+<div class="w-10 h-10 rounded-full overflow-hidden border-2 border-primary-container">
+<img alt="User profile avatar" class="w-full h-full object-cover" data-alt="Portrait of a smiling woman with warm lighting and a soft natural background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDdelPQzEB3yqeUabndoegdPXzTqMcKQQdwADxd9P3wZ1tV6sVvE-1BVG7Sta6KuNGDj8BX_4cPxS9nf4WwYQNvsH-fLERkBjJqlnVYs_bb7dzttRvHsegvB4-q_IZscZh-rghvA-zsnxB8ZstlGQ-Qo0H1lsIzYdadFXBoaZ8pPf2-4RlOoOIk7bF5zUncFjZ1XrVh8Adw19pSOJYT3q-G32acDUi3LIeob2F2jvUefMeMO3BVB9jgQKUeKGQ1_kY-yA1P88NfsbE"/>
+</div>
+</div>
+</div>
+<!-- Page Header -->
+<header class="mb-12">
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
+<div>
+<h2 class="text-5xl md:text-6xl font-headline font-extrabold text-on-surface tracking-tight mb-4">Caregiver Sharing</h2>
+<p class="text-on-surface-variant max-w-xl text-lg leading-relaxed">
+                            Maintain your support circle with granular privacy controls. Manage who can see your progress and health vitals.
+                        </p>
+</div>
+<button class="flex items-center gap-3 px-8 py-5 bg-gradient-to-br from-primary to-primary-container text-white rounded-full font-bold shadow-xl shadow-primary/10 hover:scale-105 active:scale-95 transition-all self-start md:self-auto">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">person_add</span>
+                        Add Caregiver
+                    </button>
+</div>
+</header>
+<div class="grid grid-cols-1 xl:grid-cols-3 gap-10 items-start">
+<!-- Main Content: Active Caregivers List -->
+<div class="xl:col-span-2 space-y-10">
+<section>
+<div class="flex items-center justify-between mb-8">
+<h3 class="text-2xl font-headline font-bold">Active Circle</h3>
+<span class="text-sm font-bold text-primary px-4 py-1 bg-primary/10 rounded-full">3 Caregivers</span>
+</div>
+<!-- Bento Grid style for Caregivers -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<!-- Caregiver Card 1 -->
+<div class="bg-surface-container-low p-8 rounded-xl flex flex-col gap-6 relative overflow-hidden">
+<div class="flex items-center gap-5">
+<div class="w-16 h-16 rounded-2xl overflow-hidden shadow-lg">
+<img alt="Caregiver profile" class="w-full h-full object-cover" data-alt="Close up of a supportive professional woman in a serene office environment with warm morning light" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBHeDlJGWmyxCeuM87Fjky2ITTuONeNWcVDoo8Ztz6co6lsQwlBDwuTbV4-42i6IlHWJBm1dikZV7H4Md4hXpUxQSYbBBnp836ROgjo8-IStZYJs4urLAvt1uz0Zne4nvkP_d7sbbSj7BJP9yCJc4xIadZQCitiNDe_okowjkFxwvfhfl7aQO16ODafjT1249XJ4Bsg7cXY15GaFOVWPNpSQcU_02-tUtLVQVdkXv7fZQfv3BIqV-PVTfG_V64hMGNxC3jafuqipZo"/>
+</div>
+<div>
+<h4 class="text-xl font-bold">Dr. Elena Ross</h4>
+<p class="text-sm text-on-surface-variant font-medium">Primary Practitioner</p>
+</div>
+</div>
+<div class="space-y-4">
+<p class="text-xs font-bold uppercase tracking-widest text-on-surface-variant/60">Access Permissions</p>
+<div class="flex flex-wrap gap-2">
+<span class="px-4 py-2 bg-primary-container/20 text-on-primary-container rounded-full text-xs font-bold flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">monitor_heart</span> Vitals
+                                        </span>
+<span class="px-4 py-2 bg-primary-container/20 text-on-primary-container rounded-full text-xs font-bold flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">pill</span> Meds
+                                        </span>
+<span class="px-4 py-2 bg-primary-container/20 text-on-primary-container rounded-full text-xs font-bold flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">auto_stories</span> Journal
+                                        </span>
+</div>
+</div>
+<div class="mt-auto pt-6 flex items-center justify-between">
+<button class="text-primary font-bold text-sm hover:underline">Manage Privacy</button>
+<span class="text-[10px] text-on-surface-variant/40 font-bold uppercase">Shared 4mo ago</span>
+</div>
+</div>
+<!-- Caregiver Card 2 -->
+<div class="bg-surface-container-low p-8 rounded-xl flex flex-col gap-6 relative overflow-hidden">
+<div class="flex items-center gap-5">
+<div class="w-16 h-16 rounded-2xl overflow-hidden shadow-lg">
+<img alt="Caregiver profile" class="w-full h-full object-cover" data-alt="A kind middle-aged man with graying hair smiling warmly towards the camera in a soft indoor setting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDxaDu0JKEmSbDRCJFzfpg3HorwSl-Neq_RaRQDJrOGmcQSPkbsout97E-qkWb2btjSIMz72z4ZFAc7uxerolNjovOG23Byj9JfLFj_Pq87-ZHUvag_fq_pT-jOB60SGJOM3mBNkrqELGMw4gJD2WmwGlPJQ3MNtGwGJQRFJOjOpuBKn9NBKsGOy51QY6AQS1s51GMM9nDYMDw-_pdyFyPaKR87DCQqU4dfJi6DPN-o_uZBbyBzb3of6TlvDV5rBGUwVXRFILyY-7s"/>
+</div>
+<div>
+<h4 class="text-xl font-bold">Michael Chen</h4>
+<p class="text-sm text-on-surface-variant font-medium">Family Member</p>
+</div>
+</div>
+<div class="space-y-4">
+<p class="text-xs font-bold uppercase tracking-widest text-on-surface-variant/60">Access Permissions</p>
+<div class="flex flex-wrap gap-2">
+<span class="px-4 py-2 bg-tertiary-container text-on-tertiary-container rounded-full text-xs font-bold flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">mood</span> Mood
+                                        </span>
+<span class="px-4 py-2 bg-tertiary-container text-on-tertiary-container rounded-full text-xs font-bold flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">favorite</span> Vibe
+                                        </span>
+</div>
+</div>
+<div class="mt-auto pt-6 flex items-center justify-between">
+<button class="text-primary font-bold text-sm hover:underline">Manage Privacy</button>
+<span class="text-[10px] text-on-surface-variant/40 font-bold uppercase">Shared 2w ago</span>
+</div>
+</div>
+<!-- Invite Placeholder -->
+<div class="bg-surface-container/50 border-2 border-dashed border-outline-variant p-8 rounded-xl flex flex-col items-center justify-center text-center gap-4 group cursor-pointer hover:bg-surface-container transition-colors">
+<div class="w-14 h-14 rounded-full bg-surface-container-highest flex items-center justify-center text-outline group-hover:bg-primary-container group-hover:text-on-primary-container transition-colors">
+<span class="material-symbols-outlined text-3xl">add</span>
+</div>
+<div>
+<p class="font-bold">Add New Companion</p>
+<p class="text-xs text-on-surface-variant mt-1">Invite a therapist or partner</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Privacy Controls Section -->
+<section class="bg-surface-container-highest/30 p-10 rounded-[3rem]">
+<div class="flex items-center gap-4 mb-8">
+<span class="material-symbols-outlined text-primary scale-125">shield_person</span>
+<h3 class="text-2xl font-headline font-bold">Privacy Core</h3>
+</div>
+<div class="space-y-6">
+<div class="flex items-center justify-between p-6 bg-surface-container-lowest rounded-2xl shadow-sm">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-full bg-primary/5 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">monitor_heart</span>
+</div>
+<div>
+<p class="font-bold">Health Vitals</p>
+<p class="text-xs text-on-surface-variant">Real-time heart rate, sleep, and steps</p>
+</div>
+</div>
+<div class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-11 h-6 bg-surface-variant peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+</div>
+</div>
+<div class="flex items-center justify-between p-6 bg-surface-container-lowest rounded-2xl shadow-sm">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-full bg-primary/5 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">pill</span>
+</div>
+<div>
+<p class="font-bold">Medication Tracking</p>
+<p class="text-xs text-on-surface-variant">Active prescriptions and dosage history</p>
+</div>
+</div>
+<div class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-11 h-6 bg-surface-variant peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+</div>
+</div>
+<div class="flex items-center justify-between p-6 bg-surface-container-lowest rounded-2xl shadow-sm opacity-60">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-full bg-primary/5 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">auto_stories</span>
+</div>
+<div>
+<p class="font-bold">Sensitive Journal Entries</p>
+<p class="text-xs text-on-surface-variant">Private thoughts tagged with 'Sensitive'</p>
+</div>
+</div>
+<div class="relative inline-flex items-center cursor-pointer">
+<input class="sr-only peer" type="checkbox"/>
+<div class="w-11 h-6 bg-surface-variant peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+</div>
+</div>
+</div>
+</section>
+</div>
+<!-- Sidebar Activity Feed -->
+<aside class="space-y-8">
+<div class="bg-surface-container-low p-8 rounded-[2.5rem] shadow-sm">
+<h3 class="text-xl font-headline font-bold mb-6">Recent Activity</h3>
+<div class="space-y-8">
+<div class="flex gap-4">
+<div class="shrink-0 w-2 h-2 rounded-full bg-primary mt-2"></div>
+<div>
+<p class="text-sm font-bold">Dr. Elena Ross</p>
+<p class="text-sm text-on-surface-variant">Viewed your Heart Rate Trend</p>
+<p class="text-[10px] text-on-surface-variant/40 mt-1 uppercase font-bold tracking-widest">2 hours ago</p>
+</div>
+</div>
+<div class="flex gap-4">
+<div class="shrink-0 w-2 h-2 rounded-full bg-secondary mt-2"></div>
+<div>
+<p class="text-sm font-bold">Michael Chen</p>
+<p class="text-sm text-on-surface-variant">Responded to your Mood Update</p>
+<p class="text-[10px] text-on-surface-variant/40 mt-1 uppercase font-bold tracking-widest">5 hours ago</p>
+</div>
+</div>
+<div class="flex gap-4">
+<div class="shrink-0 w-2 h-2 rounded-full bg-primary mt-2"></div>
+<div>
+<p class="text-sm font-bold">Dr. Elena Ross</p>
+<p class="text-sm text-on-surface-variant">Updated your dosage schedule</p>
+<p class="text-[10px] text-on-surface-variant/40 mt-1 uppercase font-bold tracking-widest">Yesterday</p>
+</div>
+</div>
+</div>
+<button class="w-full mt-10 py-4 text-sm font-bold border-2 border-surface-variant rounded-full hover:bg-surface-variant/30 transition-colors">View Audit Log</button>
+</div>
+<div class="bg-gradient-to-br from-tertiary/10 to-tertiary-container/30 p-8 rounded-[2.5rem]">
+<span class="material-symbols-outlined text-tertiary mb-4">emergency</span>
+<h4 class="text-lg font-bold mb-2">Emergency Access</h4>
+<p class="text-sm text-on-surface-variant mb-6 leading-relaxed">Designate a contact who can access all data in case of a medical emergency.</p>
+<button class="px-6 py-3 bg-white text-tertiary rounded-full text-xs font-bold shadow-sm">Setup Contact</button>
+</div>
+</aside>
+</div>
+</main>
+</div>
+<!-- Bottom Navigation (Predicted Component - Mobile only) -->
+<nav class="lg:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pt-2 pb-6 bg-[#faeeea]/80 dark:bg-stone-900/80 backdrop-blur-2xl rounded-t-[2.5rem] shadow-[0_-10px_40px_rgba(170,44,50,0.05)]">
+<a class="flex flex-col items-center justify-center text-stone-400 dark:text-stone-500 p-2" href="#">
+<span class="material-symbols-outlined">edit_note</span>
+<span class="text-[10px] font-bold uppercase tracking-widest mt-1">Journal</span>
+</a>
+<a class="flex flex-col items-center justify-center text-stone-400 dark:text-stone-500 p-2" href="#">
+<span class="material-symbols-outlined">bolt</span>
+<span class="text-[10px] font-bold uppercase tracking-widest mt-1">Activity</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-[#ff6b6b] text-white rounded-2xl p-3 mb-2 transform -translate-y-2 shadow-lg shadow-[#ff6b6b]/30" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">groups</span>
+</a>
+<a class="flex flex-col items-center justify-center text-stone-400 dark:text-stone-500 p-2" href="#">
+<span class="material-symbols-outlined">analytics</span>
+<span class="text-[10px] font-bold uppercase tracking-widest mt-1">Insights</span>
+</a>
+<a class="flex flex-col items-center justify-center text-stone-400 dark:text-stone-500 p-2" href="#">
+<span class="material-symbols-outlined">auto_stories</span>
+<span class="text-[10px] font-bold uppercase tracking-widest mt-1">Library</span>
+</a>
+</nav>
+</body></html>

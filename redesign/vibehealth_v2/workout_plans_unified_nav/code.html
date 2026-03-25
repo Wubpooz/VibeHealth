@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Workout Plans | VibeHealth</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Be+Vietnam+Pro:wght@300;400;500;600&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>.material-symbols-outlined {
+    font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24
+    }
+.blob-shape {
+    border-radius: 60% 40% 30% 70%/60% 30% 70% 40%
+    }
+.noise-bg {
+    background-image: url(https://lh3.googleusercontent.com/aida-public/AB6AXuBzAX8IOcA8_a_6QSlhTUPC4jyqGbRHoZz3S9_WXcTGC-sVe9tyVgNpmACyPUXS-1DqHCCyPtddwinyK2dDEQT6VNF_UerQhHSn1XBaI_TvYGVEaRZwBYI_sSGZvJY1FkUtJ64eXjtRMI0fdcqKr8Ph9hvc2tPYtc4BgiKAqgeev8QVyg8wA0-5TRq-hSz2RI7RQ8ncYCC_Xehb44DUHdAS9j9t4BshZ2PZK0jFPjIIVWi3-taOEREgICTRgqb7C8TwbMZLL37jrXE);
+    background-repeat: repeat;
+    opacity: 0.03
+    }
+body {
+    font-family: "Be Vietnam Pro", sans-serif;
+    background-color: #fff4f0
+    }
+h1, h2, h3, .font-headline {
+    font-family: "Plus Jakarta Sans", sans-serif
+    }
+.custom-scrollbar::-webkit-scrollbar {
+    width: 4px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background: rgba(170, 44, 50, 0.1);
+    border-radius: 10px;
+}</style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "tertiary-fixed": "#cffeeb",
+                        "surface-variant": "#e7dad5",
+                        "secondary-fixed-dim": "#ffb193",
+                        "tertiary-container": "#cffeeb",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container": "#f2e6e1",
+                        "secondary-dim": "#813b1d",
+                        "on-tertiary-fixed-variant": "#446e60",
+                        "on-primary-container": "#4e0009",
+                        "secondary-fixed": "#ffc5af",
+                        "on-secondary-fixed-variant": "#823c1e",
+                        "on-primary": "#ffefee",
+                        "on-secondary": "#ffefeb",
+                        "on-tertiary": "#cefdea",
+                        "on-error-container": "#520c00",
+                        "inverse-on-surface": "#a49b97",
+                        "background": "#fff4f0",
+                        "primary-fixed": "#ff7574",
+                        "on-secondary-container": "#763316",
+                        "on-surface-variant": "#615a57",
+                        "error-dim": "#b92902",
+                        "outline-variant": "#b5aba7",
+                        "surface-container-high": "#ece0db",
+                        "secondary": "#904728",
+                        "surface-container-low": "#faeeea",
+                        "surface-container-highest": "#e7dad5",
+                        "on-tertiary-container": "#396456",
+                        "primary-fixed-dim": "#f56364",
+                        "error-container": "#f95630",
+                        "surface-dim": "#dfd2cc",
+                        "surface-tint": "#aa2c32",
+                        "tertiary-dim": "#2d574a",
+                        "surface-bright": "#fff4f0",
+                        "inverse-surface": "#120d0b",
+                        "on-tertiary-fixed": "#275144",
+                        "on-primary-fixed-variant": "#60000d",
+                        "primary": "#aa2c32",
+                        "on-error": "#ffefec",
+                        "surface": "#fff4f0",
+                        "error": "#b02500",
+                        "on-surface": "#332d2b",
+                        "secondary-container": "#ffc5af",
+                        "primary-dim": "#992027",
+                        "on-primary-fixed": "#000000",
+                        "tertiary": "#396355",
+                        "inverse-primary": "#ff6b6b",
+                        "tertiary-fixed-dim": "#c1efdd",
+                        "on-background": "#332d2b",
+                        "primary-container": "#ff7574",
+                        "on-secondary-fixed": "#5d2105",
+                        "outline": "#7d7572"
+                    },
+                    fontFamily: {
+                        "headline": ["Plus Jakarta Sans"],
+                        "body": ["Be Vietnam Pro"],
+                        "label": ["Be Vietnam Pro"]
+                    },
+                    borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-background text-on-background min-h-screen relative overflow-x-hidden">
+<div class="fixed inset-0 pointer-events-none noise-bg z-[1]"></div>
+<!-- Background Blobs -->
+<div class="absolute -top-24 -right-24 w-96 h-96 bg-primary-container/20 blur-3xl blob-shape z-0"></div>
+<div class="absolute top-1/2 -left-24 w-64 h-64 bg-tertiary-container/30 blur-3xl blob-shape z-0"></div>
+<div class="flex min-h-screen">
+<!-- Side Navigation Shell (Unified Navigation from Screen 78) -->
+<aside class="hidden lg:flex flex-col w-72 h-screen sticky top-0 z-40 bg-[#faeeea] dark:bg-[#1a1614] rounded-r-[3rem] shadow-[20px_0_40px_rgba(170,44,50,0.04)] py-8 font-['Plus_Jakarta_Sans']">
+<div class="px-8 mb-8">
+<div class="text-xl font-black text-[#aa2c32] dark:text-[#ff7574]">VibeHealth</div>
+<div class="text-[10px] text-[#6d5c58] dark:text-[#a08d89] font-bold uppercase tracking-widest mt-0.5">The Living Canvas</div>
+</div>
+<div class="flex-1 space-y-1 overflow-y-auto custom-scrollbar">
+<a class="flex items-center px-6 py-3 text-[#6d5c58] dark:text-[#a08d89] hover:translate-x-1 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined mr-4 text-[20px]">grid_view</span>
+<span class="text-sm font-medium">Dashboard</span>
+</a>
+<a class="flex items-center px-6 py-3 text-[#6d5c58] dark:text-[#a08d89] hover:translate-x-1 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined mr-4 text-[20px]">restaurant</span>
+<span class="text-sm font-medium">Nutrition</span>
+</a>
+<a class="flex items-center px-6 py-3 text-[#6d5c58] dark:text-[#a08d89] hover:translate-x-1 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined mr-4 text-[20px]">sentiment_satisfied</span>
+<span class="text-sm font-medium">Mood</span>
+</a>
+<a class="flex items-center px-6 py-3 text-[#6d5c58] dark:text-[#a08d89] hover:translate-x-1 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined mr-4 text-[20px]">calendar_today</span>
+<span class="text-sm font-medium">Period</span>
+</a>
+<a class="flex items-center bg-[#e7dad5] dark:bg-[#3d322e] text-[#aa2c32] dark:text-[#ff7574] rounded-full mx-2 px-6 py-3 font-bold hover:translate-x-1 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined mr-4 text-[20px]" style="font-variation-settings: 'FILL' 1;">fitness_center</span>
+<span class="text-sm">Workouts</span>
+</a>
+<a class="flex items-center px-6 py-3 text-[#6d5c58] dark:text-[#a08d89] hover:translate-x-1 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined mr-4 text-[20px]">self_improvement</span>
+<span class="text-sm font-medium">Meditation</span>
+</a>
+<a class="flex items-center px-6 py-3 text-[#6d5c58] dark:text-[#a08d89] hover:translate-x-1 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined mr-4 text-[20px]">group</span>
+<span class="text-sm font-medium">Caregivers</span>
+</a>
+<a class="flex items-center px-6 py-3 text-[#6d5c58] dark:text-[#a08d89] hover:translate-x-1 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined mr-4 text-[20px]">medical_services</span>
+<span class="text-sm font-medium">Practitioners</span>
+</a>
+<a class="flex items-center px-6 py-3 text-[#6d5c58] dark:text-[#a08d89] hover:translate-x-1 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined mr-4 text-[20px]">monitor_heart</span>
+<span class="text-sm font-medium">Vitals</span>
+</a>
+<a class="flex items-center px-6 py-3 text-[#6d5c58] dark:text-[#a08d89] hover:translate-x-1 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined mr-4 text-[20px]">military_tech</span>
+<span class="text-sm font-medium">Rewards</span>
+</a>
+<a class="flex items-center px-6 py-3 text-[#6d5c58] dark:text-[#a08d89] hover:translate-x-1 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined mr-4 text-[20px]">settings</span>
+<span class="text-sm font-medium">Settings</span>
+</a>
+</div>
+<!-- Theme Toggle Footer -->
+<div class="mt-auto px-4 mb-4">
+<div class="bg-[#e7dad5]/50 dark:bg-[#3d322e]/50 p-1 rounded-full flex justify-between items-center">
+<button class="flex-1 flex items-center justify-center py-2 px-1 bg-white dark:bg-[#1a1614] rounded-full text-[#aa2c32] shadow-sm">
+<span class="material-symbols-outlined text-[18px]">light_mode</span>
+</button>
+<button class="flex-1 flex items-center justify-center py-2 px-1 text-[#6d5c58] dark:text-[#a08d89]">
+<span class="material-symbols-outlined text-[18px]">dark_mode</span>
+</button>
+<button class="flex-1 flex items-center justify-center py-2 px-1 text-[#6d5c58] dark:text-[#a08d89]">
+<span class="material-symbols-outlined text-[18px]">settings_brightness</span>
+</button>
+</div>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="flex-1 relative z-10 px-6 py-8 md:px-12 lg:py-12 max-w-7xl mx-auto overflow-y-auto">
+<!-- TopAppBar (Shared Component) -->
+<header class="fixed top-0 left-0 lg:left-72 right-0 z-50 bg-[#fef4f1]/70 backdrop-blur-xl md:hidden">
+<div class="flex justify-between items-center px-6 py-4">
+<span class="text-2xl font-black text-[#ff6b6b] italic headline">VibeHealth</span>
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-stone-500">notifications</span>
+<div class="w-8 h-8 rounded-full bg-surface-variant flex items-center justify-center overflow-hidden">
+<img alt="User profile avatar" data-alt="close-up portrait of a smiling young woman with warm natural lighting and soft blurred outdoor background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBRekbwjGXLo0ydYUKpStLJAdImTcmtVnUOQFRDz-DEK1RlFZIEVYf0Yc0nBcwKAomdNe2aGuVFq0l922WFG7gZafvn7u25CM3zJU5g0lI0LvXg00B6UMSOhXWuYkrXEuiBbV3lsNiz8lCvKrrnhc0cQbPC1J2tKCC3C0HDcloVNaUZqumkcjR41GOuOhknrPk2LBGHFRb12CtGNo5y5D8xoDyf9nsC3CcQPLekPS00HzA_DMyyq2cRYDHV8l_x96YSZFE9c8E3Eqc"/>
+</div>
+</div>
+</div>
+</header>
+<div class="mt-16 md:mt-0 flex flex-col gap-12">
+<!-- Hero Section & Progress -->
+<section class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-end">
+<div class="lg:col-span-7">
+<h1 class="text-5xl md:text-7xl font-black text-on-surface tracking-tighter leading-none mb-6 headline">
+                            Workout <span class="text-primary italic">Plans</span>
+</h1>
+<p class="text-xl text-on-surface-variant max-w-xl leading-relaxed">
+                            Your movement, your pace. curated routines designed to flow with your energy levels and goals.
+                        </p>
+</div>
+<div class="lg:col-span-5">
+<div class="bg-surface-container-low p-8 rounded-xl relative overflow-hidden group">
+<div class="absolute -right-12 -bottom-12 w-48 h-48 bg-tertiary-container/40 blob-shape group-hover:scale-110 transition-transform duration-700"></div>
+<div class="relative z-10">
+<div class="flex justify-between items-center mb-6">
+<h3 class="font-headline font-bold text-lg">Weekly Active Minutes</h3>
+<span class="text-tertiary font-bold">142 / 200 min</span>
+</div>
+<div class="w-full h-4 bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-gradient-to-r from-tertiary to-[#b8e6d4] rounded-full" style="width: 71%"></div>
+</div>
+<div class="flex justify-between mt-4">
+<div class="flex items-center gap-2">
+<div class="w-2 h-2 rounded-full bg-tertiary"></div>
+<span class="text-xs font-medium text-on-surface-variant">Active today: 45 min</span>
+</div>
+<span class="text-xs font-bold text-primary">View Trends</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Filters -->
+<section class="flex flex-wrap gap-3">
+<button class="px-8 py-3 bg-primary text-white rounded-full font-bold text-sm shadow-xl shadow-primary/20 transition-transform active:scale-95">All Workouts</button>
+<button class="px-8 py-3 bg-surface-container-highest text-on-surface-variant rounded-full font-bold text-sm hover:bg-surface-container-high transition-all">Yoga &amp; Flow</button>
+<button class="px-8 py-3 bg-surface-container-highest text-on-surface-variant rounded-full font-bold text-sm hover:bg-surface-container-high transition-all">HIIT &amp; Cardio</button>
+<button class="px-8 py-3 bg-surface-container-highest text-on-surface-variant rounded-full font-bold text-sm hover:bg-surface-container-high transition-all">Strength</button>
+<button class="px-8 py-3 bg-surface-container-highest text-on-surface-variant rounded-full font-bold text-sm hover:bg-surface-container-high transition-all">Restorative</button>
+</section>
+<!-- Curated Workouts Bento Grid -->
+<section>
+<h2 class="text-3xl font-black mb-8 headline">Curated for You</h2>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+<!-- Workout Card 1: Yoga -->
+<div class="group cursor-pointer">
+<div class="relative h-80 w-full overflow-hidden rounded-xl bg-surface-container mb-4">
+<img alt="Yoga session" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="peaceful woman practicing yoga at sunrise in a minimalist studio with soft warm natural light and wooden floors" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDu5KscXTFz1AdYXhZ0DS6zyZbNHJ1GOCnXJ6L9WS6wf0A4hh__pC6LnfkEnDQSsvCUOJrD882P12w0sBBU3ptcNb1mUycJBYiIyxOH5tLeXvEg-P1-z5swOdVov7jkdtYuINkWr6zfGARIXewrTdDIdm0nkk9rg09tlI7EFFKOyvhmO4-O3lzorR0_p-KnbpM9oM-ip9YJgXRSRmURMM2i4KFw65oieLarzs_UEpx1nndNFDfSBKXcDCbNoN4zV96WCFzncaSvRJw"/>
+<div class="absolute top-4 left-4 bg-white/80 backdrop-blur-md px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest text-primary">Beginner Friendly</div>
+<div class="absolute bottom-4 left-4 right-4 flex justify-between items-end">
+<div class="bg-black/20 backdrop-blur-lg p-4 rounded-xl text-white w-full flex justify-between items-center">
+<div>
+<p class="text-xs opacity-80">Duration</p>
+<p class="font-bold">25 Minutes</p>
+</div>
+<div class="text-right">
+<p class="text-xs opacity-80">Difficulty</p>
+<p class="font-bold">Low</p>
+</div>
+</div>
+</div>
+</div>
+<h3 class="text-xl font-bold group-hover:text-primary transition-colors headline">Morning Solar Flow</h3>
+<p class="text-on-surface-variant text-sm mt-1">Gently wake up your body with rhythmic vinyasa movements.</p>
+</div>
+<!-- Workout Card 2: HIIT -->
+<div class="group cursor-pointer">
+<div class="relative h-80 w-full overflow-hidden rounded-xl bg-surface-container mb-4">
+<img alt="HIIT Workout" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="dynamic shot of a person doing mountain climbers in a modern high-end gym with atmospheric moody lighting and energetic vibes" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBQCKT0AnQ8Ju4vsqYfBzOBaNClIqxpqiZDaaFmqXQVv0Xbd_LsRTQemptZBn9iB0mM348S-c6tHJFaWE2M9fZB7vK0E1t9_kbAmI3tzQ4Apw2Z8w_wWXhq8yWioagmg4jcIKaFX9zx0WNiSpM8DfBLXMUeqAkcVXjDzbSQTxSV1wXLbt7b_hy2WKQmAbJ5euHHA6QqiXbcLOHarKvzTpBZtZBtAzjVZXMtHQxhqgBfC0SXsnjbhZw1wUNkReiJy0PtY_qAA1zzZoI"/>
+<div class="absolute top-4 left-4 bg-primary text-white px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest">Trending Now</div>
+<div class="absolute bottom-4 left-4 right-4 flex justify-between items-end">
+<div class="bg-black/20 backdrop-blur-lg p-4 rounded-xl text-white w-full flex justify-between items-center">
+<div>
+<p class="text-xs opacity-80">Duration</p>
+<p class="font-bold">40 Minutes</p>
+</div>
+<div class="text-right">
+<p class="text-xs opacity-80">Difficulty</p>
+<p class="font-bold">High</p>
+</div>
+</div>
+</div>
+</div>
+<h3 class="text-xl font-bold group-hover:text-primary transition-colors headline">Vibe Intensity HIIT</h3>
+<p class="text-on-surface-variant text-sm mt-1">High-energy metabolic conditioning to boost endurance.</p>
+</div>
+<!-- Workout Card 3: Strength -->
+<div class="group cursor-pointer">
+<div class="relative h-80 w-full overflow-hidden rounded-xl bg-surface-container mb-4">
+<img alt="Strength Training" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="aesthetic close-up of kettlebells on a gym floor with warm sunlight streaming through large windows creating soft long shadows" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBm8QOKupaQfnPPg9HJA_3I8ZsOR50UgJNtSnj2b5Fbe3cZyLMCGHTarwuwWdb8nJ2QOsh8HIwWwvJFKbs3wbM3BJDL1FDeyVWLaGPv-j8lnjSPkWU5E0Y8TqtlrwzhZeaiOA8rxDa5_hzc646woFsY1jcymv8Vz7urXiNENP2Y_tS4bIfFxAOZMPExOy221pd9tPp4v9PSsSBmFprNo5jUH8pQyWUykLVk4ul9zI_O65Ok6ZSXfvxpbvbG52Y1A7aWdgXkJQ8p90c"/>
+<div class="absolute top-4 left-4 bg-white/80 backdrop-blur-md px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest text-primary">Core Focused</div>
+<div class="absolute bottom-4 left-4 right-4 flex justify-between items-end">
+<div class="bg-black/20 backdrop-blur-lg p-4 rounded-xl text-white w-full flex justify-between items-center">
+<div>
+<p class="text-xs opacity-80">Duration</p>
+<p class="font-bold">35 Minutes</p>
+</div>
+<div class="text-right">
+<p class="text-xs opacity-80">Difficulty</p>
+<p class="font-bold">Medium</p>
+</div>
+</div>
+</div>
+</div>
+<h3 class="text-xl font-bold group-hover:text-primary transition-colors headline">Functional Strength 101</h3>
+<p class="text-on-surface-variant text-sm mt-1">Building muscle through purposeful, everyday movements.</p>
+</div>
+</div>
+</section>
+<!-- My Routine Section -->
+<section class="bg-surface-container-low rounded-xl p-8 md:p-12 mb-20 relative overflow-hidden">
+<div class="absolute top-0 right-0 w-64 h-full opacity-10 pointer-events-none">
+<span class="material-symbols-outlined text-[20rem] text-primary" style="font-variation-settings: 'wght' 700;">calendar_month</span>
+</div>
+<div class="relative z-10 flex flex-col md:flex-row justify-between items-start md:items-center mb-10">
+<div>
+<h2 class="text-3xl font-black mb-2 headline">My Routine</h2>
+<p class="text-on-surface-variant">Stay consistent with your scheduled movements.</p>
+</div>
+<button class="mt-4 md:mt-0 flex items-center gap-2 text-primary font-bold hover:underline headline">
+<span class="material-symbols-outlined">edit_calendar</span>
+                            Manage Schedule
+                        </button>
+</div>
+<div class="space-y-4">
+<!-- Scheduled Workout 1 -->
+<div class="flex items-center gap-6 bg-surface-container-lowest p-6 rounded-xl hover:shadow-xl hover:shadow-primary/5 transition-all">
+<div class="w-16 h-16 rounded-xl bg-primary/10 flex flex-col items-center justify-center text-primary">
+<span class="text-xs font-black uppercase">Mon</span>
+<span class="text-lg font-bold">12</span>
+</div>
+<div class="flex-1">
+<h4 class="font-bold text-lg headline">Post-Work Reset Yoga</h4>
+<p class="text-sm text-on-surface-variant">Scheduled for 6:00 PM • 30 mins</p>
+</div>
+<button class="bg-surface-container-highest p-3 rounded-full text-primary hover:bg-primary hover:text-white transition-colors">
+<span class="material-symbols-outlined">play_arrow</span>
+</button>
+</div>
+<!-- Scheduled Workout 2 -->
+<div class="flex items-center gap-6 bg-surface-container-lowest p-6 rounded-xl hover:shadow-xl hover:shadow-primary/5 transition-all">
+<div class="w-16 h-16 rounded-xl bg-surface-container flex flex-col items-center justify-center text-on-surface-variant">
+<span class="text-xs font-black uppercase">Wed</span>
+<span class="text-lg font-bold">14</span>
+</div>
+<div class="flex-1">
+<h4 class="font-bold text-lg headline">Full Body HIIT Blast</h4>
+<p class="text-sm text-on-surface-variant">Scheduled for 7:30 AM • 45 mins</p>
+</div>
+<button class="bg-surface-container-highest p-3 rounded-full text-on-surface-variant cursor-not-allowed">
+<span class="material-symbols-outlined">lock</span>
+</button>
+</div>
+</div>
+</section>
+</div>
+</main>
+</div>
+<!-- BottomNavBar (Shared Component) -->
+<nav class="lg:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pt-2 pb-6 bg-[#faeeea]/80 backdrop-blur-2xl rounded-t-[2.5rem] shadow-[0_-10px_40px_rgba(170,44,50,0.05)]">
+<a class="flex flex-col items-center justify-center text-stone-400 dark:text-stone-500 p-2 hover:text-[#ff6b6b] transition-all" href="#">
+<span class="material-symbols-outlined">edit_note</span>
+<span class="font-['Plus_Jakarta_Sans'] text-[10px] font-bold uppercase tracking-widest">Journal</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-[#ff6b6b] text-white rounded-2xl p-3 mb-2 transform -translate-y-2 shadow-lg shadow-[#ff6b6b]/30" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">bolt</span>
+<span class="font-['Plus_Jakarta_Sans'] text-[10px] font-bold uppercase tracking-widest">Activity</span>
+</a>
+<a class="flex flex-col items-center justify-center text-stone-400 dark:text-stone-500 p-2 hover:text-[#ff6b6b] transition-all" href="#">
+<span class="material-symbols-outlined">favorite</span>
+<span class="font-['Plus_Jakarta_Sans'] text-[10px] font-bold uppercase tracking-widest">Vibe</span>
+</a>
+<a class="flex flex-col items-center justify-center text-stone-400 dark:text-stone-500 p-2 hover:text-[#ff6b6b] transition-all" href="#">
+<span class="material-symbols-outlined">analytics</span>
+<span class="font-['Plus_Jakarta_Sans'] text-[10px] font-bold uppercase tracking-widest">Insights</span>
+</a>
+<a class="flex flex-col items-center justify-center text-stone-400 dark:text-stone-500 p-2 hover:text-[#ff6b6b] transition-all" href="#">
+<span class="material-symbols-outlined">auto_stories</span>
+<span class="font-['Plus_Jakarta_Sans'] text-[10px] font-bold uppercase tracking-widest">Library</span>
+</a>
+</nav>
+</body></html>

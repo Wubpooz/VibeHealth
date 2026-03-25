@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Heart Rate Trend - VibeHealth</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700;800&amp;family=Be+Vietnam+Pro:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              tertiary: "#396355",
+              "on-secondary-fixed-variant": "#823c1e",
+              "on-tertiary-fixed": "#275144",
+              "on-primary-fixed": "#000000",
+              "surface-bright": "#fff4f0",
+              "secondary-container": "#ffc5af",
+              "surface-container-low": "#faeeea",
+              "tertiary-container": "#cffeeb",
+              "inverse-surface": "#120d0b",
+              "on-error": "#ffefec",
+              "primary-fixed-dim": "#f56364",
+              "primary-container": "#ff7574",
+              "on-secondary": "#ffefeb",
+              "primary-dim": "#992027",
+              "secondary-fixed-dim": "#ffb193",
+              "surface-variant": "#e7dad5",
+              primary: "#aa2c32",
+              "tertiary-fixed": "#cffeeb",
+              "surface-container-lowest": "#ffffff",
+              "error-dim": "#b92902",
+              "on-tertiary-container": "#396456",
+              "surface-dim": "#dfd2cc",
+              "on-error-container": "#520c00",
+              "inverse-primary": "#ff6b6b",
+              secondary: "#904728",
+              "on-primary": "#ffefee",
+              "on-background": "#332d2b",
+              background: "#fff4f0",
+              "secondary-fixed": "#ffc5af",
+              "inverse-on-surface": "#a49b97",
+              "surface-tint": "#aa2c32",
+              "surface-container-highest": "#e7dad5",
+              "outline-variant": "#b5aba7",
+              "on-secondary-fixed": "#5d2105",
+              "error-container": "#f95630",
+              "on-surface-variant": "#615a57",
+              outline: "#7d7572",
+              "on-tertiary-fixed-variant": "#446e60",
+              "on-secondary-container": "#763316",
+              surface: "#fff4f0",
+              "on-tertiary": "#cefdea",
+              "tertiary-fixed-dim": "#c1efdd",
+              "surface-container-high": "#ece0db",
+              "on-primary-fixed-variant": "#60000d",
+              "on-surface": "#332d2b",
+              "primary-fixed": "#ff7574",
+              "tertiary-dim": "#2d574a",
+              "secondary-dim": "#813b1d",
+              error: "#b02500",
+              "on-primary-container": "#4e0009",
+              "surface-container": "#f2e6e1"
+            },
+            fontFamily: {
+              headline: ["Plus Jakarta Sans"],
+              body: ["Be Vietnam Pro"],
+              label: ["Be Vietnam Pro"],
+              display: "Plus Jakarta Sans"
+            },
+            borderRadius: {
+              DEFAULT: "1rem",
+              lg: "2rem",
+              xl: "3rem",
+              full: "9999px"
+            }
+          }
+        }
+      };
+    </script>
+<style>
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        display: inline-block;
+        line-height: 1;
+      }
+      .blob-accent {
+        border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+      }
+      body {
+        background-color: #fff4f0;
+        background-image: radial-gradient(at 0% 0%, rgba(255, 117, 116, 0.05) 0px, transparent 50%),
+                          radial-gradient(at 100% 100%, rgba(184, 230, 212, 0.1) 0px, transparent 50%);
+        min-height: 100vh;
+      }
+      /* Custom scrollbar for sidebar */
+      .sidebar-scroll::-webkit-scrollbar {
+        width: 4px;
+      }
+      .sidebar-scroll::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      .sidebar-scroll::-webkit-scrollbar-thumb {
+        background: #e7dad5;
+        border-radius: 10px;
+      }
+    </style>
+</head>
+<body class="font-body text-on-surface">
+<!-- SideNavBar -->
+<aside class="hidden md:flex flex-col py-8 fixed left-0 top-0 h-full w-72 bg-[#faeeea] dark:bg-[#1a1614] rounded-r-[3rem] z-40 shadow-[20px_0_40px_rgba(170,44,50,0.04)] font-['Plus_Jakarta_Sans'] font-medium text-sm">
+<div class="px-8 mb-10">
+<div class="flex items-center gap-3">
+<span class="text-xl font-black text-[#aa2c32] dark:text-[#ff7574]">VibeHealth</span>
+</div>
+<p class="text-[10px] uppercase tracking-[0.2em] text-[#6d5c58] dark:text-[#a08d89] mt-1 font-bold">The Living Canvas</p>
+</div>
+<nav class="flex-1 overflow-y-auto sidebar-scroll space-y-1">
+<a class="flex items-center gap-4 text-[#6d5c58] dark:text-[#a08d89] px-6 py-3 hover:translate-x-1 transition-transform duration-200 active:opacity-80" href="#">
+<span class="material-symbols-outlined">grid_view</span>
+<span>Dashboard</span>
+</a>
+<a class="flex items-center gap-4 text-[#6d5c58] dark:text-[#a08d89] px-6 py-3 hover:translate-x-1 transition-transform duration-200 active:opacity-80" href="#">
+<span class="material-symbols-outlined">restaurant</span>
+<span>Nutrition</span>
+</a>
+<a class="flex items-center gap-4 text-[#6d5c58] dark:text-[#a08d89] px-6 py-3 hover:translate-x-1 transition-transform duration-200 active:opacity-80" href="#">
+<span class="material-symbols-outlined">sentiment_satisfied</span>
+<span>Mood</span>
+</a>
+<a class="flex items-center gap-4 text-[#6d5c58] dark:text-[#a08d89] px-6 py-3 hover:translate-x-1 transition-transform duration-200 active:opacity-80" href="#">
+<span class="material-symbols-outlined">calendar_today</span>
+<span>Period</span>
+</a>
+<a class="flex items-center gap-4 text-[#6d5c58] dark:text-[#a08d89] px-6 py-3 hover:translate-x-1 transition-transform duration-200 active:opacity-80" href="#">
+<span class="material-symbols-outlined">fitness_center</span>
+<span>Workouts</span>
+</a>
+<a class="flex items-center gap-4 text-[#6d5c58] dark:text-[#a08d89] px-6 py-3 hover:translate-x-1 transition-transform duration-200 active:opacity-80" href="#">
+<span class="material-symbols-outlined">self_improvement</span>
+<span>Meditation</span>
+</a>
+<a class="flex items-center gap-4 text-[#6d5c58] dark:text-[#a08d89] px-6 py-3 hover:translate-x-1 transition-transform duration-200 active:opacity-80" href="#">
+<span class="material-symbols-outlined">group</span>
+<span>Caregivers</span>
+</a>
+<a class="flex items-center gap-4 text-[#6d5c58] dark:text-[#a08d89] px-6 py-3 hover:translate-x-1 transition-transform duration-200 active:opacity-80" href="#">
+<span class="material-symbols-outlined">medical_services</span>
+<span>Practitioners</span>
+</a>
+<a class="flex items-center gap-4 bg-[#e7dad5] dark:bg-[#3d322e] text-[#aa2c32] dark:text-[#ff7574] rounded-full mx-2 px-6 py-3 font-bold hover:translate-x-1 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined">monitor_heart</span>
+<span>Vitals</span>
+</a>
+<a class="flex items-center gap-4 text-[#6d5c58] dark:text-[#a08d89] px-6 py-3 hover:translate-x-1 transition-transform duration-200 active:opacity-80" href="#">
+<span class="material-symbols-outlined">military_tech</span>
+<span>Rewards</span>
+</a>
+<a class="flex items-center gap-4 text-[#6d5c58] dark:text-[#a08d89] px-6 py-3 hover:translate-x-1 transition-transform duration-200 active:opacity-80" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span>Settings</span>
+</a>
+</nav>
+<!-- Theme Toggle Footer -->
+<div class="mt-auto px-4">
+<div class="bg-[#e7dad5]/50 dark:bg-[#2d2421] rounded-2xl p-1 flex items-center justify-between">
+<button class="flex-1 flex flex-col items-center py-2 rounded-xl bg-white dark:bg-[#1a1614] shadow-sm text-[#aa2c32] dark:text-[#ff7574]">
+<span class="material-symbols-outlined text-sm">light_mode</span>
+<span class="text-[10px] font-bold">Light</span>
+</button>
+<button class="flex-1 flex flex-col items-center py-2 text-[#6d5c58] dark:text-[#a08d89] hover:bg-[#e7dad5] dark:hover:bg-[#3d322e] rounded-xl transition-colors">
+<span class="material-symbols-outlined text-sm">dark_mode</span>
+<span class="text-[10px] font-bold">Dark</span>
+</button>
+<button class="flex-1 flex flex-col items-center py-2 text-[#6d5c58] dark:text-[#a08d89] hover:bg-[#e7dad5] dark:hover:bg-[#3d322e] rounded-xl transition-colors">
+<span class="material-symbols-outlined text-sm">settings_brightness</span>
+<span class="text-[10px] font-bold">System</span>
+</button>
+</div>
+</div>
+</aside>
+<!-- TopAppBar (Adjusted for Sidebar) -->
+<header class="fixed top-0 w-full z-30 bg-[#fff4f0]/70 dark:bg-stone-950/70 backdrop-blur-xl md:pl-72">
+<div class="flex justify-between items-center px-6 py-4 w-full max-w-7xl mx-auto">
+<div class="flex items-center gap-4">
+<button class="hover:bg-[#faeeea] p-2 rounded-full transition-colors text-primary md:hidden">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<button class="hidden md:flex hover:bg-[#faeeea] p-2 rounded-full transition-colors text-primary">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+<span class="text-2xl font-black text-[#aa2c32] dark:text-[#ff7574] tracking-tight font-headline md:hidden">VibeHealth</span>
+</div>
+<div class="hidden md:flex items-center gap-8">
+<nav class="flex gap-6">
+<a class="text-stone-500 dark:text-stone-400 font-semibold hover:text-[#ff6b6b] transition-all" href="#">Home</a>
+<a class="text-stone-500 dark:text-stone-400 font-semibold hover:text-[#ff6b6b] transition-all" href="#">Trends</a>
+<a class="text-[#aa2c32] dark:text-[#ff7574] font-bold" href="#">Vitals</a>
+<a class="text-stone-500 dark:text-stone-400 font-semibold hover:text-[#ff6b6b] transition-all" href="#">Profile</a>
+</nav>
+</div>
+<div class="flex items-center gap-3">
+<button class="hover:bg-[#faeeea] p-2 rounded-full transition-all text-on-surface-variant">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="hover:bg-[#faeeea] p-2 rounded-full transition-all text-on-surface-variant">
+<span class="material-symbols-outlined">settings</span>
+</button>
+<div class="w-10 h-10 rounded-full bg-secondary-container overflow-hidden border-2 border-[#ff7574]">
+<img alt="User profile avatar" data-alt="close-up portrait of a friendly young man with warm skin tones and soft studio lighting against a peach background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAwMkDHObeNsxr25hxL76OMosw9BKIx8ydi251kJsUZAhOCB4dX8t8DJ4EKmNaYlT3mfGHbx7r2kx73ZhcRgW8fUVpEEO_ZCHIuM7nm0gtmo3r0LLtTsBo_GcebhyoRa1cHs8tkFtLhcoiuzg2yr_AzV2QF-0zP3xOl_dhN7JqDa5w8vZJj4bBa7Xd6_Fx7uOK9i04n5lYeyMFRlKut6FWrd0swyE0_cgKLpu2v84Nb0FjXxYJMSvGpk3Lj18qHHmNhrIhStMajLls"/>
+</div>
+</div>
+</div>
+</header>
+<main class="max-w-7xl mx-auto px-6 pt-28 pb-32 space-y-12 md:pl-[19rem]">
+<!-- Header Section -->
+<section class="flex flex-col md:flex-row md:items-end justify-between gap-6">
+<div class="space-y-2">
+<div class="flex items-center gap-2 text-primary font-bold tracking-wide uppercase text-xs">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">monitor_heart</span>
+                Vitals History
+            </div>
+<h1 class="text-4xl md:text-5xl font-black font-headline text-on-surface tracking-tight">Heart Rate Trend</h1>
+</div>
+<div class="flex flex-wrap items-center gap-3 bg-surface-container-low p-1.5 rounded-full">
+<button class="px-6 py-2 rounded-full text-sm font-bold transition-all bg-primary text-on-primary shadow-lg shadow-primary/20">1w</button>
+<button class="px-6 py-2 rounded-full text-sm font-semibold text-on-surface-variant hover:bg-surface-container-high transition-all">4w</button>
+<button class="px-6 py-2 rounded-full text-sm font-semibold text-on-surface-variant hover:bg-surface-container-high transition-all">12w</button>
+<button class="px-6 py-2 rounded-full text-sm font-semibold text-on-surface-variant hover:bg-surface-container-high transition-all flex items-center gap-2">
+                Custom <span class="material-symbols-outlined text-sm">calendar_today</span>
+</button>
+</div>
+</section>
+<!-- Chart Area -->
+<section class="relative bg-surface-container-lowest rounded-xl p-8 shadow-[0_20px_40px_rgba(170,44,50,0.05)] overflow-hidden">
+<!-- Decorative Blobs -->
+<div class="absolute -top-24 -right-24 w-64 h-64 bg-tertiary-container/30 blur-3xl blob-accent"></div>
+<div class="absolute -bottom-24 -left-24 w-64 h-64 bg-primary-container/20 blur-3xl blob-accent"></div>
+<div class="relative flex justify-between items-center mb-8">
+<div>
+<h3 class="text-xl font-bold font-headline">Last 7 Days Activity</h3>
+<p class="text-on-surface-variant text-sm">Average 72 BPM • High 145 BPM</p>
+</div>
+<button class="flex items-center gap-2 bg-surface-container-high text-primary font-bold px-6 py-2.5 rounded-full hover:bg-primary hover:text-white transition-all group">
+<span class="material-symbols-outlined text-sm">download</span>
+                Export CSV
+            </button>
+</div>
+<!-- Chart Mockup -->
+<div class="h-80 w-full relative">
+<!-- Grid Lines -->
+<div class="absolute inset-0 flex flex-col justify-between py-2">
+<div class="w-full border-t border-dashed border-outline-variant/30"></div>
+<div class="w-full border-t border-dashed border-outline-variant/30"></div>
+<div class="w-full border-t border-dashed border-outline-variant/30"></div>
+<div class="w-full border-t border-dashed border-outline-variant/30"></div>
+<div class="w-full border-t border-dashed border-outline-variant/30"></div>
+</div>
+<!-- SVG Area Chart -->
+<svg class="absolute inset-0 w-full h-full drop-shadow-xl" preserveaspectratio="none" viewbox="0 0 1000 300">
+<defs>
+<lineargradient id="chartGradient" x1="0" x2="0" y1="0" y2="1">
+<stop offset="0%" stop-color="#ff7574" stop-opacity="0.4"></stop>
+<stop offset="100%" stop-color="#ff7574" stop-opacity="0"></stop>
+</lineargradient>
+</defs>
+<path d="M0,250 Q100,220 150,230 T300,180 T450,210 T600,140 T750,160 T900,120 T1000,100 V300 H0 Z" fill="url(#chartGradient)"></path>
+<path d="M0,250 Q100,220 150,230 T300,180 T450,210 T600,140 T750,160 T900,120 T1000,100" fill="none" stroke="#aa2c32" stroke-linecap="round" stroke-width="4"></path>
+<!-- Hover Tooltip Mockup -->
+<g transform="translate(600, 140)">
+<circle fill="#aa2c32" r="6" stroke="white" stroke-width="2"></circle>
+</g>
+</svg>
+<!-- Tooltip UI -->
+<div class="absolute top-[80px] left-[55%] -translate-x-1/2 bg-on-surface text-surface-container-lowest p-3 rounded-2xl shadow-2xl flex flex-col items-center gap-1 z-10">
+<span class="text-[10px] font-bold uppercase tracking-wider opacity-70">Thu, 14 Oct</span>
+<span class="text-lg font-black font-headline">142 BPM</span>
+<div class="w-2 h-2 bg-on-surface rotate-45 absolute -bottom-1"></div>
+</div>
+<!-- X-Axis Labels -->
+<div class="absolute -bottom-6 w-full flex justify-between px-2 text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">
+<span>Mon</span>
+<span>Tue</span>
+<span>Wed</span>
+<span>Thu</span>
+<span>Fri</span>
+<span>Sat</span>
+<span>Sun</span>
+</div>
+</div>
+</section>
+<!-- Quick Stats Bento Grid -->
+<section class="grid grid-cols-1 md:grid-cols-4 gap-6">
+<div class="bg-surface-container-low p-8 rounded-xl flex flex-col justify-between h-44">
+<div class="flex justify-between items-start">
+<span class="material-symbols-outlined text-primary bg-primary-container/20 p-3 rounded-2xl">arrow_downward</span>
+<span class="text-xs font-bold text-primary px-3 py-1 bg-primary-container/10 rounded-full">Minimum</span>
+</div>
+<div>
+<div class="text-4xl font-black font-headline text-on-surface">58 <span class="text-lg font-medium opacity-50">BPM</span></div>
+<p class="text-sm text-on-surface-variant mt-1">Recorded at 04:12 AM</p>
+</div>
+</div>
+<div class="bg-surface-container-low p-8 rounded-xl flex flex-col justify-between h-44">
+<div class="flex justify-between items-start">
+<span class="material-symbols-outlined text-tertiary bg-tertiary-container p-3 rounded-2xl">favorite</span>
+<span class="text-xs font-bold text-tertiary px-3 py-1 bg-tertiary-container/50 rounded-full">Average</span>
+</div>
+<div>
+<div class="text-4xl font-black font-headline text-on-surface">72 <span class="text-lg font-medium opacity-50">BPM</span></div>
+<p class="text-sm text-on-surface-variant mt-1">Normal Resting Range</p>
+</div>
+</div>
+<div class="bg-surface-container-low p-8 rounded-xl flex flex-col justify-between h-44">
+<div class="flex justify-between items-start">
+<span class="material-symbols-outlined text-[#823c1e] bg-secondary-container p-3 rounded-2xl">arrow_upward</span>
+<span class="text-xs font-bold text-[#823c1e] px-3 py-1 bg-secondary-container/50 rounded-full">Maximum</span>
+</div>
+<div>
+<div class="text-4xl font-black font-headline text-on-surface">145 <span class="text-lg font-medium opacity-50">BPM</span></div>
+<p class="text-sm text-on-surface-variant mt-1">During Peak Cardio</p>
+</div>
+</div>
+<div class="bg-primary-container p-8 rounded-xl flex flex-col justify-between h-44">
+<div class="flex justify-between items-start">
+<span class="material-symbols-outlined text-on-primary-container bg-white/30 p-3 rounded-2xl" style="font-variation-settings: 'FILL' 1;">trending_up</span>
+<span class="text-xs font-bold text-on-primary-container px-3 py-1 bg-white/20 rounded-full">Trend</span>
+</div>
+<div>
+<div class="text-2xl font-black font-headline text-on-primary-container">Slightly Increasing</div>
+<p class="text-sm text-on-primary-container/70 mt-1">+4% vs last week</p>
+</div>
+</div>
+</section>
+<!-- Data Log Section -->
+<section class="space-y-6">
+<div class="flex items-center justify-between">
+<h2 class="text-2xl font-black font-headline">Detailed Log</h2>
+<div class="flex gap-4">
+<div class="relative">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
+<input class="bg-surface-container-high border-none rounded-full pl-12 pr-6 py-2.5 text-sm focus:ring-2 focus:ring-primary/20 w-64" placeholder="Search notes..." type="text"/>
+</div>
+</div>
+</div>
+<div class="bg-surface-container-lowest rounded-xl overflow-hidden shadow-[0_10px_30px_rgba(0,0,0,0.02)]">
+<table class="w-full text-left">
+<thead>
+<tr class="bg-surface-container-low border-none">
+<th class="px-8 py-5 text-xs font-bold uppercase tracking-widest text-on-surface-variant">Date</th>
+<th class="px-8 py-5 text-xs font-bold uppercase tracking-widest text-on-surface-variant">Time</th>
+<th class="px-8 py-5 text-xs font-bold uppercase tracking-widest text-on-surface-variant text-right">Value (BPM)</th>
+<th class="px-8 py-5 text-xs font-bold uppercase tracking-widest text-on-surface-variant">Activity/Notes</th>
+<th class="px-8 py-5 text-xs font-bold uppercase tracking-widest text-on-surface-variant text-right">Status</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-surface-container-low">
+<tr class="hover:bg-surface-container-low/50 transition-colors">
+<td class="px-8 py-5 font-semibold">Oct 14, 2023</td>
+<td class="px-8 py-5 text-on-surface-variant">05:30 PM</td>
+<td class="px-8 py-5 text-right font-black font-headline text-primary">142</td>
+<td class="px-8 py-5 text-sm text-on-surface-variant italic">Intense HIIT session at the gym</td>
+<td class="px-8 py-5 text-right"><span class="bg-error-container/10 text-error-dim text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest">Peak</span></td>
+</tr>
+<tr class="hover:bg-surface-container-low/50 transition-colors">
+<td class="px-8 py-5 font-semibold">Oct 14, 2023</td>
+<td class="px-8 py-5 text-on-surface-variant">08:15 AM</td>
+<td class="px-8 py-5 text-right font-black font-headline">68</td>
+<td class="px-8 py-5 text-sm text-on-surface-variant italic">After morning meditation</td>
+<td class="px-8 py-5 text-right"><span class="bg-tertiary-container text-tertiary text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest">Normal</span></td>
+</tr>
+<tr class="hover:bg-surface-container-low/50 transition-colors">
+<td class="px-8 py-5 font-semibold">Oct 13, 2023</td>
+<td class="px-8 py-5 text-on-surface-variant">11:45 PM</td>
+<td class="px-8 py-5 text-right font-black font-headline">59</td>
+<td class="px-8 py-5 text-sm text-on-surface-variant italic">Entering deep sleep</td>
+<td class="px-8 py-5 text-right"><span class="bg-tertiary-container text-tertiary text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest">Rest</span></td>
+</tr>
+<tr class="hover:bg-surface-container-low/50 transition-colors">
+<td class="px-8 py-5 font-semibold">Oct 13, 2023</td>
+<td class="px-8 py-5 text-on-surface-variant">02:20 PM</td>
+<td class="px-8 py-5 text-right font-black font-headline">88</td>
+<td class="px-8 py-5 text-sm text-on-surface-variant italic">Walking between meetings</td>
+<td class="px-8 py-5 text-right"><span class="bg-tertiary-container text-tertiary text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest">Normal</span></td>
+</tr>
+<tr class="hover:bg-surface-container-low/50 transition-colors">
+<td class="px-8 py-5 font-semibold">Oct 12, 2023</td>
+<td class="px-8 py-5 text-on-surface-variant">06:00 AM</td>
+<td class="px-8 py-5 text-right font-black font-headline">62</td>
+<td class="px-8 py-5 text-sm text-on-surface-variant italic">Resting heart rate at wake-up</td>
+<td class="px-8 py-5 text-right"><span class="bg-tertiary-container text-tertiary text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest">Normal</span></td>
+</tr>
+</tbody>
+</table>
+<div class="px-8 py-6 bg-surface-container-low/30 flex justify-center">
+<button class="text-primary font-bold hover:underline">View Older Records</button>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar (Mobile only) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full flex justify-around items-center px-4 pb-6 pt-2 bg-[#fff4f0]/70 dark:bg-stone-950/70 backdrop-blur-xl rounded-t-[3rem] z-50 shadow-[0_-20px_40px_rgba(170,44,50,0.05)]">
+<a class="flex flex-col items-center justify-center text-stone-400 dark:text-stone-500 px-6 py-2 hover:text-[#ff6b6b] transition-all" href="#">
+<span class="material-symbols-outlined">home_health</span>
+<span class="font-['Plus_Jakarta_Sans'] text-[10px] font-semibold uppercase tracking-widest mt-1">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-stone-400 dark:text-stone-500 px-6 py-2 hover:text-[#ff6b6b] transition-all" href="#">
+<span class="material-symbols-outlined">insights</span>
+<span class="font-['Plus_Jakarta_Sans'] text-[10px] font-semibold uppercase tracking-widest mt-1">Trends</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-[#faeeea] dark:bg-stone-800 text-[#aa2c32] dark:text-[#ff7574] rounded-full px-6 py-2 scale-110 duration-300 ease-out" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">monitor_heart</span>
+<span class="font-['Plus_Jakarta_Sans'] text-[10px] font-semibold uppercase tracking-widest mt-1">Vitals</span>
+</a>
+<a class="flex flex-col items-center justify-center text-stone-400 dark:text-stone-500 px-6 py-2 hover:text-[#ff6b6b] transition-all" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="font-['Plus_Jakarta_Sans'] text-[10px] font-semibold uppercase tracking-widest mt-1">Profile</span>
+</a>
+</nav>
+</body></html>

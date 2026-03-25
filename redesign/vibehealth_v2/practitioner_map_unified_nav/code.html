@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Find Practitioners | VibeHealth</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Be+Vietnam+Pro:wght@300;400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "tertiary-fixed": "#cffeeb",
+              "surface-variant": "#e7dad5",
+              "secondary-fixed-dim": "#ffb193",
+              "tertiary-container": "#cffeeb",
+              "surface-container-lowest": "#ffffff",
+              "surface-container": "#f2e6e1",
+              "secondary-dim": "#813b1d",
+              "on-tertiary-fixed-variant": "#446e60",
+              "on-primary-container": "#4e0009",
+              "secondary-fixed": "#ffc5af",
+              "on-secondary-fixed-variant": "#823c1e",
+              "on-primary": "#ffefee",
+              "on-secondary": "#ffefeb",
+              "on-tertiary": "#cefdea",
+              "on-error-container": "#520c00",
+              "inverse-on-surface": "#a49b97",
+              "background": "#fff4f0",
+              "primary-fixed": "#ff7574",
+              "on-secondary-container": "#763316",
+              "on-surface-variant": "#615a57",
+              "error-dim": "#b92902",
+              "outline-variant": "#b5aba7",
+              "surface-container-high": "#ece0db",
+              "secondary": "#904728",
+              "surface-container-low": "#faeeea",
+              "surface-container-highest": "#e7dad5",
+              "on-tertiary-container": "#396456",
+              "primary-fixed-dim": "#f56364",
+              "error-container": "#f95630",
+              "surface-dim": "#dfd2cc",
+              "surface-tint": "#aa2c32",
+              "tertiary-dim": "#2d574a",
+              "surface-bright": "#fff4f0",
+              "inverse-surface": "#120d0b",
+              "on-tertiary-fixed": "#275144",
+              "on-primary-fixed-variant": "#60000d",
+              "primary": "#aa2c32",
+              "on-error": "#ffefec",
+              "surface": "#fff4f0",
+              "error": "#b02500",
+              "on-surface": "#332d2b",
+              "secondary-container": "#ffc5af",
+              "primary-dim": "#992027",
+              "on-primary-fixed": "#000000",
+              "tertiary": "#396355",
+              "inverse-primary": "#ff6b6b",
+              "tertiary-fixed-dim": "#c1efdd",
+              "on-background": "#332d2b",
+              "primary-container": "#ff7574",
+              "on-secondary-fixed": "#5d2105",
+              "outline": "#7d7572"
+            },
+            fontFamily: {
+              "headline": ["Plus Jakarta Sans"],
+              "body": ["Be Vietnam Pro"],
+              "label": ["Be Vietnam Pro"]
+            },
+            borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        body { font-family: 'Be Vietnam Pro', sans-serif; background-color: #fff4f0; }
+        .headline { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .soft-glass {
+            background: rgba(255, 244, 240, 0.7);
+            backdrop-filter: blur(20px);
+        }
+        .blob-bg {
+            position: absolute;
+            z-index: -1;
+            filter: blur(80px);
+            opacity: 0.4;
+            border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: rgba(170, 44, 50, 0.1);
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body class="text-on-surface antialiased overflow-hidden">
+<!-- Background Blobs -->
+<div class="blob-bg bg-primary-container w-[500px] h-[500px] -top-20 -left-20"></div>
+<div class="blob-bg bg-tertiary-container w-[400px] h-[400px] bottom-10 right-10"></div>
+<!-- Top Navigation Shell -->
+<nav class="fixed top-0 w-full z-50 bg-[#fff4f0]/70 dark:bg-[#1a1614]/70 backdrop-blur-xl flex justify-between items-center px-8 py-4 max-w-7xl mx-auto left-1/2 -translate-x-1/2">
+<div class="text-2xl font-black text-[#aa2c32] dark:text-[#ff7574] italic headline tracking-tight">VibeHealth</div>
+<div class="hidden md:flex space-x-8 font-['Plus_Jakarta_Sans'] font-bold text-sm tracking-tight">
+<a class="text-[#6d5c58] hover:text-[#ff6b6b] transition-colors duration-300" href="#">Journal</a>
+<a class="text-[#6d5c58] hover:text-[#ff6b6b] transition-colors duration-300" href="#">Insights</a>
+<a class="text-[#6d5c58] hover:text-[#ff6b6b] transition-colors duration-300" href="#">Library</a>
+</div>
+<div class="flex items-center space-x-4">
+<button class="material-symbols-outlined text-[#6d5c58] hover:text-[#aa2c32] transition-colors p-2 rounded-full hover:bg-[#faeeea]">notifications</button>
+<button class="material-symbols-outlined text-[#6d5c58] hover:text-[#aa2c32] transition-colors p-2 rounded-full hover:bg-[#faeeea]">settings</button>
+<div class="w-10 h-10 rounded-full bg-surface-container-highest overflow-hidden border-2 border-[#aa2c32]/20">
+<img alt="User profile avatar" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDlrkZT2zBZ8-jI1JDCVGHyzcBHlZK-t3_KEfM28aABIxWW5OR7GtgVnikeywxIS7mT3lOb9py46E3SwlkEQnRTWvrNMHzK-BE7AgYZdHvJMP8uMeKbunXWB4orcVC_mq1dOBD0Cq_daISOk9A4ANPYgVYr1HEDZ4B1Gh1eC0c2R6ovIPjcw27tm6DVrUGywbOrBJVhjDx81f9QxzAE1DAr_z400MFUHhYw5GPnuGaYn0d8GUPKp2-9B-Q3bvZEIk9TmcPDXwP0wjg"/>
+</div>
+</div>
+</nav>
+<div class="flex h-screen pt-20">
+<!-- Side Navigation Shell (Cohesive Component 75 Implementation) -->
+<aside class="hidden lg:flex flex-col w-72 h-screen fixed left-0 top-0 z-40 bg-[#faeeea] dark:bg-[#1a1614] rounded-r-[3rem] shadow-[20px_0_40px_rgba(170,44,50,0.04)] py-8 font-['Plus_Jakarta_Sans']">
+<div class="px-8 mb-8">
+<div class="text-xl font-black text-[#aa2c32] dark:text-[#ff7574]">VibeHealth</div>
+<div class="text-[10px] text-[#6d5c58] dark:text-[#a08d89] font-bold uppercase tracking-widest mt-0.5">The Living Canvas</div>
+</div>
+<div class="flex-1 space-y-1 overflow-y-auto custom-scrollbar">
+<a class="flex items-center px-6 py-3 text-[#6d5c58] dark:text-[#a08d89] hover:translate-x-1 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined mr-4 text-[20px]">grid_view</span>
+<span class="text-sm font-medium">Dashboard</span>
+</a>
+<a class="flex items-center px-6 py-3 text-[#6d5c58] dark:text-[#a08d89] hover:translate-x-1 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined mr-4 text-[20px]">restaurant</span>
+<span class="text-sm font-medium">Nutrition</span>
+</a>
+<a class="flex items-center px-6 py-3 text-[#6d5c58] dark:text-[#a08d89] hover:translate-x-1 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined mr-4 text-[20px]">sentiment_satisfied</span>
+<span class="text-sm font-medium">Mood</span>
+</a>
+<a class="flex items-center px-6 py-3 text-[#6d5c58] dark:text-[#a08d89] hover:translate-x-1 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined mr-4 text-[20px]">calendar_today</span>
+<span class="text-sm font-medium">Period</span>
+</a>
+<a class="flex items-center px-6 py-3 text-[#6d5c58] dark:text-[#a08d89] hover:translate-x-1 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined mr-4 text-[20px]">fitness_center</span>
+<span class="text-sm font-medium">Workouts</span>
+</a>
+<a class="flex items-center px-6 py-3 text-[#6d5c58] dark:text-[#a08d89] hover:translate-x-1 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined mr-4 text-[20px]">self_improvement</span>
+<span class="text-sm font-medium">Meditation</span>
+</a>
+<a class="flex items-center px-6 py-3 text-[#6d5c58] dark:text-[#a08d89] hover:translate-x-1 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined mr-4 text-[20px]">group</span>
+<span class="text-sm font-medium">Caregivers</span>
+</a>
+<a class="flex items-center bg-[#e7dad5] dark:bg-[#3d322e] text-[#aa2c32] dark:text-[#ff7574] rounded-full mx-2 px-6 py-3 font-bold hover:translate-x-1 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined mr-4 text-[20px]" style="font-variation-settings: 'FILL' 1;">medical_services</span>
+<span class="text-sm">Practitioners</span>
+</a>
+<a class="flex items-center px-6 py-3 text-[#6d5c58] dark:text-[#a08d89] hover:translate-x-1 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined mr-4 text-[20px]">monitor_heart</span>
+<span class="text-sm font-medium">Vitals</span>
+</a>
+<a class="flex items-center px-6 py-3 text-[#6d5c58] dark:text-[#a08d89] hover:translate-x-1 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined mr-4 text-[20px]">military_tech</span>
+<span class="text-sm font-medium">Rewards</span>
+</a>
+<a class="flex items-center px-6 py-3 text-[#6d5c58] dark:text-[#a08d89] hover:translate-x-1 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined mr-4 text-[20px]">settings</span>
+<span class="text-sm font-medium">Settings</span>
+</a>
+</div>
+<!-- Theme Toggle Footer -->
+<div class="mt-auto px-4">
+<div class="bg-[#e7dad5]/50 dark:bg-[#3d322e]/50 p-1 rounded-full flex justify-between items-center">
+<button class="flex-1 flex items-center justify-center py-2 px-1 bg-white dark:bg-[#1a1614] rounded-full text-[#aa2c32] shadow-sm">
+<span class="material-symbols-outlined text-[18px]">light_mode</span>
+</button>
+<button class="flex-1 flex items-center justify-center py-2 px-1 text-[#6d5c58] dark:text-[#a08d89]">
+<span class="material-symbols-outlined text-[18px]">dark_mode</span>
+</button>
+<button class="flex-1 flex items-center justify-center py-2 px-1 text-[#6d5c58] dark:text-[#a08d89]">
+<span class="material-symbols-outlined text-[18px]">settings_brightness</span>
+</button>
+</div>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 flex flex-col md:flex-row h-full overflow-hidden lg:ml-72">
+<!-- Sidebar: Practitioner List -->
+<section class="w-full md:w-[420px] h-full flex flex-col bg-surface border-r-0 md:border-r-0 relative z-10">
+<div class="p-6 space-y-6">
+<header>
+<h1 class="text-3xl font-extrabold headline tracking-tight text-on-surface">Find Practitioners</h1>
+<p class="text-on-surface-variant mt-1 text-sm font-medium">12 specialists near you in Los Angeles</p>
+</header>
+<!-- Search Bar -->
+<div class="relative group">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline group-focus-within:text-primary transition-colors">search</span>
+<input class="w-full pl-12 pr-4 py-4 bg-surface-container-highest rounded-xl focus:bg-surface-container-lowest focus:ring-0 border-none transition-all placeholder:text-outline font-medium" placeholder="Search by name or location..." type="text"/>
+</div>
+<!-- Filter Chips -->
+<div class="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
+<button class="px-5 py-2 bg-primary text-white rounded-full text-sm font-bold whitespace-nowrap shadow-md shadow-primary/20">All</button>
+<button class="px-5 py-2 bg-surface-container-high text-on-surface-variant rounded-full text-sm font-bold whitespace-nowrap hover:bg-surface-container-highest transition-colors">GP</button>
+<button class="px-5 py-2 bg-surface-container-high text-on-surface-variant rounded-full text-sm font-bold whitespace-nowrap hover:bg-surface-container-highest transition-colors">Dentist</button>
+<button class="px-5 py-2 bg-surface-container-high text-on-surface-variant rounded-full text-sm font-bold whitespace-nowrap hover:bg-surface-container-highest transition-colors">Therapist</button>
+<button class="px-5 py-2 bg-surface-container-high text-on-surface-variant rounded-full text-sm font-bold whitespace-nowrap hover:bg-surface-container-highest transition-colors">Dermatologist</button>
+</div>
+</div>
+<!-- Practitioner Cards Scrollable Area -->
+<div class="flex-1 overflow-y-auto px-6 space-y-4 pb-24 md:pb-8">
+<!-- Card 1 -->
+<div class="group p-5 bg-surface-container-lowest rounded-xl hover:shadow-xl hover:shadow-primary/5 transition-all cursor-pointer relative overflow-hidden">
+<div class="flex gap-4">
+<div class="w-16 h-16 rounded-2xl overflow-hidden shrink-0">
+<img alt="Dr. Sarah Chen" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCF4PM3mJxpJxbg0_reNBihI5WuYTmB_QL5gkVehJOMdgwPAhE2n0xO27dTXrLNCLN1-l7ic_RDJGxOSGAz0t5pr2vE-iOO9DAJOtBd3G2GichZ9OaD4jb1za5MT5AT59i3KzzuDPKSHxayvzedRin4shKFD9A1fucPZflte_NWsQZwF9MP3ux3axgtwM4L7mXSMU9vBF7gNkAVa_QG6S_2vQVoIKjIXokKmpIKjuZPYqi8Yd1ytgzIRgQ88UDo3t5rMuZ475PKcSw"/>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-start">
+<h3 class="font-bold text-lg headline text-on-surface">Dr. Sarah Chen</h3>
+<div class="flex items-center bg-tertiary-fixed px-2 py-0.5 rounded-lg">
+<span class="material-symbols-outlined text-[14px] text-on-tertiary-container" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="text-xs font-bold text-on-tertiary-container ml-1">4.9</span>
+</div>
+</div>
+<p class="text-sm text-on-surface-variant font-medium">Therapist • Clinical Psychologist</p>
+<div class="flex items-center mt-2 text-xs text-outline font-medium">
+<span class="material-symbols-outlined text-[16px] mr-1">location_on</span>
+                                    0.8 miles away
+                                </div>
+</div>
+</div>
+<button class="mt-4 w-full py-3 bg-surface-container-highest text-primary font-bold rounded-lg group-hover:bg-primary group-hover:text-white transition-all">
+                            Book Appointment
+                        </button>
+</div>
+<!-- Card 2 -->
+<div class="group p-5 bg-surface-container-low rounded-xl hover:shadow-xl hover:shadow-primary/5 transition-all cursor-pointer relative overflow-hidden">
+<div class="flex gap-4">
+<div class="w-16 h-16 rounded-2xl overflow-hidden shrink-0">
+<img alt="Dr. James Wilson" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD_fhp7NrH3BxdRoqftUIWhdm8OW1bpXabTYIZbVb6nKAR_v78aCiUAZ8aYzjlW42JPWrj5iNWxsvy_HzoR5PdRKiOgp9sy3TTfIhNp0GHX-UgXXIY8UNbJBSgoEA3zO-UBXsy4D6p3UVsVpErEnKhG-DJgORbJui2Pm7u2KFt30qiRWBx-aSF08wB2RLKFdDCdctJJerZLDZaEP5FytWQdFAND2uH65UNdWyGOCPCqgrcgROUrMSH3hYilNRo08ZvSVOknIbPoCYo"/>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-start">
+<h3 class="font-bold text-lg headline text-on-surface">Dr. James Wilson</h3>
+<div class="flex items-center bg-tertiary-fixed px-2 py-0.5 rounded-lg">
+<span class="material-symbols-outlined text-[14px] text-on-tertiary-container" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="text-xs font-bold text-on-tertiary-container ml-1">4.8</span>
+</div>
+</div>
+<p class="text-sm text-on-surface-variant font-medium">General Practitioner</p>
+<div class="flex items-center mt-2 text-xs text-outline font-medium">
+<span class="material-symbols-outlined text-[16px] mr-1">location_on</span>
+                                    1.2 miles away
+                                </div>
+</div>
+</div>
+<button class="mt-4 w-full py-3 bg-surface-container-highest text-primary font-bold rounded-lg group-hover:bg-primary group-hover:text-white transition-all">
+                            Book Appointment
+                        </button>
+</div>
+<!-- Card 3 -->
+<div class="group p-5 bg-surface-container-lowest rounded-xl hover:shadow-xl hover:shadow-primary/5 transition-all cursor-pointer relative overflow-hidden">
+<div class="flex gap-4">
+<div class="w-16 h-16 rounded-2xl overflow-hidden shrink-0">
+<img alt="Dr. Elena Rodriguez" src="https://lh3.googleusercontent.com/aida-public/AB6AXuACt6EfDkpTn3tRAA7yIW6cBiquadr6_YyQtGC0x7dvlvEHotot3i2DQtsypDW6NcX6WTRph2xSXbTjPK-FAQSkDu2cYqsCwrCrc5XSd7rZeOBoUsmZIQ7P7zOFYCMcWqg2uiH7Sl3M0Pgu1IFLz1Q35Doe1gXpfs-m-jm3auziyZynUwWu6chp_Ayi4o8nl9x_N8euWXubvpchdfm13YOCJJXKfgFXzcHsG7EVB5wm--gOKrTGub3hk56Mta3peRuppiAN_QUkC2s"/>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-start">
+<h3 class="font-bold text-lg headline text-on-surface">Dr. Elena Rodriguez</h3>
+<div class="flex items-center bg-tertiary-fixed px-2 py-0.5 rounded-lg">
+<span class="material-symbols-outlined text-[14px] text-on-tertiary-container" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="text-xs font-bold text-on-tertiary-container ml-1">5.0</span>
+</div>
+</div>
+<p class="text-sm text-on-surface-variant font-medium">Dentist • Orthodontist</p>
+<div class="flex items-center mt-2 text-xs text-outline font-medium">
+<span class="material-symbols-outlined text-[16px] mr-1">location_on</span>
+                                    2.4 miles away
+                                </div>
+</div>
+</div>
+<button class="mt-4 w-full py-3 bg-surface-container-highest text-primary font-bold rounded-lg group-hover:bg-primary group-hover:text-white transition-all">
+                            Book Appointment
+                        </button>
+</div>
+</div>
+</section>
+<!-- Map View Container -->
+<section class="flex-1 relative h-full bg-surface-container overflow-hidden">
+<!-- Map Placeholder Interface -->
+<div class="absolute inset-0 z-0">
+<img alt="Map View" class="w-full h-full object-cover" data-location="Los Angeles" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAGj9ksk0LnSFHxp_25fBfX_XWkENZ4juH7u-shKRcxzariiK-Sje2q47WQrlSSbc8S9oam_zxQeO_g91SqXZMlVh3Ljz-l69DOG5-haF1of74zAbwQK9zj8wndtpWa0v9Weri7hig8CFtcYM3fXwblQOavq6TNNDIJe-3vQyQ3P5ijMv1NSAUnv53zcYicIXONUSH5G5OqadMY9KjL2pjknvzn_1KJRZmJXfQAuJiLAsYfeKRhHsAS-DFAkJ5Lovq8Q0wpVbM73-U"/>
+<!-- Map Overlay Markers -->
+<div class="absolute top-[35%] left-[45%] group cursor-pointer">
+<div class="bg-primary text-white w-10 h-10 rounded-full flex items-center justify-center shadow-lg shadow-primary/40 group-hover:scale-125 transition-transform">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">medical_services</span>
+</div>
+<div class="absolute -bottom-10 left-1/2 -translate-x-1/2 bg-white/90 backdrop-blur px-3 py-1 rounded-full whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity">
+<span class="text-xs font-bold text-primary">Dr. Sarah Chen</span>
+</div>
+</div>
+<div class="absolute top-[60%] left-[25%] group cursor-pointer">
+<div class="bg-primary-fixed text-white w-10 h-10 rounded-full flex items-center justify-center shadow-lg shadow-primary-fixed/40 group-hover:scale-125 transition-transform">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">dentistry</span>
+</div>
+</div>
+<div class="absolute top-[20%] left-[70%] group cursor-pointer">
+<div class="bg-primary-fixed-dim text-white w-10 h-10 rounded-full flex items-center justify-center shadow-lg shadow-primary-fixed-dim/40 group-hover:scale-125 transition-transform">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">psychology</span>
+</div>
+</div>
+</div>
+<!-- Floating Map Controls -->
+<div class="absolute bottom-10 right-10 flex flex-col space-y-3 z-20">
+<button class="w-14 h-14 bg-white rounded-2xl shadow-xl flex items-center justify-center text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">my_location</span>
+</button>
+<div class="bg-white rounded-2xl shadow-xl flex flex-col">
+<button class="w-14 h-14 flex items-center justify-center text-on-surface-variant hover:text-primary transition-colors border-b border-surface-container">
+<span class="material-symbols-outlined">add</span>
+</button>
+<button class="w-14 h-14 flex items-center justify-center text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">remove</span>
+</button>
+</div>
+</div>
+<!-- Active Practitioner Floating Card (Mobile/Tablet View Detail) -->
+<div class="absolute top-6 left-6 right-6 md:hidden z-20">
+<div class="bg-white/80 backdrop-blur-xl p-4 rounded-3xl shadow-2xl flex items-center gap-4">
+<div class="w-12 h-12 rounded-full bg-primary-fixed shrink-0 flex items-center justify-center text-white">
+<span class="material-symbols-outlined">map</span>
+</div>
+<div>
+<p class="text-xs font-bold uppercase tracking-widest text-primary">Exploring Neighborhood</p>
+<p class="font-bold text-on-surface">West Hollywood, LA</p>
+</div>
+</div>
+</div>
+</section>
+</main>
+</div>
+<!-- Bottom Navigation Shell (Mobile Only) -->
+<nav class="lg:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pt-2 pb-6 bg-[#faeeea]/80 dark:bg-stone-900/80 backdrop-blur-2xl no-border shadow-[0_-10px_40px_rgba(170,44,50,0.05)] rounded-t-[2.5rem]">
+<a class="flex flex-col items-center justify-center text-stone-400 p-2" href="#">
+<span class="material-symbols-outlined mb-1">edit_note</span>
+<span class="font-['Plus_Jakarta_Sans'] text-[10px] font-bold uppercase tracking-widest">Journal</span>
+</a>
+<a class="flex flex-col items-center justify-center text-stone-400 p-2" href="#">
+<span class="material-symbols-outlined mb-1">bolt</span>
+<span class="font-['Plus_Jakarta_Sans'] text-[10px] font-bold uppercase tracking-widest">Activity</span>
+</a>
+<a class="flex flex-col items-center justify-center text-stone-400 p-2" href="#">
+<span class="material-symbols-outlined mb-1">favorite</span>
+<span class="font-['Plus_Jakarta_Sans'] text-[10px] font-bold uppercase tracking-widest">Vibe</span>
+</a>
+<a class="flex flex-col items-center justify-center text-stone-400 p-2" href="#">
+<span class="material-symbols-outlined mb-1">analytics</span>
+<span class="font-['Plus_Jakarta_Sans'] text-[10px] font-bold uppercase tracking-widest">Insights</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-[#ff6b6b] text-white rounded-2xl p-3 mb-2 transform -translate-y-2 shadow-lg shadow-[#ff6b6b]/30" href="#">
+<span class="material-symbols-outlined mb-1">map</span>
+<span class="font-['Plus_Jakarta_Sans'] text-[10px] font-bold uppercase tracking-widest">Library</span>
+</a>
+</nav>
+</body></html>

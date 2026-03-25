@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#a03a0f",
+              "tertiary": "#71563d",
+              "on-secondary-fixed": "#4b2e00",
+              "inverse-primary": "#fe7e4f",
+              "on-secondary": "#fff0e3",
+              "surface-container-high": "#ebe0dd",
+              "tertiary-container": "#fed9b8",
+              "surface": "#fef4f1",
+              "on-surface-variant": "#605a58",
+              "surface-container": "#f1e6e3",
+              "surface-dim": "#ddd2ce",
+              "background": "#fef4f1",
+              "tertiary-dim": "#644b32",
+              "surface-container-highest": "#e6dad7",
+              "on-background": "#322e2c",
+              "primary-container": "#fe7e4f",
+              "outline": "#7c7573",
+              "secondary-dim": "#704700",
+              "surface-container-low": "#f9efeb",
+              "on-error": "#ffefee",
+              "on-tertiary-container": "#644b32",
+              "primary-fixed": "#fe7e4f",
+              "on-tertiary-fixed-variant": "#6f553b",
+              "surface-tint": "#a03a0f",
+              "secondary": "#805100",
+              "error": "#b31b25",
+              "surface-bright": "#fef4f1",
+              "outline-variant": "#b4aba9",
+              "inverse-on-surface": "#a39b99",
+              "surface-variant": "#e6dad7",
+              "tertiary-fixed": "#fed9b8",
+              "secondary-container": "#ffc882",
+              "secondary-fixed-dim": "#ffb54e",
+              "on-primary-fixed": "#020000",
+              "error-container": "#fb5151",
+              "on-secondary-container": "#653f00",
+              "inverse-surface": "#110d0c",
+              "primary-dim": "#902e02",
+              "on-secondary-fixed-variant": "#714800",
+              "tertiary-fixed-dim": "#efcbab",
+              "error-dim": "#9f0519",
+              "on-primary": "#ffefeb",
+              "on-primary-container": "#491300",
+              "on-tertiary": "#fff0e5",
+              "on-tertiary-fixed": "#503921",
+              "surface-container-lowest": "#ffffff",
+              "secondary-fixed": "#ffc882",
+              "primary-fixed-dim": "#ed7244",
+              "on-error-container": "#570008",
+              "on-surface": "#322e2c",
+              "on-primary-fixed-variant": "#591800"
+            },
+            fontFamily: {
+              "headline": ["Plus Jakarta Sans"],
+              "body": ["Plus Jakarta Sans"],
+              "label": ["Plus Jakarta Sans"]
+            },
+            borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            background-color: #fef4f1;
+            color: #322e2c;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+        .editorial-grid {
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            gap: 3rem;
+        }
+        @media (max-width: 1024px) {
+            .editorial-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: rgba(160, 58, 15, 0.1);
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-background text-on-surface antialiased">
+<!-- Unified Sidebar Navigation -->
+<aside class="hidden lg:flex flex-col w-72 h-screen fixed left-0 top-0 z-40 bg-surface-container-low dark:bg-stone-900 rounded-r-[3rem] shadow-[20px_0_40px_rgba(160,58,15,0.04)] py-8 font-headline">
+<div class="px-8 mb-8">
+<div class="text-2xl font-black text-primary tracking-tighter">VibeHealth</div>
+<div class="text-[10px] text-on-surface-variant font-bold uppercase tracking-widest mt-0.5">The Living Canvas</div>
+</div>
+<div class="flex-1 space-y-1 overflow-y-auto custom-scrollbar">
+<a class="flex items-center px-6 py-3 text-on-surface-variant hover:translate-x-1 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined mr-4 text-[22px]">grid_view</span>
+<span class="text-sm font-semibold">Dashboard</span>
+</a>
+<a class="flex items-center px-6 py-3 text-on-surface-variant hover:translate-x-1 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined mr-4 text-[22px]">restaurant</span>
+<span class="text-sm font-semibold">Nutrition</span>
+</a>
+<a class="flex items-center px-6 py-3 text-on-surface-variant hover:translate-x-1 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined mr-4 text-[22px]">sentiment_satisfied</span>
+<span class="text-sm font-semibold">Mood</span>
+</a>
+<a class="flex items-center px-6 py-3 text-on-surface-variant hover:translate-x-1 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined mr-4 text-[22px]">calendar_today</span>
+<span class="text-sm font-semibold">Period</span>
+</a>
+<a class="flex items-center px-6 py-3 text-on-surface-variant hover:translate-x-1 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined mr-4 text-[22px]">fitness_center</span>
+<span class="text-sm font-semibold">Workouts</span>
+</a>
+<a class="flex items-center px-6 py-3 text-on-surface-variant hover:translate-x-1 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined mr-4 text-[22px]">self_improvement</span>
+<span class="text-sm font-semibold">Meditation</span>
+</a>
+<a class="flex items-center px-6 py-3 text-on-surface-variant hover:translate-x-1 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined mr-4 text-[22px]">group</span>
+<span class="text-sm font-semibold">Caregivers</span>
+</a>
+<a class="flex items-center px-6 py-3 text-on-surface-variant hover:translate-x-1 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined mr-4 text-[22px]">medical_services</span>
+<span class="text-sm font-semibold">Practitioners</span>
+</a>
+<a class="flex items-center px-6 py-3 text-on-surface-variant hover:translate-x-1 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined mr-4 text-[22px]">monitor_heart</span>
+<span class="text-sm font-semibold">Vitals</span>
+</a>
+<a class="flex items-center px-6 py-3 text-on-surface-variant hover:translate-x-1 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined mr-4 text-[22px]">military_tech</span>
+<span class="text-sm font-semibold">Rewards</span>
+</a>
+<a class="flex items-center bg-surface-container-highest/50 text-primary rounded-full mx-2 px-6 py-3 font-bold hover:translate-x-1 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined mr-4 text-[22px]" style="font-variation-settings: 'FILL' 1;">edit_note</span>
+<span class="text-sm">Journals</span>
+</a>
+<a class="flex items-center px-6 py-3 text-on-surface-variant hover:translate-x-1 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined mr-4 text-[22px]">settings</span>
+<span class="text-sm font-semibold">Settings</span>
+</a>
+</div>
+<!-- Theme Toggle Footer -->
+<div class="mt-auto px-4 pt-4 border-t border-outline-variant/10">
+<div class="bg-surface-container/50 dark:bg-stone-800/50 p-1.5 rounded-full flex justify-between items-center">
+<button class="flex-1 flex items-center justify-center py-2 px-1 bg-surface-container-lowest dark:bg-stone-900 rounded-full text-primary shadow-sm">
+<span class="material-symbols-outlined text-[18px]">light_mode</span>
+</button>
+<button class="flex-1 flex items-center justify-center py-2 px-1 text-on-surface-variant">
+<span class="material-symbols-outlined text-[18px]">dark_mode</span>
+</button>
+<button class="flex-1 flex items-center justify-center py-2 px-1 text-on-surface-variant">
+<span class="material-symbols-outlined text-[18px]">settings_brightness</span>
+</button>
+</div>
+</div>
+</aside>
+<!-- Top Header (Minimized for Sidebar) -->
+<header class="fixed top-0 w-full z-30 bg-background/80 dark:bg-orange-950/80 backdrop-blur-xl lg:pl-72">
+<nav class="flex justify-end items-center px-8 py-4 w-full max-w-7xl mx-auto">
+<div class="flex items-center gap-4">
+<button class="p-2 rounded-full hover:bg-surface-container transition-colors">
+<span class="material-symbols-outlined text-on-surface">notifications</span>
+</button>
+<img alt="User profile avatar" class="w-10 h-10 rounded-full object-cover ring-2 ring-primary-container/20" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBHldsrry_YNCHg7C8ajeEAOtAenufo2Km9-3rCeMZbRnrAqZXPv8yuRG4Md833PLBO37P62BJTAo88Hg5ym4hx3WugtH8S6fCT70TJ4wEW-IMShNtdyrepO6CIzQW0CLaoHTgwzH2gJP-RLZnV888gwxNPAA1trsxb1lAQRJmB92vUhU2BhyZBSLoy6wQqasm4mHpePDhW9RSsDLGd76u2d61570i0NuhdlAFVfeOO-M0hrVJ4909u_X_xLmW_U30syT7-3c2UvY8"/>
+</div>
+</nav>
+</header>
+<main class="max-w-7xl mx-auto pt-24 pb-32 px-6 lg:px-12 lg:ml-72">
+<div class="editorial-grid">
+<!-- Editor Column -->
+<section class="space-y-8">
+<div class="space-y-2">
+<h1 class="text-5xl font-black tracking-tight text-on-background leading-tight">Morning Reflections</h1>
+<p class="text-on-surface-variant font-medium">October 24, 2023 • 08:45 AM</p>
+</div>
+<!-- Mood & Editor Container -->
+<div class="bg-surface-container-lowest rounded-xl p-8 shadow-[0_40px_40px_-15px_rgba(160,58,15,0.04)]">
+<!-- Mood Picker -->
+<div class="flex flex-wrap items-center gap-4 mb-10">
+<span class="text-label-md uppercase tracking-widest font-bold text-on-surface-variant/60 mr-2">Today's Mood</span>
+<div class="flex gap-3">
+<button class="w-12 h-12 rounded-full bg-surface-container flex items-center justify-center text-2xl hover:scale-110 transition-transform">☀️</button>
+<button class="w-12 h-12 rounded-full bg-primary-container/20 border-2 border-primary-container flex items-center justify-center text-2xl scale-110">🌈</button>
+<button class="w-12 h-12 rounded-full bg-surface-container flex items-center justify-center text-2xl hover:scale-110 transition-transform">🌿</button>
+<button class="w-12 h-12 rounded-full bg-surface-container flex items-center justify-center text-2xl hover:scale-110 transition-transform">☁️</button>
+<button class="w-12 h-12 rounded-full bg-surface-container flex items-center justify-center text-2xl hover:scale-110 transition-transform">🌙</button>
+</div>
+</div>
+<!-- Markdown Editor -->
+<div class="space-y-4">
+<div class="flex items-center gap-4 border-b border-outline-variant/10 pb-4 mb-4">
+<button class="p-2 hover:bg-surface-container rounded-lg transition-colors"><span class="material-symbols-outlined">format_bold</span></button>
+<button class="p-2 hover:bg-surface-container rounded-lg transition-colors"><span class="material-symbols-outlined">format_italic</span></button>
+<button class="p-2 hover:bg-surface-container rounded-lg transition-colors"><span class="material-symbols-outlined">format_list_bulleted</span></button>
+<button class="p-2 hover:bg-surface-container rounded-lg transition-colors"><span class="material-symbols-outlined">link</span></button>
+<div class="h-6 w-px bg-outline-variant/20 mx-2"></div>
+<button class="p-2 hover:bg-surface-container rounded-lg transition-colors"><span class="material-symbols-outlined">mic</span></button>
+<button class="p-2 hover:bg-surface-container rounded-lg transition-colors"><span class="material-symbols-outlined">image</span></button>
+</div>
+<textarea class="w-full min-h-[400px] bg-transparent border-none focus:ring-0 text-xl leading-relaxed placeholder:text-on-surface-variant/30 resize-none font-body" placeholder="Start writing your thoughts..."></textarea>
+</div>
+<!-- Tags & Media Gallery -->
+<div class="mt-8 pt-8 border-t border-outline-variant/10 space-y-6">
+<div class="flex flex-wrap gap-2">
+<span class="px-4 py-1.5 bg-secondary-container/30 text-on-secondary-container rounded-full text-sm font-bold tracking-wide">#Gratitude</span>
+<span class="px-4 py-1.5 bg-surface-container text-on-surface-variant rounded-full text-sm font-bold tracking-wide">#Mindfulness</span>
+<button class="px-4 py-1.5 border border-dashed border-outline-variant rounded-full text-sm font-bold text-on-surface-variant/60 flex items-center gap-1 hover:bg-surface-container transition-colors">
+<span class="material-symbols-outlined text-sm">add</span> Add Tag
+                        </button>
+</div>
+<div class="grid grid-cols-3 gap-4">
+<div class="relative group aspect-square rounded-lg overflow-hidden bg-surface-container">
+<img class="w-full h-full object-cover transition-transform group-hover:scale-105" data-alt="dewy morning plant leaves with sunlight filtering through in a soft focus dreamlike atmosphere" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAuE9BuNEt4fngoKqehyIQ1UV3wCGoN9IomySajLnsGAWEpnsNzugwYgGDVr2SY8odBCIwpLNWoSXF4Ce1n4Zmk_E2HCOudSRe-hGiKyPv0_VL6MK1pFcaAo0m2CFT7IQH-kUVbcTMtKCwDjyn59TXHw4ZRBT3EmGlwK5e2XoSdR5Lo9ZkdEVTTBcTJmqNjKL5YvGZzIXVNacG7E4OhsXLStiZX7z0fPVAR0Go89resr69xueOiNr7rD_C3iCgFwmIwSqtLbcnIjVA"/>
+<button class="absolute top-2 right-2 p-1.5 bg-black/20 backdrop-blur-md rounded-full text-white opacity-0 group-hover:opacity-100 transition-opacity">
+<span class="material-symbols-outlined text-sm">close</span>
+</button>
+</div>
+<div class="relative group aspect-square rounded-lg overflow-hidden bg-surface-container flex flex-col items-center justify-center p-4">
+<div class="w-full h-2 bg-primary-container/20 rounded-full mb-2 overflow-hidden">
+<div class="w-2/3 h-full bg-primary"></div>
+</div>
+<span class="text-xs font-bold text-primary">voice_note_01.mp3</span>
+<button class="absolute top-2 right-2 p-1.5 bg-black/20 backdrop-blur-md rounded-full text-white opacity-0 group-hover:opacity-100 transition-opacity">
+<span class="material-symbols-outlined text-sm">close</span>
+</button>
+</div>
+<button class="aspect-square rounded-lg border-2 border-dashed border-outline-variant/30 flex flex-col items-center justify-center gap-2 hover:bg-surface-container-low transition-colors group">
+<span class="material-symbols-outlined text-on-surface-variant/40 group-hover:text-primary transition-colors">add_circle</span>
+<span class="text-xs font-bold text-on-surface-variant/40 group-hover:text-primary transition-colors uppercase tracking-widest">Add Media</span>
+</button>
+</div>
+</div>
+</div>
+<div class="flex justify-end gap-4">
+<button class="px-8 py-3 rounded-full font-bold text-primary hover:bg-surface-container-high transition-all">Save Draft</button>
+<button class="px-10 py-3 rounded-full bg-gradient-to-br from-primary to-primary-container text-on-primary font-bold shadow-lg shadow-primary/20 scale-102-hover transition-transform">Publish Entry</button>
+</div>
+</section>
+<!-- Sidebar: Previous Entries -->
+<aside class="space-y-8">
+<div class="bg-surface-container-low rounded-lg p-8">
+<h3 class="text-2xl font-black text-on-background tracking-tight mb-6">Past Journeys</h3>
+<div class="space-y-6">
+<!-- Entry Item 1 -->
+<div class="group cursor-pointer">
+<div class="flex justify-between items-start mb-1">
+<span class="text-[10px] font-black uppercase tracking-[0.2em] text-primary-container">Yesterday</span>
+<span class="material-symbols-outlined text-sm text-on-surface-variant/20 group-hover:text-primary transition-colors">arrow_forward</span>
+</div>
+<h4 class="font-bold text-on-background group-hover:text-primary transition-colors leading-snug">The sound of rain and new beginnings</h4>
+<p class="text-sm text-on-surface-variant line-clamp-2 mt-1">Today I woke up to the pitter-patter on the window and felt a strange sense of relief...</p>
+</div>
+<!-- Entry Item 2 -->
+<div class="group cursor-pointer">
+<div class="flex justify-between items-start mb-1">
+<span class="text-[10px] font-black uppercase tracking-[0.2em] text-on-surface-variant/40">Oct 22, 2023</span>
+<span class="material-symbols-outlined text-sm text-on-surface-variant/20 group-hover:text-primary transition-colors">arrow_forward</span>
+</div>
+<h4 class="font-bold text-on-background group-hover:text-primary transition-colors leading-snug">Coffee dates and career clarity</h4>
+<p class="text-sm text-on-surface-variant line-clamp-2 mt-1">Met Sarah at the corner cafe. We talked for hours about where we see ourselves in five years...</p>
+</div>
+<!-- Entry Item 3 -->
+<div class="group cursor-pointer">
+<div class="flex justify-between items-start mb-1">
+<span class="text-[10px] font-black uppercase tracking-[0.2em] text-on-surface-variant/40">Oct 20, 2023</span>
+<span class="material-symbols-outlined text-sm text-on-surface-variant/20 group-hover:text-primary transition-colors">arrow_forward</span>
+</div>
+<h4 class="font-bold text-on-background group-hover:text-primary transition-colors leading-snug">Sunset at the pier</h4>
+<div class="flex gap-2 mt-2">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+</div>
+</div>
+</div>
+<button class="w-full mt-10 py-4 rounded-xl border border-outline-variant/20 text-on-surface-variant font-bold text-sm uppercase tracking-widest hover:bg-surface-container transition-colors">
+                    View Archive
+                </button>
+</div>
+<!-- Stats/Insight Card -->
+<div class="bg-gradient-to-br from-tertiary to-tertiary-dim rounded-lg p-8 text-on-tertiary relative overflow-hidden group">
+<div class="absolute top-0 right-0 -mr-8 -mt-8 w-32 h-32 bg-secondary-container/20 rounded-full blur-3xl group-hover:scale-150 transition-transform duration-700"></div>
+<span class="material-symbols-outlined text-secondary-container mb-4" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+<h5 class="text-xl font-bold mb-2">Weekly Insight</h5>
+<p class="text-on-tertiary/80 text-sm leading-relaxed mb-6">You've been feeling "Inspired" 40% more often than last week. Your morning entries show a pattern of high creativity.</p>
+<a class="text-secondary-container font-bold text-sm flex items-center gap-2 group/link" href="#">
+                    Analyze Trends <span class="material-symbols-outlined text-sm group-hover/link:translate-x-1 transition-transform">arrow_forward</span>
+</a>
+</div>
+</aside>
+</div>
+</main>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="lg:hidden fixed bottom-0 left-0 w-full z-50 flex justify-center pb-8">
+<div class="bg-white/90 dark:bg-orange-950/90 backdrop-blur-2xl fixed bottom-6 left-1/2 -translate-x-1/2 w-[90%] max-w-md rounded-full px-6 py-3 shadow-[0_40px_40px_-15px_rgba(160,58,15,0.06)] flex justify-between items-center">
+<a class="flex flex-col items-center justify-center text-[#322e2c]/50 dark:text-[#fef4f1]/50 hover:bg-[#f9efeb] dark:hover:bg-orange-900/30 rounded-full transition-all p-2" href="#">
+<span class="material-symbols-outlined">grid_view</span>
+<span class="font-['Plus_Jakarta_Sans'] text-[11px] uppercase tracking-widest font-bold mt-1">Feed</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#322e2c]/50 dark:text-[#fef4f1]/50 hover:bg-[#f9efeb] dark:hover:bg-orange-900/30 rounded-full transition-all p-2" href="#">
+<span class="material-symbols-outlined">favorite</span>
+<span class="font-['Plus_Jakarta_Sans'] text-[11px] uppercase tracking-widest font-bold mt-1">Pulse</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-gradient-to-br from-[#a03a0f] to-[#fe7e4f] text-white rounded-full px-5 py-2 active:scale-95 transition-all" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+<span class="font-['Plus_Jakarta_Sans'] text-[11px] uppercase tracking-widest font-bold mt-1">Studio</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#322e2c]/50 dark:text-[#fef4f1]/50 hover:bg-[#f9efeb] dark:hover:bg-orange-900/30 rounded-full transition-all p-2" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="font-['Plus_Jakarta_Sans'] text-[11px] uppercase tracking-widest font-bold mt-1">Profile</span>
+</a>
+</div>
+</nav>
+</body></html>

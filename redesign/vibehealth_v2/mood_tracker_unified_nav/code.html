@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Mood Tracker - VibeHealth</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Be+Vietnam+Pro:wght@400;500;600&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "tertiary-fixed": "#cffeeb",
+              "surface-variant": "#e7dad5",
+              "secondary-fixed-dim": "#ffb193",
+              "tertiary-container": "#cffeeb",
+              "surface-container-lowest": "#ffffff",
+              "surface-container": "#f2e6e1",
+              "secondary-dim": "#813b1d",
+              "on-tertiary-fixed-variant": "#446e60",
+              "on-primary-container": "#4e0009",
+              "secondary-fixed": "#ffc5af",
+              "on-secondary-fixed-variant": "#823c1e",
+              "on-primary": "#ffefee",
+              "on-secondary": "#ffefeb",
+              "on-tertiary": "#cefdea",
+              "on-error-container": "#520c00",
+              "inverse-on-surface": "#a49b97",
+              "background": "#fff4f0",
+              "primary-fixed": "#ff7574",
+              "on-secondary-container": "#763316",
+              "on-surface-variant": "#615a57",
+              "error-dim": "#b92902",
+              "outline-variant": "#b5aba7",
+              "surface-container-high": "#ece0db",
+              "secondary": "#904728",
+              "surface-container-low": "#faeeea",
+              "surface-container-highest": "#e7dad5",
+              "on-tertiary-container": "#396456",
+              "primary-fixed-dim": "#f56364",
+              "error-container": "#f95630",
+              "surface-dim": "#dfd2cc",
+              "surface-tint": "#aa2c32",
+              "tertiary-dim": "#2d574a",
+              "surface-bright": "#fff4f0",
+              "inverse-surface": "#120d0b",
+              "on-tertiary-fixed": "#275144",
+              "on-primary-fixed-variant": "#60000d",
+              "primary": "#aa2c32",
+              "on-error": "#ffefec",
+              "surface": "#fff4f0",
+              "error": "#b02500",
+              "on-surface": "#332d2b",
+              "secondary-container": "#ffc5af",
+              "primary-dim": "#992027",
+              "on-primary-fixed": "#000000",
+              "tertiary": "#396355",
+              "inverse-primary": "#ff6b6b",
+              "tertiary-fixed-dim": "#c1efdd",
+              "on-background": "#332d2b",
+              "primary-container": "#ff7574",
+              "on-secondary-fixed": "#5d2105",
+              "outline": "#7d7572"
+            },
+            fontFamily: {
+              "headline": ["Plus Jakarta Sans"],
+              "body": ["Be Vietnam Pro"],
+              "label": ["Be Vietnam Pro"]
+            },
+            borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .soft-blob {
+            border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+        }
+        .noise-overlay {
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+            opacity: 0.03;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: rgba(170, 44, 50, 0.1);
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body class="bg-background font-body text-on-surface min-h-screen selection:bg-primary-container selection:text-on-primary-container antialiased">
+<div class="fixed inset-0 noise-overlay pointer-events-none"></div>
+<!-- Top Navigation Shell -->
+<nav class="fixed top-0 w-full z-50 bg-[#fff4f0]/70 dark:bg-stone-900/70 backdrop-blur-xl">
+<div class="flex justify-between items-center px-6 py-4 max-w-7xl mx-auto">
+<div class="text-2xl font-black text-[#aa2c32] italic headline tracking-tight">VibeHealth</div>
+<div class="hidden md:flex gap-8 items-center font-['Plus_Jakarta_Sans'] font-bold text-sm tracking-tight">
+<a class="text-stone-500 hover:text-[#ff6b6b] transition-colors duration-300" href="#">Journal</a>
+<a class="text-[#ff6b6b] border-b-2 border-[#ff6b6b] pb-1" href="#">Insights</a>
+<a class="text-stone-500 hover:text-[#ff6b6b] transition-colors duration-300" href="#">Library</a>
+</div>
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined text-stone-600 p-2 rounded-full hover:bg-surface-container">notifications</button>
+<div class="w-10 h-10 rounded-full bg-surface-container-highest overflow-hidden border-2 border-[#aa2c32]/20">
+<img alt="User profile avatar" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB_UuCrcqcgfByLcOT2TMFBTB8pTv4sdjdQJtQnGsVaQR0JPyfGxARGKjK-Fq1BksRgHhD5KOhu_hr00nnvx1m9KzCbnbL3zJ29XyJ54P4MxwfyExI9WqOefpzwSzqG_19k9YrZjn2OKkUym2yThaR4l36ibFR1sfbNPS0EXOMf2Ah4lEtQJ3vv4C0vUmsrvsYxTTl3cfW3A6bwE8lldJvDbHf7A8k1QddeTcqbB354vINvbagdA_ijNKUAc_1OS0_YRbt7hxiQq3Q"/>
+</div>
+</div>
+</div>
+</nav>
+<div class="flex h-screen pt-20">
+<!-- Side Navigation (Unified) -->
+<aside class="hidden lg:flex flex-col w-72 h-screen fixed left-0 top-0 z-40 bg-[#faeeea] dark:bg-stone-800 rounded-r-[3rem] shadow-[20px_0_40px_rgba(170,44,50,0.04)] py-8 font-['Plus_Jakarta_Sans']">
+<div class="px-8 mb-8">
+<div class="text-xl font-black text-[#aa2c32] dark:text-[#ff7574]">VibeHealth</div>
+<div class="text-[10px] text-stone-500 dark:text-stone-400 font-bold uppercase tracking-widest mt-0.5">The Living Canvas</div>
+</div>
+<div class="flex-1 space-y-1 overflow-y-auto custom-scrollbar px-2">
+<a class="flex items-center px-6 py-3 text-stone-600 dark:text-stone-400 hover:translate-x-1 transition-transform duration-200 hover:bg-[#e7dad5] rounded-full" href="#">
+<span class="material-symbols-outlined mr-4 text-[20px]">grid_view</span>
+<span class="text-sm font-medium">Dashboard</span>
+</a>
+<a class="flex items-center px-6 py-3 text-stone-600 dark:text-stone-400 hover:translate-x-1 transition-transform duration-200 hover:bg-[#e7dad5] rounded-full" href="#">
+<span class="material-symbols-outlined mr-4 text-[20px]">restaurant</span>
+<span class="text-sm font-medium">Nutrition</span>
+</a>
+<a class="flex items-center bg-gradient-to-br from-[#aa2c32] to-[#ff7574] text-white rounded-full px-6 py-3 font-bold hover:translate-x-1 transition-transform duration-200 shadow-lg shadow-[#ff6b6b]/20" href="#">
+<span class="material-symbols-outlined mr-4 text-[20px]" style="font-variation-settings: 'FILL' 1;">mood</span>
+<span class="text-sm">Mood</span>
+</a>
+<a class="flex items-center px-6 py-3 text-stone-600 dark:text-stone-400 hover:translate-x-1 transition-transform duration-200 hover:bg-[#e7dad5] rounded-full" href="#">
+<span class="material-symbols-outlined mr-4 text-[20px]">calendar_today</span>
+<span class="text-sm font-medium">Period</span>
+</a>
+<a class="flex items-center px-6 py-3 text-stone-600 dark:text-stone-400 hover:translate-x-1 transition-transform duration-200 hover:bg-[#e7dad5] rounded-full" href="#">
+<span class="material-symbols-outlined mr-4 text-[20px]">fitness_center</span>
+<span class="text-sm font-medium">Workouts</span>
+</a>
+<a class="flex items-center px-6 py-3 text-stone-600 dark:text-stone-400 hover:translate-x-1 transition-transform duration-200 hover:bg-[#e7dad5] rounded-full" href="#">
+<span class="material-symbols-outlined mr-4 text-[20px]">self_improvement</span>
+<span class="text-sm font-medium">Meditation</span>
+</a>
+<a class="flex items-center px-6 py-3 text-stone-600 dark:text-stone-400 hover:translate-x-1 transition-transform duration-200 hover:bg-[#e7dad5] rounded-full" href="#">
+<span class="material-symbols-outlined mr-4 text-[20px]">group</span>
+<span class="text-sm font-medium">Caregivers</span>
+</a>
+<a class="flex items-center px-6 py-3 text-stone-600 dark:text-stone-400 hover:translate-x-1 transition-transform duration-200 hover:bg-[#e7dad5] rounded-full" href="#">
+<span class="material-symbols-outlined mr-4 text-[20px]">medical_services</span>
+<span class="text-sm font-medium">Practitioners</span>
+</a>
+<a class="flex items-center px-6 py-3 text-stone-600 dark:text-stone-400 hover:translate-x-1 transition-transform duration-200 hover:bg-[#e7dad5] rounded-full" href="#">
+<span class="material-symbols-outlined mr-4 text-[20px]">monitor_heart</span>
+<span class="text-sm font-medium">Vitals</span>
+</a>
+<a class="flex items-center px-6 py-3 text-stone-600 dark:text-stone-400 hover:translate-x-1 transition-transform duration-200 hover:bg-[#e7dad5] rounded-full" href="#">
+<span class="material-symbols-outlined mr-4 text-[20px]">military_tech</span>
+<span class="text-sm font-medium">Rewards</span>
+</a>
+<a class="flex items-center px-6 py-3 text-stone-600 dark:text-stone-400 hover:translate-x-1 transition-transform duration-200 hover:bg-[#e7dad5] rounded-full" href="#">
+<span class="material-symbols-outlined mr-4 text-[20px]">settings</span>
+<span class="text-sm font-medium">Settings</span>
+</a>
+</div>
+<!-- Theme Toggle Footer -->
+<div class="mt-auto px-6 mb-4">
+<div class="bg-[#e7dad5]/50 dark:bg-stone-700/50 p-1 rounded-full flex justify-between items-center">
+<button class="flex-1 flex items-center justify-center py-2 px-1 bg-white dark:bg-stone-900 rounded-full text-[#aa2c32] shadow-sm">
+<span class="material-symbols-outlined text-[18px]">light_mode</span>
+</button>
+<button class="flex-1 flex items-center justify-center py-2 px-1 text-stone-500 dark:text-stone-400">
+<span class="material-symbols-outlined text-[18px]">dark_mode</span>
+</button>
+<button class="flex-1 flex items-center justify-center py-2 px-1 text-stone-500 dark:text-stone-400">
+<span class="material-symbols-outlined text-[18px]">settings_brightness</span>
+</button>
+</div>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="flex-grow px-6 pb-32 md:pb-12 max-w-5xl mx-auto lg:ml-72">
+<!-- Header Section -->
+<header class="py-12 relative overflow-hidden">
+<div class="absolute -right-20 -top-20 w-64 h-64 bg-tertiary-container soft-blob opacity-40 blur-3xl"></div>
+<div class="relative z-10">
+<h1 class="text-5xl md:text-7xl font-headline font-extrabold text-on-surface leading-tight tracking-tighter">
+                    Mood Tracker
+                </h1>
+<p class="text-xl text-on-surface-variant mt-4 max-w-xl">
+                    How are you feeling today? Let's map your inner landscape.
+                </p>
+</div>
+</header>
+<!-- Bento Grid Layout -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-8">
+<!-- Mood Selector Card -->
+<section class="md:col-span-12 lg:col-span-8 bg-surface-container-low rounded-xl p-8 shadow-sm">
+<h2 class="text-2xl font-headline font-bold mb-8">Current Vibe</h2>
+<div class="flex flex-wrap justify-between items-center gap-4 md:gap-8">
+<!-- Emoji Buttons -->
+<button class="group flex flex-col items-center gap-3 transition-transform hover:scale-110 active:scale-90">
+<div class="w-16 h-16 md:w-20 md:h-20 rounded-full bg-surface-container-highest flex items-center justify-center text-4xl group-hover:bg-[#ffedc2] transition-colors shadow-sm">🤩</div>
+<span class="text-xs font-bold uppercase tracking-widest text-on-surface-variant">Great</span>
+</button>
+<button class="group flex flex-col items-center gap-3 transition-transform hover:scale-110 active:scale-90">
+<div class="w-16 h-16 md:w-20 md:h-20 rounded-full bg-surface-container-highest flex items-center justify-center text-4xl group-hover:bg-[#cffeeb] transition-colors shadow-sm">😊</div>
+<span class="text-xs font-bold uppercase tracking-widest text-on-surface-variant">Good</span>
+</button>
+<button class="group flex flex-col items-center gap-3 transition-transform hover:scale-110 active:scale-90 border-4 border-primary p-1 rounded-full">
+<div class="w-16 h-16 md:w-20 md:h-20 rounded-full bg-primary flex items-center justify-center text-4xl shadow-lg shadow-primary/20">😐</div>
+<span class="text-xs font-bold uppercase tracking-widest text-primary">Okay</span>
+</button>
+<button class="group flex flex-col items-center gap-3 transition-transform hover:scale-110 active:scale-90">
+<div class="w-16 h-16 md:w-20 md:h-20 rounded-full bg-surface-container-highest flex items-center justify-center text-4xl group-hover:bg-[#e7dad5] transition-colors shadow-sm">😔</div>
+<span class="text-xs font-bold uppercase tracking-widest text-on-surface-variant">Low</span>
+</button>
+<button class="group flex flex-col items-center gap-3 transition-transform hover:scale-110 active:scale-90">
+<div class="w-16 h-16 md:w-20 md:h-20 rounded-full bg-surface-container-highest flex items-center justify-center text-4xl group-hover:bg-[#ffb193] transition-colors shadow-sm">😫</div>
+<span class="text-xs font-bold uppercase tracking-widest text-on-surface-variant">Hard</span>
+</button>
+</div>
+<div class="mt-12 space-y-8">
+<div>
+<label class="block text-sm font-bold text-on-surface-variant uppercase tracking-widest mb-4">Why I feel this way</label>
+<div class="flex flex-wrap gap-3">
+<span class="px-6 py-2 bg-surface-container-highest text-on-surface rounded-full text-sm font-medium hover:bg-primary hover:text-white transition-colors cursor-pointer">Work</span>
+<span class="px-6 py-2 bg-primary text-white rounded-full text-sm font-medium cursor-pointer">Sleep</span>
+<span class="px-6 py-2 bg-surface-container-highest text-on-surface rounded-full text-sm font-medium hover:bg-primary hover:text-white transition-colors cursor-pointer">Food</span>
+<span class="px-6 py-2 bg-surface-container-highest text-on-surface rounded-full text-sm font-medium hover:bg-primary hover:text-white transition-colors cursor-pointer">Social</span>
+<span class="px-6 py-2 bg-surface-container-highest text-on-surface rounded-full text-sm font-medium hover:bg-primary hover:text-white transition-colors cursor-pointer">Hobby</span>
+<span class="px-6 py-2 bg-surface-container-highest text-on-surface rounded-full text-sm font-medium hover:bg-primary hover:text-white transition-colors cursor-pointer">Health</span>
+</div>
+</div>
+<div>
+<label class="block text-sm font-bold text-on-surface-variant uppercase tracking-widest mb-4">Vibe Check</label>
+<input class="w-full bg-surface-container-highest border-none rounded-xl p-6 text-on-surface placeholder:text-outline focus:ring-2 focus:ring-primary transition-all" placeholder="Quick notes about your day..." type="text"/>
+</div>
+</div>
+</section>
+<!-- Weekly Insights Card -->
+<section class="md:col-span-12 lg:col-span-4 bg-surface-container-low rounded-xl p-8 shadow-sm flex flex-col">
+<h2 class="text-2xl font-headline font-bold mb-2">Mood Trends</h2>
+<p class="text-on-surface-variant text-sm mb-8">Weekly Progress</p>
+<div class="flex-grow flex flex-col justify-end gap-2 h-64">
+<div class="flex items-end justify-between gap-2 h-full">
+<!-- Chart Mockup -->
+<div class="flex flex-col items-center gap-2 flex-1 group">
+<div class="w-full bg-[#c5b4e3] rounded-t-lg transition-all group-hover:brightness-110" style="height: 60%"></div>
+<span class="text-[10px] font-bold text-outline">MON</span>
+</div>
+<div class="flex flex-col items-center gap-2 flex-1 group">
+<div class="w-full bg-[#ff6b6b] rounded-t-lg transition-all group-hover:brightness-110" style="height: 40%"></div>
+<span class="text-[10px] font-bold text-outline">TUE</span>
+</div>
+<div class="flex flex-col items-center gap-2 flex-1 group">
+<div class="w-full bg-[#c5b4e3] rounded-t-lg transition-all group-hover:brightness-110" style="height: 85%"></div>
+<span class="text-[10px] font-bold text-outline">WED</span>
+</div>
+<div class="flex flex-col items-center gap-2 flex-1 group">
+<div class="w-full bg-[#ff6b6b] rounded-t-lg transition-all group-hover:brightness-110" style="height: 30%"></div>
+<span class="text-[10px] font-bold text-outline">THU</span>
+</div>
+<div class="flex flex-col items-center gap-2 flex-1 group">
+<div class="w-full bg-[#c5b4e3] rounded-t-lg transition-all group-hover:brightness-110" style="height: 70%"></div>
+<span class="text-[10px] font-bold text-outline">FRI</span>
+</div>
+<div class="flex flex-col items-center gap-2 flex-1 group">
+<div class="w-full bg-[#ff6b6b] rounded-t-lg transition-all group-hover:brightness-110" style="height: 95%"></div>
+<span class="text-[10px] font-bold text-outline">SAT</span>
+</div>
+<div class="flex flex-col items-center gap-2 flex-1 group">
+<div class="w-full bg-[#c5b4e3] rounded-t-lg transition-all group-hover:brightness-110" style="height: 50%"></div>
+<span class="text-[10px] font-bold text-outline">SUN</span>
+</div>
+</div>
+</div>
+<div class="mt-8 pt-8 border-t border-surface-container-high">
+<div class="flex items-center justify-between">
+<div>
+<div class="text-3xl font-black text-primary">82%</div>
+<div class="text-xs font-bold text-on-surface-variant uppercase tracking-tighter">Stability Score</div>
+</div>
+<span class="material-symbols-outlined text-tertiary text-4xl" data-icon="analytics" style="font-variation-settings: 'FILL' 1;">analytics</span>
+</div>
+</div>
+</section>
+<!-- Previous Logs -->
+<section class="md:col-span-12 bg-surface-container-low rounded-xl p-8 shadow-sm">
+<div class="flex items-center justify-between mb-8">
+<h2 class="text-2xl font-headline font-bold">Previous Logs</h2>
+<button class="text-sm font-bold text-primary hover:underline">View All</button>
+</div>
+<div class="space-y-4">
+<!-- Log Item 1 -->
+<div class="flex items-center justify-between p-6 bg-surface-container-lowest rounded-xl hover:translate-x-1 transition-transform cursor-pointer">
+<div class="flex items-center gap-6">
+<div class="text-3xl">🤩</div>
+<div>
+<h4 class="font-bold text-on-surface">Feeling amazing after morning yoga</h4>
+<p class="text-xs text-on-surface-variant">Today, 8:45 AM • Healthy, Morning</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline" data-icon="chevron_right">chevron_right</span>
+</div>
+<!-- Log Item 2 -->
+<div class="flex items-center justify-between p-6 bg-surface-container-lowest rounded-xl hover:translate-x-1 transition-transform cursor-pointer">
+<div class="flex items-center gap-6">
+<div class="text-3xl">😔</div>
+<div>
+<h4 class="font-bold text-on-surface">Stressful project deadline</h4>
+<p class="text-xs text-on-surface-variant">Yesterday, 4:12 PM • Work, Stress</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline" data-icon="chevron_right">chevron_right</span>
+</div>
+<!-- Log Item 3 -->
+<div class="flex items-center justify-between p-6 bg-surface-container-lowest rounded-xl hover:translate-x-1 transition-transform cursor-pointer">
+<div class="flex items-center gap-6">
+<div class="text-3xl">😊</div>
+<div>
+<h4 class="font-bold text-on-surface">Dinner with friends</h4>
+<p class="text-xs text-on-surface-variant">Oct 24, 7:30 PM • Social, Food</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline" data-icon="chevron_right">chevron_right</span>
+</div>
+</div>
+</section>
+</div>
+</main>
+</div>
+<!-- Bottom Navigation (Mobile) -->
+<nav class="lg:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pt-2 pb-6 bg-[#faeeea]/80 dark:bg-stone-900/80 backdrop-blur-2xl rounded-t-[2.5rem] shadow-[0_-10px_40px_rgba(170,44,50,0.05)]">
+<a class="flex flex-col items-center justify-center text-stone-400 dark:text-stone-500 p-2" href="#">
+<span class="material-symbols-outlined text-2xl" data-icon="edit_note">edit_note</span>
+<span class="font-['Plus_Jakarta_Sans'] text-[10px] font-bold uppercase tracking-widest mt-1">Journal</span>
+</a>
+<a class="flex flex-col items-center justify-center text-stone-400 dark:text-stone-500 p-2" href="#">
+<span class="material-symbols-outlined text-2xl" data-icon="bolt">bolt</span>
+<span class="font-['Plus_Jakarta_Sans'] text-[10px] font-bold uppercase tracking-widest mt-1">Activity</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-[#ff6b6b] text-white rounded-2xl p-3 mb-2 transform -translate-y-2 shadow-lg shadow-[#ff6b6b]/30" href="#">
+<span class="material-symbols-outlined text-2xl" data-icon="favorite" style="font-variation-settings: 'FILL' 1;">favorite</span>
+<span class="font-['Plus_Jakarta_Sans'] text-[10px] font-bold uppercase tracking-widest mt-1">Vibe</span>
+</a>
+<a class="flex flex-col items-center justify-center text-stone-400 dark:text-stone-500 p-2" href="#">
+<span class="material-symbols-outlined text-2xl" data-icon="analytics">analytics</span>
+<span class="font-['Plus_Jakarta_Sans'] text-[10px] font-bold uppercase tracking-widest mt-1">Insights</span>
+</a>
+<a class="flex flex-col items-center justify-center text-stone-400 dark:text-stone-500 p-2" href="#">
+<span class="material-symbols-outlined text-2xl" data-icon="auto_stories">auto_stories</span>
+<span class="font-['Plus_Jakarta_Sans'] text-[10px] font-bold uppercase tracking-widest mt-1">Library</span>
+</a>
+</nav>
+</body></html>

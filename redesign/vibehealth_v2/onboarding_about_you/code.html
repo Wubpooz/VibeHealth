@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>VibeHealth Onboarding</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Be+Vietnam+Pro:wght@400;500;600&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "on-secondary-container": "#763316",
+              "surface-container-highest": "#e7dad5",
+              "on-secondary-fixed-variant": "#823c1e",
+              "on-tertiary": "#cefdea",
+              "surface-dim": "#dfd2cc",
+              "on-tertiary-fixed-variant": "#446e60",
+              "surface-container-lowest": "#ffffff",
+              "outline": "#7d7572",
+              "surface-variant": "#e7dad5",
+              "on-secondary": "#ffefeb",
+              "on-primary-container": "#4e0009",
+              "on-surface": "#332d2b",
+              "surface-container-high": "#ece0db",
+              "on-primary-fixed": "#000000",
+              "primary-fixed-dim": "#f56364",
+              "on-primary": "#ffefee",
+              "tertiary-fixed": "#cffeeb",
+              "secondary-fixed": "#ffc5af",
+              "inverse-primary": "#ff6b6b",
+              "on-primary-fixed-variant": "#60000d",
+              "surface": "#fff4f0",
+              "surface-container": "#f2e6e1",
+              "background": "#fff4f0",
+              "tertiary-container": "#cffeeb",
+              "on-secondary-fixed": "#5d2105",
+              "tertiary-fixed-dim": "#c1efdd",
+              "tertiary-dim": "#2d574a",
+              "tertiary": "#396355",
+              "error-dim": "#b92902",
+              "secondary": "#904728",
+              "on-tertiary-fixed": "#275144",
+              "secondary-fixed-dim": "#ffb193",
+              "on-tertiary-container": "#396456",
+              "inverse-surface": "#120d0b",
+              "on-background": "#332d2b",
+              "primary-dim": "#992027",
+              "on-error-container": "#520c00",
+              "error-container": "#f95630",
+              "surface-tint": "#aa2c32",
+              "outline-variant": "#b5aba7",
+              "secondary-container": "#ffc5af",
+              "primary-fixed": "#ff7574",
+              "secondary-dim": "#813b1d",
+              "on-surface-variant": "#615a57",
+              "inverse-on-surface": "#a49b97",
+              "error": "#b02500",
+              "surface-container-low": "#faeeea",
+              "primary-container": "#ff7574",
+              "primary": "#aa2c32",
+              "on-error": "#ffefec",
+              "surface-bright": "#fff4f0"
+            },
+            fontFamily: {
+              "headline": ["Plus Jakarta Sans"],
+              "body": ["Be Vietnam Pro"],
+              "label": ["Be Vietnam Pro"]
+            },
+            borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .blob-bg {
+            border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+        }
+        input[type="date"]::-webkit-calendar-picker-indicator {
+            filter: invert(24%) sepia(87%) saturate(2251%) hue-rotate(338deg) brightness(88%) contrast(92%);
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body class="bg-surface font-body text-on-surface min-h-screen relative overflow-x-hidden">
+<!-- Decorative Blobs (Design System: The Soft Pop Aesthetic) -->
+<div class="fixed top-[-10%] left-[-10%] w-[50%] h-[50%] bg-primary-container/20 blob-bg -z-10 blur-3xl"></div>
+<div class="fixed bottom-[-10%] right-[-10%] w-[40%] h-[60%] bg-tertiary-container/30 blob-bg -z-10 blur-3xl"></div>
+<!-- Main Onboarding Container -->
+<main class="min-h-screen flex flex-col items-center justify-center p-6 md:p-12">
+<!-- Header / Logo Area -->
+<div class="mb-12 text-center">
+<h1 class="font-headline font-black text-3xl text-primary tracking-tighter mb-2">VibeHealth</h1>
+<p class="text-on-surface-variant text-sm font-medium uppercase tracking-widest">The Living Canvas</p>
+</div>
+<!-- Focused Onboarding Card (Task-Focused: Suppression of Shell Navigation) -->
+<div class="w-full max-w-xl bg-surface-container-low rounded-xl p-8 md:p-12 shadow-[0_20px_40px_rgba(170,44,50,0.05)] relative overflow-hidden">
+<!-- Progress Indicator -->
+<div class="absolute top-0 left-0 w-full h-1.5 bg-surface-container-highest">
+<div class="h-full bg-gradient-to-r from-primary to-primary-container w-[40%] transition-all duration-500"></div>
+</div>
+<div class="flex justify-between items-center mb-10 mt-2">
+<span class="text-xs font-bold text-primary-dim uppercase tracking-wider">Step 2 of 5</span>
+<span class="text-xs text-on-surface-variant font-medium italic">Setting the foundation...</span>
+</div>
+<!-- Header -->
+<header class="mb-10">
+<h2 class="font-headline font-800 text-4xl text-on-surface tracking-tight mb-4 leading-tight">Tell me about yourself!</h2>
+<p class="text-on-surface-variant leading-relaxed">Let's tailor your wellness journey. This information helps us calculate your personalized Vibe Score.</p>
+</header>
+<!-- Form Fields -->
+<form class="space-y-8">
+<!-- Name Field -->
+<div class="group">
+<label class="block text-sm font-bold text-on-surface mb-3 ml-1" for="name">Full Name</label>
+<div class="relative">
+<input class="w-full bg-surface-container-highest border-none rounded-lg px-6 py-4 text-on-surface placeholder:text-outline focus:ring-2 focus:ring-primary-container focus:bg-surface-container-lowest transition-all duration-300" id="name" placeholder="How should we call you?" type="text"/>
+<span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-primary/40">person</span>
+</div>
+</div>
+<!-- Birthday Picker -->
+<div class="group">
+<label class="block text-sm font-bold text-on-surface mb-3 ml-1" for="birthday">Date of Birth</label>
+<div class="relative">
+<input class="w-full bg-surface-container-highest border-none rounded-lg px-6 py-4 text-on-surface focus:ring-2 focus:ring-primary-container focus:bg-surface-container-lowest transition-all duration-300 appearance-none" id="birthday" type="date"/>
+</div>
+</div>
+<!-- Biological Sex Selection -->
+<div>
+<label class="block text-sm font-bold text-on-surface mb-4 ml-1">Biological Sex</label>
+<div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+<button class="flex items-center justify-center gap-2 px-4 py-3 rounded-full bg-primary text-white font-semibold text-sm shadow-lg shadow-primary/20 transition-all hover:scale-[1.02] active:scale-95" type="button">
+<span class="material-symbols-outlined text-lg">male</span>
+                            Male
+                        </button>
+<button class="flex items-center justify-center gap-2 px-4 py-3 rounded-full bg-surface-container-highest text-on-surface font-semibold text-sm transition-all hover:bg-outline-variant/20 hover:scale-[1.02] active:scale-95" type="button">
+<span class="material-symbols-outlined text-lg">female</span>
+                            Female
+                        </button>
+<button class="flex items-center justify-center gap-2 px-4 py-3 rounded-full bg-surface-container-highest text-on-surface font-semibold text-sm transition-all hover:bg-outline-variant/20 hover:scale-[1.02] active:scale-95" type="button">
+<span class="material-symbols-outlined text-lg">diversity_3</span>
+                            Other
+                        </button>
+<button class="flex items-center justify-center gap-2 px-4 py-3 rounded-full bg-surface-container-highest text-on-surface font-semibold text-sm transition-all hover:bg-outline-variant/20 hover:scale-[1.02] active:scale-95 text-center" type="button">
+                            Prefer not to say
+                        </button>
+</div>
+</div>
+<!-- CTA Button -->
+<div class="pt-6">
+<button class="w-full py-5 rounded-full bg-gradient-to-r from-primary to-primary-container text-on-primary font-bold text-lg shadow-[0_20px_40px_rgba(170,44,50,0.2)] hover:shadow-[0_20px_40px_rgba(170,44,50,0.3)] transition-all duration-300 transform hover:-translate-y-1 active:scale-95 flex items-center justify-center gap-3" type="submit">
+                        Continue
+                        <span class="material-symbols-outlined">arrow_forward</span>
+</button>
+</div>
+</form>
+</div>
+<!-- Secondary Info / Support Link -->
+<p class="mt-8 text-on-surface-variant text-sm font-medium">
+            Already have an account? <a class="text-primary font-bold hover:underline underline-offset-4" href="#">Log in here</a>
+</p>
+</main>
+<!-- Simple Footer (No Nav Shell logic) -->
+<footer class="w-full py-8 px-6 flex flex-col items-center gap-4">
+<div class="flex gap-8">
+<a class="text-xs font-semibold text-outline hover:text-primary transition-colors" href="#">Privacy Policy</a>
+<a class="text-xs font-semibold text-outline hover:text-primary transition-colors" href="#">Terms of Service</a>
+<a class="text-xs font-semibold text-outline hover:text-primary transition-colors" href="#">Help Center</a>
+</div>
+<p class="text-[10px] text-outline/60 uppercase tracking-widest font-bold">© 2024 VibeHealth. The Living Canvas.</p>
+</footer>
+<!-- Decorative Image Floating Elements -->
+<div class="fixed top-20 right-[-100px] w-64 h-64 opacity-20 pointer-events-none hidden lg:block">
+<img alt="Decorative organic shapes" class="w-full h-full object-contain" data-alt="abstract organic shapes resembling cells and energy waves soft pink and coral palette with frosted glass texture" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCl7y--1XIdXH_yZy4H_eVvd8FPP9YMBtf1TJ8bKoA-mQUq-K-0XEGgRwh3iYXgdQmTkel0eNdcODcUqNXzDuqtZoLooJ1uueR-BAg_fMQ5xRXB81-3RXM4ovparluvmwyxG0sPSswC225PGnvDGM-vK0IB0MGqUMUY4uPM536a4lR2wqgOtWM7XQvI0A-Ezql9fXemQuuHnC2Jw6sD2WOkshWicqnrDBqbfXNi-FfD6gAgtBZoCyvoNs3BIVLYyDqKKxW3ouNTelQ"/>
+</div>
+<div class="fixed bottom-20 left-[-100px] w-80 h-80 opacity-20 pointer-events-none hidden lg:block">
+<img alt="Decorative wellness shapes" class="w-full h-full object-contain" data-alt="soft gradient blobs and flowing lines representing wellness and vitality warm sunset colors minimalist aesthetic" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDB4OZeaA3h1YpTLkTAWqxd_X6fCTOC2SUzz8crNcGjvQIVH__ZrQ9Y4fJLRwoNc4_8kWYAAMcOMDFUzsjUlR91lHJijqKh-VCatWrKRRbv7RQDljUSKulqDml2M6Im4mLeFF115Actf8I9Xk6qwwa5dqNyxMBKA_vPt7ha7pf2ccpEcH3LFh_2jeouHfP8kosoOOXdxJryggqbqKkzKCDVfVezb_0t0l31uCG5GhopGD4c8dPeOcX-4UmvrBGVdE9WtmxQL7x8Lng"/>
+</div>
+</body></html>

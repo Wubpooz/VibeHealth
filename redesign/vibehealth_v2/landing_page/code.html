@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+
+<html class="scroll-smooth" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>VibeHealth | The Living Canvas</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Be+Vietnam+Pro:wght@400;500;600&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "on-secondary-container": "#763316",
+              "surface-container-highest": "#e7dad5",
+              "on-secondary-fixed-variant": "#823c1e",
+              "on-tertiary": "#cefdea",
+              "surface-dim": "#dfd2cc",
+              "on-tertiary-fixed-variant": "#446e60",
+              "surface-container-lowest": "#ffffff",
+              "outline": "#7d7572",
+              "surface-variant": "#e7dad5",
+              "on-secondary": "#ffefeb",
+              "on-primary-container": "#4e0009",
+              "on-surface": "#332d2b",
+              "surface-container-high": "#ece0db",
+              "on-primary-fixed": "#000000",
+              "primary-fixed-dim": "#f56364",
+              "on-primary": "#ffefee",
+              "tertiary-fixed": "#cffeeb",
+              "secondary-fixed": "#ffc5af",
+              "inverse-primary": "#ff6b6b",
+              "on-primary-fixed-variant": "#60000d",
+              "surface": "#fff4f0",
+              "surface-container": "#f2e6e1",
+              "background": "#fff4f0",
+              "tertiary-container": "#cffeeb",
+              "on-secondary-fixed": "#5d2105",
+              "tertiary-fixed-dim": "#c1efdd",
+              "tertiary-dim": "#2d574a",
+              "tertiary": "#396355",
+              "error-dim": "#b92902",
+              "secondary": "#904728",
+              "on-tertiary-fixed": "#275144",
+              "secondary-fixed-dim": "#ffb193",
+              "on-tertiary-container": "#396456",
+              "inverse-surface": "#120d0b",
+              "on-background": "#332d2b",
+              "primary-dim": "#992027",
+              "on-error-container": "#520c00",
+              "error-container": "#f95630",
+              "surface-tint": "#aa2c32",
+              "outline-variant": "#b5aba7",
+              "secondary-container": "#ffc5af",
+              "primary-fixed": "#ff7574",
+              "secondary-dim": "#813b1d",
+              "on-surface-variant": "#615a57",
+              "inverse-on-surface": "#a49b97",
+              "error": "#b02500",
+              "surface-container-low": "#faeeea",
+              "primary-container": "#ff7574",
+              "primary": "#aa2c32",
+              "on-error": "#ffefec",
+              "surface-bright": "#fff4f0"
+            },
+            fontFamily: {
+              "headline": ["Plus Jakarta Sans"],
+              "body": ["Be Vietnam Pro"],
+              "label": ["Be Vietnam Pro"]
+            },
+            borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        body { font-family: 'Be Vietnam Pro', sans-serif; background-color: #fff4f0; }
+        .headline-font { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .blob-shape { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .noise-texture {
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+            opacity: 0.03;
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface selection:bg-primary-container selection:text-on-primary-container relative min-h-screen flex flex-col overflow-x-hidden">
+<div class="noise-texture fixed inset-0 pointer-events-none z-[100]"></div>
+<!-- TopNavBar -->
+<header class="fixed top-0 w-full z-50 bg-[#fff4f0]/70 dark:bg-slate-950/70 backdrop-blur-xl">
+<nav class="flex justify-between items-center px-8 py-4 max-w-7xl mx-auto">
+<div class="text-2xl font-black text-[#aa2c32] dark:text-[#ff7574] font-['Plus_Jakarta_Sans'] tracking-tight">VibeHealth</div>
+<div class="hidden md:flex items-center gap-8">
+<a class="text-[#aa2c32] dark:text-[#ff7574] font-bold border-b-2 border-[#aa2c32] pb-1 font-['Plus_Jakarta_Sans'] transition-colors duration-300" href="#">Features</a>
+<a class="text-[#e7dad5] dark:text-slate-400 font-medium font-['Plus_Jakarta_Sans'] hover:text-[#ff6b6b] transition-colors duration-300" href="#">Science</a>
+<a class="text-[#e7dad5] dark:text-slate-400 font-medium font-['Plus_Jakarta_Sans'] hover:text-[#ff6b6b] transition-colors duration-300" href="#">Pricing</a>
+</div>
+<button class="bg-primary hover:bg-primary-dim text-white px-6 py-2.5 rounded-full font-bold transition-all scale-95 active:scale-90 shadow-lg shadow-primary/20">
+                Get Started
+            </button>
+</nav>
+</header>
+<main class="flex-grow pt-24">
+<!-- Hero Section -->
+<section class="relative px-6 py-20 lg:py-32 overflow-hidden">
+<div class="absolute -top-20 -right-20 w-96 h-96 bg-tertiary-container/30 blob-shape blur-3xl -z-10"></div>
+<div class="absolute top-1/2 -left-20 w-80 h-80 bg-primary-container/20 blob-shape blur-3xl -z-10"></div>
+<div class="max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 items-center">
+<div class="space-y-8">
+<div class="inline-flex items-center gap-2 px-4 py-2 bg-secondary-container/30 text-on-secondary-container rounded-full text-sm font-semibold tracking-wide">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+                        Welcome to VibeHealth
+                    </div>
+<h1 class="text-6xl md:text-8xl headline-font font-extrabold text-on-surface leading-[1.1] tracking-tighter">
+                        Wellness that <span class="text-primary italic">Vibes</span> with you.
+                    </h1>
+<p class="text-xl text-on-surface-variant max-w-lg leading-relaxed">
+                        Transforming the clinical into the personal. Your health journey, visualized through the lens of a living canvas. 
+                    </p>
+<div class="flex flex-wrap gap-4 pt-4">
+<button class="px-8 py-4 bg-gradient-to-br from-primary to-primary-container text-white rounded-full font-bold text-lg shadow-[0_20px_40px_rgba(170,44,50,0.2)] hover:scale-105 active:scale-95 transition-all">
+                            Get Started Free
+                        </button>
+<button class="px-8 py-4 bg-surface-container-highest text-primary rounded-full font-bold text-lg hover:bg-surface-container-high transition-all">
+                            How it works
+                        </button>
+</div>
+</div>
+<div class="relative flex justify-center items-center">
+<div class="absolute inset-0 bg-primary-container/10 rounded-full blur-3xl scale-75 animate-pulse"></div>
+<img alt="Playful bunny mascot" class="relative z-10 w-full max-w-md drop-shadow-2xl" data-alt="whimsical and playful 3D rendered bunny mascot with soft white fur and friendly eyes sitting in a meditative pose surrounded by floating organic health icons" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCZ16DliuYeIi4NpYe7-0WxtFzWBwpFybI4xoOhidDp_mYxSc6AOpwDnm9YLGgPD5kghKkdrI8DypfYULTICHUn7UcKI-5isZrPnZ8KvoUuT2qSrQmyoCkIDB_lbqa6yYKl3QVLJpxBxR0KgdtHEInwbvKlEcK-3IDo-2X7tJLY-ffsJ3BYgl247XlkAV7yF_6suD1c94spV8ohvlHlWPvRFEq_bfFY_I7hq3KTFzfHcJuE9gfvvJgh6xZAH0zQ9k4W1ySiGq6j8E4"/>
+</div>
+</div>
+</section>
+<!-- Features Bento Grid -->
+<section class="py-24 px-6 bg-surface-container-low">
+<div class="max-w-7xl mx-auto">
+<div class="mb-16 text-center">
+<h2 class="text-4xl md:text-5xl headline-font font-bold mb-4">Features for the Future</h2>
+<p class="text-on-surface-variant max-w-2xl mx-auto">Beautifully crafted tools designed to keep your health in perfect harmony with your lifestyle.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-12 gap-6">
+<!-- Medical ID -->
+<div class="md:col-span-8 bg-surface-container-lowest p-10 rounded-[2rem] shadow-[0_10px_30px_rgba(170,44,50,0.03)] group hover:translate-y-[-4px] transition-all duration-500">
+<div class="flex flex-col md:flex-row gap-8 items-center">
+<div class="flex-1 space-y-4">
+<div class="w-14 h-14 bg-primary/10 rounded-2xl flex items-center justify-center">
+<span class="material-symbols-outlined text-primary text-3xl">medical_information</span>
+</div>
+<h3 class="text-2xl font-bold headline-font">Medical ID</h3>
+<p class="text-on-surface-variant leading-relaxed">Your vital health stats, encrypted and accessible in moments of need. A digital life-saver that lives in your pocket.</p>
+</div>
+<div class="w-full md:w-1/2 overflow-hidden rounded-2xl">
+<img alt="Medical ID" class="w-full h-full object-cover scale-110 group-hover:scale-100 transition-transform duration-700" data-alt="close up of a modern sleek medical ID interface on a smartphone screen showing vital signs and emergency contact info in a soft coral palette" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBLyEbLDPjVCLkMbayMFenrVKCK3KBZZ-pXDkxmFmslhMfcy0Ee2jBJDEKWqVmEJFM65c6NhqKDLVVVmXq6xA8AmVhXFNhiNRP1b_yqqRns-2LENR4yPkDRV8CjTL_vSf9wQDC_GsIvMJtzc3LOfqLnMJUzJOZ3Oj2TWifkpGwHWeFrQHjg9esICgcGNoDlC6yMhWGMrdRmI9T_pgpZY8XSejaC0e865_gxb1wndw_Av3nP97Wgrx5lH6r8GkNf12JpEzSaz8yqpzM"/>
+</div>
+</div>
+</div>
+<!-- Carrot Rewards -->
+<div class="md:col-span-4 bg-tertiary-container/40 p-10 rounded-[2rem] shadow-[0_10px_30px_rgba(170,44,50,0.03)] group hover:translate-y-[-4px] transition-all duration-500 flex flex-col justify-between">
+<div class="space-y-4">
+<div class="w-14 h-14 bg-tertiary/10 rounded-2xl flex items-center justify-center">
+<span class="material-symbols-outlined text-tertiary text-3xl">restaurant</span>
+</div>
+<h3 class="text-2xl font-bold headline-font">Carrot Rewards</h3>
+<p class="text-on-surface-variant leading-relaxed">Earn tokens for every healthy choice. From morning walks to mindful eating, get rewarded for living well.</p>
+</div>
+<div class="mt-8 flex justify-end">
+<img alt="Carrot Reward" class="w-24 h-24 rotate-12 group-hover:rotate-0 transition-transform duration-500" data-alt="a stylized minimalist golden carrot icon with a sparkling trail on a soft mint green background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAAuy10B1n5iRtGqR7iVACUtsrJ5dLqYwp5i5dC1cqd_heZ3ohs5Yq1mXSDCnKbwqsJ-mqxU0KvDv6GSIoTrNP5Y2HR7TkVD52sttQbmkF6Of7zsq0cSP3QYWUsJDVv24pRC_jdapDGNfxeg-tTBdTSgHeT1BnT9x_LHK8MfBBMk-AdV9jDyN8Yt4_2g9zJnLx005g7h1pDLWPnXZwieTswAn-yccGjn4nYqYTG_dcf5XXjyM809n-tBIHTnyaVR5ByAvyGflaG14o"/>
+</div>
+</div>
+<!-- First Aid Guide -->
+<div class="md:col-span-4 bg-primary/5 p-10 rounded-[2rem] shadow-[0_10px_30px_rgba(170,44,50,0.03)] group hover:translate-y-[-4px] transition-all duration-500">
+<div class="space-y-4">
+<div class="w-14 h-14 bg-error-container/10 rounded-2xl flex items-center justify-center">
+<span class="material-symbols-outlined text-error text-3xl">emergency</span>
+</div>
+<h3 class="text-2xl font-bold headline-font">First Aid Guide</h3>
+<p class="text-on-surface-variant leading-relaxed">Instant, visual instructions for emergency response. Empowering you to act confidently when seconds count.</p>
+</div>
+</div>
+<!-- Smart Dashboard -->
+<div class="md:col-span-8 bg-surface-container-highest/50 p-10 rounded-[2rem] shadow-[0_10px_30px_rgba(170,44,50,0.03)] group hover:translate-y-[-4px] transition-all duration-500">
+<div class="flex flex-col md:flex-row gap-8 items-center">
+<div class="w-full md:w-1/2 bg-white/50 backdrop-blur-md rounded-2xl p-6">
+<img alt="Smart Dashboard" class="w-full h-full object-cover rounded-lg" data-alt="abstract visualization of health data metrics using colorful organic bubbles and soft glowing lines in a professional dashboard layout" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAC1lwxNpwXxkFmPbiH4N8XmWYplYdgbv03vAmLKOs8sEl26B2bC56MnQutGj3RZdjhHVoS1jINaRhZ67yEZLt9J7MdFRvOpwFaXiuuAsoblie88GH2AdjOk7Ww7oNYRCtyimDhGHCjIG6y0QtpMNKN9KLagT5dAfcCrKJ7HIl4AcnaesRGneW-MpqAqFBdt6M_p6ix6SiocQ-hkMG9GgDRmlP221kslN7aeg1XiQ7-gafFRYDCVH4nkup7Fe0FPlPmuRruCtqw6HU"/>
+</div>
+<div class="flex-1 space-y-4">
+<div class="w-14 h-14 bg-secondary/10 rounded-2xl flex items-center justify-center">
+<span class="material-symbols-outlined text-secondary text-3xl">dashboard</span>
+</div>
+<h3 class="text-2xl font-bold headline-font">Smart Dashboard</h3>
+<p class="text-on-surface-variant leading-relaxed">A holistic view of your wellness ecosystem. Trends, insights, and predictions powered by empathetic AI.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- 3-Step Onboarding -->
+<section class="py-32 px-6">
+<div class="max-w-7xl mx-auto">
+<div class="max-w-2xl mb-20">
+<h2 class="text-4xl md:text-5xl headline-font font-bold mb-6">Your Journey Starts Here</h2>
+<p class="text-xl text-on-surface-variant">Simple steps to a more vibrant version of yourself. No friction, just flow.</p>
+</div>
+<div class="grid md:grid-cols-3 gap-12 relative">
+<!-- Step 1 -->
+<div class="space-y-6 relative">
+<div class="text-9xl font-black text-primary/5 absolute -top-16 -left-4 select-none">01</div>
+<div class="relative space-y-4">
+<div class="w-16 h-16 bg-primary text-white rounded-full flex items-center justify-center text-2xl font-bold shadow-lg shadow-primary/20">1</div>
+<h3 class="text-2xl font-bold headline-font">Download &amp; Profile</h3>
+<p class="text-on-surface-variant leading-relaxed">Set up your unique health identity in seconds. Secure, private, and tailored to your goals.</p>
+</div>
+</div>
+<!-- Step 2 -->
+<div class="space-y-6 relative">
+<div class="text-9xl font-black text-primary/5 absolute -top-16 -left-4 select-none">02</div>
+<div class="relative space-y-4">
+<div class="w-16 h-16 bg-primary text-white rounded-full flex items-center justify-center text-2xl font-bold shadow-lg shadow-primary/20">2</div>
+<h3 class="text-2xl font-bold headline-font">Sync Your Vibe</h3>
+<p class="text-on-surface-variant leading-relaxed">Connect your wearables and apps. Watch as your Living Canvas starts to breathe and respond.</p>
+</div>
+</div>
+<!-- Step 3 -->
+<div class="space-y-6 relative">
+<div class="text-9xl font-black text-primary/5 absolute -top-16 -left-4 select-none">03</div>
+<div class="relative space-y-4">
+<div class="w-16 h-16 bg-primary text-white rounded-full flex items-center justify-center text-2xl font-bold shadow-lg shadow-primary/20">3</div>
+<h3 class="text-2xl font-bold headline-font">Thrive &amp; Earn</h3>
+<p class="text-on-surface-variant leading-relaxed">Start your daily quests, unlock insights, and redeem your carrots for premium health perks.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- CTA Section -->
+<section class="py-24 px-6 max-w-7xl mx-auto mb-24">
+<div class="bg-gradient-to-br from-[#aa2c32] to-[#ff7574] rounded-[3rem] p-12 md:p-20 text-center relative overflow-hidden shadow-2xl shadow-primary/30">
+<div class="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl -mr-32 -mt-32"></div>
+<div class="absolute bottom-0 left-0 w-64 h-64 bg-black/10 rounded-full blur-3xl -ml-32 -mb-32"></div>
+<div class="relative z-10 space-y-8">
+<h2 class="text-4xl md:text-6xl headline-font font-extrabold text-white leading-tight">Ready to join the canvas?</h2>
+<p class="text-xl text-white/80 max-w-xl mx-auto">Be among the first to experience the future of personal wellness tracking.</p>
+<div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+<button class="bg-white text-primary px-10 py-5 rounded-full font-bold text-lg hover:bg-on-primary transition-all shadow-xl">
+                            Join the Waitlist
+                        </button>
+<span class="text-white/60 text-sm italic font-medium">No credit card required. Pure health.</span>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="w-full py-12 px-8 bg-[#faeeea] dark:bg-slate-950 flex flex-col items-center gap-6 mt-auto">
+<div class="w-full max-w-7xl flex flex-col md:flex-row justify-between items-center gap-8">
+<div class="text-lg font-bold text-[#aa2c32] font-['Plus_Jakarta_Sans']">VibeHealth</div>
+<div class="flex gap-8">
+<a class="text-[#aa2c32]/70 font-['Plus_Jakarta_Sans'] text-sm hover:text-[#ff6b6b] transition-all" href="#">Privacy</a>
+<a class="text-[#aa2c32]/70 font-['Plus_Jakarta_Sans'] text-sm hover:text-[#ff6b6b] transition-all" href="#">Terms</a>
+<a class="text-[#aa2c32]/70 font-['Plus_Jakarta_Sans'] text-sm hover:text-[#ff6b6b] transition-all" href="#">Support</a>
+</div>
+<div class="flex gap-4">
+<a class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-all" href="#">
+<span class="material-symbols-outlined text-lg">share</span>
+</a>
+<a class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-all" href="#">
+<span class="material-symbols-outlined text-lg">favorite</span>
+</a>
+<a class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-all" href="#">
+<span class="material-symbols-outlined text-lg">public</span>
+</a>
+</div>
+</div>
+<div class="text-[#aa2c32]/50 text-xs font-['Plus_Jakarta_Sans'] mt-8">
+            © 2024 VibeHealth. The Living Canvas.
+        </div>
+</footer>
+<!-- BottomNavBar (Mobile Only) -->
+<div class="md:hidden fixed bottom-0 w-full flex justify-around items-center px-6 pb-6 pt-2 bg-[#faeeea]/80 dark:bg-slate-900/80 backdrop-blur-2xl rounded-t-[3rem] z-50 shadow-[0_-20px_40px_rgba(170,44,50,0.05)]">
+<div class="flex flex-col items-center justify-center bg-[#ff7574] text-white rounded-full p-3 shadow-lg shadow-[#ff6b6b]/20 font-['Plus_Jakarta_Sans'] text-xs font-semibold">
+<span class="material-symbols-outlined">home</span>
+<span>Home</span>
+</div>
+<div class="flex flex-col items-center justify-center text-[#aa2c32]/60 dark:text-slate-400 p-3 font-['Plus_Jakarta_Sans'] text-xs font-semibold hover:bg-[#e7dad5] dark:hover:bg-slate-800 rounded-full transition-all">
+<span class="material-symbols-outlined">auto_awesome</span>
+<span>Journey</span>
+</div>
+<div class="flex flex-col items-center justify-center text-[#aa2c32]/60 dark:text-slate-400 p-3 font-['Plus_Jakarta_Sans'] text-xs font-semibold hover:bg-[#e7dad5] dark:hover:bg-slate-800 rounded-full transition-all">
+<span class="material-symbols-outlined">analytics</span>
+<span>Insights</span>
+</div>
+<div class="flex flex-col items-center justify-center text-[#aa2c32]/60 dark:text-slate-400 p-3 font-['Plus_Jakarta_Sans'] text-xs font-semibold hover:bg-[#e7dad5] dark:hover:bg-slate-800 rounded-full transition-all">
+<span class="material-symbols-outlined">person</span>
+<span>Profile</span>
+</div>
+</div>
+</body></html>

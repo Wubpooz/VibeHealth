@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Health Summary Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#FF6B6B",
+                        "background-light": "#FFF0F0",
+                        "background-dark": "#1A1A1A",
+                        surface: {
+                            light: "#FFFFFF",
+                            dark: "#2A2A2A"
+                        },
+                        text: {
+                            light: "#333333",
+                            dark: "#F0F0F0"
+                        },
+                        border: {
+                            light: "#FEE2E2",
+                            dark: "#404040"
+                        }
+                    },
+                    fontFamily: {
+                        display: ["Poppins", "sans-serif"],
+                    },
+                    borderRadius: {
+                        DEFAULT: "12px",
+                    },
+                },
+            },
+        };
+    </script>
+<style type="text/tailwindcss">
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            font-size: 20px;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-text-light dark:text-text-dark min-h-screen">
+<header class="bg-primary text-white py-6 px-8 flex items-center justify-between sticky top-0 z-20 shadow-md">
+<div class="flex items-center gap-4">
+<div class="bg-white/20 p-2 rounded-xl">
+<span class="material-symbols-outlined">health_metrics</span>
+</div>
+<div>
+<h1 class="text-2xl font-bold tracking-tight leading-tight">Health Dashboard</h1>
+<p class="text-xs font-medium opacity-80 uppercase tracking-widest">Medical ID Summary</p>
+</div>
+</div>
+<div class="flex gap-3">
+<button class="bg-white/20 hover:bg-white/30 p-3 rounded-full transition-all">
+<span class="material-symbols-outlined">share</span>
+</button>
+<button class="bg-white text-primary px-6 py-2.5 rounded-full font-bold shadow-lg flex items-center gap-2 hover:bg-gray-50 transition-all">
+<span class="material-symbols-outlined">save</span>
+                Save Changes
+            </button>
+</div>
+</header>
+<main class="max-w-7xl mx-auto p-6 md:p-8">
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+<div class="bg-white dark:bg-surface-dark p-6 rounded-3xl shadow-sm border border-border-light dark:border-border-dark flex flex-col justify-between relative overflow-hidden group">
+<div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+<span class="material-symbols-outlined text-6xl">bloodtype</span>
+</div>
+<div>
+<h2 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">Your Blood Type</h2>
+<div class="flex items-baseline gap-2">
+<span class="text-5xl font-black text-primary">B-</span>
+<span class="text-xs font-semibold text-primary/60">Rare</span>
+</div>
+</div>
+<button class="mt-4 flex items-center gap-2 text-sm font-semibold text-gray-500 hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-sm">edit</span> Change
+                </button>
+</div>
+<div class="bg-white dark:bg-surface-dark p-6 rounded-3xl shadow-sm border border-border-light dark:border-border-dark flex flex-col justify-between group">
+<div>
+<div class="flex justify-between items-start mb-2">
+<h2 class="text-xs font-bold text-gray-400 uppercase tracking-widest">Known Allergies</h2>
+<button class="text-gray-400 hover:text-primary"><span class="material-symbols-outlined">add_circle</span></button>
+</div>
+<div class="flex flex-wrap gap-2">
+<div class="bg-primary/10 text-primary px-3 py-1 rounded-lg text-sm font-bold flex items-center gap-1 group/chip">
+                            Tree Nuts
+                            <span class="material-symbols-outlined text-xs cursor-pointer opacity-0 group-hover/chip:opacity-100">close</span>
+</div>
+</div>
+</div>
+<div class="mt-4 text-xs font-medium text-gray-400 italic">1 entry found</div>
+</div>
+<div class="bg-white dark:bg-surface-dark p-6 rounded-3xl shadow-sm border border-border-light dark:border-border-dark flex flex-col justify-between group">
+<div>
+<div class="flex justify-between items-start mb-2">
+<h2 class="text-xs font-bold text-gray-400 uppercase tracking-widest">Active Conditions</h2>
+<button class="text-gray-400 hover:text-primary"><span class="material-symbols-outlined">add_circle</span></button>
+</div>
+<div class="space-y-2">
+<div class="flex items-center justify-between group/row">
+<span class="text-sm font-bold text-text-light dark:text-text-dark">Hypertension</span>
+<span class="material-symbols-outlined text-gray-300 group-hover/row:text-primary cursor-pointer">edit_note</span>
+</div>
+</div>
+</div>
+<div class="mt-4 text-xs font-medium text-gray-400 italic">Updated 2 days ago</div>
+</div>
+<div class="bg-primary text-white p-6 rounded-3xl shadow-lg border-none flex flex-col justify-between">
+<div>
+<h2 class="text-xs font-bold text-white/70 uppercase tracking-widest mb-1">Primary Contact</h2>
+<p class="text-lg font-bold">Sarah Williams</p>
+<p class="text-sm opacity-80">(Spouse)</p>
+</div>
+<a class="mt-4 flex items-center justify-center gap-2 bg-white/20 hover:bg-white/30 py-2 rounded-xl text-sm font-bold transition-all" href="tel:5550123">
+<span class="material-symbols-outlined text-sm">call</span> 555-0123
+                </a>
+</div>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+<div class="lg:col-span-2 space-y-6">
+<div class="bg-white dark:bg-surface-dark rounded-3xl p-8 shadow-sm border border-border-light dark:border-border-dark">
+<div class="flex items-center justify-between mb-6">
+<h3 class="text-xl font-bold flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">pill</span>
+                            Active Medications
+                        </h3>
+<button class="bg-primary/10 text-primary px-4 py-2 rounded-full text-sm font-bold flex items-center gap-2 hover:bg-primary/20 transition-all">
+<span class="material-symbols-outlined text-sm">add</span> Add New
+                        </button>
+</div>
+<div class="space-y-4">
+<div class="flex items-center justify-between p-4 rounded-2xl bg-background-light dark:bg-background-dark border border-transparent hover:border-primary/20 transition-all group">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-xl bg-white dark:bg-surface-dark flex items-center justify-center text-primary shadow-sm">
+<span class="material-symbols-outlined">medication</span>
+</div>
+<div>
+<p class="font-bold text-text-light dark:text-text-dark">Lisinopril</p>
+<p class="text-xs text-gray-500">10mg daily • For Hypertension</p>
+</div>
+</div>
+<div class="flex gap-2">
+<button class="p-2 text-gray-400 hover:text-primary transition-colors"><span class="material-symbols-outlined">edit</span></button>
+<button class="p-2 text-gray-400 hover:text-red-500 transition-colors"><span class="material-symbols-outlined">delete</span></button>
+</div>
+</div>
+<div class="flex items-center justify-center p-8 border-2 border-dashed border-border-light dark:border-border-dark rounded-2xl text-gray-400 font-medium">
+<p class="text-sm">No other medications registered.</p>
+</div>
+</div>
+</div>
+<div class="bg-white dark:bg-surface-dark rounded-3xl p-8 shadow-sm border border-border-light dark:border-border-dark">
+<div class="flex items-center justify-between mb-4">
+<h3 class="text-xl font-bold flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">description</span>
+                            Medical Notes
+                        </h3>
+<button class="text-primary hover:underline text-sm font-bold">Edit Bio</button>
+</div>
+<div class="bg-background-light dark:bg-background-dark p-6 rounded-2xl">
+<p class="text-sm leading-relaxed text-gray-600 dark:text-gray-300 italic">
+                            "Patient has a history of mild asthma triggered by seasonal changes. Prefers generic brand medications when available."
+                        </p>
+</div>
+</div>
+</div>
+<div class="space-y-6">
+<div class="bg-white dark:bg-surface-dark rounded-3xl p-8 shadow-sm border border-border-light dark:border-border-dark">
+<h3 class="text-xl font-bold mb-6 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">contacts</span>
+                        All Contacts
+                    </h3>
+<div class="space-y-6">
+<div class="flex items-center justify-between border-b border-border-light dark:border-border-dark pb-4">
+<div>
+<p class="font-bold">Sarah Williams</p>
+<p class="text-xs text-primary font-semibold uppercase tracking-tighter">Primary • Spouse</p>
+</div>
+<button class="material-symbols-outlined text-gray-400 hover:text-primary">more_vert</button>
+</div>
+<div class="flex items-center justify-between border-b border-border-light dark:border-border-dark pb-4">
+<div>
+<p class="font-bold">John Doe</p>
+<p class="text-xs text-gray-500 font-semibold uppercase tracking-tighter">Secondary • Brother</p>
+</div>
+<button class="material-symbols-outlined text-gray-400 hover:text-primary">more_vert</button>
+</div>
+<button class="w-full py-4 rounded-2xl border-2 border-dashed border-border-light dark:border-border-dark text-gray-400 text-sm font-bold flex items-center justify-center gap-2 hover:bg-primary/5 hover:border-primary/40 hover:text-primary transition-all">
+<span class="material-symbols-outlined">person_add</span> Add Emergency Contact
+                        </button>
+</div>
+</div>
+<div class="bg-surface-dark text-white rounded-3xl p-8 shadow-xl">
+<h3 class="text-sm font-bold text-white/50 uppercase tracking-widest mb-6">Quick Vitals</h3>
+<div class="grid grid-cols-2 gap-4">
+<div class="space-y-1">
+<p class="text-[10px] text-white/60 uppercase font-bold">Weight</p>
+<p class="text-lg font-bold">72 kg</p>
+<button class="text-[10px] text-primary font-bold">UPDATE</button>
+</div>
+<div class="space-y-1">
+<p class="text-[10px] text-white/60 uppercase font-bold">Height</p>
+<p class="text-lg font-bold">178 cm</p>
+<button class="text-[10px] text-primary font-bold">UPDATE</button>
+</div>
+<div class="space-y-1 pt-4 border-t border-white/10 col-span-2">
+<p class="text-[10px] text-white/60 uppercase font-bold">Organ Donor</p>
+<p class="text-lg font-bold text-primary">Yes</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<footer class="max-w-7xl mx-auto p-8 pt-0">
+<div class="bg-white/50 dark:bg-surface-dark/50 rounded-3xl p-6 flex flex-col md:flex-row items-center justify-between gap-4 border border-border-light dark:border-border-dark">
+<p class="text-sm text-gray-500 font-medium">Last full review: Oct 24, 2023</p>
+<div class="flex gap-4">
+<button class="text-sm font-bold text-gray-400 hover:text-primary px-4 py-2">Privacy Settings</button>
+<button class="bg-primary text-white px-8 py-3 rounded-2xl font-bold shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all">Confirm All Data</button>
+</div>
+</div>
+</footer>
+
+</body></html>

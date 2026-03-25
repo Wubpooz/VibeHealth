@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>VibeHealth - The Living Canvas</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Be+Vietnam+Pro:wght@400;500;600&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "on-secondary-container": "#763316",
+              "surface-container-highest": "#e7dad5",
+              "on-secondary-fixed-variant": "#823c1e",
+              "on-tertiary": "#cefdea",
+              "surface-dim": "#dfd2cc",
+              "on-tertiary-fixed-variant": "#446e60",
+              "surface-container-lowest": "#ffffff",
+              "outline": "#7d7572",
+              "surface-variant": "#e7dad5",
+              "on-secondary": "#ffefeb",
+              "on-primary-container": "#4e0009",
+              "on-surface": "#332d2b",
+              "surface-container-high": "#ece0db",
+              "on-primary-fixed": "#000000",
+              "primary-fixed-dim": "#f56364",
+              "on-primary": "#ffefee",
+              "tertiary-fixed": "#cffeeb",
+              "secondary-fixed": "#ffc5af",
+              "inverse-primary": "#ff6b6b",
+              "on-primary-fixed-variant": "#60000d",
+              "surface": "#fff4f0",
+              "surface-container": "#f2e6e1",
+              "background": "#fff4f0",
+              "tertiary-container": "#cffeeb",
+              "on-secondary-fixed": "#5d2105",
+              "tertiary-fixed-dim": "#c1efdd",
+              "tertiary-dim": "#2d574a",
+              "tertiary": "#396355",
+              "error-dim": "#b92902",
+              "secondary": "#904728",
+              "on-tertiary-fixed": "#275144",
+              "secondary-fixed-dim": "#ffb193",
+              "on-tertiary-container": "#396456",
+              "inverse-surface": "#120d0b",
+              "on-background": "#332d2b",
+              "primary-dim": "#992027",
+              "on-error-container": "#520c00",
+              "error-container": "#f95630",
+              "surface-tint": "#aa2c32",
+              "outline-variant": "#b5aba7",
+              "secondary-container": "#ffc5af",
+              "primary-fixed": "#ff7574",
+              "secondary-dim": "#813b1d",
+              "on-surface-variant": "#615a57",
+              "inverse-on-surface": "#a49b97",
+              "error": "#b02500",
+              "surface-container-low": "#faeeea",
+              "primary-container": "#ff7574",
+              "primary": "#aa2c32",
+              "on-error": "#ffefec",
+              "surface-bright": "#fff4f0"
+            },
+            fontFamily: {
+              "headline": ["Plus Jakarta Sans"],
+              "body": ["Be Vietnam Pro"],
+              "label": ["Be Vietnam Pro"]
+            },
+            borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            font-family: 'Be Vietnam Pro', sans-serif;
+            background-image: radial-gradient(circle at 10% 20%, rgba(255, 117, 116, 0.05) 0%, transparent 40%),
+                              radial-gradient(circle at 90% 80%, rgba(184, 230, 212, 0.1) 0%, transparent 40%);
+        }
+        .organic-blob {
+            border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+        }
+    </style>
+</head>
+<body class="bg-background min-h-screen flex flex-col items-center justify-center p-6">
+<!-- Decorative Blobs for "The Living Canvas" feel -->
+<div class="fixed top-[-10%] left-[-10%] w-[40vw] h-[40vw] bg-tertiary-container/30 organic-blob -z-10 blur-3xl"></div>
+<div class="fixed bottom-[-10%] right-[-10%] w-[50vw] h-[50vw] bg-primary-container/20 organic-blob -z-10 blur-3xl"></div>
+<!-- Login Container -->
+<main class="w-full max-w-md">
+<div class="bg-surface-container-low rounded-xl p-10 md:p-12 shadow-[0_20px_40px_rgba(170,44,50,0.05)] border-none relative overflow-hidden">
+<!-- Logo & Mascot Section -->
+<div class="flex flex-col items-center mb-10">
+<div class="w-20 h-20 bg-primary-container rounded-full flex items-center justify-center mb-6 shadow-lg shadow-primary/10">
+<span class="material-symbols-outlined text-white text-5xl" data-weight="fill">cruelty_free</span>
+</div>
+<h1 class="font-headline font-extrabold text-3xl text-primary tracking-tight mb-2">VibeHealth</h1>
+<p class="text-on-surface-variant font-medium text-center">Enter your space of wellness</p>
+</div>
+<!-- Login Form -->
+<form class="space-y-6">
+<!-- Email Field -->
+<div class="space-y-2">
+<label class="block text-sm font-semibold text-on-surface ml-1" for="email">Email Address</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline-variant">mail</span>
+<input class="w-full pl-12 pr-4 py-4 bg-surface-container-highest border-none rounded-lg text-on-surface placeholder:text-outline focus:ring-2 focus:ring-primary-container transition-all outline-none" id="email" placeholder="name@vibe.health" type="email"/>
+</div>
+</div>
+<!-- Password Field -->
+<div class="space-y-2">
+<div class="flex justify-between items-center px-1">
+<label class="text-sm font-semibold text-on-surface" for="password">Password</label>
+<a class="text-xs font-bold text-primary hover:text-primary-dim transition-colors" href="#">Forgot Password?</a>
+</div>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline-variant">lock</span>
+<input class="w-full pl-12 pr-4 py-4 bg-surface-container-highest border-none rounded-lg text-on-surface placeholder:text-outline focus:ring-2 focus:ring-primary-container transition-all outline-none" id="password" placeholder="••••••••" type="password"/>
+</div>
+</div>
+<!-- Sign In Button -->
+<button class="w-full py-4 bg-gradient-to-r from-primary to-primary-container text-white font-bold rounded-full shadow-[0_12px_24px_rgba(170,44,50,0.2)] hover:shadow-[0_16px_32px_rgba(170,44,50,0.3)] hover:scale-[1.02] active:scale-95 transition-all duration-300" type="submit">
+                    Sign In
+                </button>
+</form>
+<!-- Divider -->
+<div class="relative my-10 flex items-center justify-center">
+<div class="absolute inset-0 flex items-center">
+<div class="w-full h-[1px] bg-outline-variant opacity-20"></div>
+</div>
+<span class="relative bg-surface-container-low px-4 text-xs font-semibold text-on-surface-variant uppercase tracking-widest">or continue with</span>
+</div>
+<!-- Social Logins -->
+<div class="grid grid-cols-3 gap-4 mb-10">
+<button class="flex items-center justify-center py-3 bg-surface-container-highest rounded-full hover:bg-surface-variant transition-colors group">
+<img alt="Google" class="w-5 h-5 grayscale group-hover:grayscale-0 transition-all" data-alt="minimalist google logo icon on a white background with soft shadow" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDTIYmnV4FIkN-VYMazKnP2VpuYE6eHGHNKRB-o2BOaVp-Z5R89JD-SD-aO0mxAzRBrUOtmswnmiPW1UuZvZ2-pKFVS4L1WZaX4jjnm8P8ddc-flOGeV_7zJXFwdD1E-ZmstiC46V4Dc5w2JpjEaXTGWInngLpJHuDmdS9nQWsxU1hYBFSjwYnnKN4J-UYCEDco-iZhPx0qhXoojY8CtJdRIGwA9HFKvhEzYcxiGFW-_KE3NpTb8uBnK2nPVA8-TF8EhPHeHrHipUE"/>
+</button>
+<button class="flex items-center justify-center py-3 bg-surface-container-highest rounded-full hover:bg-surface-variant transition-colors group">
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-on-surface" data-weight="fill">terminal</span>
+</button>
+<button class="flex items-center justify-center py-3 bg-surface-container-highest rounded-full hover:bg-surface-variant transition-colors group">
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-on-surface" data-weight="fill">ios</span>
+</button>
+</div>
+<!-- Sign Up Link -->
+<div class="text-center">
+<p class="text-on-surface-variant text-sm font-medium">
+                    Don't have an account? 
+                    <a class="text-primary font-bold hover:underline underline-offset-4 ml-1" href="#">Sign up</a>
+</p>
+</div>
+</div>
+<!-- Footer -->
+<footer class="mt-8 flex flex-col items-center gap-4">
+<div class="flex gap-6 text-sm font-medium text-on-surface-variant">
+<a class="hover:text-primary transition-colors" href="#">Privacy</a>
+<a class="hover:text-primary transition-colors" href="#">Terms</a>
+<a class="hover:text-primary transition-colors" href="#">Support</a>
+</div>
+<p class="text-xs text-outline-variant font-medium">© 2024 VibeHealth. The Living Canvas.</p>
+</footer>
+</main>
+<!-- Decorative Bottom Image -->
+<div class="mt-12 opacity-40">
+<img alt="Organic Shapes" class="h-24 w-auto grayscale-0" data-alt="abstract organic flowing shapes and gradients in soft coral and mint colors with a subtle grain texture editorial style" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBxu41lI5RwtlVuTBrshJJUlfQ3Jr4_HdeZG_Wt8AYM4QvjMsdOFp_F3eZbOyguBRXe809SjytjlTgLmFypMsXtXdiU_ESk8c7us0mNiWkUbptrov7Gh5iXh0EX4F1SXP7G6KmgcYfZRAWK-7t-v8mB92TYvPL4OVRlEe9zzC0iJn-63RZyCY4FphTZa85EYb2uh-qMF36gAT6i08Twwo2xuxJQw4Fg25ymQFxwfcElsOwciLrChLbeaRvOdI9mPX2Du8bsR8kvMoY"/>
+</div>
+</body></html>

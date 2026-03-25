@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>VibeHealth Onboarding - Your Body</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Be+Vietnam+Pro:wght@300;400;500;600&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        body {
+            font-family: 'Be Vietnam Pro', sans-serif;
+            background-color: #fff4f0;
+        }
+        .headline-font {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+        .blob-shape {
+            border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        /* Custom scrollbar for better aesthetics */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #fff4f0;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #e7dad5;
+            border-radius: 10px;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              colors: {
+                "on-secondary-container": "#763316",
+                "surface-container-highest": "#e7dad5",
+                "on-secondary-fixed-variant": "#823c1e",
+                "on-tertiary": "#cefdea",
+                "surface-dim": "#dfd2cc",
+                "on-tertiary-fixed-variant": "#446e60",
+                "surface-container-lowest": "#ffffff",
+                "outline": "#7d7572",
+                "surface-variant": "#e7dad5",
+                "on-secondary": "#ffefeb",
+                "on-primary-container": "#4e0009",
+                "on-surface": "#332d2b",
+                "surface-container-high": "#ece0db",
+                "on-primary-fixed": "#000000",
+                "primary-fixed-dim": "#f56364",
+                "on-primary": "#ffefee",
+                "tertiary-fixed": "#cffeeb",
+                "secondary-fixed": "#ffc5af",
+                "inverse-primary": "#ff6b6b",
+                "on-primary-fixed-variant": "#60000d",
+                "surface": "#fff4f0",
+                "surface-container": "#f2e6e1",
+                "background": "#fff4f0",
+                "tertiary-container": "#cffeeb",
+                "on-secondary-fixed": "#5d2105",
+                "tertiary-fixed-dim": "#c1efdd",
+                "tertiary-dim": "#2d574a",
+                "tertiary": "#396355",
+                "error-dim": "#b92902",
+                "secondary": "#904728",
+                "on-tertiary-fixed": "#275144",
+                "secondary-fixed-dim": "#ffb193",
+                "on-tertiary-container": "#396456",
+                "inverse-surface": "#120d0b",
+                "on-background": "#332d2b",
+                "primary-dim": "#992027",
+                "on-error-container": "#520c00",
+                "error-container": "#f95630",
+                "surface-tint": "#aa2c32",
+                "outline-variant": "#b5aba7",
+                "secondary-container": "#ffc5af",
+                "primary-fixed": "#ff7574",
+                "secondary-dim": "#813b1d",
+                "on-surface-variant": "#615a57",
+                "inverse-on-surface": "#a49b97",
+                "error": "#b02500",
+                "surface-container-low": "#faeeea",
+                "primary-container": "#ff7574",
+                "primary": "#aa2c32",
+                "on-error": "#ffefec",
+                "surface-bright": "#fff4f0"
+              },
+              fontFamily: {
+                "headline": ["Plus Jakarta Sans"],
+                "body": ["Be Vietnam Pro"],
+                "label": ["Be Vietnam Pro"]
+              },
+              borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+            },
+          },
+        }
+      </script>
+</head>
+<body class="min-h-screen flex flex-col items-center justify-center p-6 md:p-12 relative overflow-hidden">
+<!-- Organic Background Blobs -->
+<div class="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-secondary-container/20 blob-shape -z-10 blur-3xl"></div>
+<div class="absolute bottom-[-5%] right-[-5%] w-[400px] h-[400px] bg-primary-container/20 blob-shape -z-10 blur-3xl"></div>
+<!-- Main Content Canvas -->
+<main class="w-full max-w-2xl bg-surface-container-low/80 backdrop-blur-xl rounded-xl p-8 md:p-12 shadow-[0_40px_80px_rgba(170,44,50,0.04)] relative">
+<!-- Header & Progress -->
+<header class="mb-12">
+<div class="flex items-center justify-between mb-8">
+<div class="flex items-center gap-2">
+<span class="w-10 h-10 bg-primary rounded-full flex items-center justify-center text-on-primary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">favorite</span>
+</span>
+<h1 class="headline-font font-black text-2xl text-primary tracking-tight">VibeHealth</h1>
+</div>
+<div class="flex flex-col items-end">
+<span class="text-xs font-bold text-on-surface-variant mb-2 tracking-widest uppercase">Step 3 of 5</span>
+<div class="w-32 h-1.5 bg-surface-container-highest rounded-full overflow-hidden">
+<div class="w-[60%] h-full bg-gradient-to-r from-primary to-primary-container"></div>
+</div>
+</div>
+</div>
+<h2 class="headline-font text-4xl md:text-5xl font-extrabold text-on-surface leading-[1.1] mb-4">
+                Let's talk about <br/><span class="text-primary italic">Your Body</span>
+</h2>
+<p class="text-on-surface-variant text-lg leading-relaxed max-w-md">
+                We use these metrics to calibrate your daily vibe and health goals.
+            </p>
+</header>
+<!-- Form Card Section -->
+<div class="space-y-10">
+<!-- Height Input Cluster -->
+<div class="space-y-4">
+<div class="flex justify-between items-center">
+<label class="headline-font font-bold text-xl text-on-surface">Height</label>
+<div class="flex p-1 bg-surface-container-highest rounded-full">
+<button class="px-5 py-1.5 rounded-full text-sm font-bold bg-primary text-white transition-all shadow-md shadow-primary/20">cm</button>
+<button class="px-5 py-1.5 rounded-full text-sm font-bold text-on-surface-variant hover:text-primary transition-colors">ft/in</button>
+</div>
+</div>
+<div class="relative">
+<input class="w-full bg-surface-container-highest border-none rounded-lg p-6 text-2xl font-bold text-on-surface focus:ring-2 focus:ring-primary-container transition-all placeholder:text-outline-variant/50" placeholder="175" type="number"/>
+<span class="absolute right-6 top-1/2 -translate-y-1/2 text-on-surface-variant font-medium">centimeters</span>
+</div>
+</div>
+<!-- Weight Input Cluster -->
+<div class="space-y-4">
+<div class="flex justify-between items-center">
+<label class="headline-font font-bold text-xl text-on-surface">Weight</label>
+<div class="flex p-1 bg-surface-container-highest rounded-full">
+<button class="px-5 py-1.5 rounded-full text-sm font-bold bg-primary text-white transition-all shadow-md shadow-primary/20">kg</button>
+<button class="px-5 py-1.5 rounded-full text-sm font-bold text-on-surface-variant hover:text-primary transition-colors">lb</button>
+</div>
+</div>
+<div class="relative">
+<input class="w-full bg-surface-container-highest border-none rounded-lg p-6 text-2xl font-bold text-on-surface focus:ring-2 focus:ring-primary-container transition-all placeholder:text-outline-variant/50" placeholder="72" type="number"/>
+<span class="absolute right-6 top-1/2 -translate-y-1/2 text-on-surface-variant font-medium">kilograms</span>
+</div>
+</div>
+<!-- Mascot Tip (Asymmetric Component) -->
+<div class="flex items-start gap-6 bg-tertiary-container/30 p-6 rounded-lg relative overflow-hidden mt-4">
+<div class="flex-shrink-0 w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-sm">
+<img alt="Friendly carrot mascot" class="w-10 h-10" data-alt="cute minimalist carrot character with a friendly smiling face on a soft white circular background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC91OtI0-CxoDDSDTQQ5Wbj7qI7TBAfJtnPuAR5TpYH8nrP6tR7AJHCZv8uWHA5Qg1uQymP62dFsUjRSWRbyB3dPzrZ9KKT_31g6j6z0fSckkfLR4xtWvEibEFagt91A_sVtwxkv5l72z7_JldhXctPgEbV6vhO1ejee-K07oxZii76-FQEfC_hy7MoLTGfghiFY_DHvHi2ziUTVB-EngNo4QV75FtxIzNLmBzo5z7PSVNSYD9vvI6qtUq2gy5ogENiW1bFApjj0NU"/>
+</div>
+<div class="space-y-1">
+<span class="headline-font text-xs font-black text-tertiary-dim uppercase tracking-widest">Vibe Buddy Tip</span>
+<p class="text-on-tertiary-container font-medium leading-relaxed">
+                        "This helps me give better advice! Every body is unique, and these small details make my health insights way more accurate for you."
+                    </p>
+</div>
+<!-- Decorative element -->
+<div class="absolute -right-4 -bottom-4 w-24 h-24 bg-tertiary/10 rounded-full blur-2xl"></div>
+</div>
+</div>
+<!-- Action Section -->
+<footer class="mt-16 flex flex-col md:flex-row items-center gap-4">
+<button class="w-full md:w-auto px-12 py-5 bg-gradient-to-br from-primary to-primary-container text-on-primary rounded-full font-bold text-lg shadow-[0_20px_40px_rgba(170,44,50,0.2)] hover:scale-[1.02] active:scale-95 transition-all">
+                Continue
+            </button>
+<button class="w-full md:w-auto px-8 py-5 text-on-surface-variant font-bold hover:text-primary transition-colors">
+                I'll do this later
+            </button>
+</footer>
+</main>
+<!-- Side Image Decor (Desktop) -->
+<div class="hidden lg:block absolute left-[80%] top-[20%] w-[400px] h-[600px] rounded-xl overflow-hidden shadow-2xl rotate-3">
+<img class="w-full h-full object-cover" data-alt="close-up of a person practicing yoga in a bright airy studio with soft sunlight casting long shadows and a calm atmosphere" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBOTQB-EDPyFwddHHvSAt31haxXZB-QHvFfSyWlByN3V3b1TFB9-ZeQBn7SjIWo-b1NFTbDSKC_YjL6EmSs3g0rn3OwTH-O8LjWTx-j2hrMqfIGM9I9yhDNPXAt2DpPW7YaWPXBiNWSmuV56eVen1lW8ktAZRUafLB3JKgH7yUqAcfwgeGaoxQmMaZDkMn_4_KnoEskLIlOAqs1OL4o5Fq5ewdsg5HI5Yda0HrIBhjIrEdGIol6Bd-IGOrug6B2Ie7IMv7kj5M3ghg"/>
+</div>
+<!-- Bottom Footer Brand -->
+<div class="mt-12 text-on-surface-variant/40 flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">verified_user</span>
+<span class="text-xs font-medium tracking-wide">© 2024 VibeHealth. Secure &amp; Encrypted Data.</span>
+</div>
+</body></html>

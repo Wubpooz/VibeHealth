@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Health Checks - VibeHealth</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Be+Vietnam+Pro:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "surface-bright": "#fff4f0",
+              "on-background": "#332d2b",
+              "on-tertiary": "#cefdea",
+              "outline-variant": "#b5aba7",
+              "on-tertiary-container": "#396456",
+              "outline": "#7d7572",
+              "tertiary-container": "#cffeeb",
+              "secondary": "#904728",
+              "surface-dim": "#dfd2cc",
+              "on-secondary-fixed-variant": "#823c1e",
+              "on-surface-variant": "#615a57",
+              "surface": "#fff4f0",
+              "on-primary-fixed-variant": "#60000d",
+              "tertiary": "#396355",
+              "background": "#fff4f0",
+              "error-container": "#f95630",
+              "surface-container-highest": "#e7dad5",
+              "on-error-container": "#520c00",
+              "tertiary-fixed": "#cffeeb",
+              "on-primary-container": "#4e0009",
+              "secondary-container": "#ffc5af",
+              "primary-fixed-dim": "#f56364",
+              "tertiary-fixed-dim": "#c1efdd",
+              "secondary-fixed": "#ffc5af",
+              "surface-container": "#f2e6e1",
+              "tertiary-dim": "#2d574a",
+              "primary-dim": "#992027",
+              "primary": "#aa2c32",
+              "error": "#b02500",
+              "surface-variant": "#e7dad5",
+              "on-primary-fixed": "#000000",
+              "inverse-on-surface": "#a49b97",
+              "inverse-primary": "#ff6b6b",
+              "on-surface": "#332d2b",
+              "on-secondary-fixed": "#5d2105",
+              "surface-container-high": "#ece0db",
+              "surface-tint": "#aa2c32",
+              "primary-fixed": "#ff7574",
+              "secondary-dim": "#813b1d",
+              "on-tertiary-fixed-variant": "#446e60",
+              "on-primary": "#ffefee",
+              "on-secondary-container": "#763316",
+              "surface-container-low": "#faeeea",
+              "secondary-fixed-dim": "#ffb193",
+              "error-dim": "#b92902",
+              "surface-container-lowest": "#ffffff",
+              "on-secondary": "#ffefeb",
+              "on-tertiary-fixed": "#275144",
+              "on-error": "#ffefec",
+              "inverse-surface": "#120d0b",
+              "primary-container": "#ff7574"
+            },
+            fontFamily: {
+              "headline": ["Plus Jakarta Sans"],
+              "body": ["Be Vietnam Pro"],
+              "label": ["Be Vietnam Pro"]
+            },
+            borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+      .blob-shape {
+        border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+      }
+      body {
+        background-color: #fff4f0;
+        background-image: radial-gradient(at 0% 0%, rgba(255, 117, 116, 0.05) 0px, transparent 50%),
+                          radial-gradient(at 100% 100%, rgba(184, 230, 212, 0.1) 0px, transparent 50%);
+        background-attachment: fixed;
+      }
+      .sidebar-scroll::-webkit-scrollbar {
+        width: 4px;
+      }
+      .sidebar-scroll::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      .sidebar-scroll::-webkit-scrollbar-thumb {
+        background: #e7dad5;
+        border-radius: 10px;
+      }
+    </style>
+</head>
+<body class="font-body text-on-background min-h-screen">
+<!-- SideNavBar -->
+<aside class="hidden md:flex flex-col py-8 fixed left-0 top-0 h-full w-72 bg-[#faeeea] dark:bg-[#1a1614] rounded-r-[3rem] z-40 shadow-[20px_0_40px_rgba(170,44,50,0.04)] font-['Plus_Jakarta_Sans'] font-medium text-sm">
+<div class="px-8 mb-10">
+<div class="flex items-center gap-3">
+<span class="text-xl font-black text-[#aa2c32] dark:text-[#ff7574]">VibeHealth</span>
+</div>
+<p class="text-[10px] uppercase tracking-[0.2em] text-[#6d5c58] dark:text-[#a08d89] mt-1 font-bold">The Living Canvas</p>
+</div>
+<nav class="flex-1 overflow-y-auto sidebar-scroll space-y-1">
+<a class="flex items-center gap-4 text-[#6d5c58] dark:text-[#a08d89] px-6 py-3 hover:translate-x-1 transition-transform duration-200 active:opacity-80" href="#">
+<span class="material-symbols-outlined">grid_view</span>
+<span>Dashboard</span>
+</a>
+<a class="flex items-center gap-4 text-[#6d5c58] dark:text-[#a08d89] px-6 py-3 hover:translate-x-1 transition-transform duration-200 active:opacity-80" href="#">
+<span class="material-symbols-outlined">restaurant</span>
+<span>Nutrition</span>
+</a>
+<a class="flex items-center gap-4 text-[#6d5c58] dark:text-[#a08d89] px-6 py-3 hover:translate-x-1 transition-transform duration-200 active:opacity-80" href="#">
+<span class="material-symbols-outlined">sentiment_satisfied</span>
+<span>Mood</span>
+</a>
+<a class="flex items-center gap-4 text-[#6d5c58] dark:text-[#a08d89] px-6 py-3 hover:translate-x-1 transition-transform duration-200 active:opacity-80" href="#">
+<span class="material-symbols-outlined">calendar_today</span>
+<span>Period</span>
+</a>
+<a class="flex items-center gap-4 text-[#6d5c58] dark:text-[#a08d89] px-6 py-3 hover:translate-x-1 transition-transform duration-200 active:opacity-80" href="#">
+<span class="material-symbols-outlined">fitness_center</span>
+<span>Workouts</span>
+</a>
+<a class="flex items-center gap-4 text-[#6d5c58] dark:text-[#a08d89] px-6 py-3 hover:translate-x-1 transition-transform duration-200 active:opacity-80" href="#">
+<span class="material-symbols-outlined">self_improvement</span>
+<span>Meditation</span>
+</a>
+<a class="flex items-center gap-4 text-[#6d5c58] dark:text-[#a08d89] px-6 py-3 hover:translate-x-1 transition-transform duration-200 active:opacity-80" href="#">
+<span class="material-symbols-outlined">group</span>
+<span>Caregivers</span>
+</a>
+<a class="flex items-center gap-4 text-[#6d5c58] dark:text-[#a08d89] px-6 py-3 hover:translate-x-1 transition-transform duration-200 active:opacity-80" href="#">
+<span class="material-symbols-outlined">medical_services</span>
+<span>Practitioners</span>
+</a>
+<a class="flex items-center gap-4 bg-[#e7dad5] dark:bg-[#3d322e] text-[#aa2c32] dark:text-[#ff7574] rounded-full mx-2 px-6 py-3 font-bold hover:translate-x-1 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined">monitor_heart</span>
+<span>Vitals</span>
+</a>
+<a class="flex items-center gap-4 text-[#6d5c58] dark:text-[#a08d89] px-6 py-3 hover:translate-x-1 transition-transform duration-200 active:opacity-80" href="#">
+<span class="material-symbols-outlined">military_tech</span>
+<span>Rewards</span>
+</a>
+<a class="flex items-center gap-4 text-[#6d5c58] dark:text-[#a08d89] px-6 py-3 hover:translate-x-1 transition-transform duration-200 active:opacity-80" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span>Settings</span>
+</a>
+</nav>
+<!-- Theme Toggle Footer -->
+<div class="mt-auto px-4">
+<div class="bg-[#e7dad5]/50 dark:bg-[#2d2421] rounded-2xl p-1 flex items-center justify-between">
+<button class="flex-1 flex flex-col items-center py-2 rounded-xl bg-white dark:bg-[#1a1614] shadow-sm text-[#aa2c32] dark:text-[#ff7574]">
+<span class="material-symbols-outlined text-sm">light_mode</span>
+<span class="text-[10px] font-bold">Light</span>
+</button>
+<button class="flex-1 flex flex-col items-center py-2 text-[#6d5c58] dark:text-[#a08d89] hover:bg-[#e7dad5] dark:hover:bg-[#3d322e] rounded-xl transition-colors">
+<span class="material-symbols-outlined text-sm">dark_mode</span>
+<span class="text-[10px] font-bold">Dark</span>
+</button>
+<button class="flex-1 flex flex-col items-center py-2 text-[#6d5c58] dark:text-[#a08d89] hover:bg-[#e7dad5] dark:hover:bg-[#3d322e] rounded-xl transition-colors">
+<span class="material-symbols-outlined text-sm">settings_brightness</span>
+<span class="text-[10px] font-bold">System</span>
+</button>
+</div>
+</div>
+</aside>
+<!-- TopAppBar -->
+<nav class="fixed top-0 w-full z-30 bg-[#fff4f0]/70 backdrop-blur-xl transition-all duration-300 md:pl-72">
+<div class="flex justify-between items-center px-8 py-4 max-w-7xl mx-auto">
+<div class="text-2xl font-black italic text-[#aa2c32] tracking-tighter md:hidden">VibeHealth</div>
+<div class="hidden md:flex items-center gap-8">
+<a class="text-[#4a4543] hover:text-[#aa2c32] transition-colors font-['Plus_Jakarta_Sans'] font-semibold" href="#">Journal</a>
+<a class="text-[#4a4543] hover:text-[#aa2c32] transition-colors font-['Plus_Jakarta_Sans'] font-semibold" href="#">Insights</a>
+<a class="text-[#4a4543] hover:text-[#aa2c32] transition-colors font-['Plus_Jakarta_Sans'] font-semibold" href="#">Library</a>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 text-[#4a4543] hover:opacity-80 transition-all duration-300 scale-95 active:scale-90">
+<span class="material-symbols-outlined" data-icon="calendar_today">calendar_today</span>
+</button>
+<button class="p-2 text-[#4a4543] hover:opacity-80 transition-all duration-300 scale-95 active:scale-90">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+</button>
+<div class="w-10 h-10 rounded-full bg-surface-container-highest overflow-hidden border-2 border-[#ff7574]">
+<img alt="User profile" class="w-full h-full object-cover" data-alt="professional portrait of a smiling woman with a warm expression in soft natural lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBRC5UXtTgsmPTVhLrdZij88ZXtiBqtkGlukRUpjA96luQIwaJId2on69pnwrgnEpmkqc6qnc5y0If01Dycu2OL2shGIfa_QJ1zWKRtOGYEhWM7itbQzrybV-1sbxVE1W5zQPfxFDmgiJmrft5FFEaIGYxquMdoQWV4AU1572n6z_T1lQs5jLZ_bMWCBkvMra3TbZSFy1t34lgqcLYIC0w7OLQHvN9LUyZYrHzO76JnWqKhoulRSVaecZkynG2zZZh4dDet0EN0TTE"/>
+</div>
+</div>
+</div>
+</nav>
+<!-- Main Content -->
+<main class="max-w-4xl mx-auto px-6 pt-32 md:pl-80 pb-24">
+<!-- Header Section -->
+<header class="mb-12 text-center md:text-left">
+<h1 class="font-headline font-extrabold text-5xl text-on-background tracking-tight mb-4">Health Checks</h1>
+<p class="text-on-surface-variant text-lg max-w-lg">Track your preventive care, upcoming vaccinations, and essential screenings all in one place.</p>
+</header>
+<!-- Tabs Navigation -->
+<div class="flex gap-2 p-1.5 bg-surface-container-low rounded-xl mb-12 shadow-sm">
+<button class="flex-1 py-3 px-4 rounded-lg font-headline font-bold text-sm transition-all duration-300 bg-surface-container-lowest text-primary shadow-sm">
+                Vaccines
+            </button>
+<button class="flex-1 py-3 px-4 rounded-lg font-headline font-bold text-sm transition-all duration-300 text-on-surface-variant hover:bg-surface-container-high">
+                Screenings
+            </button>
+<button class="flex-1 py-3 px-4 rounded-lg font-headline font-bold text-sm transition-all duration-300 text-on-surface-variant hover:bg-surface-container-high">
+                Appointments
+            </button>
+</div>
+<!-- Timeline Section -->
+<div class="relative">
+<!-- Timeline Path -->
+<div class="absolute left-6 top-8 bottom-8 w-1 bg-surface-container-highest rounded-full"></div>
+<!-- Upcoming Item (Tetanus Booster) -->
+<div class="relative flex gap-8 mb-10 pl-1">
+<div class="relative z-10">
+<div class="w-12 h-12 rounded-full bg-gradient-to-br from-primary to-primary-container flex items-center justify-center text-white shadow-[0_10px_20px_rgba(170,44,50,0.15)] ring-4 ring-background">
+<span class="material-symbols-outlined" data-icon="medical_services">medical_services</span>
+</div>
+</div>
+<div class="flex-1 bg-surface-container-lowest p-6 rounded-lg shadow-[0_20px_40px_rgba(170,44,50,0.05)] transition-transform hover:scale-[1.01]">
+<div class="flex flex-wrap justify-between items-start gap-4 mb-4">
+<div>
+<span class="inline-block px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest bg-blue-100 text-blue-600 mb-2">Upcoming</span>
+<h3 class="font-headline font-bold text-xl text-on-background">Tetanus Booster</h3>
+</div>
+<div class="text-right">
+<p class="text-primary font-bold text-sm">Due in 15 days</p>
+<p class="text-on-surface-variant text-xs">Recommended every 10 years</p>
+</div>
+</div>
+<p class="text-on-surface-variant text-sm mb-6 leading-relaxed">Essential for protection against bacteria commonly found in soil and dust. Routine booster needed for adults.</p>
+<button class="w-full py-3 bg-gradient-to-br from-[#aa2c32] to-[#ff7574] text-white rounded-full font-headline font-bold text-sm shadow-lg hover:opacity-90 transition-opacity active:scale-[0.98]">
+                        Schedule Appointment
+                    </button>
+</div>
+</div>
+<!-- Overdue Item -->
+<div class="relative flex gap-8 mb-10 pl-1">
+<div class="relative z-10">
+<div class="w-12 h-12 rounded-full bg-error-container flex items-center justify-center text-on-error-container shadow-lg ring-4 ring-background">
+<span class="material-symbols-outlined" data-icon="priority_high">priority_high</span>
+</div>
+</div>
+<div class="flex-1 bg-surface-container-lowest p-6 rounded-lg shadow-sm border border-error/5 transition-transform hover:scale-[1.01]">
+<div class="flex flex-wrap justify-between items-start gap-4 mb-3">
+<div>
+<span class="inline-block px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest bg-red-100 text-red-600 mb-2">Overdue</span>
+<h3 class="font-headline font-bold text-xl text-on-background">Wellness Checkup</h3>
+</div>
+<div class="text-right">
+<p class="text-error font-bold text-sm">Expired May 2024</p>
+</div>
+</div>
+<div class="flex gap-4">
+<button class="flex-1 py-3 bg-surface-container-high text-on-background rounded-full font-headline font-bold text-sm transition-colors hover:bg-surface-container-highest">
+                            Remind Later
+                        </button>
+<button class="flex-1 py-3 bg-primary text-white rounded-full font-headline font-bold text-sm shadow-md hover:bg-primary-dim transition-colors">
+                            Book Now
+                        </button>
+</div>
+</div>
+</div>
+<!-- Completed Item (Flu Shot) -->
+<div class="relative flex gap-8 mb-10 pl-1 opacity-80">
+<div class="relative z-10">
+<div class="w-12 h-12 rounded-full bg-tertiary-container flex items-center justify-center text-on-tertiary-container ring-4 ring-background">
+<span class="material-symbols-outlined" data-icon="check_circle" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+</div>
+<div class="flex-1 bg-surface-container-low p-6 rounded-lg transition-transform hover:scale-[1.01]">
+<div class="flex flex-wrap justify-between items-start gap-4 mb-2">
+<div>
+<span class="inline-block px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest bg-mint-100 text-tertiary mb-2">Completed</span>
+<h3 class="font-headline font-bold text-xl text-on-background">Flu Shot 2024</h3>
+</div>
+<div class="text-right text-on-surface-variant font-medium text-sm">
+                            Sept 12, 2024
+                        </div>
+</div>
+<p class="text-on-surface-variant text-sm italic">"Administered at HealthFirst Clinic. No side effects noted."</p>
+<div class="mt-4 flex items-center gap-2 text-primary font-bold text-xs uppercase tracking-widest cursor-pointer hover:underline">
+<span class="material-symbols-outlined text-sm" data-icon="description">description</span>
+                        View Records
+                    </div>
+</div>
+</div>
+<!-- Completed Item (COVID Booster) -->
+<div class="relative flex gap-8 pl-1 opacity-80">
+<div class="relative z-10">
+<div class="w-12 h-12 rounded-full bg-tertiary-container flex items-center justify-center text-on-tertiary-container ring-4 ring-background">
+<span class="material-symbols-outlined" data-icon="check_circle" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+</div>
+<div class="flex-1 bg-surface-container-low p-6 rounded-lg transition-transform hover:scale-[1.01]">
+<div class="flex justify-between items-start mb-2">
+<div>
+<span class="inline-block px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest bg-mint-100 text-tertiary mb-2">Completed</span>
+<h3 class="font-headline font-bold text-xl text-on-background">COVID-19 Booster</h3>
+</div>
+<div class="text-right text-on-surface-variant font-medium text-sm">
+                            Jan 05, 2024
+                        </div>
+</div>
+<p class="text-on-surface-variant text-sm italic">"Annual seasonal update. Moderna Spikevax."</p>
+</div>
+</div>
+</div>
+<!-- Asymmetric Accent Blobs -->
+<div class="fixed -bottom-24 -right-24 w-96 h-96 bg-tertiary-container/30 blob-shape -z-10 blur-3xl"></div>
+<div class="fixed top-40 md:left-60 -left-20 w-72 h-72 bg-primary-container/20 blob-shape -z-10 blur-3xl"></div>
+</main>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full flex justify-around items-center px-6 pb-6 bg-[#faeeea]/80 backdrop-blur-2xl rounded-t-[3rem] z-50 shadow-[0_-20px_40px_rgba(170,44,50,0.08)]">
+<a class="flex flex-col items-center justify-center text-[#4a4543] py-3 hover:scale-110 transition-transform duration-300" href="#">
+<span class="material-symbols-outlined" data-icon="home">home</span>
+<span class="font-['Plus_Jakarta_Sans'] font-semibold text-[10px] uppercase tracking-widest mt-1">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#4a4543] py-3 hover:scale-110 transition-transform duration-300" href="#">
+<span class="material-symbols-outlined" data-icon="edit_note">edit_note</span>
+<span class="font-['Plus_Jakarta_Sans'] font-semibold text-[10px] uppercase tracking-widest mt-1">Journal</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-gradient-to-br from-[#aa2c32] to-[#ff7574] text-white rounded-full w-14 h-14 -mt-6 shadow-lg Active: scale-90 duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="insert_emoticon" style="font-variation-settings: 'FILL' 1;">insert_emoticon</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#4a4543] py-3 hover:scale-110 transition-transform duration-300" href="#">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="font-['Plus_Jakarta_Sans'] font-semibold text-[10px] uppercase tracking-widest mt-1">Profile</span>
+</a>
+</nav>
+</body></html>

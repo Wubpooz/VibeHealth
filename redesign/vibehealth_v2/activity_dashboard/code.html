@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Activity Dashboard - Soft Pop Bloom</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,typography,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&amp;family=Plus+Jakarta+Sans:wght@400;600;700;800&amp;display=swap" rel="stylesheet"/>
+<script>
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        colors: {
+          primary: "#ff7f6c",
+          "background-light": "#fff5f2",
+          "background-dark": "#1a1615",
+          "surface-light": "#ffffff",
+          "surface-dark": "#2a2422",
+          "text-main-light": "#332c2a",
+          "text-main-dark": "#f9f6f5",
+          "text-muted-light": "#8a7e7b",
+          "text-muted-dark": "#a39895",
+          "border-light": "#ffe5de",
+          "border-dark": "#3d3432",
+          "coral": "#ff6b6b",
+          "peach": "#ff9e7d",
+          "soft-pink": "#ffd1c8",
+        },
+        fontFamily: {
+          display: ["Poppins", "sans-serif"],
+          headline: ["Plus Jakarta Sans"],
+        },
+        borderRadius: {
+          DEFAULT: "1rem",
+          "lg": "1.5rem",
+          "xl": "2rem",
+          "full": "9999px",
+        },
+        boxShadow: {
+          'soft': '0 10px 40px -10px rgba(255, 127, 108, 0.1)',
+        }
+      },
+    },
+  };
+</script>
+<style>
+  body { font-family: 'Poppins', sans-serif; }
+  .gradient-text {
+    background: linear-gradient(135deg, #ff6b6b, #ff9e7d);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .gradient-bg {
+    background: linear-gradient(135deg, #ff6b6b, #ff9e7d);
+  }
+  .ring-chart {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background: conic-gradient(
+      #ff6b6b 0deg 270deg,
+      #ffd1c8 270deg 360deg
+    );
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+  .ring-chart::before {
+    content: '';
+    position: absolute;
+    width: 90px;
+    height: 90px;
+    background-color: white;
+    border-radius: 50%;
+  }
+  .dark .ring-chart::before {
+    background-color: #2a2422;
+  }
+  .ring-chart-inner {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  .sidebar-scroll::-webkit-scrollbar {
+    width: 4px;
+  }
+  .sidebar-scroll::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .sidebar-scroll::-webkit-scrollbar-thumb {
+    background: #e7dad5;
+    border-radius: 10px;
+  }
+</style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-text-main-light dark:text-text-main-dark min-h-screen transition-colors duration-300">
+<div class="flex h-screen overflow-hidden">
+<!-- Unified Sidebar Navigation -->
+<aside class="hidden md:flex flex-col py-8 fixed left-0 top-0 h-full w-72 bg-[#faeeea] dark:bg-[#1a1614] rounded-r-[3rem] z-40 shadow-[20px_0_40px_rgba(255,127,108,0.04)] font-['Plus_Jakarta_Sans'] font-medium text-sm">
+<div class="px-8 mb-10">
+<div class="flex items-center gap-3">
+<span class="text-xl font-black text-primary dark:text-peach">BloomFit</span>
+</div>
+<p class="text-[10px] uppercase tracking-[0.2em] text-[#6d5c58] dark:text-[#a08d89] mt-1 font-bold">The Living Canvas</p>
+</div>
+<nav class="flex-1 overflow-y-auto sidebar-scroll space-y-1">
+<a class="flex items-center gap-4 bg-[#e7dad5] dark:bg-[#3d322e] text-primary dark:text-peach rounded-full mx-2 px-6 py-3 font-bold hover:translate-x-1 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined">grid_view</span>
+<span>Dashboard</span>
+</a>
+<a class="flex items-center gap-4 text-[#6d5c58] dark:text-[#a08d89] px-6 py-3 hover:translate-x-1 transition-transform duration-200 active:opacity-80" href="#">
+<span class="material-symbols-outlined">restaurant</span>
+<span>Nutrition</span>
+</a>
+<a class="flex items-center gap-4 text-[#6d5c58] dark:text-[#a08d89] px-6 py-3 hover:translate-x-1 transition-transform duration-200 active:opacity-80" href="#">
+<span class="material-symbols-outlined">sentiment_satisfied</span>
+<span>Mood</span>
+</a>
+<a class="flex items-center gap-4 text-[#6d5c58] dark:text-[#a08d89] px-6 py-3 hover:translate-x-1 transition-transform duration-200 active:opacity-80" href="#">
+<span class="material-symbols-outlined">calendar_today</span>
+<span>Period</span>
+</a>
+<a class="flex items-center gap-4 text-[#6d5c58] dark:text-[#a08d89] px-6 py-3 hover:translate-x-1 transition-transform duration-200 active:opacity-80" href="#">
+<span class="material-symbols-outlined">fitness_center</span>
+<span>Workouts</span>
+</a>
+<a class="flex items-center gap-4 text-[#6d5c58] dark:text-[#a08d89] px-6 py-3 hover:translate-x-1 transition-transform duration-200 active:opacity-80" href="#">
+<span class="material-symbols-outlined">self_improvement</span>
+<span>Meditation</span>
+</a>
+<a class="flex items-center gap-4 text-[#6d5c58] dark:text-[#a08d89] px-6 py-3 hover:translate-x-1 transition-transform duration-200 active:opacity-80" href="#">
+<span class="material-symbols-outlined">group</span>
+<span>Caregivers</span>
+</a>
+<a class="flex items-center gap-4 text-[#6d5c58] dark:text-[#a08d89] px-6 py-3 hover:translate-x-1 transition-transform duration-200 active:opacity-80" href="#">
+<span class="material-symbols-outlined">medical_services</span>
+<span>Practitioners</span>
+</a>
+<a class="flex items-center gap-4 text-[#6d5c58] dark:text-[#a08d89] px-6 py-3 hover:translate-x-1 transition-transform duration-200 active:opacity-80" href="#">
+<span class="material-symbols-outlined">monitor_heart</span>
+<span>Vitals</span>
+</a>
+<a class="flex items-center gap-4 text-[#6d5c58] dark:text-[#a08d89] px-6 py-3 hover:translate-x-1 transition-transform duration-200 active:opacity-80" href="#">
+<span class="material-symbols-outlined">military_tech</span>
+<span>Rewards</span>
+</a>
+<a class="flex items-center gap-4 text-[#6d5c58] dark:text-[#a08d89] px-6 py-3 hover:translate-x-1 transition-transform duration-200 active:opacity-80" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span>Settings</span>
+</a>
+</nav>
+<!-- Theme Toggle Footer -->
+<div class="mt-auto px-4">
+<div class="bg-[#e7dad5]/50 dark:bg-[#2d2421] rounded-2xl p-1 flex items-center justify-between">
+<button class="flex-1 flex flex-col items-center py-2 rounded-xl bg-white dark:bg-[#1a1614] shadow-sm text-primary dark:text-peach" onclick="document.documentElement.className = 'light'">
+<span class="material-symbols-outlined text-sm">light_mode</span>
+<span class="text-[10px] font-bold">Light</span>
+</button>
+<button class="flex-1 flex flex-col items-center py-2 text-[#6d5c58] dark:text-[#a08d89] hover:bg-[#e7dad5] dark:hover:bg-[#3d322e] rounded-xl transition-colors" onclick="document.documentElement.className = 'dark'">
+<span class="material-symbols-outlined text-sm">dark_mode</span>
+<span class="text-[10px] font-bold">Dark</span>
+</button>
+<button class="flex-1 flex flex-col items-center py-2 text-[#6d5c58] dark:text-[#a08d89] hover:bg-[#e7dad5] dark:hover:bg-[#3d322e] rounded-xl transition-colors">
+<span class="material-symbols-outlined text-sm">settings_brightness</span>
+<span class="text-[10px] font-bold">System</span>
+</button>
+</div>
+</div>
+</aside>
+<main class="flex-1 flex flex-col overflow-hidden md:ml-72">
+<header class="h-20 bg-surface-light/80 dark:bg-surface-dark/80 backdrop-blur-md border-b border-border-light dark:border-border-dark px-8 flex items-center justify-between flex-shrink-0 transition-colors duration-300">
+<div>
+<h1 class="text-2xl font-bold">Good Morning, Sarah! 👋</h1>
+<p class="text-sm text-text-muted-light dark:text-text-muted-dark">Here's your activity overview for today.</p>
+</div>
+<div class="flex items-center space-x-4">
+<button class="w-10 h-10 rounded-full bg-background-light dark:bg-border-dark flex items-center justify-center text-text-muted-light dark:text-text-muted-dark hover:text-primary transition-colors">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="px-5 py-2.5 rounded-xl gradient-bg text-white font-medium shadow-soft hover:opacity-90 transition-opacity flex items-center space-x-2">
+<span class="material-symbols-outlined text-sm">add</span>
+<span>Log Activity</span>
+</button>
+</div>
+</header>
+<div class="flex-1 overflow-y-auto p-8">
+<div class="max-w-6xl mx-auto space-y-8">
+<section class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<div class="bg-surface-light dark:bg-surface-dark rounded-2xl p-6 shadow-sm border border-border-light dark:border-border-dark flex items-center justify-between">
+<div>
+<p class="text-text-muted-light dark:text-text-muted-dark text-sm font-medium mb-1 flex items-center">
+<span class="material-symbols-outlined text-primary text-sm mr-1">directions_walk</span> Steps
+              </p>
+<h3 class="text-3xl font-bold">8,432</h3>
+<p class="text-sm text-green-500 font-medium mt-1">+12% vs yesterday</p>
+</div>
+<div class="ring-chart" style="background: conic-gradient(#ff6b6b 0deg 250deg, #ffd1c8 250deg 360deg)">
+<div class="ring-chart-inner">
+<span class="text-lg font-bold">75%</span>
+</div>
+</div>
+</div>
+<div class="bg-surface-light dark:bg-surface-dark rounded-2xl p-6 shadow-sm border border-border-light dark:border-border-dark flex items-center justify-between">
+<div>
+<p class="text-text-muted-light dark:text-text-muted-dark text-sm font-medium mb-1 flex items-center">
+<span class="material-symbols-outlined text-primary text-sm mr-1">local_fire_department</span> Calories
+              </p>
+<h3 class="text-3xl font-bold">1,850</h3>
+<p class="text-sm text-text-muted-light dark:text-text-muted-dark mt-1">Goal: 2,400 kcal</p>
+</div>
+<div class="ring-chart" style="background: conic-gradient(#ff9e7d 0deg 280deg, #ffe5de 280deg 360deg)">
+<div class="ring-chart-inner">
+<span class="text-lg font-bold">82%</span>
+</div>
+</div>
+</div>
+<div class="bg-surface-light dark:bg-surface-dark rounded-2xl p-6 shadow-sm border border-border-light dark:border-border-dark flex items-center justify-between">
+<div>
+<p class="text-text-muted-light dark:text-text-muted-dark text-sm font-medium mb-1 flex items-center">
+<span class="material-symbols-outlined text-primary text-sm mr-1">timer</span> Active Time
+              </p>
+<h3 class="text-3xl font-bold">45<span class="text-lg text-text-muted-light dark:text-text-muted-dark font-medium ml-1">min</span></h3>
+<p class="text-sm text-text-muted-light dark:text-text-muted-dark mt-1">Goal: 60 min</p>
+</div>
+<div class="ring-chart" style="background: conic-gradient(#ff8573 0deg 200deg, #ffd1c8 200deg 360deg)">
+<div class="ring-chart-inner">
+<span class="text-lg font-bold">60%</span>
+</div>
+</div>
+</div>
+</section>
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+<section class="lg:col-span-2 bg-surface-light dark:bg-surface-dark rounded-2xl p-6 shadow-sm border border-border-light dark:border-border-dark">
+<div class="flex items-center justify-between mb-6">
+<h2 class="text-xl font-bold">Activity Trend</h2>
+<select class="bg-background-light dark:bg-border-dark border-none rounded-lg text-sm font-medium py-2 pl-4 pr-8 focus:ring-primary text-text-main-light dark:text-text-main-dark">
+<option>This Week</option>
+<option>Last Week</option>
+<option>This Month</option>
+</select>
+</div>
+<div class="h-64 w-full relative flex items-end justify-between pt-4">
+<div class="absolute inset-0 flex flex-col justify-between pb-8 z-0">
+<div class="border-b border-border-light dark:border-border-dark w-full h-0"></div>
+<div class="border-b border-border-light dark:border-border-dark w-full h-0"></div>
+<div class="border-b border-border-light dark:border-border-dark w-full h-0"></div>
+<div class="border-b border-border-light dark:border-border-dark w-full h-0"></div>
+</div>
+<div class="relative z-10 w-full h-full flex items-end justify-between px-2 pb-8">
+<div class="flex flex-col items-center w-[10%] group">
+<div class="w-full bg-soft-pink dark:bg-opacity-20 rounded-t-lg h-[40%] group-hover:bg-primary transition-colors relative">
+<div class="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-surface-dark dark:bg-surface-light text-white dark:text-black text-xs py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity">4k</div>
+</div>
+<span class="text-xs text-text-muted-light dark:text-text-muted-dark mt-2 font-medium">Mon</span>
+</div>
+<div class="flex flex-col items-center w-[10%] group">
+<div class="w-full bg-soft-pink dark:bg-opacity-20 rounded-t-lg h-[65%] group-hover:bg-primary transition-colors relative">
+<div class="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-surface-dark dark:bg-surface-light text-white dark:text-black text-xs py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity">6.5k</div>
+</div>
+<span class="text-xs text-text-muted-light dark:text-text-muted-dark mt-2 font-medium">Tue</span>
+</div>
+<div class="flex flex-col items-center w-[10%] group">
+<div class="w-full bg-soft-pink dark:bg-opacity-20 rounded-t-lg h-[85%] group-hover:bg-primary transition-colors relative">
+<div class="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-surface-dark dark:bg-surface-light text-white dark:text-black text-xs py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity">8.5k</div>
+</div>
+<span class="text-xs text-text-muted-light dark:text-text-muted-dark mt-2 font-medium">Wed</span>
+</div>
+<div class="flex flex-col items-center w-[10%] group">
+<div class="w-full bg-soft-pink dark:bg-opacity-20 rounded-t-lg h-[50%] group-hover:bg-primary transition-colors relative">
+<div class="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-surface-dark dark:bg-surface-light text-white dark:text-black text-xs py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity">5k</div>
+</div>
+<span class="text-xs text-text-muted-light dark:text-text-muted-dark mt-2 font-medium">Thu</span>
+</div>
+<div class="flex flex-col items-center w-[10%] group">
+<div class="w-full gradient-bg rounded-t-lg h-[95%] shadow-soft relative">
+<div class="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-surface-dark dark:bg-surface-light text-white dark:text-black text-xs py-1 px-2 rounded opacity-100 transition-opacity">9.5k</div>
+</div>
+<span class="text-xs font-bold text-primary mt-2">Fri</span>
+</div>
+<div class="flex flex-col items-center w-[10%] group">
+<div class="w-full bg-soft-pink dark:bg-opacity-20 rounded-t-lg h-[30%] group-hover:bg-primary transition-colors relative">
+<div class="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-surface-dark dark:bg-surface-light text-white dark:text-black text-xs py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity">3k</div>
+</div>
+<span class="text-xs text-text-muted-light dark:text-text-muted-dark mt-2 font-medium">Sat</span>
+</div>
+<div class="flex flex-col items-center w-[10%] group">
+<div class="w-full bg-soft-pink dark:bg-opacity-20 rounded-t-lg h-[20%] group-hover:bg-primary transition-colors relative">
+<div class="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-surface-dark dark:bg-surface-light text-white dark:text-black text-xs py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity">2k</div>
+</div>
+<span class="text-xs text-text-muted-light dark:text-text-muted-dark mt-2 font-medium">Sun</span>
+</div>
+</div>
+</div>
+</section>
+<section class="bg-surface-light dark:bg-surface-dark rounded-2xl p-6 shadow-sm border border-border-light dark:border-border-dark flex flex-col">
+<div class="flex items-center justify-between mb-6">
+<h2 class="text-xl font-bold">Recent Log</h2>
+<a class="text-sm font-medium text-primary hover:underline" href="#">View All</a>
+</div>
+<div class="flex-1 space-y-4 overflow-y-auto pr-2">
+<div class="p-4 rounded-xl bg-background-light dark:bg-border-dark/50 flex items-center justify-between hover:bg-border-light dark:hover:bg-border-dark transition-colors cursor-pointer">
+<div class="flex items-center space-x-4">
+<div class="w-12 h-12 rounded-full bg-white dark:bg-surface-dark flex items-center justify-center text-primary shadow-sm">
+<span class="material-symbols-outlined">pool</span>
+</div>
+<div>
+<h4 class="font-semibold text-sm">Morning Swim</h4>
+<p class="text-xs text-text-muted-light dark:text-text-muted-dark">Today, 07:30 AM</p>
+</div>
+</div>
+<div class="text-right">
+<p class="font-bold text-sm">350 kcal</p>
+<p class="text-xs text-text-muted-light dark:text-text-muted-dark">45 min</p>
+</div>
+</div>
+<div class="p-4 rounded-xl bg-background-light dark:bg-border-dark/50 flex items-center justify-between hover:bg-border-light dark:hover:bg-border-dark transition-colors cursor-pointer">
+<div class="flex items-center space-x-4">
+<div class="w-12 h-12 rounded-full bg-white dark:bg-surface-dark flex items-center justify-center text-peach shadow-sm">
+<span class="material-symbols-outlined">directions_bike</span>
+</div>
+<div>
+<h4 class="font-semibold text-sm">Cycling Commute</h4>
+<p class="text-xs text-text-muted-light dark:text-text-muted-dark">Yesterday, 05:15 PM</p>
+</div>
+</div>
+<div class="text-right">
+<p class="font-bold text-sm">210 kcal</p>
+<p class="text-xs text-text-muted-light dark:text-text-muted-dark">25 min</p>
+</div>
+</div>
+<div class="p-4 rounded-xl bg-background-light dark:bg-border-dark/50 flex items-center justify-between hover:bg-border-light dark:hover:bg-border-dark transition-colors cursor-pointer">
+<div class="flex items-center space-x-4">
+<div class="w-12 h-12 rounded-full bg-white dark:bg-surface-dark flex items-center justify-center text-coral shadow-sm">
+<span class="material-symbols-outlined">fitness_center</span>
+</div>
+<div>
+<h4 class="font-semibold text-sm">Strength Training</h4>
+<p class="text-xs text-text-muted-light dark:text-text-muted-dark">Wed, 06:00 PM</p>
+</div>
+</div>
+<div class="text-right">
+<p class="font-bold text-sm">420 kcal</p>
+<p class="text-xs text-text-muted-light dark:text-text-muted-dark">60 min</p>
+</div>
+</div>
+</div>
+<button class="w-full mt-4 py-3 rounded-xl border border-dashed border-primary text-primary font-medium hover:bg-soft-pink/20 transition-colors flex items-center justify-center space-x-2">
+<span class="material-symbols-outlined text-sm">add_circle</span>
+<span>Manual Entry</span>
+</button>
+</section>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>

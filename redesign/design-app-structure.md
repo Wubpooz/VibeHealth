@@ -951,7 +951,7 @@ From `roadmap.md` + `roadmap-mathieu-metrics.md`:
 - JOURNAL.MOOD.LABEL / MOOD.HAPPY / MOOD.SAD / ...
 - JOURNAL.MEDIA.UPLOAD / MEDIA.DELETE
 - JOURNAL.EMPTY.TITLE / EMPTY.CTA
-
+```
 ---
 
 ### 11.2 `/settings` — Settings & Profile (Phase 3 extension)

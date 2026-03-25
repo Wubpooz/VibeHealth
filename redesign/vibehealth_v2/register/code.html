@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Join VibeHealth - Create Your Account</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Be+Vietnam+Pro:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .blob-shape {
+            border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+        }
+        .grainy-overlay {
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+            opacity: 0.03;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "on-secondary-container": "#763316",
+                        "surface-container-highest": "#e7dad5",
+                        "on-secondary-fixed-variant": "#823c1e",
+                        "on-tertiary": "#cefdea",
+                        "surface-dim": "#dfd2cc",
+                        "on-tertiary-fixed-variant": "#446e60",
+                        "surface-container-lowest": "#ffffff",
+                        "outline": "#7d7572",
+                        "surface-variant": "#e7dad5",
+                        "on-secondary": "#ffefeb",
+                        "on-primary-container": "#4e0009",
+                        "on-surface": "#332d2b",
+                        "surface-container-high": "#ece0db",
+                        "on-primary-fixed": "#000000",
+                        "primary-fixed-dim": "#f56364",
+                        "on-primary": "#ffefee",
+                        "tertiary-fixed": "#cffeeb",
+                        "secondary-fixed": "#ffc5af",
+                        "inverse-primary": "#ff6b6b",
+                        "on-primary-fixed-variant": "#60000d",
+                        "surface": "#fff4f0",
+                        "surface-container": "#f2e6e1",
+                        "background": "#fff4f0",
+                        "tertiary-container": "#cffeeb",
+                        "on-secondary-fixed": "#5d2105",
+                        "tertiary-fixed-dim": "#c1efdd",
+                        "tertiary-dim": "#2d574a",
+                        "tertiary": "#396355",
+                        "error-dim": "#b92902",
+                        "secondary": "#904728",
+                        "on-tertiary-fixed": "#275144",
+                        "on-tertiary-container": "#396456",
+                        "inverse-surface": "#120d0b",
+                        "on-background": "#332d2b",
+                        "primary-dim": "#992027",
+                        "on-error-container": "#520c00",
+                        "error-container": "#f95630",
+                        "surface-tint": "#aa2c32",
+                        "outline-variant": "#b5aba7",
+                        "secondary-container": "#ffc5af",
+                        "primary-fixed": "#ff7574",
+                        "secondary-dim": "#813b1d",
+                        "on-surface-variant": "#615a57",
+                        "inverse-on-surface": "#a49b97",
+                        "error": "#b02500",
+                        "surface-container-low": "#faeeea",
+                        "primary-container": "#ff7574",
+                        "primary": "#aa2c32",
+                        "on-error": "#ffefec",
+                        "surface-bright": "#fff4f0"
+                    },
+                    fontFamily: {
+                        "headline": ["Plus Jakarta Sans"],
+                        "body": ["Be Vietnam Pro"],
+                        "label": ["Be Vietnam Pro"]
+                    },
+                    borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-surface font-body text-on-surface selection:bg-primary-container selection:text-on-primary-container min-h-screen relative overflow-x-hidden">
+<!-- Background Noise Texture -->
+<div class="fixed inset-0 grainy-overlay pointer-events-none"></div>
+<!-- Decorative Organic Blobs -->
+<div class="fixed -top-24 -left-24 w-96 h-96 bg-tertiary-container/30 blob-shape blur-3xl -z-10"></div>
+<div class="fixed top-1/2 -right-32 w-[30rem] h-[30rem] bg-secondary-container/20 blob-shape blur-3xl -z-10"></div>
+<div class="fixed -bottom-16 left-1/4 w-80 h-80 bg-primary-container/10 blob-shape blur-3xl -z-10"></div>
+<!-- Main Navigation Header (Shared Component) -->
+<header class="fixed top-0 w-full z-50 bg-[#fff4f0]/70 dark:bg-slate-950/70 backdrop-blur-xl">
+<div class="flex justify-between items-center px-8 py-4 max-w-7xl mx-auto">
+<div class="text-2xl font-black text-[#aa2c32] dark:text-[#ff7574] font-headline tracking-tight">VibeHealth</div>
+<div class="hidden md:flex gap-8 items-center">
+<a class="text-[#e7dad5] dark:text-slate-400 font-medium hover:text-[#ff6b6b] transition-colors duration-300" href="#">Features</a>
+<a class="text-[#e7dad5] dark:text-slate-400 font-medium hover:text-[#ff6b6b] transition-colors duration-300" href="#">Science</a>
+<a class="text-[#e7dad5] dark:text-slate-400 font-medium hover:text-[#ff6b6b] transition-colors duration-300" href="#">Pricing</a>
+<button class="bg-gradient-to-br from-primary to-primary-container text-white px-6 py-2.5 rounded-full font-bold shadow-lg shadow-primary/20 hover:scale-105 active:scale-95 transition-all">
+                    Get Started
+                </button>
+</div>
+<!-- Mobile Menu Toggle (Simplified) -->
+<button class="md:hidden text-primary">
+<span class="material-symbols-outlined">menu</span>
+</button>
+</div>
+</header>
+<main class="pt-24 pb-12 px-6 flex flex-col items-center justify-center min-h-screen">
+<div class="w-full max-w-xl">
+<!-- Hero Mascot Section -->
+<div class="flex flex-col items-center mb-10 text-center">
+<div class="relative w-32 h-32 mb-6">
+<div class="absolute inset-0 bg-primary-container/20 blob-shape animate-pulse"></div>
+<img alt="VibeHealth Bunny Mascot" class="relative z-10 w-full h-full object-contain" data-alt="a cute and friendly minimalist pink bunny mascot with large ears and a gentle smile sitting in a soft pastel environment" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAodOXB707AJBDkuN-oOftN1M-Pw_X9D_oEG47-P0Ja_67V3MDC4w8AcJiRhEx794L-KlBc-E6NOOl0CMCMdVD5sp78213CXzAjB3LaqEZk-N_vOdx-T3o9Zi8VWeK7kkyVDdXkqRT8gLEunTgYMiZIjOWJSGjqtueIudkTdgMHAw-wdzapPRo4M1vnDrrcrhqwGlIa0N64R7H1KZD7zaznFcCe7psvELw9Rv6cXKjqAVHoqFFHhepuXO9Cd2UCgMpiZelZ6sdwbo8"/>
+</div>
+<h1 class="font-headline text-4xl md:text-5xl font-extrabold text-primary tracking-tight mb-3">Join VibeHealth!</h1>
+<p class="text-on-surface-variant text-lg max-w-xs mx-auto">Start your journey to vibrant living today.</p>
+</div>
+<!-- Registration Card -->
+<div class="bg-surface-container-low rounded-xl p-8 md:p-12 shadow-[0_20px_40px_rgba(170,44,50,0.05)] relative overflow-hidden">
+<!-- Inner soft glow -->
+<div class="absolute -top-10 -right-10 w-32 h-32 bg-secondary-container/30 blur-2xl rounded-full"></div>
+<form class="space-y-6 relative z-10">
+<!-- Full Name Field -->
+<div class="space-y-2">
+<label class="font-label text-sm font-semibold text-primary ml-1">Full Name</label>
+<div class="relative group">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline group-focus-within:text-primary transition-colors">person</span>
+<input class="w-full bg-surface-container-highest border-none rounded-lg py-4 pl-12 pr-4 focus:ring-2 focus:ring-primary/20 focus:bg-surface-container-lowest transition-all placeholder:text-outline-variant" placeholder="Cameron Vibe" type="text"/>
+</div>
+</div>
+<!-- Email Field -->
+<div class="space-y-2">
+<label class="font-label text-sm font-semibold text-primary ml-1">Email Address</label>
+<div class="relative group">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline group-focus-within:text-primary transition-colors">mail</span>
+<input class="w-full bg-surface-container-highest border-none rounded-lg py-4 pl-12 pr-4 focus:ring-2 focus:ring-primary/20 focus:bg-surface-container-lowest transition-all placeholder:text-outline-variant" placeholder="hello@vibehealth.com" type="email"/>
+</div>
+</div>
+<!-- Password Field -->
+<div class="space-y-2">
+<label class="font-label text-sm font-semibold text-primary ml-1">Create Password</label>
+<div class="relative group">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline group-focus-within:text-primary transition-colors">lock</span>
+<input class="w-full bg-surface-container-highest border-none rounded-lg py-4 pl-12 pr-12 focus:ring-2 focus:ring-primary/20 focus:bg-surface-container-lowest transition-all placeholder:text-outline-variant" placeholder="••••••••" type="password"/>
+<button class="absolute right-4 top-1/2 -translate-y-1/2 text-outline hover:text-primary" type="button">
+<span class="material-symbols-outlined">visibility_off</span>
+</button>
+</div>
+</div>
+<!-- Confirm Password Field -->
+<div class="space-y-2">
+<label class="font-label text-sm font-semibold text-primary ml-1">Confirm Password</label>
+<div class="relative group">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline group-focus-within:text-primary transition-colors">lock_reset</span>
+<input class="w-full bg-surface-container-highest border-none rounded-lg py-4 pl-12 pr-4 focus:ring-2 focus:ring-primary/20 focus:bg-surface-container-lowest transition-all placeholder:text-outline-variant" placeholder="••••••••" type="password"/>
+</div>
+</div>
+<!-- CTA Button -->
+<button class="w-full bg-gradient-to-r from-primary to-primary-container text-white py-5 rounded-full font-headline font-extrabold text-lg shadow-[0_15px_30px_rgba(170,44,50,0.2)] hover:shadow-[0_20px_40px_rgba(170,44,50,0.3)] hover:-translate-y-0.5 active:translate-y-0 active:scale-95 transition-all" type="submit">
+                        Create Account
+                    </button>
+</form>
+<!-- Social Signup Divider -->
+<div class="flex items-center gap-4 my-10">
+<div class="flex-1 h-[1px] bg-outline-variant/30"></div>
+<span class="text-xs font-bold text-outline-variant uppercase tracking-widest">or join with</span>
+<div class="flex-1 h-[1px] bg-outline-variant/30"></div>
+</div>
+<!-- Social Options -->
+<div class="grid grid-cols-2 gap-4">
+<button class="flex items-center justify-center gap-3 bg-surface-container-highest py-4 rounded-lg font-semibold text-on-surface hover:bg-surface-container-high transition-colors active:scale-95">
+<img alt="Google" class="w-5 h-5" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB0VWYF-fr3bb8Qfa5DHAFxKXRCeVrbauU2IYfWxsxGVs7LmMEWLg8Vg0zaJLSNO8t3OBf3ynYjPKrboFRU_Dhhq5jRIdh_pXXP0NRGVa0mVYwLs1vpA3Qnqqhf_GFDz3Eu2kQvSmp7Ll_vd0fzOJTfWeKkgdPRLchmL1ChOdzCGdUxPQAxNt9hRVaaPNVgATQ_P1EVBwgKVau1EtaBF5zbdzkhmcAkMGz2LVeFnWDMArntHbspUetqaplA88RJSBm5iN1Q2UO73Hs"/>
+                        Google
+                    </button>
+<button class="flex items-center justify-center gap-3 bg-surface-container-highest py-4 rounded-lg font-semibold text-on-surface hover:bg-surface-container-high transition-colors active:scale-95">
+<span class="material-symbols-outlined text-[#000]">ios</span>
+                        Apple
+                    </button>
+</div>
+<p class="mt-10 text-center text-on-surface-variant">
+                    Already have an account? 
+                    <a class="text-primary font-bold hover:underline" href="#">Log in</a>
+</p>
+</div>
+<!-- Additional Links / Footer Style -->
+<div class="mt-8 text-center text-xs text-outline leading-relaxed px-6">
+                By creating an account, you agree to VibeHealth's 
+                <a class="underline hover:text-primary" href="#">Terms of Service</a> and 
+                <a class="underline hover:text-primary" href="#">Privacy Policy</a>.
+            </div>
+</div>
+</main>
+<!-- Footer (Shared Component Style) -->
+<footer class="w-full py-12 px-8 flex flex-col items-center gap-6 mt-auto bg-[#faeeea] dark:bg-slate-950">
+<div class="text-lg font-bold text-[#aa2c32] font-headline">VibeHealth</div>
+<div class="flex gap-8">
+<a class="text-[#aa2c32]/70 text-sm font-medium hover:text-[#ff6b6b] transition-all" href="#">Privacy</a>
+<a class="text-[#aa2c32]/70 text-sm font-medium hover:text-[#ff6b6b] transition-all" href="#">Terms</a>
+<a class="text-[#aa2c32]/70 text-sm font-medium hover:text-[#ff6b6b] transition-all" href="#">Support</a>
+</div>
+<div class="text-[#aa2c32]/50 text-xs font-['Plus_Jakarta_Sans']">
+            © 2024 VibeHealth. The Living Canvas.
+        </div>
+</footer>
+<!-- No BottomNavBar on Register screen as per Focused Task Rule -->
+</body></html>

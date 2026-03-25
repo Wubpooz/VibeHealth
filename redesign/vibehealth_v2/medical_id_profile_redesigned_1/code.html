@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Wellness Dashboard | VibeHealth</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Be+Vietnam+Pro:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#aa2c32",
+              "secondary": "#904728",
+              "tertiary": "#396355",
+              "background": "#fff4f0",
+              "surface": "#ffffff",
+              "on-surface-variant": "#615a57",
+              "coral-grad": "linear-gradient(135deg, #ff7574 0%, #aa2c32 100%)",
+            },
+            fontFamily: {
+              "headline": ["Plus Jakarta Sans"],
+              "body": ["Be Vietnam Pro"],
+            },
+            borderRadius: {
+              "custom": "2.5rem",
+              "organic": "30% 70% 70% 30% / 30% 30% 70% 70%",
+            },
+          },
+        },
+      }
+    </script>
+<style type="text/tailwindcss">
+        @layer base {
+            body {
+                @apply bg-background text-[#332d2b] font-body min-h-screen;
+                background-image: 
+                    radial-gradient(at 100% 0%, rgba(255, 117, 116, 0.15) 0px, transparent 50%),
+                    radial-gradient(at 0% 100%, rgba(184, 230, 212, 0.15) 0px, transparent 50%);
+            }
+        }
+        .organic-shape-1 { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
+        .organic-shape-2 { border-radius: 40% 60% 70% 30% / 50% 60% 40% 50%; }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+        .text-gradient {
+            background: linear-gradient(to right, #aa2c32, #ff7574);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        /* Custom scrollbar for sidebar */
+        .sidebar-scroll::-webkit-scrollbar {
+            width: 4px;
+        }
+        .sidebar-scroll::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .sidebar-scroll::-webkit-scrollbar-thumb {
+            background: #e7dad5;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body class="pb-32">
+<!-- SideNavBar -->
+<aside class="hidden md:flex flex-col py-8 fixed left-0 top-0 h-full w-72 bg-[#faeeea] dark:bg-[#1a1614] rounded-r-[3rem] z-40 shadow-[20px_0_40px_rgba(170,44,50,0.04)] font-['Plus_Jakarta_Sans'] font-medium text-sm">
+<div class="px-8 mb-10">
+<div class="flex items-center gap-3">
+<span class="text-xl font-black text-[#aa2c32] dark:text-[#ff7574]">VibeHealth</span>
+</div>
+<p class="text-[10px] uppercase tracking-[0.2em] text-[#6d5c58] dark:text-[#a08d89] mt-1 font-bold">The Living Canvas</p>
+</div>
+<nav class="flex-1 overflow-y-auto sidebar-scroll space-y-1">
+<a class="flex items-center gap-4 text-[#6d5c58] dark:text-[#a08d89] px-6 py-3 hover:translate-x-1 transition-transform duration-200 active:opacity-80" href="#">
+<span class="material-symbols-outlined">grid_view</span>
+<span>Dashboard</span>
+</a>
+<a class="flex items-center gap-4 text-[#6d5c58] dark:text-[#a08d89] px-6 py-3 hover:translate-x-1 transition-transform duration-200 active:opacity-80" href="#">
+<span class="material-symbols-outlined">restaurant</span>
+<span>Nutrition</span>
+</a>
+<a class="flex items-center gap-4 text-[#6d5c58] dark:text-[#a08d89] px-6 py-3 hover:translate-x-1 transition-transform duration-200 active:opacity-80" href="#">
+<span class="material-symbols-outlined">sentiment_satisfied</span>
+<span>Mood</span>
+</a>
+<a class="flex items-center gap-4 text-[#6d5c58] dark:text-[#a08d89] px-6 py-3 hover:translate-x-1 transition-transform duration-200 active:opacity-80" href="#">
+<span class="material-symbols-outlined">calendar_today</span>
+<span>Period</span>
+</a>
+<a class="flex items-center gap-4 text-[#6d5c58] dark:text-[#a08d89] px-6 py-3 hover:translate-x-1 transition-transform duration-200 active:opacity-80" href="#">
+<span class="material-symbols-outlined">fitness_center</span>
+<span>Workouts</span>
+</a>
+<a class="flex items-center gap-4 text-[#6d5c58] dark:text-[#a08d89] px-6 py-3 hover:translate-x-1 transition-transform duration-200 active:opacity-80" href="#">
+<span class="material-symbols-outlined">self_improvement</span>
+<span>Meditation</span>
+</a>
+<a class="flex items-center gap-4 text-[#6d5c58] dark:text-[#a08d89] px-6 py-3 hover:translate-x-1 transition-transform duration-200 active:opacity-80" href="#">
+<span class="material-symbols-outlined">group</span>
+<span>Caregivers</span>
+</a>
+<a class="flex items-center gap-4 text-[#6d5c58] dark:text-[#a08d89] px-6 py-3 hover:translate-x-1 transition-transform duration-200 active:opacity-80" href="#">
+<span class="material-symbols-outlined">medical_services</span>
+<span>Practitioners</span>
+</a>
+<a class="flex items-center gap-4 bg-[#e7dad5] dark:bg-[#3d322e] text-[#aa2c32] dark:text-[#ff7574] rounded-full mx-2 px-6 py-3 font-bold hover:translate-x-1 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined">monitor_heart</span>
+<span>Vitals</span>
+</a>
+<a class="flex items-center gap-4 text-[#6d5c58] dark:text-[#a08d89] px-6 py-3 hover:translate-x-1 transition-transform duration-200 active:opacity-80" href="#">
+<span class="material-symbols-outlined">military_tech</span>
+<span>Rewards</span>
+</a>
+<a class="flex items-center gap-4 text-[#6d5c58] dark:text-[#a08d89] px-6 py-3 hover:translate-x-1 transition-transform duration-200 active:opacity-80" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span>Settings</span>
+</a>
+</nav>
+<!-- Theme Toggle Footer -->
+<div class="mt-auto px-4">
+<div class="bg-[#e7dad5]/50 dark:bg-[#2d2421] rounded-2xl p-1 flex items-center justify-between">
+<button class="flex-1 flex flex-col items-center py-2 rounded-xl bg-white dark:bg-[#1a1614] shadow-sm text-[#aa2c32] dark:text-[#ff7574]">
+<span class="material-symbols-outlined text-sm">light_mode</span>
+<span class="text-[10px] font-bold">Light</span>
+</button>
+<button class="flex-1 flex flex-col items-center py-2 text-[#6d5c58] dark:text-[#a08d89] hover:bg-[#e7dad5] dark:hover:bg-[#3d322e] rounded-xl transition-colors">
+<span class="material-symbols-outlined text-sm">dark_mode</span>
+<span class="text-[10px] font-bold">Dark</span>
+</button>
+<button class="flex-1 flex flex-col items-center py-2 text-[#6d5c58] dark:text-[#a08d89] hover:bg-[#e7dad5] dark:hover:bg-[#3d322e] rounded-xl transition-colors">
+<span class="material-symbols-outlined text-sm">settings_brightness</span>
+<span class="text-[10px] font-bold">System</span>
+</button>
+</div>
+</div>
+</aside>
+<header class="fixed top-0 w-full z-30 px-6 py-4 flex justify-between items-center bg-background/80 backdrop-blur-md md:pl-80">
+<div class="text-2xl font-black text-primary font-headline tracking-tighter md:invisible">VibeHealth</div>
+<div class="flex items-center gap-3 ml-auto">
+<button class="w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-sm text-primary">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<div class="w-10 h-10 rounded-full overflow-hidden border-2 border-white shadow-sm">
+<img alt="Sarah" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBDUehf4M6-7NsKkSX7WwnxXjsY0ORBUDT2y1C8uLSLEPhiniKHMF0zRQPXq_gxGFKbV9RFriG0lVH2auEGfkMoiJC_AtKsQQrba-GZVUwk3JVRC5f-Ya64i1OHShCypO0vyy2F67IRWKrMwwY10VhEGaNTQUe9LHDKZvqgu9WvOO5LUY2xjfXxRseqySVxYGIQcpVeJ4UKtAbxceDVtZkixy9HkjvHA9duS0MwMaED1-XvqE6zZ47mrvbeGD-6iSpz5bP0kl8Ztv4"/>
+</div>
+</div>
+</header>
+<main class="pt-24 px-6 max-w-7xl mx-auto md:pl-72">
+<section class="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
+<div>
+<h1 class="text-4xl md:text-5xl font-headline font-extrabold text-[#332d2b] tracking-tight">
+                    Hello, <span class="text-gradient">Sarah</span>
+</h1>
+<p class="text-on-surface-variant text-lg mt-2 font-medium">How is your spirit feeling today?</p>
+</div>
+<div class="flex gap-2">
+<button class="px-6 py-3 bg-white/50 hover:bg-white rounded-full font-bold text-sm transition-all border border-primary/10">Personalize Dashboard</button>
+<button class="px-6 py-3 bg-gradient-to-r from-primary to-[#ff7574] text-white rounded-full font-bold text-sm shadow-lg shadow-primary/20">Log Wellbeing</button>
+</div>
+</section>
+<div class="grid grid-cols-1 md:grid-cols-12 gap-6">
+<div class="md:col-span-4 space-y-6">
+<div class="glass-card rounded-[2.5rem] p-8 relative overflow-hidden group">
+<div class="absolute -right-10 -top-10 w-40 h-40 bg-tertiary/10 organic-shape-1 group-hover:scale-110 transition-transform duration-700"></div>
+<h3 class="font-headline font-bold text-xl mb-6">Emotional Vibe</h3>
+<div class="flex flex-col items-center py-4">
+<div class="w-32 h-32 organic-shape-2 bg-gradient-to-br from-tertiary to-tertiary/40 flex items-center justify-center text-white mb-4 shadow-xl shadow-tertiary/20">
+<span class="material-symbols-outlined text-5xl">sentiment_satisfied</span>
+</div>
+<p class="font-bold text-2xl text-tertiary">Centered</p>
+<p class="text-on-surface-variant text-sm mt-1">Steady for 4 days</p>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div class="bg-white/80 rounded-3xl p-6 flex flex-col items-center text-center shadow-sm">
+<div class="w-12 h-12 rounded-2xl bg-primary/10 text-primary flex items-center justify-center mb-3">
+<span class="material-symbols-outlined">water_drop</span>
+</div>
+<p class="text-[10px] uppercase font-bold tracking-widest text-on-surface-variant">Blood Type</p>
+<p class="text-2xl font-black text-primary">O-</p>
+</div>
+<div class="bg-white/80 rounded-3xl p-6 flex flex-col items-center text-center shadow-sm">
+<div class="w-12 h-12 rounded-2xl bg-secondary/10 text-secondary flex items-center justify-center mb-3">
+<span class="material-symbols-outlined">fitness_center</span>
+</div>
+<p class="text-[10px] uppercase font-bold tracking-widest text-on-surface-variant">Weight</p>
+<p class="text-2xl font-black text-secondary">62<span class="text-sm">kg</span></p>
+</div>
+</div>
+</div>
+<div class="md:col-span-5 space-y-6">
+<div class="glass-card rounded-[2.5rem] p-8 shadow-sm">
+<div class="flex justify-between items-center mb-8">
+<h3 class="font-headline font-bold text-xl">Daily Rituals</h3>
+<span class="px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs font-bold">85% Streak</span>
+</div>
+<div class="space-y-6">
+<div class="flex items-center gap-4 group">
+<div class="w-12 h-12 rounded-full border-2 border-primary/20 flex items-center justify-center shrink-0">
+<div class="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-sm">check</span>
+</div>
+</div>
+<div class="flex-1">
+<h4 class="font-bold text-[#332d2b]">Sertraline 50mg</h4>
+<p class="text-xs text-on-surface-variant">Morning routine • Taken at 8:15 AM</p>
+</div>
+</div>
+<div class="flex items-center gap-4 group">
+<div class="w-12 h-12 rounded-full border-2 border-primary/20 flex items-center justify-center shrink-0">
+<div class="w-4 h-4 rounded-full border-2 border-primary/40"></div>
+</div>
+<div class="flex-1 opacity-60">
+<h4 class="font-bold text-[#332d2b]">Vitamin D</h4>
+<p class="text-xs text-on-surface-variant">Evening ritual • Scheduled for 7:00 PM</p>
+</div>
+</div>
+<div class="pt-4">
+<div class="h-2 w-full bg-background rounded-full overflow-hidden">
+<div class="h-full bg-gradient-to-r from-primary to-[#ff7574] rounded-full" style="width: 60%"></div>
+</div>
+<div class="flex justify-between mt-2 text-[10px] font-bold text-on-surface-variant uppercase tracking-tighter">
+<span>Morning</span>
+<span>Noon</span>
+<span>Evening</span>
+</div>
+</div>
+</div>
+</div>
+<div class="bg-[#aa2c32] text-white rounded-[2.5rem] p-8 relative overflow-hidden">
+<div class="absolute -left-12 -bottom-12 w-48 h-48 bg-white/10 organic-shape-2"></div>
+<div class="relative z-10">
+<div class="flex items-center gap-2 mb-4">
+<span class="material-symbols-outlined text-white/60">healing</span>
+<h3 class="font-headline font-bold text-xl">Type 1 Diabetes</h3>
+</div>
+<p class="text-white/80 text-sm leading-relaxed mb-6">Currently monitored via Dexcom G6. Keeping levels within 4.0 - 7.0 mmol/L range is today's focus.</p>
+<div class="flex gap-2">
+<span class="px-3 py-1 bg-white/20 rounded-full text-[10px] font-bold">Active Sensor</span>
+<span class="px-3 py-1 bg-white/20 rounded-full text-[10px] font-bold">Insulin-Dependent</span>
+</div>
+</div>
+</div>
+</div>
+<div class="md:col-span-3 space-y-6">
+<div class="bg-white rounded-[2.5rem] p-6 shadow-sm border-2 border-red-50">
+<h3 class="font-headline font-bold text-lg mb-4 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-xl">emergency</span>
+                        Emergency
+                    </h3>
+<div class="space-y-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-slate-100 overflow-hidden">
+<img alt="Mark" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCs36RtvT_v-lRK6C2ov0iyokCXPS9qwGpUPiN-D08FLhVD2i9Fz6mFPKonQ7ALvo-95tuk2-_2VYczkXMX9ZOWUpUfiYfmSMVt6mlN3Iwa0ru8zAkCIaT1CHX4Drmrxo46KnlSOy-5mfjlPV6iEX9LnZgIZ1WZ6-F7zPjfmFQBeQPAg-cxFfUrygjMzdIJ4OG9-M2L3swCVVE2R8SEhiZYGh4m6NHqJgRpZdRk32Ym9HaxCCkQ_FFbTo_8yVG6P_GyhdUZnIX5qQU"/>
+</div>
+<div class="flex-1">
+<p class="text-sm font-bold">Mark Jenkins</p>
+<p class="text-[10px] text-on-surface-variant">Father</p>
+</div>
+<button class="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center">
+<span class="material-symbols-outlined text-sm">call</span>
+</button>
+</div>
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-slate-100 overflow-hidden">
+<img alt="Elena" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBAAWDfAXoNGAiX0HElWcREg8RkuQMnv50NJtlhU_X0TI156n4U-gn-zGADC-r0iwiV_J5Vs9kLtalXkfs8uwuPERCrUfVkxbeVhZge1uUqfIxt-VRdneJYXNB5Vfgop3EFE0r2-6g29CJYfrSNYmxm_sBX4t8DqCctPj2CaYzzoZ_pUQ_I_59abEwbbTSduhejBiFjWWsQLt4TnjAV3kAx01MRLWniK3QcK80vjp30Lr7sioZOAoM-JHWdKhW5JlUP4VptaxhsnrQ"/>
+</div>
+<div class="flex-1">
+<p class="text-sm font-bold">Elena Rossi</p>
+<p class="text-[10px] text-on-surface-variant">Partner</p>
+</div>
+<button class="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center">
+<span class="material-symbols-outlined text-sm">call</span>
+</button>
+</div>
+</div>
+</div>
+<div class="bg-gradient-to-br from-[#fff4f0] to-[#f5dad0] rounded-[2.5rem] p-6 text-center border border-white">
+<span class="material-symbols-outlined text-primary text-4xl mb-2">qr_code_2</span>
+<h4 class="font-bold text-primary">Emergency ID Pass</h4>
+<p class="text-[11px] text-on-surface-variant mt-1 px-4">Download your ID for lock screen integration</p>
+<button class="mt-4 w-full py-2 bg-white rounded-full text-xs font-bold text-primary hover:bg-primary hover:text-white transition-colors">Generate Pass</button>
+</div>
+</div>
+</div>
+<footer class="mt-12 text-center pb-20">
+<p class="italic text-on-surface-variant text-sm max-w-md mx-auto">"You are more than your metrics. You are a living, breathing work of art."</p>
+</footer>
+</main>
+<nav class="md:hidden fixed bottom-0 left-0 w-full flex justify-around items-center px-4 pb-8 pt-4 bg-background/90 backdrop-blur-2xl z-50 rounded-t-[3rem] shadow-[0_-10px_40px_rgba(0,0,0,0.05)]">
+<a class="flex flex-col items-center justify-center text-primary" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">dashboard</span>
+<span class="font-headline text-[10px] font-bold mt-1">Me</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant opacity-60 hover:opacity-100 transition-opacity" href="#">
+<span class="material-symbols-outlined">badge</span>
+<span class="font-headline text-[10px] font-bold mt-1">Health ID</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant opacity-60 hover:opacity-100 transition-opacity" href="#">
+<span class="material-symbols-outlined">spa</span>
+<span class="font-headline text-[10px] font-bold mt-1">Wellness</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant opacity-60 hover:opacity-100 transition-opacity" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-headline text-[10px] font-bold mt-1">More</span>
+</a>
+</nav>
+</body></html>

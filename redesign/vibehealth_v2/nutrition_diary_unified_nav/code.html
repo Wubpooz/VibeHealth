@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Nutrition Diary | VibeHealth</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Be+Vietnam+Pro:wght@300;400;500;600&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "tertiary-fixed": "#cffeeb",
+              "surface-variant": "#e7dad5",
+              "secondary-fixed-dim": "#ffb193",
+              "tertiary-container": "#cffeeb",
+              "surface-container-lowest": "#ffffff",
+              "surface-container": "#f2e6e1",
+              "secondary-dim": "#813b1d",
+              "on-tertiary-fixed-variant": "#446e60",
+              "on-primary-container": "#4e0009",
+              "secondary-fixed": "#ffc5af",
+              "on-secondary-fixed-variant": "#823c1e",
+              "on-primary": "#ffefee",
+              "on-secondary": "#ffefeb",
+              "on-tertiary": "#cefdea",
+              "on-error-container": "#520c00",
+              "inverse-on-surface": "#a49b97",
+              "background": "#fff4f0",
+              "primary-fixed": "#ff7574",
+              "on-secondary-container": "#763316",
+              "on-surface-variant": "#615a57",
+              "error-dim": "#b92902",
+              "outline-variant": "#b5aba7",
+              "surface-container-high": "#ece0db",
+              "secondary": "#904728",
+              "surface-container-low": "#faeeea",
+              "surface-container-highest": "#e7dad5",
+              "on-tertiary-container": "#396456",
+              "primary-fixed-dim": "#f56364",
+              "error-container": "#f95630",
+              "surface-dim": "#dfd2cc",
+              "surface-tint": "#aa2c32",
+              "tertiary-dim": "#2d574a",
+              "surface-bright": "#fff4f0",
+              "inverse-surface": "#120d0b",
+              "on-tertiary-fixed": "#275144",
+              "on-primary-fixed-variant": "#60000d",
+              "primary": "#aa2c32",
+              "on-error": "#ffefec",
+              "surface": "#fff4f0",
+              "error": "#b02500",
+              "on-surface": "#332d2b",
+              "secondary-container": "#ffc5af",
+              "primary-dim": "#992027",
+              "on-primary-fixed": "#000000",
+              "tertiary": "#396355",
+              "inverse-primary": "#ff6b6b",
+              "tertiary-fixed-dim": "#c1efdd",
+              "on-background": "#332d2b",
+              "primary-container": "#ff7574",
+              "on-secondary-fixed": "#5d2105",
+              "outline": "#7d7572",
+              "mint": "#b8e6d4"
+            },
+            fontFamily: {
+              "headline": ["Plus Jakarta Sans"],
+              "body": ["Be Vietnam Pro"],
+              "label": ["Be Vietnam Pro"]
+            },
+            borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .glass-effect {
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+        .blob-bg {
+            border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+        }
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        body {
+            background-image: radial-gradient(at 0% 0%, #fff4f0 0%, transparent 50%),
+                              radial-gradient(at 100% 0%, #faeeea 0%, transparent 50%);
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: rgba(170, 44, 50, 0.1);
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body class="font-body text-on-surface bg-background min-h-screen">
+<!-- TopNavBar -->
+<nav class="fixed top-0 w-full z-50 bg-[#fff4f0]/70 dark:bg-stone-900/70 backdrop-blur-xl no-border flex justify-between items-center px-8 py-4 max-w-7xl mx-auto left-1/2 -translate-x-1/2">
+<div class="text-2xl font-black text-[#aa2c32] dark:text-[#ff7574] italic font-headline tracking-tight lg:hidden">VibeHealth</div>
+<div class="hidden lg:block"></div> <!-- Spacer for flex alignment when sidebar title is visible -->
+<div class="hidden md:flex space-x-8 font-['Plus_Jakarta_Sans'] font-bold text-sm tracking-tight">
+<a class="text-[#ff6b6b] border-b-2 border-[#ff6b6b] pb-1" href="#">Journal</a>
+<a class="text-[#6d5c58] hover:text-[#ff6b6b] transition-colors duration-300" href="#">Insights</a>
+<a class="text-[#6d5c58] hover:text-[#ff6b6b] transition-colors duration-300" href="#">Library</a>
+</div>
+<div class="flex items-center space-x-4">
+<button class="material-symbols-outlined text-[#6d5c58] hover:text-[#aa2c32] transition-colors p-2 rounded-full hover:bg-[#faeeea]">notifications</button>
+<button class="material-symbols-outlined text-[#6d5c58] hover:text-[#aa2c32] transition-colors p-2 rounded-full hover:bg-[#faeeea]">settings</button>
+<div class="w-10 h-10 rounded-full bg-surface-container-highest overflow-hidden border-2 border-[#aa2c32]/20">
+<img alt="User profile avatar" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCiXHPTLL1TeCVRF24VLhos-A8l3d2hmmFq0wh1VOaA8Ar6hpOg90nIijyE2BExe4UnBXmWbz2_7s4-sOdzlCnt84P0XxvFm8zoEsS-kwbTJFZJt6wME2BzvVqdWIMzl8H_X0LEm717SvHDMT251xG-LqH6uRbb9uNNqsXtS7LyF1uXtBlmxg5MtKMGWFW3GAT266MEbSjEWc4BRtkizgpnz4TvjPdnE-WikaDox7b-ti56dymOJs77lcg2sYQ5uMNVRsBwozX57tE"/>
+</div>
+</div>
+</nav>
+<div class="flex max-w-7xl mx-auto min-h-screen">
+<!-- Unified SideNavBar -->
+<aside class="hidden lg:flex flex-col w-72 h-screen sticky top-0 z-40 bg-[#faeeea] dark:bg-[#1a1614] rounded-r-[3rem] shadow-[20px_0_40px_rgba(170,44,50,0.04)] py-8 font-['Plus_Jakarta_Sans']">
+<div class="px-8 mb-8">
+<div class="text-xl font-black text-[#aa2c32] dark:text-[#ff7574] italic">VibeHealth</div>
+<div class="text-[10px] text-[#6d5c58] dark:text-[#a08d89] font-bold uppercase tracking-widest mt-0.5">The Living Canvas</div>
+</div>
+<div class="flex-1 space-y-1 overflow-y-auto custom-scrollbar">
+<a class="flex items-center px-6 py-3 text-[#6d5c58] dark:text-[#a08d89] hover:translate-x-1 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined mr-4 text-[20px]">grid_view</span>
+<span class="text-sm font-medium">Dashboard</span>
+</a>
+<a class="flex items-center bg-[#e7dad5] dark:bg-[#3d322e] text-[#aa2c32] dark:text-[#ff7574] rounded-full mx-2 px-6 py-3 font-bold hover:translate-x-1 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined mr-4 text-[20px]" style="font-variation-settings: 'FILL' 1;">restaurant</span>
+<span class="text-sm">Nutrition</span>
+</a>
+<a class="flex items-center px-6 py-3 text-[#6d5c58] dark:text-[#a08d89] hover:translate-x-1 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined mr-4 text-[20px]">sentiment_satisfied</span>
+<span class="text-sm font-medium">Mood</span>
+</a>
+<a class="flex items-center px-6 py-3 text-[#6d5c58] dark:text-[#a08d89] hover:translate-x-1 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined mr-4 text-[20px]">calendar_today</span>
+<span class="text-sm font-medium">Period</span>
+</a>
+<a class="flex items-center px-6 py-3 text-[#6d5c58] dark:text-[#a08d89] hover:translate-x-1 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined mr-4 text-[20px]">fitness_center</span>
+<span class="text-sm font-medium">Workouts</span>
+</a>
+<a class="flex items-center px-6 py-3 text-[#6d5c58] dark:text-[#a08d89] hover:translate-x-1 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined mr-4 text-[20px]">self_improvement</span>
+<span class="text-sm font-medium">Meditation</span>
+</a>
+<a class="flex items-center px-6 py-3 text-[#6d5c58] dark:text-[#a08d89] hover:translate-x-1 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined mr-4 text-[20px]">group</span>
+<span class="text-sm font-medium">Caregivers</span>
+</a>
+<a class="flex items-center px-6 py-3 text-[#6d5c58] dark:text-[#a08d89] hover:translate-x-1 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined mr-4 text-[20px]">medical_services</span>
+<span class="text-sm font-medium">Practitioners</span>
+</a>
+<a class="flex items-center px-6 py-3 text-[#6d5c58] dark:text-[#a08d89] hover:translate-x-1 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined mr-4 text-[20px]">monitor_heart</span>
+<span class="text-sm font-medium">Vitals</span>
+</a>
+<a class="flex items-center px-6 py-3 text-[#6d5c58] dark:text-[#a08d89] hover:translate-x-1 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined mr-4 text-[20px]">military_tech</span>
+<span class="text-sm font-medium">Rewards</span>
+</a>
+<a class="flex items-center px-6 py-3 text-[#6d5c58] dark:text-[#a08d89] hover:translate-x-1 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined mr-4 text-[20px]">settings</span>
+<span class="text-sm font-medium">Settings</span>
+</a>
+</div>
+<!-- Theme Toggle Footer -->
+<div class="mt-auto px-4">
+<div class="bg-[#e7dad5]/50 dark:bg-[#3d322e]/50 p-1 rounded-full flex justify-between items-center">
+<button class="flex-1 flex items-center justify-center py-2 px-1 bg-white dark:bg-[#1a1614] rounded-full text-[#aa2c32] shadow-sm">
+<span class="material-symbols-outlined text-[18px]">light_mode</span>
+</button>
+<button class="flex-1 flex items-center justify-center py-2 px-1 text-[#6d5c58] dark:text-[#a08d89]">
+<span class="material-symbols-outlined text-[18px]">dark_mode</span>
+</button>
+<button class="flex-1 flex items-center justify-center py-2 px-1 text-[#6d5c58] dark:text-[#a08d89]">
+<span class="material-symbols-outlined text-[18px]">settings_brightness</span>
+</button>
+</div>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="flex-1 px-6 lg:px-12 pt-24 pb-32">
+<!-- Header Section -->
+<header class="mb-12">
+<h1 class="text-5xl font-extrabold font-headline text-on-surface tracking-tight mb-2">Nutrition Diary</h1>
+<p class="text-lg text-on-surface-variant font-medium">Feeding your glow, one bite at a time.</p>
+</header>
+<!-- Bento Grid Metrics -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
+<!-- Calorie Main Card -->
+<div class="md:col-span-2 bg-surface-container-low rounded-xl p-8 relative overflow-hidden flex flex-col justify-between">
+<div class="absolute -right-12 -top-12 w-64 h-64 bg-primary-container/20 blob-bg"></div>
+<div class="relative z-10">
+<span class="text-sm font-bold uppercase tracking-widest text-primary mb-4 block">Daily Goal</span>
+<div class="flex items-baseline gap-2">
+<span class="text-7xl font-black font-headline text-on-surface">1,840</span>
+<span class="text-2xl font-bold text-on-surface-variant">/ 2,200 kcal</span>
+</div>
+</div>
+<div class="relative z-10 mt-8">
+<div class="w-full h-4 bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-gradient-to-r from-primary to-primary-container w-[83%] rounded-full"></div>
+</div>
+<p class="mt-4 text-sm font-medium text-on-surface-variant italic">360 kcal remaining for dinner!</p>
+</div>
+</div>
+<!-- Macro Breakdown -->
+<div class="bg-surface-container-highest rounded-xl p-8 flex flex-col justify-between">
+<h3 class="font-bold text-on-surface mb-6">Daily Macros</h3>
+<div class="space-y-6">
+<div class="space-y-2">
+<div class="flex justify-between text-xs font-bold uppercase tracking-tighter">
+<span>Carbs</span>
+<span>142g / 220g</span>
+</div>
+<div class="w-full h-2 bg-white/50 rounded-full">
+<div class="h-full bg-secondary-fixed w-[64%] rounded-full"></div>
+</div>
+</div>
+<div class="space-y-2">
+<div class="flex justify-between text-xs font-bold uppercase tracking-tighter">
+<span>Protein</span>
+<span>98g / 110g</span>
+</div>
+<div class="w-full h-2 bg-white/50 rounded-full">
+<div class="h-full bg-primary w-[89%] rounded-full"></div>
+</div>
+</div>
+<div class="space-y-2">
+<div class="flex justify-between text-xs font-bold uppercase tracking-tighter">
+<span>Fats</span>
+<span>45g / 65g</span>
+</div>
+<div class="w-full h-2 bg-white/50 rounded-full">
+<div class="h-full bg-tertiary w-[69%] rounded-full"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Meal Log Section -->
+<section class="space-y-12 mb-20">
+<div class="flex justify-between items-end">
+<h2 class="text-3xl font-bold font-headline">Today's Log</h2>
+<span class="text-on-surface-variant font-medium">Monday, Oct 23</span>
+</div>
+<!-- Meal Categories -->
+<div class="space-y-6">
+<!-- Breakfast -->
+<div class="group">
+<div class="flex items-center justify-between mb-4 px-2">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary">wb_twilight</span>
+<h3 class="text-xl font-bold">Breakfast</h3>
+</div>
+<span class="text-on-surface-variant font-semibold">420 kcal</span>
+</div>
+<div class="space-y-3">
+<div class="bg-surface-container-low p-5 rounded-lg flex items-center justify-between hover:bg-surface-container transition-colors">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-full overflow-hidden">
+<img alt="Avocado Toast" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDLEvuilnaKWvE6oz5BDPuvVf356pA4GtQnXphNXZ2MFkfGatIYBowy-Gkc7G7njzshBZL_DZnKgrmhIuD0-mYr_YXaxQcaDu_wd-zyzwlL0b-xRYJZFVBZyJfw42eJcXvpfqlUzzhR8rpSYFkI32ebR3jpWYKiLn8tHIYjrDG8czj4p7r1JEsE_c1pWR6BicQ16oBK7Do2hTg3-kvMb4G1d1pCAfz9n2QSxoHphIwL3gvNP-5vbL9oFVTx6PXAz4TghyM58kVcZFk"/>
+</div>
+<div>
+<p class="font-bold">Avocado Toast with Poached Egg</p>
+<p class="text-xs text-on-surface-variant">1 serving • 310 kcal</p>
+</div>
+</div>
+<button class="material-symbols-outlined text-outline">more_vert</button>
+</div>
+<div class="bg-surface-container-low p-5 rounded-lg flex items-center justify-between hover:bg-surface-container transition-colors">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-full overflow-hidden">
+<img alt="Black Coffee" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAYr3LMt3rqpfz2WuXlo3zG7KVfG9rkJ8yXF-8VelKBOe8kLeH4CVNInqnltlBdfPAvfXUmvs0cP7QzOaQIqgV_D5wgBkcAZ50ClVTxoLS2ZgQhez-6xPiSet1ql0LxP1pCmUNCM_mPKMoVnnNuy09xKO8d_fOY_QvGQEJjzYE8VMI5kDx0ZSJiS1YFKArFhZMPXnVjcRBLRF2HiQlojSYmoynTxUox6BYbo99gLmCtEX1oh4xic5NhWu25mMBByE1wFZsgcRfxnG8"/>
+</div>
+<div>
+<p class="font-bold">Iced Oat Milk Latte</p>
+<p class="text-xs text-on-surface-variant">Large • 110 kcal</p>
+</div>
+</div>
+<button class="material-symbols-outlined text-outline">more_vert</button>
+</div>
+</div>
+</div>
+<!-- Lunch -->
+<div class="group">
+<div class="flex items-center justify-between mb-4 px-2">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary">light_mode</span>
+<h3 class="text-xl font-bold">Lunch</h3>
+</div>
+<span class="text-on-surface-variant font-semibold">680 kcal</span>
+</div>
+<div class="space-y-3">
+<div class="bg-surface-container-low p-5 rounded-lg flex items-center justify-between hover:bg-surface-container transition-colors">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-full overflow-hidden">
+<img alt="Buddha Bowl" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCwkGhUNkKyGSLZuE-MD9XYQcRhFnIEe1Ou7F2_vhRs7iBEuRZcst6oupWHvKVTo2VOQ-yfgGWAenlw4xmGkItOm3ocgEVUKXeDqv8Bj9t2uqDmi-Q3JbxZd7mRjqFDXe_t6yiwdT4RXexUKnRLfr5HfxsdZoJ85hM8vebeSS77SUGMJQ3SBa4Agq02ZYQN_-TXd_UaPVV18EbyaNMQnjrqJsM-44DGbkzY0XYhSS5E0caJs0eV5JazwB2HceB9PBXJtAP7BqG10GM"/>
+</div>
+<div>
+<p class="font-bold">Quinoa &amp; Roasted Chickpea Bowl</p>
+<p class="text-xs text-on-surface-variant">1 bowl • 680 kcal</p>
+</div>
+</div>
+<button class="material-symbols-outlined text-outline">more_vert</button>
+</div>
+</div>
+</div>
+<!-- Water Tracker -->
+<div class="bg-mint/20 rounded-xl p-8 mt-12">
+<div class="flex items-center justify-between mb-8">
+<div>
+<h3 class="text-xl font-bold text-tertiary">Hydration</h3>
+<p class="text-sm text-tertiary-dim">Stay refreshed</p>
+</div>
+<div class="text-right">
+<span class="text-2xl font-black text-tertiary">1.5L</span>
+<span class="text-sm text-tertiary-dim"> / 2.5L</span>
+</div>
+</div>
+<div class="flex justify-between gap-2">
+<button class="flex-1 flex flex-col items-center gap-2 p-3 bg-mint rounded-2xl shadow-sm">
+<span class="material-symbols-outlined text-tertiary" style="font-variation-settings: 'FILL' 1;">local_drink</span>
+</button>
+<button class="flex-1 flex flex-col items-center gap-2 p-3 bg-mint rounded-2xl shadow-sm">
+<span class="material-symbols-outlined text-tertiary" style="font-variation-settings: 'FILL' 1;">local_drink</span>
+</button>
+<button class="flex-1 flex flex-col items-center gap-2 p-3 bg-mint rounded-2xl shadow-sm">
+<span class="material-symbols-outlined text-tertiary" style="font-variation-settings: 'FILL' 1;">local_drink</span>
+</button>
+<button class="flex-1 flex flex-col items-center gap-2 p-3 bg-white/40 rounded-2xl">
+<span class="material-symbols-outlined text-tertiary/40">local_drink</span>
+</button>
+<button class="flex-1 flex flex-col items-center gap-2 p-3 bg-white/40 rounded-2xl">
+<span class="material-symbols-outlined text-tertiary/40">local_drink</span>
+</button>
+<button class="flex-1 flex flex-col items-center gap-2 p-3 bg-white/40 rounded-2xl">
+<span class="material-symbols-outlined text-tertiary/40">local_drink</span>
+</button>
+</div>
+<button class="w-full mt-6 py-3 bg-white/60 border-2 border-dashed border-tertiary/20 rounded-full text-tertiary font-bold text-sm">+ Add 250ml</button>
+</div>
+</div>
+</section>
+</main>
+</div>
+<!-- Floating Action Button -->
+<button class="fixed bottom-28 right-8 lg:bottom-12 lg:right-12 w-16 h-16 bg-gradient-to-br from-[#aa2c32] to-[#ff7574] text-white rounded-full shadow-2xl shadow-[#ff6b6b]/40 flex items-center justify-center z-50 transform hover:scale-110 active:scale-95 transition-all">
+<span class="material-symbols-outlined text-3xl">add</span>
+</button>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="lg:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pt-2 pb-6 bg-[#faeeea]/80 dark:bg-stone-900/80 backdrop-blur-2xl rounded-t-[2.5rem] no-border shadow-[0_-10px_40px_rgba(170,44,50,0.05)]">
+<a class="flex flex-col items-center justify-center text-stone-400 p-2" href="#">
+<span class="material-symbols-outlined">edit_note</span>
+<span class="font-['Plus_Jakarta_Sans'] text-[10px] font-bold uppercase tracking-widest mt-1">Journal</span>
+</a>
+<a class="flex flex-col items-center justify-center text-stone-400 p-2" href="#">
+<span class="material-symbols-outlined">bolt</span>
+<span class="font-['Plus_Jakarta_Sans'] text-[10px] font-bold uppercase tracking-widest mt-1">Activity</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-[#ff6b6b] text-white rounded-2xl p-3 mb-2 transform -translate-y-2 shadow-lg shadow-[#ff6b6b]/30" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">restaurant</span>
+<span class="font-['Plus_Jakarta_Sans'] text-[10px] font-bold uppercase tracking-widest mt-1">Vibe</span>
+</a>
+<a class="flex flex-col items-center justify-center text-stone-400 p-2" href="#">
+<span class="material-symbols-outlined">analytics</span>
+<span class="font-['Plus_Jakarta_Sans'] text-[10px] font-bold uppercase tracking-widest mt-1">Insights</span>
+</a>
+<a class="flex flex-col items-center justify-center text-stone-400 p-2" href="#">
+<span class="material-symbols-outlined">auto_stories</span>
+<span class="font-['Plus_Jakarta_Sans'] text-[10px] font-bold uppercase tracking-widest mt-1">Library</span>
+</a>
+</nav>
+</body></html>
