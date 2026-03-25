@@ -306,12 +306,26 @@ type ViewMode = 'card' | 'edit';
                       <option [value]="rel">{{ rel }}</option>
                     }
                   </select>
-                  <input
-                    type="tel"
-                    [(ngModel)]="newContact.phone"
-                    placeholder="Phone number"
-                    class="contact-input"
-                  />
+                  <div class="phone-row">
+                    <select
+                      [(ngModel)]="selectedCountryCode"
+                      (ngModelChange)="updateCountryCode($event)"
+                      class="contact-select country-select"
+                      aria-label="Country code"
+                    >
+                      @for (country of countryOptions; track country.code) {
+                        <option [value]="country.dial">{{ country.flag }} {{ country.dial }}</option>
+                      }
+                    </select>
+                    <input
+                      type="tel"
+                      [(ngModel)]="newContact.phone"
+                      placeholder="Phone number"
+                      class="contact-input" 
+                      inputmode="tel"
+                      autocomplete="tel"
+                    />
+                  </div>
                   <button
                     class="add-contact-btn"
                     (click)="addContact()"
@@ -1339,6 +1353,18 @@ type ViewMode = 'card' | 'edit';
       border-color: #44403C;
       color: #FAFAF9;
     }
+
+    :host-context(.dark) .blood-type-btn.selected {
+      background: linear-gradient(135deg, #4b1115 0%, #7f1d1d 100%);
+      border-color: #f87171;
+      color: #fee2e2;
+      box-shadow: 0 0 0 2px rgba(248, 113, 113, 0.5);
+    }
+
+    :host-context(.dark) .blood-type-display {
+      background: linear-gradient(135deg, #7f1d1d 0%, #991b1b 100%);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+    }
   `]
 })
 export class MedicalIdComponent implements OnInit {
@@ -1376,6 +1402,47 @@ export class MedicalIdComponent implements OnInit {
     phone: '',
     isPrimary: false
   };
+
+  countryOptions = [
+    { country: 'United States', code: 'US', dial: '+1', flag: '🇺🇸' },
+    { country: 'United Kingdom', code: 'GB', dial: '+44', flag: '🇬🇧' },
+    { country: 'Canada', code: 'CA', dial: '+1', flag: '🇨🇦' },
+    { country: 'Australia', code: 'AU', dial: '+61', flag: '🇦🇺' },
+    { country: 'France', code: 'FR', dial: '+33', flag: '🇫🇷' },
+    { country: 'Germany', code: 'DE', dial: '+49', flag: '🇩🇪' },
+    { country: 'India', code: 'IN', dial: '+91', flag: '🇮🇳' },
+  ];
+
+  selectedCountryCode = this.getPreferredCountryCode();
+
+  getPreferredCountryCode(): string {
+    const locale = navigator.language?.split('-')[1] || navigator.language;
+    const found = this.countryOptions.find(c => c.code.toLowerCase() === locale?.toLowerCase());
+    return found?.dial || '+1';
+  }
+
+  get selectedCountry(): { country: string; code: string; dial: string; flag: string } {
+    return this.countryOptions.find(c => c.dial === this.selectedCountryCode) || this.countryOptions[0];
+  }
+
+  formatPhoneInput(phone: string): string {
+    const cleaned = phone.replaceAll(/[^\d+]/g, '');
+    if (cleaned.startsWith('+')) return cleaned;
+    if (!this.selectedCountryCode.startsWith('+')) return `+${this.selectedCountryCode}${cleaned}`;
+    return `${this.selectedCountryCode}${cleaned}`;
+  }
+
+  updateCountryCode(code: string): void {
+    this.selectedCountryCode = code;
+    if (this.newContact.phone.trim()) {
+      this.newContact.phone = this.formatPhoneInput(this.newContact.phone);
+    }
+  }
+
+  isValidPhoneNumber(phone: string): boolean {
+    const normalized = this.formatPhoneInput(phone);
+    return /^\d{15}$/.test(normalized.replace(/^\+/, '')) || /^\+\d{6,15}$/.test(normalized);
+  }
 
   // Computed
   readonly medicalIdData = computed(() => this.medicalIdService.medicalId());
@@ -1439,17 +1506,24 @@ export class MedicalIdComponent implements OnInit {
 
   // Contact management
   canAddContact(): boolean {
-    return !!(this.newContact.name.trim() && this.newContact.relationship && this.newContact.phone.trim());
+    return !!(
+      this.newContact.name.trim() &&
+      this.newContact.relationship &&
+      this.newContact.phone.trim() &&
+      this.isValidPhoneNumber(this.newContact.phone)
+    );
   }
 
   addContact() {
     if (!this.canAddContact()) return;
 
+    const normalizedPhone = this.formatPhoneInput(this.newContact.phone.trim());
+
     const contact: EmergencyContact = {
       id: crypto.randomUUID(),
       name: this.newContact.name.trim(),
       relationship: this.newContact.relationship,
-      phone: this.newContact.phone.trim(),
+      phone: normalizedPhone,
       isPrimary: this.editData.emergencyContacts.length === 0
     };
 
