@@ -129,7 +129,7 @@ describe('Workout & sync metrics routes', () => {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ provider: 'GOOGLE_FIT' }),
     });
-    const body: any = await res.json();
+    const body = await res.json() as { status: string };
 
     expect(res.status).toBe(200);
     expect(body.status).toBe('connected_placeholder');

@@ -572,7 +572,7 @@ export class MetricsService {
   async logWorkoutSet(workoutPlanExerciseId: string, repsCompleted: number): Promise<WorkoutSetLogResult | null> {
     try {
       const response = await firstValueFrom(
-        this.http.post<{ success: boolean; log: WorkoutSetLogResult; timer: { restSeconds: number } }>(
+        this.http.post<{ success: boolean; log: WorkoutSetLogResult }>(
           `${this.apiUrl}/workout-logs`,
           { workoutPlanExerciseId, repsCompleted },
           { withCredentials: true }

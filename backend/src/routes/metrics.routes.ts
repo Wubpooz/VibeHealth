@@ -939,6 +939,18 @@ const healthSyncAutoSchema = z.object({
   autoSync: z.boolean(),
 });
 
+type ExerciseDefaults = {
+  id: string;
+  defaultSets: number;
+  defaultRepsMin: number;
+  defaultRepsMax: number;
+  defaultRestSeconds: number;
+};
+
+function acceptedDifficulties(difficulty: WorkoutDifficulty): WorkoutDifficulty[] {
+  return difficulty === 'ADVANCED' ? ['INTERMEDIATE', 'ADVANCED'] : [difficulty];
+}
+
 function buildWorkoutSuggestionsFromProfile(profile: {
   fitnessLevel: string | null;
   goals: string[];
@@ -1177,7 +1189,7 @@ metricsRoutes.get('/workouts/suggestions', async (c) => {
       where: {
         isActive: true,
         category: { in: categories },
-        difficulty: { in: difficulty === 'ADVANCED' ? ['INTERMEDIATE', 'ADVANCED'] : [difficulty] },
+        difficulty: { in: acceptedDifficulties(difficulty) },
       },
       orderBy: [{ category: 'asc' }, { name: 'asc' }],
       take: 18,
@@ -1238,20 +1250,22 @@ metricsRoutes.post('/workout-plans', async (c) => {
       where: {
         isActive: true,
         category: { in: categories },
-        difficulty: { in: difficulty === 'ADVANCED' ? ['INTERMEDIATE', 'ADVANCED'] : [difficulty] },
+        difficulty: { in: acceptedDifficulties(difficulty) },
+      },
+      select: {
+        id: true,
+        defaultSets: true,
+        defaultRepsMin: true,
+        defaultRepsMax: true,
+        defaultRestSeconds: true,
       },
       orderBy: [{ category: 'asc' }, { name: 'asc' }],
       take: 6,
     });
 
-    const defaultExercises = exercises.map((exercise: {
-      id: string;
-      defaultSets: number;
-      defaultRepsMin: number;
-      defaultRepsMax: number;
-      defaultRestSeconds: number;
-    }, index: number) => ({
+    const defaultExercises = exercises.map((exercise: ExerciseDefaults, index: number) => ({
       exerciseCatalogId: exercise.id,
+      // 1-based ordering keeps UI display aligned with "exercise #1, #2, ..."
       orderIndex: index + 1,
       sets: exercise.defaultSets,
       repsMin: exercise.defaultRepsMin,
@@ -1292,17 +1306,20 @@ metricsRoutes.post('/workout-logs', async (c) => {
   }
 
   try {
-    const exerciseEntry = await prisma.workoutPlanExercise.findFirst({
-      where: {
-        id: parsed.data.workoutPlanExerciseId,
-        workoutPlan: { userId: user.id, isActive: true },
-      },
+    const exerciseEntry = await prisma.workoutPlanExercise.findUnique({
+      where: { id: parsed.data.workoutPlanExerciseId },
       include: {
         exercise: true,
+        workoutPlan: {
+          select: {
+            userId: true,
+            isActive: true,
+          },
+        },
       },
     });
 
-    if (!exerciseEntry) {
+    if (!exerciseEntry || exerciseEntry.workoutPlan.userId !== user.id || !exerciseEntry.workoutPlan.isActive) {
       return c.json({ error: 'Workout exercise not found' }, 404);
     }
 
@@ -1311,8 +1328,7 @@ metricsRoutes.post('/workout-logs', async (c) => {
       log: {
         workoutPlanExerciseId: exerciseEntry.id,
         repsCompleted: parsed.data.repsCompleted,
-        targetReps: `${exerciseEntry.repsMin}-${exerciseEntry.repsMax}`,
-        restSeconds: exerciseEntry.restSeconds,
+        targetReps: { min: exerciseEntry.repsMin, max: exerciseEntry.repsMax },
         exerciseName: exerciseEntry.exercise.name,
       },
       timer: {

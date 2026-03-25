@@ -7,6 +7,7 @@ import {
   ViewChildren,
   afterNextRender,
   computed,
+  DestroyRef,
   inject,
   signal,
 } from '@angular/core';
@@ -50,6 +51,7 @@ import { BackButtonComponent } from '../../shared/components/back-button/back-bu
           <label class="flex-1">
             <span class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{{ 'WORKOUTS.NEW_PLAN_NAME' | translate }}</span>
             <input
+              id="workout-plan-name"
               type="text"
               [ngModel]="newPlanName()"
               (ngModelChange)="newPlanName.set($event)"
@@ -84,6 +86,7 @@ import { BackButtonComponent } from '../../shared/components/back-button/back-bu
                     <input
                       type="number"
                       min="1"
+                      [attr.aria-label]="'WORKOUTS.REPS_INPUT_ARIA' | translate:{ exercise: exercise.exercise.name }"
                       class="w-20 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 px-3 py-1.5 text-sm text-gray-900 dark:text-white"
                       [ngModel]="repsByExercise()[exercise.id] || exercise.repsMin"
                       (ngModelChange)="setReps(exercise.id, $event)"
@@ -129,7 +132,8 @@ import { BackButtonComponent } from '../../shared/components/back-button/back-bu
               <input
                 type="checkbox"
                 [checked]="isAutoSync(provider)"
-                (change)="toggleAutoSync(provider, $any($event.target).checked)"
+                #autoSyncInput
+                (change)="toggleAutoSync(provider, autoSyncInput.checked)"
                 [disabled]="!isConnected(provider)"
                 [attr.aria-label]="'WORKOUTS.AUTO_SYNC' | translate"
               />
@@ -151,6 +155,7 @@ import { BackButtonComponent } from '../../shared/components/back-button/back-bu
 })
 export class WorkoutsPageComponent implements AfterViewInit {
   private readonly metricsService = inject(MetricsService);
+  private readonly destroyRef = inject(DestroyRef);
   readonly workoutSuggestions = this.metricsService.workoutSuggestions;
   readonly workoutPlans = this.metricsService.workoutPlans;
   readonly syncConnections = this.metricsService.syncConnections;
@@ -159,6 +164,7 @@ export class WorkoutsPageComponent implements AfterViewInit {
   readonly newPlanName = signal('');
   readonly repsByExercise = signal<Record<string, number>>({});
   readonly restTimers = signal<Record<string, number>>({});
+  private readonly timerHandles = new Map<string, ReturnType<typeof setInterval>>();
   @ViewChildren('exerciseCard') private readonly exerciseCards!: QueryList<ElementRef<HTMLElement>>;
 
   readonly activePlanExercises = computed(() => this.workoutPlans()[0]?.exercises ?? []);
@@ -169,6 +175,7 @@ export class WorkoutsPageComponent implements AfterViewInit {
       void this.metricsService.loadWorkoutPlans();
       void this.metricsService.loadSyncConnections();
     });
+    this.destroyRef.onDestroy(() => this.clearAllTimers());
   }
 
   ngAfterViewInit(): void {
@@ -199,7 +206,7 @@ export class WorkoutsPageComponent implements AfterViewInit {
 
   setReps(exerciseId: string, value: number): void {
     const parsed = Number(value);
-    if (!Number.isFinite(parsed) || parsed <= 0) return;
+    if (Number.isNaN(parsed) || !Number.isInteger(parsed) || parsed <= 0) return;
     this.repsByExercise.update((state) => ({ ...state, [exerciseId]: parsed }));
   }
 
@@ -226,15 +233,17 @@ export class WorkoutsPageComponent implements AfterViewInit {
 
   private startRestCountdown(exerciseId: string, seconds: number): void {
     if (seconds <= 0) return;
+    this.clearTimer(exerciseId);
     const timer = setInterval(() => {
       const current = this.restTimers()[exerciseId] ?? 0;
       if (current <= 1) {
-        clearInterval(timer);
+        this.clearTimer(exerciseId);
         this.restTimers.update((state) => ({ ...state, [exerciseId]: 0 }));
         return;
       }
       this.restTimers.update((state) => ({ ...state, [exerciseId]: current - 1 }));
     }, 1000);
+    this.timerHandles.set(exerciseId, timer);
   }
 
   private animateExerciseCards(): void {
@@ -245,5 +254,20 @@ export class WorkoutsPageComponent implements AfterViewInit {
         { duration: 0.35, delay: index * 0.05, ease: 'easeOut' },
       );
     });
+  }
+
+  private clearTimer(exerciseId: string): void {
+    const timer = this.timerHandles.get(exerciseId);
+    if (timer !== undefined) {
+      clearInterval(timer);
+      this.timerHandles.delete(exerciseId);
+    }
+  }
+
+  private clearAllTimers(): void {
+    for (const timer of this.timerHandles.values()) {
+      clearInterval(timer);
+    }
+    this.timerHandles.clear();
   }
 }

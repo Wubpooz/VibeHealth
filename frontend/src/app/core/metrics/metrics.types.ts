@@ -311,7 +311,10 @@ export interface WorkoutSuggestions {
 export interface WorkoutSetLogResult {
   workoutPlanExerciseId: string;
   repsCompleted: number;
-  targetReps: string;
+  targetReps: {
+    min: number;
+    max: number;
+  };
   restSeconds: number;
   exerciseName: string;
 }

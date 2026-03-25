@@ -718,6 +718,7 @@
     "CREATE_PLAN": "Créer le plan",
     "ACTIVE_PLAN": "Plan actif",
     "LOG_SET": "Enregistrer la série",
+    "REPS_INPUT_ARIA": "Saisie des répétitions pour {{exercise}}",
     "REST_TIMER": "Repos",
     "SYNC_TITLE": "Synchronisation des plateformes santé",
     "SYNC_SUBTITLE": "Connectez des fournisseurs et configurez les paramètres de synchronisation continue (mode placeholder).",

@@ -720,6 +720,7 @@
     "CREATE_PLAN": "Create plan",
     "ACTIVE_PLAN": "Active plan",
     "LOG_SET": "Log set",
+    "REPS_INPUT_ARIA": "Reps input for {{exercise}}",
     "REST_TIMER": "Rest",
     "SYNC_TITLE": "Health platform sync",
     "SYNC_SUBTITLE": "Connect providers and configure placeholder continuous sync settings.",
