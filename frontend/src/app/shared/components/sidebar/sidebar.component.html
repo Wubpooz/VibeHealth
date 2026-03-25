@@ -16,31 +16,76 @@
       >
         @switch (item.icon) {
           @case ('LayoutDashboard') {
-            <svg lucideLayoutDashboard class="nav-icon" [attr.aria-hidden]="true"></svg>
+            <svg lucideLayoutDashboard class="nav-icon"
+              [attr.fill]="isActive(item.route) ? 'currentColor' : 'none'"
+              stroke="currentColor"
+              stroke-width="2"
+              [attr.aria-hidden]="true"
+            ></svg>
           }
           @case ('Activity') {
-            <svg lucideActivity class="nav-icon" [attr.aria-hidden]="true"></svg>
+            <svg lucideActivity class="nav-icon"
+              [attr.fill]="isActive(item.route) ? 'currentColor' : 'none'"
+              stroke="currentColor"
+              stroke-width="2"
+              [attr.aria-hidden]="true"
+            ></svg>
           }
           @case ('Dumbbell') {
-            <svg lucideDumbbell class="nav-icon" [attr.aria-hidden]="true"></svg>
+            <svg lucideDumbbell class="nav-icon"
+              [attr.fill]="isActive(item.route) ? 'currentColor' : 'none'"
+              stroke="currentColor"
+              stroke-width="2"
+              [attr.aria-hidden]="true"
+            ></svg>
           }
           @case ('Utensils') {
-            <svg lucideUtensils class="nav-icon" [attr.aria-hidden]="true"></svg>
+            <svg lucideUtensils class="nav-icon"
+              [attr.fill]="isActive(item.route) ? 'currentColor' : 'none'"
+              stroke="currentColor"
+              stroke-width="2"
+              [attr.aria-hidden]="true"
+            ></svg>
           }
           @case ('Target') {
-            <svg lucideTarget class="nav-icon" [attr.aria-hidden]="true"></svg>
+            <svg lucideTarget class="nav-icon"
+              [attr.fill]="isActive(item.route) ? 'currentColor' : 'none'"
+              stroke="currentColor"
+              stroke-width="2"
+              [attr.aria-hidden]="true"
+            ></svg>
           }
           @case ('BadgeCheck') {
-            <svg lucideBadgeCheck class="nav-icon" [attr.aria-hidden]="true"></svg>
+            <svg lucideBadgeCheck class="nav-icon"
+              [attr.fill]="isActive(item.route) ? 'currentColor' : 'none'"
+              stroke="currentColor"
+              stroke-width="2"
+              [attr.aria-hidden]="true"
+            ></svg>
           }
           @case ('Cross') {
-            <svg lucideCross class="nav-icon" [attr.aria-hidden]="true"></svg>
+            <svg lucideCross class="nav-icon"
+              [attr.fill]="isActive(item.route) ? 'currentColor' : 'none'"
+              stroke="currentColor"
+              stroke-width="2"
+              [attr.aria-hidden]="true"
+            ></svg>
           }
           @case ('BookOpen') {
-            <svg lucideBookOpen class="nav-icon" [attr.aria-hidden]="true"></svg>
+            <svg lucideBookOpen class="nav-icon"
+              [attr.fill]="isActive(item.route) ? 'currentColor' : 'none'"
+              stroke="currentColor"
+              stroke-width="2"
+              [attr.aria-hidden]="true"
+            ></svg>
           }
           @case ('Trophy') {
-            <svg lucideTrophy class="nav-icon" [attr.aria-hidden]="true"></svg>
+            <svg lucideTrophy class="nav-icon"
+              [attr.fill]="isActive(item.route) ? 'currentColor' : 'none'"
+              stroke="currentColor"
+              stroke-width="2"
+              [attr.aria-hidden]="true"
+            ></svg>
           }
         }
         <span class="nav-label">{{ item.labelKey | translate }}</span>

@@ -86,6 +86,8 @@ export class SidebarComponent {
     { route: '/rewards', labelKey: 'nav.rewards', icon: 'Trophy' }
   ];
 
+
+
   isActive(route: string): boolean {
     return this.router.url === route;
   }
