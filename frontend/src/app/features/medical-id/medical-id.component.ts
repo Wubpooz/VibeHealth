@@ -1,7 +1,8 @@
-import { Component, inject, OnInit, signal, computed } from '@angular/core';
+import { Component, inject, OnInit, signal, computed, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
+import { toDataURL } from 'qrcode';
 import { MedicalIdService } from '../../core/medical-id/medical-id.service';
 import { ReferenceDataService } from '../../core/reference-data/reference-data.service';
 import { BackButtonComponent } from '../../shared/components/back-button/back-button.component';
@@ -179,24 +180,17 @@ type ViewMode = 'card' | 'edit';
             <!-- QR Code Section -->
             <div class="qr-section">
               <div class="qr-wrapper">
-                @if (showQR()) {
-                  <div class="qr-preview">
-                    <img [src]="qrCodeUrl()" alt="Medical ID QR Code" />
-                    <button class="qr-close" type="button" (click)="showQR.set(false)" aria-label="Close QR preview">✕</button>
-                  </div>
-                } @else {
-                  <button
-                    type="button"
-                    class="qr-placeholder"
-                    (click)="showQR.set(true)"
-                    aria-label="View QR Code"
-                  >
-                    <svg class="qr-icon" viewBox="0 0 24 24" fill="currentColor">
-                      <path d="M3 3h6v6H3V3zm2 2v2h2V5H5zm8-2h6v6h-6V3zm2 2v2h2V5h-2zM3 13h6v6H3v-6zm2 2v2h2v-2H5zm13-2h3v2h-3v-2zm-5 0h2v3h-2v-3zm2 3h3v3h-2v-1h-1v-2zm3 0h2v2h-2v-2zm-2-3h2v2h-2v-2zm2 5v1h-3v-1h3zm-5 1v-1h2v1h-2z"/>
-                    </svg>
-                    <span>Preview QR</span>
-                  </button>
-                }
+                <button
+                  type="button"
+                  class="qr-placeholder"
+                  (click)="showQR.set(true)"
+                  aria-label="View QR Code"
+                >
+                  <svg class="qr-icon" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M3 3h6v6H3V3zm2 2v2h2V5H5zm8-2h6v6h-6V3zm2 2v2h2V5h-2zM3 13h6v6H3v-6zm2 2v2h2v-2H5zm13-2h3v2h-3v-2zm-5 0h2v3h-2v-3zm2 3h3v3h-2v-1h-1v-2zm3 0h2v2h-2v-2zm-2-3h2v2h-2v-2zm2 5v1h-3v-1h3zm-5 1v-1h2v1h-2z"/>
+                  </svg>
+                  <span>Preview QR</span>
+                </button>
               </div>
               <p class="qr-hint">Scan to access emergency info</p>
             </div>
@@ -385,17 +379,24 @@ type ViewMode = 'card' | 'edit';
               (click)="showQR.set(false)"
               aria-label="Close QR Modal"
             >
-              ×
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+              </svg>
             </button>
             <h3 id="qr-modal-title">Emergency QR Code</h3>
             <div class="qr-large">
               <!-- Computed QR from user medical ID data -->
-              <img
-                class="qr-svg"
-                [src]="qrCodeUrl()"
-                alt="Generated Medical ID QR Code"
-                loading="lazy"
-              />
+              @if (qrCodeUrl()) {
+                <img
+                  class="qr-svg"
+                  [src]="qrCodeUrl()"
+                  alt="Generated Medical ID QR Code"
+                  loading="lazy"
+                />
+              } @else {
+                <div class="qr-modal-loading">Generating QR code…</div>
+              }
             </div>
             <p class="qr-instructions">
               First responders can scan this code to view your critical medical information
@@ -1032,17 +1033,24 @@ type ViewMode = 'card' | 'edit';
     }
 
     .qr-large {
-      width: 200px;
-      height: 200px;
+      width: 100%;
+      max-width: 320px;
+      aspect-ratio: 1 / 1;
       margin: 0 auto;
       background: white;
       border: 8px solid #1F2937;
       border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-sizing: border-box;
     }
 
     .qr-svg {
       width: 100%;
       height: 100%;
+      object-fit: cover;
+      border-radius: 4px;
     }
 
     .qr-instructions {
@@ -1434,12 +1442,38 @@ export class MedicalIdComponent implements OnInit {
   readonly commonMedications = this.referenceDataService.medications;
   readonly commonConditions = this.referenceDataService.conditions;
 
-  readonly qrCodeUrl = computed(() => {
-    const payload = this.medicalIdService.generateQRData();
-    if (!payload) return '';
-    const encoded = encodeURIComponent(payload);
-    return `https://api.qrserver.com/v1/create-qr-code/?size=260x260&margin=8&data=${encoded}`;
-  });
+  readonly qrCodeUrl = signal('');
+
+  private readonly _qrPayload = computed(() => this.medicalIdService.generateQRData());
+
+  constructor() {
+    effect(() => {
+      const payload = this._qrPayload();
+      this.updateQrCode(payload);
+    });
+  }
+
+  private async updateQrCode(payload: string): Promise<void> {
+    if (!payload) {
+      this.qrCodeUrl.set('');
+      return;
+    }
+
+    try {
+      const dataUrl = await toDataURL(payload, {
+        width: 280,
+        margin: 1, // Remove default margin for better styling control
+        color: {
+          dark: '#0F172A',
+          light: '#FFFFFF'
+        }
+      });
+      this.qrCodeUrl.set(dataUrl);
+    } catch (error) {
+      console.error('QR code generation failed', error);
+      this.qrCodeUrl.set('');
+    }
+  }
 
   // Edit form data
   editData = {
