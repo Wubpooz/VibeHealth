@@ -111,6 +111,27 @@ import { BackButtonComponent } from '../../shared/components/back-button/back-bu
         </section>
       }
 
+      <section class="bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-3xl p-5 sm:p-6 space-y-2">
+        <h2 class="text-lg font-bold text-gray-900 dark:text-white">{{ 'WORKOUTS.SUMMARY_TITLE' | translate }}</h2>
+        <p class="text-sm text-gray-500 dark:text-gray-400">{{ 'WORKOUTS.SUMMARY_SUBTITLE' | translate }}</p>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+          <div class="rounded-2xl border border-primary-100 dark:border-primary-900/40 bg-primary-50/70 dark:bg-primary-900/20 p-3">
+            <p class="text-xs uppercase tracking-wide text-primary-700 dark:text-primary-300">{{ 'WORKOUTS.CALORIES_TODAY' | translate }}</p>
+            <p class="mt-1 text-xl font-bold text-primary-900 dark:text-primary-100">{{ workoutSummary().calories }} kcal</p>
+          </div>
+          <div class="rounded-2xl border border-orange-100 dark:border-orange-900/40 bg-orange-50/70 dark:bg-orange-900/20 p-3">
+            <p class="text-xs uppercase tracking-wide text-orange-700 dark:text-orange-300">{{ 'WORKOUTS.HEART_RATE_LAST' | translate }}</p>
+            <p class="mt-1 text-xl font-bold text-orange-900 dark:text-orange-100">
+              @if (workoutSummary().heartRate !== null) {
+                {{ workoutSummary().heartRate }} bpm
+              } @else {
+                {{ 'WORKOUTS.NO_HEART_RATE' | translate }}
+              }
+            </p>
+          </div>
+        </div>
+      </section>
+
       <section class="bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-3xl p-5 sm:p-6 space-y-4">
         <h2 class="text-lg font-bold text-gray-900 dark:text-white">{{ 'WORKOUTS.SYNC_TITLE' | translate }}</h2>
         <p class="text-sm text-gray-500 dark:text-gray-400">{{ 'WORKOUTS.SYNC_SUBTITLE' | translate }}</p>
@@ -159,6 +180,8 @@ export class WorkoutsPageComponent implements AfterViewInit {
   readonly workoutSuggestions = this.metricsService.workoutSuggestions;
   readonly workoutPlans = this.metricsService.workoutPlans;
   readonly syncConnections = this.metricsService.syncConnections;
+  readonly activityToday = this.metricsService.activityToday;
+  readonly vitalsToday = this.metricsService.vitalsToday;
 
   readonly providers: HealthSyncProvider[] = ['GOOGLE_FIT', 'SAMSUNG_HEALTH'];
   readonly newPlanName = signal('');
@@ -168,12 +191,22 @@ export class WorkoutsPageComponent implements AfterViewInit {
   @ViewChildren('exerciseCard') private readonly exerciseCards!: QueryList<ElementRef<HTMLElement>>;
 
   readonly activePlanExercises = computed(() => this.workoutPlans()[0]?.exercises ?? []);
+  readonly workoutSummary = computed(() => {
+    const calories = this.activityToday()?.totalCalories ?? 0;
+    const heartRate = this.vitalsToday()?.summary.HEART_RATE?.value;
+    return {
+      calories,
+      heartRate: Number.isFinite(heartRate) ? heartRate : null,
+    };
+  });
 
   constructor() {
     afterNextRender(() => {
       void this.metricsService.loadWorkoutSuggestions();
       void this.metricsService.loadWorkoutPlans();
       void this.metricsService.loadSyncConnections();
+      void this.metricsService.loadActivityToday();
+      void this.metricsService.loadVitalsToday();
     });
     this.destroyRef.onDestroy(() => this.clearAllTimers());
   }

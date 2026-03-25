@@ -54,6 +54,7 @@ gantt
 > Scaffold, auth, onboarding, bunny mascot, design system, offline essentials, and i18n.
 
 ### 0.1 Project Scaffold
+- ✅ Monorepo scaffold is in place: Bun/Hono backend + Angular 21 PWA frontend with Docker and CI wiring.
 - Bun + Hono API with structured routes/services/schemas
 - Prisma schema, PostgreSQL via Docker Compose
 - Angular 21 **PWA** with Tailwind, routing, shared modules
@@ -62,6 +63,7 @@ gantt
 - **Service Worker** setup for offline caching from day one
 
 ### 0.2 Authentication & Accounts
+- ✅ BetterAuth email/password auth with session-aware route guarding is implemented.
 - BetterAuth integration (email/password, OAuth, magic links)
 - Session management & JWT refresh
 - Role model: user, caregiver (read-only shared access), admin
@@ -93,12 +95,14 @@ gantt
 - ✅ Micro-animations (animate.js)
 
 ### 0.7 Internationalization (i18n)
+- ✅ EN + FR are actively used across shipped features with synced translation files.
 - Angular i18n / ngx-translate setup
 - FR + EN locales shipped from day one
 - Translation file structure ready for future languages
 - Date, number, and unit formatting per locale
 
 ### 0.8 First Aid Guide & Survival Tips *(offline-first)*
+- ✅ First Aid list/detail flows and helpline content are implemented and routed.
 - Offline-first quick-reference cards (cached at install)
 - Categories: burns, choking, CPR, fractures, allergic reactions, etc.
 - Step-by-step illustrated guides
@@ -111,7 +115,14 @@ gantt
 
 > Vitals, activity, nutrition, hydration, and goals.
 
+### ✅ Completed in codebase (current shipped state)
+- ✅ Core metrics backend + frontend are implemented for vitals, hydration, activity, nutrition, and goals.
+- ✅ Workout foundations are implemented on `/workouts` (suggestions, plan generation, set logging, rep counter, rest timers).
+- ✅ Health sync contracts exist for Google Fit / Samsung Health connection state and manual/auto controls.
+- ⚠️ Partial: full provider OAuth ingestion + conflict-resolution pipeline is still pending.
+
 ### 1.1 Vitals Dashboard
+- ✅ Route + dashboard shipped at `/vitals` with logging and 7-day trend visualizations.
 - **Steps** — daily/weekly/monthly graph, daily goal, streaks
 - **Heart rate** — resting, active, trends, abnormal alerts
 - **Sleep** — duration, quality score, sleep stages (if data available)
@@ -121,12 +132,14 @@ gantt
 > Each vital: current value card → trend chart → averages (7d/30d/90d) → threshold warnings
 
 ### 1.2 Activity Tracking
+- ✅ Route + logging shipped at `/activity` with today and weekly summaries.
 - Automatic activity detection placeholders (walk, run, cycle)
 - Manual activity logging (type, duration, intensity, notes)
 - Daily active minutes & calorie burn estimation
 - Database-backed searchable activity catalog with MET values, expanded sports coverage, and timer-friendly duration capture
 
 ### 1.3 Nutrition & Calories Tracking
+- ✅ Route + food diary shipped at `/nutrition` with macro tracking and catalog autofill.
 - Food diary with meal categories (breakfast, lunch, dinner, snacks)
 - Calorie, macro (protein/carbs/fat), and micro-nutrient tracking
 - Barcode scanner placeholder for packaged foods
@@ -134,12 +147,14 @@ gantt
 - Database-backed meal catalog templates for common meals/snacks with autofill for calories and macros
 
 ### 1.4 Hydration Tracking
+- ✅ Hydration quick-log + daily progress ring are implemented.
 - Quick-log buttons (glass, bottle, custom amount)
 - Daily goal based on profile (weight, activity level, climate)
 - Reminders at configurable intervals
 - Visual progress (water fill animation)
 
 ### 1.5 Health & Workout Goals
+- ✅ SMART goal creation and goal progress logging are implemented on `/goals`.
 - SMART goal creation (specific, measurable, time-bound)
 - Categories: steps, weight, hydration, sleep, nutrition, custom
 - Progress tracking with milestone celebrations (bunny reacts!)
@@ -218,6 +233,7 @@ gantt
 - Private by default, shareable per entry
 
 ### 3.4 Workouts Tab
+- ✅ Implemented today: post-workout snapshot in `/workouts` linked to existing metrics (today calories burned + latest logged heart rate).
 - **Exercise suggestions** based on profile (fitness level, goals, equipment)
 - Categories: strength, cardio, flexibility, HIIT, yoga
 - Pre-built workout plans + custom creation
