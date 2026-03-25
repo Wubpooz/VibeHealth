@@ -3,7 +3,7 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { catchError, of, firstValueFrom, Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import type { User, SignInCredentials, SignUpCredentials, AuthResponse, AuthError } from './auth.types';
+import type { User, SignInCredentials, SignUpCredentials, AuthResponse, AuthError, OAuthProvider } from './auth.types';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -15,12 +15,14 @@ export class AuthService {
   private readonly userSignal = signal<User | null>(null);
   private readonly loadingSignal = signal(true);
   private readonly errorSignal = signal<string | null>(null);
+  private readonly enabledProvidersSignal = signal<OAuthProvider[]>([]);
 
   // Public computed values
   readonly user = this.userSignal.asReadonly();
   readonly isAuthenticated = computed(() => !!this.userSignal());
   readonly isLoading = this.loadingSignal.asReadonly();
   readonly error = this.errorSignal.asReadonly();
+  readonly enabledProviders = this.enabledProvidersSignal.asReadonly();
   readonly isEmailVerified = computed(() => this.userSignal()?.emailVerified ?? false);
 
   constructor() {
@@ -28,7 +30,10 @@ export class AuthService {
   }
 
   async initSession(): Promise<void> {
-    await this.loadSession();
+    await Promise.all([
+      this.loadSession(),
+      this.loadOAuthProviders(),
+    ]);
   }
 
   private async loadSession(): Promise<void> {
@@ -137,9 +142,30 @@ export class AuthService {
     return response !== null;
   }
 
-  getOAuthUrl(provider: 'google' | 'github' | 'apple'): string {
+  getOAuthUrl(provider: OAuthProvider): string {
     const callbackUrl = encodeURIComponent(globalThis.location.origin + '/dashboard');
     return `${this.apiUrl}/sign-in/social/${provider}?callbackURL=${callbackUrl}`;
+  }
+
+  private async loadOAuthProviders(): Promise<void> {
+    try {
+      const response = await firstValueFrom(
+        this.http.get<{ providers: OAuthProvider[] }>(`${this.apiUrl}/providers`, {
+          withCredentials: true,
+        }).pipe(
+          catchError((error) => {
+            if (!environment.production) {
+              console.error('OAuth providers load failed:', error);
+            }
+            return of({ providers: [] });
+          })
+        )
+      );
+
+      this.enabledProvidersSignal.set(response.providers);
+    } catch {
+      this.enabledProvidersSignal.set([]);
+    }
   }
 
   clearError(): void {

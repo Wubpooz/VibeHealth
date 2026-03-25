@@ -120,11 +120,13 @@ import { BackButtonComponent } from '../../../shared/components/back-button/back
           </div>
 
           <!-- Social Login -->
-          <app-social-buttons
-            [providers]="['google', 'github', 'apple']"
-            [loading]="auth.isLoading()"
-            (onProviderClick)="onOAuthClick($event)"
-          />
+          @if (socialProviders().length > 0) {
+            <app-social-buttons
+              [providers]="socialProviders()"
+              [loading]="auth.isLoading()"
+              (onProviderClick)="onOAuthClick($event)"
+            />
+          }
 
           <!-- Magic Link -->
           <div class="mt-8 pt-6 border-t border-gray-100 dark:border-gray-800">
@@ -191,6 +193,7 @@ export class LoginComponent {
   magicLinkEmail = '';
   showMagicLink = signal(false);
   magicLinkSent = signal(false);
+  readonly socialProviders = this.auth.enabledProviders;
 
   async onSubmit(): Promise<void> {
     if (!this.email || !this.password) return;

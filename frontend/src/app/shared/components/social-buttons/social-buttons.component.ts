@@ -2,7 +2,7 @@ import { Component, input, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 
-export type OAuthProvider = 'google' | 'github' | 'apple';
+export type { OAuthProvider } from '../../../core/auth/auth.types';
 
 @Component({
   selector: 'app-social-buttons',
@@ -45,8 +45,8 @@ export type OAuthProvider = 'google' | 'github' | 'apple';
   `,
 })
 export class SocialButtonsComponent {
-  providers = input<OAuthProvider[]>(['google', 'github']);
+  providers = input<import('../../../core/auth/auth.types').OAuthProvider[]>(['google', 'github']);
   loading = input(false);
   // eslint-disable-next-line @angular-eslint/no-output-on-prefix
-  onProviderClick = output<OAuthProvider>();
+  onProviderClick = output<import('../../../core/auth/auth.types').OAuthProvider>();
 }
