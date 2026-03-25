@@ -609,8 +609,7 @@
       "GOAL_MET": "Objectif atteint",
       "BELOW_GOAL": "Sous l'objectif"
     },
-    "NUTRITION": {
-      "SCAN_BARCODE": "Scanner le code-barres",
+    "NUTRITION": {      "TITLE": "Nutrition",      "SCAN_BARCODE": "Scanner le code-barres",
       "ALIGN_BARCODE": "Alignez le code-barres dans le cadre",
       "SCANNER_COMING_SOON": "Lecteur de code-barres bientôt disponible !",
       "SCANNER_DESCRIPTION": "Nous travaillons sur l'intégration du scan de code-barres pour rendre l'enregistrement nutritionnel encore plus rapide. Pour l'instant, veuillez saisir les détails manuellement.",

@@ -610,6 +610,7 @@
       "BELOW_GOAL": "Below Goal"
     },
     "NUTRITION": {
+      "TITLE": "Nutrition",
       "SCAN_BARCODE": "Scan Barcode",
       "ALIGN_BARCODE": "Align barcode within the frame",
       "SCANNER_COMING_SOON": "Barcode Scanner Coming Soon!",
