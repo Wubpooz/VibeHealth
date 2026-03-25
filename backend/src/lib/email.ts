@@ -6,6 +6,24 @@ interface UsesendMailPayload {
   text: string;
 }
 
+type AuthEmailDelivery =
+  | {
+      kind: 'otp';
+      recipient: string;
+      otp: string;
+      otpType: string;
+    }
+  | {
+      kind: 'magic-link';
+      recipient: string;
+      url: string;
+    }
+  | {
+      kind: 'verify-link' | 'reset-link';
+      recipient: string;
+      url: string;
+    };
+
 const isDev = process.env.NODE_ENV === 'development';
 
 function requiredEnv(name: 'USESEND_API_KEY' | 'USESEND_FROM_EMAIL'): string {
@@ -51,6 +69,41 @@ export async function sendVerificationEmail(to: string, verifyUrl: string): Prom
   await sendTransactionalEmail({ to, from, subject, html, text });
 }
 
+export async function sendOtpEmail(to: string, otp: string, type: string): Promise<void> {
+  const from = requiredEnv('USESEND_FROM_EMAIL');
+
+  const contentByType: Record<string, { subject: string; intro: string }> = {
+    'sign-in': {
+      subject: 'Your VibeHealth sign-in code',
+      intro: 'Use this one-time code to sign in to your VibeHealth account.',
+    },
+    'email-verification': {
+      subject: 'Verify your VibeHealth email',
+      intro: 'Use this one-time code to verify your VibeHealth email address.',
+    },
+    'forget-password': {
+      subject: 'Reset your VibeHealth password',
+      intro: 'Use this one-time code to reset your VibeHealth password.',
+    },
+  };
+
+  const content = contentByType[type] ?? {
+    subject: 'Your VibeHealth verification code',
+    intro: 'Use this one-time code to continue your VibeHealth authentication flow.',
+  };
+
+  const html = `
+    <p>Hello,</p>
+    <p>${content.intro}</p>
+    <p style="font-size: 28px; font-weight: 700; letter-spacing: 4px; margin: 16px 0;">${otp}</p>
+    <p>This code will expire soon.</p>
+    <p>If you did not request this, you can ignore this email.</p>
+  `;
+  const text = `Hello,\n\n${content.intro}\n\nCode: ${otp}\n\nThis code will expire soon.\nIf you did not request this, you can ignore this email.`;
+
+  await sendTransactionalEmail({ to, from, subject: content.subject, html, text });
+}
+
 export async function sendResetPasswordEmail(to: string, resetUrl: string): Promise<void> {
   const from = requiredEnv('USESEND_FROM_EMAIL');
   const subject = 'Reset your VibeHealth password';
@@ -65,23 +118,69 @@ export async function sendResetPasswordEmail(to: string, resetUrl: string): Prom
   await sendTransactionalEmail({ to, from, subject, html, text });
 }
 
-export async function sendWithDevFallback(
-  label: 'verify' | 'reset',
-  recipient: string,
-  url: string,
-): Promise<void> {
+export async function sendMagicLinkEmail(to: string, magicUrl: string): Promise<void> {
+  const from = requiredEnv('USESEND_FROM_EMAIL');
+  const subject = 'Your VibeHealth magic sign-in link';
+  const html = `
+    <p>Hello,</p>
+    <p>Use this secure magic link to sign in to your VibeHealth account:</p>
+    <p><a href="${magicUrl}">Sign in to VibeHealth</a></p>
+    <p>This link expires soon and can only be used a limited number of times.</p>
+    <p>If you did not request this, you can ignore this email.</p>
+  `;
+  const text = `Hello,\n\nUse this secure magic link to sign in to your VibeHealth account:\n${magicUrl}\n\nThis link expires soon and can only be used a limited number of times.\nIf you did not request this, you can ignore this email.`;
+
+  await sendTransactionalEmail({ to, from, subject, html, text });
+}
+
+function linkLabel(kind: 'verify-link' | 'reset-link' | 'magic-link'): string {
+  if (kind === 'verify-link') {
+    return 'Verify email link';
+  }
+  if (kind === 'reset-link') {
+    return 'Password reset link';
+  }
+  return 'Magic link';
+}
+
+async function deliverAuthEmail(delivery: AuthEmailDelivery): Promise<void> {
+  if (delivery.kind === 'otp') {
+    await sendOtpEmail(delivery.recipient, delivery.otp, delivery.otpType);
+    return;
+  }
+
+  if (delivery.kind === 'magic-link') {
+    await sendMagicLinkEmail(delivery.recipient, delivery.url);
+    return;
+  }
+
+  if (delivery.kind === 'verify-link') {
+    await sendVerificationEmail(delivery.recipient, delivery.url);
+    return;
+  }
+
+  await sendResetPasswordEmail(delivery.recipient, delivery.url);
+}
+
+function logDevFallback(delivery: AuthEmailDelivery): void {
+  if (delivery.kind === 'otp') {
+    console.log(
+      `\n📧 [DEV] OTP (${delivery.otpType}) for ${delivery.recipient}:\n${delivery.otp}\n`,
+    );
+    return;
+  }
+
+  console.log(`\n📧 [DEV] ${linkLabel(delivery.kind)} for ${delivery.recipient}:\n${delivery.url}\n`);
+}
+
+export async function sendWithDevFallback(delivery: AuthEmailDelivery): Promise<void> {
   try {
-    if (label === 'verify') {
-      await sendVerificationEmail(recipient, url);
-      return;
-    }
-    await sendResetPasswordEmail(recipient, url);
+    await deliverAuthEmail(delivery);
   } catch (error) {
     if (!isDev) {
       throw error;
     }
-    const prefix = label === 'verify' ? 'Verify email' : 'Password reset';
-    console.log(`\n📧 [DEV] ${prefix} for ${recipient}:\n${url}\n`);
+    logDevFallback(delivery);
     console.warn('⚠️ useSend delivery unavailable in development. Falling back to console output.');
   }
 }

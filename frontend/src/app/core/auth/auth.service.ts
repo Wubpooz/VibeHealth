@@ -128,16 +128,116 @@ export class AuthService {
 
   async sendMagicLink(email: string): Promise<boolean> {
     const response = await this.executeAuthRequest(
-      this.http.post(`${this.apiUrl}/magic-link/send`, { email }, { withCredentials: true }),
+      this.http.post(
+        `${this.apiUrl}/sign-in/magic-link`,
+        {
+          email,
+          callbackURL: `${globalThis.location.origin}/dashboard`,
+          errorCallbackURL: `${globalThis.location.origin}/login`,
+        },
+        { withCredentials: true }
+      ),
       'Failed to send magic link'
     );
     return response !== null;
   }
 
-  async resendVerificationEmail(): Promise<boolean> {
+  async sendEmailVerificationOtp(email: string): Promise<boolean> {
     const response = await this.executeAuthRequest(
-      this.http.post(`${this.apiUrl}/send-verification-email`, {}, { withCredentials: true }),
-      'Failed to resend verification email'
+      this.http.post(
+        `${this.apiUrl}/email-otp/send-verification-otp`,
+        { email, type: 'email-verification' },
+        { withCredentials: true }
+      ),
+      'Failed to send verification code'
+    );
+    return response !== null;
+  }
+
+  async resendVerificationEmail(): Promise<boolean> {
+    const email = this.userSignal()?.email;
+    if (!email) {
+      this.errorSignal.set('No authenticated email address found. Please sign in again.');
+      return false;
+    }
+
+    return this.sendEmailVerificationOtp(email);
+  }
+
+  async verifyEmailWithOtp(otp: string, email?: string): Promise<boolean> {
+    const targetEmail = email ?? this.userSignal()?.email;
+    if (!targetEmail) {
+      this.errorSignal.set('No email address available for verification.');
+      return false;
+    }
+
+    const response = await this.executeAuthRequest(
+      this.http.post(
+        `${this.apiUrl}/email-otp/verify-email`,
+        { email: targetEmail, otp },
+        { withCredentials: true }
+      ),
+      'Failed to verify email code'
+    );
+
+    if (response !== null) {
+      await this.loadSession();
+      return true;
+    }
+
+    return false;
+  }
+
+  async sendSignInOtp(email: string): Promise<boolean> {
+    const response = await this.executeAuthRequest(
+      this.http.post(
+        `${this.apiUrl}/email-otp/send-verification-otp`,
+        { email, type: 'sign-in' },
+        { withCredentials: true }
+      ),
+      'Failed to send sign-in code'
+    );
+    return response !== null;
+  }
+
+  async signInWithOtp(email: string, otp: string, name?: string): Promise<boolean> {
+    const response = await this.executeAuthRequest<AuthResponse>(
+      this.http.post<AuthResponse>(
+        `${this.apiUrl}/sign-in/email-otp`,
+        { email, otp, name },
+        { withCredentials: true }
+      ),
+      'Sign in with code failed'
+    );
+
+    if (response?.user) {
+      this.userSignal.set(response.user);
+      return true;
+    }
+
+    return false;
+  }
+
+  async requestPasswordResetOtp(email: string): Promise<boolean> {
+    const response = await this.executeAuthRequest(
+      this.http.post(
+        `${this.apiUrl}/email-otp/request-password-reset`,
+        { email },
+        { withCredentials: true }
+      ),
+      'Failed to send password reset code'
+    );
+    return response !== null;
+  }
+
+  async resetPasswordWithOtp(email: string, otp: string, password: string): Promise<boolean> {
+    const response = await this.executeAuthRequest(
+      this.http.post(
+        `${this.apiUrl}/email-otp/reset-password`,
+        { email, otp, password },
+        { withCredentials: true }
+      ),
+      'Failed to reset password'
     );
     return response !== null;
   }

@@ -1,8 +1,7 @@
 import { Component, ViewChild, inject, computed, signal, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MatSidenav } from '@angular/material/sidenav';
+import { MatSidenav, MatSidenavModule } from '@angular/material/sidenav';
 import { RouterOutlet, ChildrenOutletContexts, Router, NavigationEnd } from '@angular/router';
-import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
@@ -68,7 +67,8 @@ export class AppComponent implements OnInit {
       currentUrl === '/' ||
       currentUrl.startsWith('/login') ||
       currentUrl.startsWith('/register') ||
-      currentUrl.startsWith('/verify-email');
+      currentUrl.startsWith('/verify-email') ||
+      currentUrl.startsWith('/forgot-password');
     return isAuth && !isAuthPage && !this.isNotFoundPage();
   });
 

@@ -1,5 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { AuthService } from '../../../core/auth/auth.service';
@@ -10,7 +11,7 @@ import { BackButtonComponent } from '../../../shared/components/back-button/back
 @Component({
   selector: 'app-verify-email',
   standalone: true,
-  imports: [CommonModule, RouterModule, TranslateModule, SpinnerComponent, BackButtonComponent],
+  imports: [CommonModule, FormsModule, RouterModule, TranslateModule, SpinnerComponent, BackButtonComponent],
   template: `
     <div class="relative min-h-screen flex items-center justify-center overflow-hidden bg-gray-50 dark:bg-gray-950 px-4 py-12 transition-colors duration-500">
       
@@ -52,6 +53,34 @@ import { BackButtonComponent } from '../../../shared/components/back-button/back
           }
 
           <div class="space-y-6">
+            <div class="space-y-3">
+              <label for="verificationOtp" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 text-left">
+                Verification code
+              </label>
+              <input
+                id="verificationOtp"
+                type="text"
+                [(ngModel)]="otpCode"
+                inputmode="numeric"
+                autocomplete="one-time-code"
+                class="input-field text-center tracking-[0.45em] uppercase"
+                maxlength="8"
+                placeholder="123456"
+              />
+              <button
+                (click)="verifyOtp()"
+                [disabled]="auth.isLoading() || !otpCode.trim()"
+                class="w-full btn-primary flex items-center justify-center gap-2 group"
+              >
+                @if (auth.isLoading()) {
+                  <app-spinner size="sm" containerClass="text-white" />
+                  <span>{{ 'common.loading' | translate }}</span>
+                } @else {
+                  <span>Verify code</span>
+                }
+              </button>
+            </div>
+
             <button
               (click)="resendEmail()"
               [disabled]="auth.isLoading()"
@@ -102,6 +131,19 @@ export class VerifyEmailComponent {
   readonly auth = inject(AuthService);
   private readonly toast = inject(ToastService);
   resent = false;
+  otpCode = '';
+
+  async verifyOtp(): Promise<void> {
+    const code = this.otpCode.trim();
+    if (!code) return;
+
+    const success = await this.auth.verifyEmailWithOtp(code);
+    if (success) {
+      this.toast.success('Email verified successfully.', 'Verification complete');
+    } else if (this.auth.error()) {
+      this.toast.error(this.auth.error()!, 'Unable to verify code');
+    }
+  }
 
   async resendEmail(): Promise<void> {
     const success = await this.auth.resendVerificationEmail();

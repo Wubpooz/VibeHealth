@@ -33,6 +33,14 @@ export const routes: Routes = [
       ),
   },
   {
+    path: "forgot-password",
+    loadComponent: () =>
+      import("./features/auth/forgot-password/forgot-password.component").then(
+        (m) => m.ForgotPasswordComponent,
+      ),
+    canActivate: [guestGuard],
+  },
+  {
     path: "onboarding",
     loadComponent: () =>
       import("./features/onboarding/onboarding.component").then(
