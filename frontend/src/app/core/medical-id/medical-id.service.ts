@@ -1,12 +1,14 @@
 import { Injectable, signal, computed, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
+import { environment } from '../../../environments/environment';
 import { MedicalIdData, EmergencyContact, BloodType } from '../../features/medical-id/medical-id.types';
 import { ProfileService } from '../profile/profile.service';
 import { AuthService } from '../auth/auth.service';
 
 @Injectable({ providedIn: 'root' })
 export class MedicalIdService {
+  private readonly baseUrl = `${environment.apiUrl || ''}/api/v1/medical-id`;
   private readonly http = inject(HttpClient);
   private readonly profileService = inject(ProfileService);
   private readonly authService = inject(AuthService);
@@ -43,7 +45,7 @@ export class MedicalIdService {
 
     try {
       const response = await firstValueFrom(
-        this.http.get<{ medicalId: MedicalIdData | null }>('/api/v1/medical-id', {
+        this.http.get<{ medicalId: MedicalIdData | null }>(this.baseUrl, {
           withCredentials: true
         })
       );
@@ -77,7 +79,7 @@ export class MedicalIdService {
 
     try {
       const response = await firstValueFrom(
-        this.http.post<{ medicalId: MedicalIdData }>('/api/v1/medical-id', data, {
+        this.http.post<{ medicalId: MedicalIdData }>(this.baseUrl, data, {
           withCredentials: true
         })
       );
