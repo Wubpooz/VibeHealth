@@ -1,5 +1,5 @@
-import { Component, inject, computed } from '@angular/core';
-import { RouterOutlet, ChildrenOutletContexts, Router } from '@angular/router';
+import { Component, inject, computed, signal } from '@angular/core';
+import { RouterOutlet, ChildrenOutletContexts, Router, NavigationEnd } from '@angular/router';
 import { GoeyToastComponent, ScrollTopProgressComponent, SidebarComponent } from './shared/components';
 import { routeAnimations } from './shared/animations';
 import { AuthService } from './core/auth/auth.service';
@@ -15,13 +15,25 @@ export class AppComponent {
   private readonly contexts = inject(ChildrenOutletContexts);
   private readonly authService = inject(AuthService);
   private readonly router = inject(Router);
+  private readonly currentUrl = signal(this.router.url);
+
+  constructor() {
+    this.router.events.subscribe((event) => {
+      if (event instanceof NavigationEnd) {
+        this.currentUrl.set(event.urlAfterRedirects);
+      }
+    });
+  }
 
   // Show sidebar only on authenticated pages
   readonly showSidebar = computed(() => {
     const isAuth = this.authService.isAuthenticated();
-    const currentUrl = this.router.url;
-    const isAuthPage = currentUrl === '/' || currentUrl.startsWith('/login') || 
-                      currentUrl.startsWith('/register') || currentUrl.startsWith('/verify-email');
+    const currentUrl = this.currentUrl();
+    const isAuthPage =
+      currentUrl === '/' ||
+      currentUrl.startsWith('/login') ||
+      currentUrl.startsWith('/register') ||
+      currentUrl.startsWith('/verify-email');
     return isAuth && !isAuthPage;
   });
 
