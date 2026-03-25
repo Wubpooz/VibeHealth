@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, inject, signal, effect } from '@ang
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { AuthService } from '../../../core/auth/auth.service';
 import { ToastService } from '../../../core/toast/toast.service';
 import { SpinnerComponent } from '../../../shared/components/spinner/spinner.component';
@@ -218,6 +218,7 @@ export class ForgotPasswordComponent {
   readonly auth = inject(AuthService);
   private readonly toast = inject(ToastService);
   private readonly router = inject(Router);
+  private readonly translate = inject(TranslateService);
 
   email = '';
   otp = '';
@@ -256,9 +257,12 @@ export class ForgotPasswordComponent {
     if (success) {
       // Show checkmark animation
       this.showSuccessState.set(true);
-      this.toast.success('Password reset code sent to your email.', 'Email sent');
+      this.toast.success(
+        this.translate.instant('AUTH.RESET_CODE_SENT'),
+        this.translate.instant('AUTH.EMAIL')
+      );
     } else if (this.auth.error()) {
-      this.toast.error(this.auth.error()!, 'Unable to send reset code');
+      this.toast.error(this.auth.error()!, this.translate.instant('AUTH.FORGOT_PASSWORD'));
     }
   }
 
@@ -272,7 +276,10 @@ export class ForgotPasswordComponent {
     );
 
     if (success) {
-      this.toast.success('Password reset successful. You can now sign in.', 'Password updated');
+      this.toast.success(
+        this.translate.instant('AUTH.RESET_PASSWORD'),
+        this.translate.instant('common.success')
+      );
       this.router.navigate(['/login']);
       return;
     }

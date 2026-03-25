@@ -87,6 +87,13 @@
     "PASSWORDS_NOT_MATCH": "Passwords do not match",
     "NEW_PASSWORD": "New password",
     "RESET_PASSWORD": "Reset password",
+    "CHANGE_EMAIL": "Change email",
+    "VERIFIED_SUCCESS": "Email verified successfully!",
+    "VERIFICATION_COMPLETE": "Verification complete",
+    "VERIFICATION_FAILED": "Verification failed",
+    "EMAIL_SENT": "Email sent",
+    "VERIFIED_CODE": "Verification code",
+    "VERIFY_CODE": "Verify code",
     "CONTINUE_WITH_GOOGLE": "Continue with Google",
     "CONTINUE_WITH_GITHUB": "Continue with GitHub",
     "CONTINUE_WITH_APPLE": "Continue with Apple"

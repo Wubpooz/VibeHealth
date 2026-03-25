@@ -2,7 +2,7 @@ import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { AuthService } from '../../../core/auth/auth.service';
 import { ToastService } from '../../../core/toast/toast.service';
 import { SpinnerComponent } from '../../../shared/components/spinner/spinner.component';
@@ -55,7 +55,7 @@ import { BackButtonComponent } from '../../../shared/components/back-button/back
           <div class="space-y-6">
             <div class="space-y-3">
               <label for="verificationOtp" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 text-left">
-                Verification code
+                {{ 'AUTH.VERIFIED_CODE' | translate }}
               </label>
               <input
                 id="verificationOtp"
@@ -76,7 +76,7 @@ import { BackButtonComponent } from '../../../shared/components/back-button/back
                   <app-spinner size="sm" containerClass="text-white" />
                   <span>{{ 'common.loading' | translate }}</span>
                 } @else {
-                  <span>Verify code</span>
+                  <span>{{ 'AUTH.VERIFY_CODE' | translate }}</span>
                 }
               </button>
             </div>
@@ -130,6 +130,7 @@ import { BackButtonComponent } from '../../../shared/components/back-button/back
 export class VerifyEmailComponent {
   readonly auth = inject(AuthService);
   private readonly toast = inject(ToastService);
+  private readonly translate = inject(TranslateService);
   resent = false;
   otpCode = '';
 
@@ -139,9 +140,12 @@ export class VerifyEmailComponent {
 
     const success = await this.auth.verifyEmailWithOtp(code);
     if (success) {
-      this.toast.success('Email verified successfully.', 'Verification complete');
+      this.toast.success(
+        this.translate.instant('AUTH.VERIFIED_SUCCESS'),
+        this.translate.instant('AUTH.VERIFICATION_COMPLETE')
+      );
     } else if (this.auth.error()) {
-      this.toast.error(this.auth.error()!, 'Unable to verify code');
+      this.toast.error(this.auth.error()!, this.translate.instant('AUTH.VERIFICATION_FAILED'));
     }
   }
 
@@ -149,9 +153,12 @@ export class VerifyEmailComponent {
     const success = await this.auth.resendVerificationEmail();
     if (success) {
       this.resent = true;
-      this.toast.success('Verification email resent.', 'Email sent');
+      this.toast.success(
+        this.translate.instant('AUTH.VERIFICATION_SENT'),
+        this.translate.instant('AUTH.EMAIL_SENT')
+      );
     } else if (this.auth.error()) {
-      this.toast.error(this.auth.error()!, 'Unable to resend verification');
+      this.toast.error(this.auth.error()!, this.translate.instant('AUTH.VERIFICATION_FAILED'));
     }
   }
 }

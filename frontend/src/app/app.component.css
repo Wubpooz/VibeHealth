@@ -45,11 +45,18 @@
 }
 
 .route-container {
-  min-height: calc(100vh - 64px);
-  margin-top: 64px;
+  min-height: 100vh;
+  margin-top: 0;
   transition: margin-left 0.3s ease;
   margin-left: 0;
   /* padding: 1.25rem;  to remove */
+}
+
+@media (max-width: 1023px) {
+  .route-container {
+    min-height: calc(100vh - 64px);
+    margin-top: 64px;
+  }
 }
 
 .route-container.not-found-no-margin {

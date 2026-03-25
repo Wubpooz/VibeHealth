@@ -72,7 +72,9 @@ export class AppComponent implements OnInit {
     return isAuth && !isAuthPage && !this.isNotFoundPage();
   });
 
-  readonly showToolbar = computed(() => !this.isNotFoundPage());
+  // Toolbar is primarily part of mobile navigation.
+  // On desktop for mobile-only pages, hide it; on core app pages, keep it behind the sidebar.
+  readonly showToolbar = computed(() => !this.isNotFoundPage() && (this.isMobile()));
 
   @ViewChild('drawer') readonly drawer?: MatSidenav;
 
