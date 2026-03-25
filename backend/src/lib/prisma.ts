@@ -48,6 +48,7 @@ const testPrisma = {
     create: () => Promise.resolve(null),
     findFirst: () => Promise.resolve(null),
     update: () => Promise.resolve(null),
+    updateMany: () => Promise.resolve({ count: 0 }),
   },
   exerciseCatalog: {
     findMany: () => Promise.resolve([]),
@@ -63,7 +64,7 @@ const testPrisma = {
     update: () => Promise.resolve(null),
   },
   $disconnect: () => Promise.resolve(),
-  $transaction: (fn: (prisma: unknown) => unknown) => fn({}),
+  $transaction: (fn: (prisma: unknown) => unknown) => fn(testPrisma),
 };
 
 const runtimePrisma = globalForPrisma.prisma ?? new PrismaClient({
