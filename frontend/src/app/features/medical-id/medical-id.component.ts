@@ -389,37 +389,13 @@ type ViewMode = 'card' | 'edit';
             </button>
             <h3 id="qr-modal-title">Emergency QR Code</h3>
             <div class="qr-large">
-              <!-- Simple QR placeholder - in production, use a QR library -->
-              <svg class="qr-svg" viewBox="0 0 200 200" fill="currentColor">
-                <rect x="20" y="20" width="60" height="60" fill="#000"/>
-                <rect x="30" y="30" width="40" height="40" fill="#fff"/>
-                <rect x="40" y="40" width="20" height="20" fill="#000"/>
-                <rect x="120" y="20" width="60" height="60" fill="#000"/>
-                <rect x="130" y="30" width="40" height="40" fill="#fff"/>
-                <rect x="140" y="40" width="20" height="20" fill="#000"/>
-                <rect x="20" y="120" width="60" height="60" fill="#000"/>
-                <rect x="30" y="130" width="40" height="40" fill="#fff"/>
-                <rect x="40" y="140" width="20" height="20" fill="#000"/>
-                <!-- Data pattern - simplified -->
-                <rect x="90" y="30" width="10" height="10" fill="#000"/>
-                <rect x="90" y="50" width="10" height="10" fill="#000"/>
-                <rect x="90" y="90" width="10" height="10" fill="#000"/>
-                <rect x="30" y="90" width="10" height="10" fill="#000"/>
-                <rect x="50" y="90" width="10" height="10" fill="#000"/>
-                <rect x="120" y="90" width="10" height="10" fill="#000"/>
-                <rect x="140" y="90" width="10" height="10" fill="#000"/>
-                <rect x="160" y="90" width="10" height="10" fill="#000"/>
-                <rect x="90" y="120" width="10" height="10" fill="#000"/>
-                <rect x="120" y="120" width="10" height="10" fill="#000"/>
-                <rect x="150" y="120" width="10" height="10" fill="#000"/>
-                <rect x="90" y="140" width="10" height="10" fill="#000"/>
-                <rect x="110" y="140" width="10" height="10" fill="#000"/>
-                <rect x="130" y="140" width="10" height="10" fill="#000"/>
-                <rect x="160" y="140" width="10" height="10" fill="#000"/>
-                <rect x="120" y="160" width="10" height="10" fill="#000"/>
-                <rect x="140" y="160" width="10" height="10" fill="#000"/>
-                <rect x="170" y="160" width="10" height="10" fill="#000"/>
-              </svg>
+              <!-- Computed QR from user medical ID data -->
+              <img
+                class="qr-svg"
+                [src]="qrCodeUrl()"
+                alt="Generated Medical ID QR Code"
+                loading="lazy"
+              />
             </div>
             <p class="qr-instructions">
               First responders can scan this code to view your critical medical information
