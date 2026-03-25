@@ -1,18 +1,25 @@
 import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { RouterLink, Router } from '@angular/router';
+import { RouterModule, Router } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { AuthService } from '../../../core/auth/auth.service';
 import { ToastService } from '../../../core/toast/toast.service';
-import { SpinnerComponent, SocialButtonsComponent, OAuthProvider } from '../../../shared/components';
+import { SpinnerComponent } from '../../../shared/components/spinner/spinner.component';
+import { SocialButtonsComponent, type OAuthProvider } from '../../../shared/components/social-buttons/social-buttons.component';
+import { BackButtonComponent } from '../../../shared/components/back-button/back-button.component';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink, TranslateModule, SpinnerComponent, SocialButtonsComponent],
+  imports: [CommonModule, FormsModule, RouterModule, TranslateModule, SpinnerComponent, SocialButtonsComponent, BackButtonComponent],
   template: `
     <div class="relative min-h-screen flex items-center justify-center overflow-hidden bg-gray-50 dark:bg-gray-950 px-4 py-12 transition-colors duration-500">
+
+      <!-- Back Button -->
+      <div class="absolute top-4 left-4 z-10">
+        <app-back-button />
+      </div>
 
       <!-- Ambient Background Effects -->
       <div class="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">

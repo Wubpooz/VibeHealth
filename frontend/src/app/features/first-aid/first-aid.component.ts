@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { BackButtonComponent } from '../../shared/components/back-button/back-button.component';
 import { FirstAidService } from './first-aid.service';
 import { FirstAidCategory, SeverityLevel } from './first-aid.types';
 import { FIRST_AID_CATEGORIES } from './first-aid.data';
@@ -10,7 +11,7 @@ import { fadeInOut, slideInUp, scaleIn } from '../../shared/animations';
 
 @Component({
   selector: 'app-first-aid',
-  imports: [CommonModule, RouterLink, FormsModule, TranslateModule],
+  imports: [CommonModule, RouterLink, FormsModule, TranslateModule, BackButtonComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   animations: [fadeInOut, slideInUp, scaleIn],
   template: `
@@ -21,11 +22,7 @@ import { fadeInOut, slideInUp, scaleIn } from '../../shared/animations';
         <div class="max-w-6xl mx-auto px-4 sm:px-6 py-4">
           <div class="flex items-center justify-between">
             <div class="flex items-center gap-3">
-              <a routerLink="/dashboard" class="p-2 -ml-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
-                <svg class="w-5 h-5 text-gray-600 dark:text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-                </svg>
-              </a>
+              <app-back-button [showLabel]="false" />
               <div>
                 <h1 class="text-xl font-bold text-gray-900 dark:text-white font-heading">{{ 'FIRST_AID.TITLE' | translate }}</h1>
                 <p class="text-sm text-gray-500 dark:text-gray-400">{{ 'FIRST_AID.SUBTITLE' | translate }}</p>

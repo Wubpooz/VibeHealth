@@ -12,19 +12,19 @@ import { MetricsService } from '../../core/metrics/metrics.service';
 import { RewardsService } from '../../core/rewards/rewards.service';
 import { ActivityLoggerComponent } from './activity-logger.component';
 import { TrendChartComponent, type TrendDataPoint } from '../../shared/components/trend-chart/trend-chart.component';
-import { StatsGridComponent } from '../../shared/components/stats-grid/stats-grid.component';
 import { ACTIVITY_PRESETS } from '../../core/metrics/metrics.types';
+import { BackButtonComponent } from '../../shared/components/back-button/back-button.component';
 
 @Component({
   selector: 'app-activity-page',
-  imports: [CommonModule, RouterModule, TranslateModule, ActivityLoggerComponent, TrendChartComponent, StatsGridComponent],
+  imports: [CommonModule, RouterModule, TranslateModule, ActivityLoggerComponent, TrendChartComponent, BackButtonComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="min-h-screen bg-[#fdf8f8] dark:bg-gray-950 px-4 sm:px-6 lg:px-8 py-8 pb-24 space-y-6 no-select">
 
       <!-- Page Header -->
       <div class="flex items-center justify-between">
-        <a routerLink="/dashboard" class="btn-go-back">{{ 'common.back_to_dashboard' | translate }}</a>
+        <app-back-button [label]="'common.back_to_dashboard' | translate" [showLabel]="true" />
         <div class="flex items-center gap-3">
           <span class="text-3xl">🏃</span>
           <div>
@@ -81,7 +81,6 @@ import { ACTIVITY_PRESETS } from '../../core/metrics/metrics.types';
 
         <!-- Stats sidebar -->
         <div class="space-y-6">
-          <app-stats-grid />
 
           <!-- Activity breakdown by type -->
           @if (typeBreakdown().length > 0) {

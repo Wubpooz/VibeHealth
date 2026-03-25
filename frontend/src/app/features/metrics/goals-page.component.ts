@@ -16,10 +16,7 @@ import {
 } from "../../core/metrics/goals.service";
 import { RewardsService } from "../../core/rewards/rewards.service";
 import { GoalWizardComponent } from "./goal-wizard.component";
-// import {
-//   TrendChartComponent,
-//   type TrendDataPoint,
-// } from "../../shared/components/trend-chart/trend-chart.component";
+import { BackButtonComponent } from '../../shared/components/back-button/back-button.component';
 
 @Component({
   selector: "app-goals-page",
@@ -27,6 +24,7 @@ import { GoalWizardComponent } from "./goal-wizard.component";
     CommonModule,
     TranslateModule,
     GoalWizardComponent,
+    BackButtonComponent,
     // TrendChartComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -36,7 +34,7 @@ import { GoalWizardComponent } from "./goal-wizard.component";
     >
       <!-- Page Header -->
       <div class="flex items-center justify-between flex-wrap gap-4">
-        <a routerLink="/dashboard" class="btn-go-back">{{ 'common.back_to_dashboard' | translate }}</a>
+        <app-back-button [label]="'common.back_to_dashboard' | translate" [showLabel]="true" />
         <div class="flex items-center gap-3">
           <div
             class="w-12 h-12 rounded-2xl bg-gradient-to-br from-violet-500 to-purple-700 flex items-center justify-center shadow-lg shadow-violet-500/20"
@@ -887,15 +885,7 @@ export class GoalsPageComponent {
       const goals = this.goalsService.goals();
       const idx = goals.findIndex((g) => g.id === goal.id);
       if (idx !== -1) {
-        //TODO
-        // const updated = {
-        //   ...goals[idx],
-        //   progress: [
-        //     result,
-        //     ...((goals[idx] as Goal & { progress?: unknown[] }).progress ?? []),
-        //   ],
-        // };
-        // Re-trigger reactivity via service (the signal will reflect on next load)
+        // Update invalidation logic is done via loadGoals.
         await this.goalsService.loadGoals();
       }
 
@@ -926,7 +916,6 @@ export class GoalsPageComponent {
 
   onGoalCreated(): void {
     // Wizard already added to service state; just close after a beat
-    //TODO
     setTimeout(() => this.showWizard.set(false), 1800);
   }
 }

@@ -8,7 +8,6 @@ import {
   QueryList,
   ElementRef,
   AfterViewInit,
-  HostListener,
 } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { RouterLink, Router } from "@angular/router";
@@ -20,8 +19,10 @@ import { BunnyMascotComponent } from "../../shared/components/bunny-mascot/bunny
 import { CarrotCounterComponent } from "../../shared/components/carrot-counter/carrot-counter.component";
 import { ThemeToggleComponent } from "../../shared/components/theme-toggle/theme-toggle.component";
 import { CarrotFeedComponent } from "../../shared/components/carrot-feed/carrot-feed.component";
+import { BackButtonComponent } from "../../shared/components/back-button/back-button.component";
 import { HydrationTrackerComponent } from "../metrics/hydration-tracker.component";
 import { animate } from "motion/mini";
+import { StatsGridComponent } from "../../shared/components/stats-grid/stats-grid.component";
 
 @Component({
   selector: "app-dashboard",
@@ -33,8 +34,10 @@ import { animate } from "motion/mini";
     CarrotCounterComponent,
     ThemeToggleComponent,
     CarrotFeedComponent,
+    BackButtonComponent,
     HydrationTrackerComponent,
-  ],
+    StatsGridComponent
+],
   styles: [
     `
       .action-card,
@@ -62,113 +65,18 @@ import { animate } from "motion/mini";
     <div
       class="min-h-screen bg-[#fdf8f8] dark:bg-gray-950 transition-colors duration-300"
     >
-      <!-- Mobile sidebar overlay -->
-      @if (sidebarOpen()) {
-        <div
-          class="fixed inset-0 bg-black/30 z-40 lg:hidden"
-          (click)="sidebarOpen.set(false)"
-          (keydown.enter)="sidebarOpen.set(false)"
-          tabindex="0"
-          role="button"
-          aria-label="{{ 'DASHBOARD.CLOSE_SIDEBAR_OVERLAY' | translate }}"
-        ></div>
-      }
-
-      <!-- Sidebar Navigation -->
-      <aside
-        class="fixed left-0 top-0 h-full w-72 flex flex-col p-6 bg-white/90 dark:bg-gray-900/95 backdrop-blur-xl border-r border-gray-100 dark:border-gray-800 z-50 transform -translate-x-full lg:translate-x-0 transition-transform duration-300"
-        [class.sidebar-open]="sidebarOpen()"
-      >
-        <!-- Logo -->
-        <div class="flex items-center gap-3 mb-8">
-          <div
-            class="w-10 h-10 rounded-xl bg-gradient-to-br from-primary-500 to-primary-600 flex items-center justify-center shadow-lg shadow-primary-500/20"
-          >
-            <img
-              src="assets/logo.png"
-              alt="Logo"
-              class="w-6 h-6 object-contain brightness-0 invert"
-            />
-          </div>
-          <span class="text-2xl font-bold text-primary-500 font-heading"
-            >VibeHealth</span
-          >
-        </div>
-
-        <!-- User Profile Card -->
-        @if (auth.user(); as user) {
-          <div
-            class="flex items-center gap-3 p-4 bg-primary-50 dark:bg-primary-900/20 rounded-2xl mb-8"
-          >
-            <div
-              class="w-12 h-12 rounded-full bg-primary-100 dark:bg-primary-800/50 flex items-center justify-center overflow-hidden"
-            >
-              <app-bunny-mascot [mood]="'happy'" [size]="40" />
-            </div>
-            <div class="flex-1 min-w-0">
-              <p class="font-bold text-gray-900 dark:text-white truncate">
-                {{ user.name || ("DASHBOARD.USER_DEFAULT_NAME" | translate) }}
-                🐰
-              </p>
-              <p class="text-xs text-gray-500 dark:text-gray-400 font-medium">
-                {{ "DASHBOARD.PREMIUM_MEMBER" | translate }}
-              </p>
-            </div>
-          </div>
-        }
-
-        <!-- Navigation -->
-        <nav class="flex-1 space-y-1">
-          @for (item of navItems; track item.route) {
-            <a
-              [routerLink]="item.route"
-              class="flex items-center gap-4 px-5 py-3.5 rounded-2xl font-medium text-sm transition-all duration-200 hover:translate-x-1"
-              [class]="
-                item.route === '/dashboard'
-                  ? 'bg-primary-50 text-primary-600 dark:bg-primary-900/30 dark:text-primary-400'
-                  : 'text-gray-500 hover:text-primary-500 dark:text-gray-400 dark:hover:text-primary-400'
-              "
-            >
-              <span class="text-xl">{{ item.icon }}</span>
-              <span>{{ item.label | translate }}</span>
-            </a>
-          }
-        </nav>
-
-        <!-- Bottom CTA -->
-        <button
-          class="mt-auto w-full py-4 px-6 bg-gradient-to-r from-primary-500 to-primary-600 text-white font-bold rounded-2xl shadow-lg shadow-primary-500/25 hover:shadow-xl hover:shadow-primary-500/30 transition-all active:scale-[0.98]"
-        >
-          {{ "DASHBOARD.BOOK_CHECKUP" | translate }}
-        </button>
-      </aside>
+      <!-- Back Button -->
+      <div class="fixed top-4 left-4 z-10">
+        <app-back-button />
+      </div>
 
       <!-- Main Content Area -->
-      <div class="lg:ml-72">
+      <div>
         <!-- Top Header Bar -->
         <header
           class="sticky top-0 z-30 bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl border-b border-gray-100 dark:border-gray-800"
         >
           <div class="px-4 sm:px-8 py-4 flex items-center justify-between">
-            <!-- Mobile menu button -->
-            <button
-              class="lg:hidden p-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-              (click)="sidebarOpen.set(true)"
-            >
-              <svg
-                class="w-6 h-6 text-gray-600 dark:text-gray-300"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M4 6h16M4 12h16M4 18h16"
-                />
-              </svg>
-            </button>
 
             <!-- Date & Weather (desktop) -->
             <div
@@ -389,29 +297,7 @@ import { animate } from "motion/mini";
             </div>
           </section>
 
-          <!-- Quick Actions — gradient icon tiles -->
-          <section class="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
-            @for (action of quickActions; track action.label; let i = $index) {
-              <button
-                #actionCard
-                (click)="handleQuickAction(action)"
-                class="action-card group p-6 sm:p-8 rounded-3xl flex flex-col items-center gap-4 bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 hover:shadow-2xl transition-all duration-300 hover:-translate-y-1"
-                [style.box-shadow]="'0 4px 20px ' + action.shadow"
-              >
-                <div
-                  class="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl flex items-center justify-center text-3xl sm:text-4xl group-hover:scale-110 transition-transform shadow-lg"
-                  [style.background]="action.gradient"
-                  [style.box-shadow]="'0 6px 16px ' + action.shadow"
-                >
-                  {{ action.emoji }}
-                </div>
-                <span
-                  class="font-bold text-gray-900 dark:text-white text-sm sm:text-base font-heading"
-                  >{{ action.label | translate }}</span
-                >
-              </button>
-            }
-          </section>
+          <app-stats-grid />
 
           <!-- Stats Grid -->
           <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -768,7 +654,6 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 
   // UI State
   showOnboardingPrompt = signal(false);
-  sidebarOpen = signal(false);
   dismissedOnboarding = signal(false);
   dismissedEmailBanner = signal(false);
 
@@ -821,38 +706,6 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     { route: "/activity", icon: "🏃", label: "nav.wellness" },
     { route: "/goals", icon: "🎯", label: "nav.medical" },
     { route: "/onboarding", icon: "👤", label: "nav.profile" },
-  ];
-
-  // Quick actions — gradient icon tiles: Medical ID, First Aid, Goals, Profile
-  quickActions = [
-    {
-      emoji: "💓",
-      label: "DASHBOARD.QUICK_MEDICAL_ID",
-      gradient: "linear-gradient(135deg, #ef4444 0%, #b91c1c 100%)",
-      shadow: "rgba(239,68,68,0.30)",
-      route: "/medical-id",
-    },
-    {
-      emoji: "🚑",
-      label: "DASHBOARD.QUICK_FIRST_AID",
-      gradient: "linear-gradient(135deg, #f97316 0%, #c2410c 100%)",
-      shadow: "rgba(249,115,22,0.30)",
-      route: "/first-aid",
-    },
-    {
-      emoji: "🎯",
-      label: "DASHBOARD.QUICK_GOALS",
-      gradient: "linear-gradient(135deg, #7c4dff 0%, #4527a0 100%)",
-      shadow: "rgba(124,77,255,0.30)",
-      route: "/goals",
-    },
-    {
-      emoji: "👤",
-      label: "DASHBOARD.QUICK_PROFILE",
-      gradient: "linear-gradient(135deg, #10b981 0%, #047857 100%)",
-      shadow: "rgba(16,185,129,0.30)",
-      route: "/onboarding",
-    },
   ];
 
   // Weekly trend data
@@ -992,9 +845,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   }
 
   handleQuickAction(action: { route?: string; action?: string }) {
-    if (action.route) {
-      this.router.navigate([action.route]);
-    } else if (action.action === "logWater") {
+    if (action.action === "logWater") {
       // Quick water log action - will integrate with hydration service
       this.rewards.awardCarrots(1, "Logged water! 💧", "hydration");
     }
@@ -1014,11 +865,4 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     this.rewards.awardCarrots(5, "Test reward! 🎉", "bonus");
   }
 
-  // Close sidebar on window resize to desktop
-  @HostListener("window:resize")
-  onResize() {
-    if (window.innerWidth >= 1024) {
-      this.sidebarOpen.set(false);
-    }
-  }
 }

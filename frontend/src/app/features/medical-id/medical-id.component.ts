@@ -1,10 +1,10 @@
 import { Component, inject, OnInit, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { MedicalIdService } from '../../core/medical-id/medical-id.service';
 import { ReferenceDataService } from '../../core/reference-data/reference-data.service';
+import { BackButtonComponent } from '../../shared/components/back-button/back-button.component';
 import { AutocompleteComponent } from '../../shared/components/autocomplete/autocomplete.component';
 import { ProfileService } from '../../core/profile/profile.service';
 import { AuthService } from '../../core/auth/auth.service';
@@ -15,17 +15,13 @@ type ViewMode = 'card' | 'edit';
 @Component({
   selector: 'app-medical-id',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink, TranslateModule, AutocompleteComponent],
+  imports: [CommonModule, FormsModule, TranslateModule, AutocompleteComponent, BackButtonComponent],
   template: `
     <div class="medical-id-page">
       <!-- Dramatic Emergency Header -->
       <header class="emergency-header">
         <div class="header-content">
-          <a routerLink="/dashboard" class="back-link">
-            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
-            </svg>
-          </a>
+          <app-back-button [showLabel]="false" />
           <div class="header-title">
             <div class="medical-cross">
               <span class="cross-h"></span>
@@ -1401,10 +1397,12 @@ export class MedicalIdComponent implements OnInit {
     return name.substring(0, 2).toUpperCase();
   });
 
-  async ngOnInit() {
-    await this.profileService.loadProfile();
-    await this.medicalIdService.loadMedicalId();
-    this.syncEditData();
+  ngOnInit(): void {
+    void (async () => {
+      await this.profileService.loadProfile();
+      await this.medicalIdService.loadMedicalId();
+      this.syncEditData();
+    })();
   }
 
   toggleMode() {

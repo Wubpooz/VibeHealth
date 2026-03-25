@@ -8,11 +8,11 @@ import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 import { RouterModule } from '@angular/router';
 import { MetricsService } from '../../core/metrics/metrics.service';
-import { StatsGridComponent } from '../../shared/components/stats-grid/stats-grid.component';
 import { CarrotFeedComponent } from '../../shared/components/carrot-feed/carrot-feed.component';
 import { TrendChartComponent, type TrendDataPoint } from '../../shared/components/trend-chart/trend-chart.component';
 import { HydrationTrackerComponent } from './hydration-tracker.component';
 import { VitalsLoggerComponent } from './vitals-logger.component';
+import { BackButtonComponent } from '../../shared/components/back-button/back-button.component';
 
 @Component({
   selector: 'app-vitals-dashboard',
@@ -20,11 +20,11 @@ import { VitalsLoggerComponent } from './vitals-logger.component';
     CommonModule,
     TranslateModule,
     RouterModule,
-    StatsGridComponent,
     CarrotFeedComponent,
     TrendChartComponent,
     HydrationTrackerComponent,
     VitalsLoggerComponent,
+    BackButtonComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
@@ -46,42 +46,11 @@ import { VitalsLoggerComponent } from './vitals-logger.component';
               </p>
             </div>
           </div>
-          <a routerLink="/dashboard" class="btn-go-back">
-            {{ 'common.back_to_dashboard' | translate }}
-          </a>
-
-          <!-- Quick-action tiles: Medical ID, First Aid, Journal, Profile -->
-          <div class="hidden sm:flex items-center gap-2">
-            @for (action of quickActions; track action.label) {
-              <a
-                [routerLink]="action.route"
-                class="quick-tile group"
-                [style.--tile-color]="action.color"
-              >
-                <span class="tile-emoji">{{ action.emoji }}</span>
-                <span class="tile-label">{{ action.label }}</span>
-              </a>
-            }
-          </div>
-        </div>
-
-        <!-- Mobile quick-action row -->
-        <div class="flex gap-3 sm:hidden overflow-x-auto pb-1 -mx-4 px-4 scrollbar-hide">
-          @for (action of quickActions; track action.label) {
-            <a
-              [routerLink]="action.route"
-              class="quick-tile-mobile flex-shrink-0"
-              [style.background]="action.gradient"
-            >
-              <span class="text-2xl">{{ action.emoji }}</span>
-              <span class="text-xs font-semibold text-white mt-1">{{ action.label }}</span>
-            </a>
-          }
+          <app-back-button [label]="'common.back_to_dashboard' | translate" [showLabel]="true" />
         </div>
 
         <!-- Stats Grid + Carrot Feed -->
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <app-stats-grid />
           <app-carrot-feed />
         </div>
 
@@ -216,42 +185,10 @@ import { VitalsLoggerComponent } from './vitals-logger.component';
 export class VitalsDashboardComponent {
   private readonly metricsService = inject(MetricsService);
 
-  // Quick-action grid: Medical ID, First Aid, Journal, Profile
-  readonly quickActions = [
-    {
-      emoji: '💓',
-      label: 'Medical ID',
-      route: '/medical-id',
-      color: '#ef4444',
-      gradient: 'linear-gradient(135deg, #ef4444, #b91c1c)',
-    },
-    {
-      emoji: '🚑',
-      label: 'First Aid',
-      route: '/first-aid',
-      color: '#f97316',
-      gradient: 'linear-gradient(135deg, #f97316, #c2410c)',
-    },
-    {
-      emoji: '📓',
-      label: 'Journal',
-      route: '/journal',
-      color: '#10b981',
-      gradient: 'linear-gradient(135deg, #10b981, #047857)',
-    },
-    {
-      emoji: '👤',
-      label: 'Profile',
-      route: '/onboarding',
-      color: '#6366f1',
-      gradient: 'linear-gradient(135deg, #6366f1, #4338ca)',
-    },
-  ];
-
   // ── 7-day trend data ──────────────────────────────────────────────────────
 
   /**
-   * TODO: wire to real weekly vitals API (GET /api/v1/metrics/vitals?type=STEPS&startDate=...)
+   * NOTE: wire to real weekly vitals API (GET /api/v1/metrics/vitals?type=STEPS&startDate=...)
    * For now uses today's step count on the current day and placeholders for the rest.
    */
   readonly weeklyStepsData = computed<TrendDataPoint[]>(() => {
@@ -269,7 +206,7 @@ export class VitalsDashboardComponent {
   });
 
   /**
-   * TODO: wire to real weekly vitals API (GET /api/v1/metrics/vitals?type=SLEEP_HOURS&startDate=...)
+   * NOTE: wire to real weekly vitals API (GET /api/v1/metrics/vitals?type=SLEEP_HOURS&startDate=...)
    */
   readonly weeklySleepData = computed<TrendDataPoint[]>(() => {
     const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];

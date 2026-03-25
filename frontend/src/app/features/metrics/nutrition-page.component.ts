@@ -11,8 +11,8 @@ import { MetricsService } from '../../core/metrics/metrics.service';
 import { RewardsService } from '../../core/rewards/rewards.service';
 import { NutritionLoggerComponent } from './nutrition-logger.component';
 import { TrendChartComponent, type TrendDataPoint } from '../../shared/components/trend-chart/trend-chart.component';
-import { StatsGridComponent } from '../../shared/components/stats-grid/stats-grid.component';
 import { DAILY_GOALS, MEAL_TYPE_INFO } from '../../core/metrics/metrics.types';
+import { BackButtonComponent } from '../../shared/components/back-button/back-button.component';
 
 @Component({
   selector: 'app-nutrition-page',
@@ -21,7 +21,7 @@ import { DAILY_GOALS, MEAL_TYPE_INFO } from '../../core/metrics/metrics.types';
     TranslateModule,
     NutritionLoggerComponent,
     TrendChartComponent,
-    StatsGridComponent,
+    BackButtonComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
@@ -29,7 +29,7 @@ import { DAILY_GOALS, MEAL_TYPE_INFO } from '../../core/metrics/metrics.types';
 
       <!-- Page Header -->
       <div class="flex items-center justify-between flex-wrap gap-4">
-        <a routerLink="/dashboard" class="btn-go-back">{{ 'common.back_to_dashboard' | translate }}</a>
+        <app-back-button [label]="'common.back_to_dashboard' | translate" [showLabel]="true" />
         <div class="flex items-center gap-3">
           <span class="text-3xl">🥗</span>
           <div>
@@ -153,7 +153,6 @@ import { DAILY_GOALS, MEAL_TYPE_INFO } from '../../core/metrics/metrics.types';
 
         <!-- Sidebar -->
         <div class="space-y-6">
-          <app-stats-grid />
 
           <!-- Meal type breakdown -->
           @if (mealTypeBreakdown().length > 0) {

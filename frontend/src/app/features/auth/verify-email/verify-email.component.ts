@@ -1,18 +1,24 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { AuthService } from '../../../core/auth/auth.service';
 import { ToastService } from '../../../core/toast/toast.service';
-import { SpinnerComponent } from '../../../shared/components';
+import { SpinnerComponent } from '../../../shared/components/spinner/spinner.component';
+import { BackButtonComponent } from '../../../shared/components/back-button/back-button.component';
 
 @Component({
   selector: 'app-verify-email',
   standalone: true,
-  imports: [CommonModule, RouterLink, TranslateModule, SpinnerComponent],
+  imports: [CommonModule, RouterModule, TranslateModule, SpinnerComponent, BackButtonComponent],
   template: `
     <div class="relative min-h-screen flex items-center justify-center overflow-hidden bg-gray-50 dark:bg-gray-950 px-4 py-12 transition-colors duration-500">
       
+      <!-- Back Button -->
+      <div class="absolute top-4 left-4 z-10">
+        <app-back-button />
+      </div>
+
       <!-- Ambient Background Effects -->
       <div class="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
         <div class="absolute top-[20%] left-[50%] w-[50%] h-[50%] bg-primary-300/20 rounded-full blur-[120px] animate-pulse-slow -translate-x-1/2 dark:bg-primary-900/20"></div>
