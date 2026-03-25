@@ -318,14 +318,20 @@ export class WorkoutsPageComponent implements AfterViewInit {
   private async tryFinalizeSyncOAuthFromUrl(): Promise<void> {
     if (!window.location.search) return;
     const currentUrl = new URL(window.location.href);
-    const state = currentUrl.searchParams.get('oauth_state');
-    const code = currentUrl.searchParams.get('oauth_code');
+    const state =
+      currentUrl.searchParams.get('oauth_state') ??
+      currentUrl.searchParams.get('state');
+    const code =
+      currentUrl.searchParams.get('oauth_code') ??
+      currentUrl.searchParams.get('code');
     if (!state || !code) return;
 
     await this.metricsService.completeSyncOAuth(state, code);
 
     currentUrl.searchParams.delete('oauth_state');
     currentUrl.searchParams.delete('oauth_code');
+    currentUrl.searchParams.delete('state');
+    currentUrl.searchParams.delete('code');
     const cleanedUrl = this.buildUrlFromParts(
       currentUrl.pathname,
       currentUrl.searchParams,
