@@ -96,7 +96,7 @@ export interface TrendDataPoint {
       box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
     }
 
-    :host-context([data-theme="dark"]) .trend-chart {
+    :host-context(.dark) .trend-chart {
       background: #1f2937;
     }
 
@@ -112,7 +112,7 @@ export interface TrendDataPoint {
       margin: 0 0 0.25rem 0;
     }
 
-    :host-context([data-theme="dark"]) .chart-title {
+    :host-context(.dark) .chart-title {
       color: #f3f4f6;
     }
 
@@ -122,7 +122,7 @@ export interface TrendDataPoint {
       margin: 0;
     }
 
-    :host-context([data-theme="dark"]) .chart-subtitle {
+    :host-context(.dark) .chart-subtitle {
       color: #9ca3af;
     }
 
@@ -147,7 +147,7 @@ export interface TrendDataPoint {
       text-align: right;
     }
 
-    :host-context([data-theme="dark"]) .y-tick {
+    :host-context(.dark) .y-tick {
       color: #6b7280;
     }
 
@@ -162,7 +162,7 @@ export interface TrendDataPoint {
       padding-left: 0.5rem;
     }
 
-    :host-context([data-theme="dark"]) .bars-container {
+    :host-context(.dark) .bars-container {
       border-color: #374151;
     }
 
@@ -186,8 +186,16 @@ export interface TrendDataPoint {
       opacity: 0.6;
     }
 
-    :host-context([data-theme="dark"]) .target-line {
+    :host-context(.dark) .target-line {
       background: #fbbf24;
+    }
+
+    :host-context(.dark) .bar {
+      background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+    }
+
+    :host-context(.dark) .bar:hover {
+      box-shadow: 0 4px 20px rgba(16, 185, 129, 0.4);
     }
 
     .bar {
@@ -239,8 +247,12 @@ export interface TrendDataPoint {
       transition: opacity 0.3s ease;
     }
 
-    :host-context([data-theme="dark"]) .bar-value {
+    :host-context(.dark) .bar-value {
       color: #34d399;
+    }
+
+    :host-context(.dark) .bar.below-target .bar-value {
+      color: #fbbf24;
     }
 
     .bar.below-target .bar-value {
@@ -304,7 +316,7 @@ export interface TrendDataPoint {
       color: #6b7280;
     }
 
-    :host-context([data-theme="dark"]) .legend-text {
+    :host-context(.dark) .legend-text {
       color: #9ca3af;
     }
   `],
