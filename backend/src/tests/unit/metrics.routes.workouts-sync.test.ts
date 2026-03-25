@@ -17,8 +17,21 @@ const getAuthSpy = () =>
     session: mockSession,
   } as never);
 
+const restoreEnvVar = (name: string, value: string | undefined) => {
+  if (value === undefined) {
+    delete process.env[name];
+    return;
+  }
+  process.env[name] = value;
+};
+
 describe('Workout & sync metrics routes', () => {
   let authGetSessionSpy: ReturnType<typeof spyOn>;
+  const originalOAuthEnv = {
+    GOOGLE_FIT_OAUTH_CLIENT_ID: process.env.GOOGLE_FIT_OAUTH_CLIENT_ID,
+    GOOGLE_FIT_OAUTH_REDIRECT_URI: process.env.GOOGLE_FIT_OAUTH_REDIRECT_URI,
+    GOOGLE_FIT_OAUTH_AUTHORIZE_URL: process.env.GOOGLE_FIT_OAUTH_AUTHORIZE_URL,
+  };
 
   beforeEach(() => {
     authGetSessionSpy = getAuthSpy();
@@ -26,6 +39,9 @@ describe('Workout & sync metrics routes', () => {
 
   afterEach(() => {
     authGetSessionSpy?.mockRestore();
+    restoreEnvVar('GOOGLE_FIT_OAUTH_CLIENT_ID', originalOAuthEnv.GOOGLE_FIT_OAUTH_CLIENT_ID);
+    restoreEnvVar('GOOGLE_FIT_OAUTH_REDIRECT_URI', originalOAuthEnv.GOOGLE_FIT_OAUTH_REDIRECT_URI);
+    restoreEnvVar('GOOGLE_FIT_OAUTH_AUTHORIZE_URL', originalOAuthEnv.GOOGLE_FIT_OAUTH_AUTHORIZE_URL);
   });
 
   it('builds workout suggestions from profile', async () => {
