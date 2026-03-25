@@ -103,6 +103,37 @@ import { CommonModule } from '@angular/common';
       transition: stroke-dashoffset 0.15s linear;
     }
 
+    :host-context(.dark) .scroll-top-btn {
+      color: #f8fafc;
+      background: rgba(15, 23, 42, 0.72);
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+    }
+
+    :host-context(.dark) .scroll-top-btn:focus-visible {
+      outline: 2px solid #e11d48;
+      outline-offset: 4px;
+    }
+
+    :host-context(.dark) .scroll-top-btn:hover {
+      transform: scale(1.08);
+    }
+
+    :host-context(.dark) .scroll-top-btn:hover .arrow {
+      color: #ffbaba;
+    }
+
+    :host-context(.dark) .ring-bg {
+      stroke: rgba(255, 255, 255, 0.2);
+    }
+
+    :host-context(.dark) .ring-progress {
+      stroke: #fb7185;
+    }
+
+    :host-context(.dark) .arrow {
+      color: #f8fafc;
+    }
+
     .arrow {
       width: 1.3rem;
       height: 1.3rem;

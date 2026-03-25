@@ -99,6 +99,60 @@ import {
       box-shadow: 0 4px 20px rgba(124, 77, 255, 0.1);
     }
 
+    :host-context(.dark) .vitals-card {
+      background: linear-gradient(135deg, #1e1f3b 0%, #23263f 100%);
+      box-shadow: 0 4px 20px rgba(78, 77, 157, 0.45);
+      border: 1px solid rgba(102, 113, 198, 0.35);
+    }
+
+    :host-context(.dark) .title-row h3 {
+      color: #c5c7ff;
+    }
+
+    :host-context(.dark) .last-reading {
+      color: #ebe9ff;
+      background: rgba(124, 77, 255, 0.22);
+    }
+
+    :host-context(.dark) .type-btn {
+      background: #242846;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.45);
+      border-color: rgba(97, 96, 166, 0.3);
+    }
+
+    :host-context(.dark) .type-btn:hover:not(.selected) {
+      border-color: rgba(178, 143, 255, 0.45);
+    }
+
+    :host-context(.dark) .type-btn.selected {
+      border-color: #8578ff;
+      background: linear-gradient(135deg, #272c5a 0%, #1b1d3d 100%);
+      box-shadow: 0 4px 12px rgba(124, 77, 255, 0.35);
+    }
+
+    :host-context(.dark) .value-input {
+      background: #1a1c33;
+      color: #eef0ff;
+      border: 2px solid #373d6c;
+    }
+
+    :host-context(.dark) .value-input:focus {
+      border-color: #8578ff;
+    }
+
+    :host-context(.dark) .unit-badge {
+      color: #b2b6ff;
+    }
+
+    :host-context(.dark) .submit-btn {
+      box-shadow: 0 4px 12px rgba(124, 77, 255, 0.45);
+    }
+
+    :host-context(.dark) .success-flash {
+      background: rgba(46, 125, 50, 0.25);
+      color: #d7f4d5;
+    }
+
     .header {
       display: flex;
       justify-content: space-between;

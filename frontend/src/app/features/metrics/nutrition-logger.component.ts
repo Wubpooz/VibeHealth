@@ -280,8 +280,10 @@ import {
       box-shadow: 0 4px 20px rgba(76, 175, 80, 0.15);
     }
 
-    :host-context([data-theme="dark"]) .nutrition-card {
-      background: linear-gradient(135deg, #1b5e20 0%, #2e7d32 100%);
+    :host-context(.dark) .nutrition-card {
+      background: linear-gradient(135deg, #0b3b1a 0%, #164d24 100%);
+      box-shadow: 0 4px 20px rgba(76, 175, 80, 0.35);
+      border: 1px solid rgba(102, 187, 106, 0.3);
     }
 
     .header {
@@ -309,8 +311,8 @@ import {
       margin: 0;
     }
 
-    :host-context([data-theme="dark"]) .title-row h3 {
-      color: #a5d6a7;
+    :host-context(.dark) .title-row h3 {
+      color: #d0f7d0;
     }
 
     .add-btn {
@@ -351,8 +353,8 @@ import {
       color: #2e7d32;
     }
 
-    :host-context([data-theme="dark"]) .progress-header .current {
-      color: #a5d6a7;
+    :host-context(.dark) .progress-header .current {
+      color: #d0f7d0;
     }
 
     .progress-header .separator {
@@ -371,7 +373,7 @@ import {
       overflow: hidden;
     }
 
-    :host-context([data-theme="dark"]) .progress-bar {
+    :host-context(.dark) .progress-bar {
       background: rgba(0, 0, 0, 0.3);
     }
 
@@ -395,7 +397,7 @@ import {
       margin-bottom: 1rem;
     }
 
-    :host-context([data-theme="dark"]) .macros {
+    :host-context(.dark) .macros {
       background: rgba(0, 0, 0, 0.2);
     }
 
@@ -417,7 +419,7 @@ import {
       color: #2e7d32;
     }
 
-    :host-context([data-theme="dark"]) .macro .value {
+    :host-context(.dark) .macro .value {
       color: #a5d6a7;
     }
 
@@ -427,7 +429,7 @@ import {
       text-transform: uppercase;
     }
 
-    :host-context([data-theme="dark"]) .macro .label {
+    :host-context(.dark) .macro .label {
       color: #c5e1a5;
     }
 
@@ -452,7 +454,7 @@ import {
       position: relative;
     }
 
-    :host-context([data-theme="dark"]) .meal-btn {
+    :host-context(.dark) .meal-btn {
       background: #2e7d32;
     }
 
@@ -466,7 +468,7 @@ import {
       background: #e8f5e9;
     }
 
-    :host-context([data-theme="dark"]) .meal-btn.logged {
+    :host-context(.dark) .meal-btn.logged {
       background: #4caf50;
     }
 
@@ -480,7 +482,7 @@ import {
       color: #37474f;
     }
 
-    :host-context([data-theme="dark"]) .meal-btn .name {
+    :host-context(.dark) .meal-btn .name {
       color: #c8e6c9;
     }
 
@@ -512,8 +514,8 @@ import {
       color: #2e7d32;
     }
 
-    :host-context([data-theme="dark"]) .form-group label,
-    :host-context([data-theme="dark"]) .form-group .form-label {
+    :host-context(.dark) .form-group label,
+    :host-context(.dark) .form-group .form-label {
       color: #a5d6a7;
     }
 
@@ -530,7 +532,7 @@ import {
       border: 1px solid rgba(76, 175, 80, 0.15);
     }
 
-    :host-context([data-theme="dark"]) .catalog-detail {
+    :host-context(.dark) .catalog-detail {
       background: rgba(30, 41, 31, 0.75);
       border-color: rgba(165, 214, 167, 0.18);
     }
@@ -550,7 +552,7 @@ import {
       color: #37474f;
     }
 
-    :host-context([data-theme="dark"]) .catalog-detail-header strong {
+    :host-context(.dark) .catalog-detail-header strong {
       color: #eceff1;
     }
 
@@ -577,7 +579,7 @@ import {
       transition: all 0.2s ease;
     }
 
-    :host-context([data-theme="dark"]) .type-btn {
+    :host-context(.dark) .type-btn {
       background: #388e3c;
     }
 
@@ -586,7 +588,7 @@ import {
       background: #e8f5e9;
     }
 
-    :host-context([data-theme="dark"]) .type-btn.selected {
+    :host-context(.dark) .type-btn.selected {
       background: #4caf50;
     }
 
@@ -599,7 +601,7 @@ import {
       color: #37474f;
     }
 
-    :host-context([data-theme="dark"]) .type-btn .name {
+    :host-context(.dark) .type-btn .name {
       color: #c8e6c9;
     }
 
@@ -616,8 +618,8 @@ import {
       box-sizing: border-box;
     }
 
-    :host-context([data-theme="dark"]) .form-group input,
-    :host-context([data-theme="dark"]) .input-with-unit input {
+    :host-context(.dark) .form-group input,
+    :host-context(.dark) .input-with-unit input {
       background: #388e3c;
       border-color: rgba(255, 255, 255, 0.1);
       color: #e8f5e9;
@@ -635,7 +637,7 @@ import {
       white-space: nowrap;
     }
 
-    :host-context([data-theme="dark"]) .input-with-unit .unit {
+    :host-context(.dark) .input-with-unit .unit {
       color: #c5e1a5;
     }
 
@@ -672,7 +674,7 @@ import {
       color: #558b2f;
     }
 
-    :host-context([data-theme="dark"]) .macro-input label {
+    :host-context(.dark) .macro-input label {
       color: #c5e1a5;
     }
 
@@ -725,7 +727,7 @@ import {
       margin: 0 0 0.75rem;
     }
 
-    :host-context([data-theme="dark"]) .recent h4 {
+    :host-context(.dark) .recent h4 {
       color: #a5d6a7;
     }
 
@@ -744,7 +746,7 @@ import {
       border-radius: 0.75rem;
     }
 
-    :host-context([data-theme="dark"]) .meal-item {
+    :host-context(.dark) .meal-item {
       background: rgba(0, 0, 0, 0.2);
     }
 
@@ -763,7 +765,7 @@ import {
       color: #37474f;
     }
 
-    :host-context([data-theme="dark"]) .meal-item .name {
+    :host-context(.dark) .meal-item .name {
       color: #c8e6c9;
     }
 

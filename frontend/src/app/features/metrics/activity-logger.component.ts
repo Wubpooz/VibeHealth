@@ -251,8 +251,10 @@ import {
       box-shadow: 0 4px 20px rgba(255, 152, 0, 0.15);
     }
 
-    :host-context([data-theme="dark"]) .activity-card {
-      background: linear-gradient(135deg, #37474f 0%, #263238 100%);
+    :host-context(.dark) .activity-card {
+      background: linear-gradient(135deg, #263238 0%, #1f2937 100%);
+      box-shadow: 0 4px 20px rgba(255, 152, 0, 0.35);
+      border: 1px solid rgba(255, 152, 0, 0.3);
     }
 
     .header {
@@ -280,8 +282,8 @@ import {
       margin: 0;
     }
 
-    :host-context([data-theme="dark"]) .title-row h3 {
-      color: #ffb74d;
+    :host-context(.dark) .title-row h3 {
+      color: #ffd180;
     }
 
     .add-btn {
@@ -313,8 +315,8 @@ import {
       margin-bottom: 1rem;
     }
 
-    :host-context([data-theme="dark"]) .summary {
-      background: rgba(0, 0, 0, 0.2);
+    :host-context(.dark) .summary {
+      background: rgba(31, 41, 55, 0.3);
     }
 
     .stat {
@@ -330,7 +332,7 @@ import {
       color: #e65100;
     }
 
-    :host-context([data-theme="dark"]) .stat .value {
+    :host-context(.dark) .stat .value {
       color: #ffb74d;
     }
 
@@ -340,7 +342,7 @@ import {
       text-transform: uppercase;
     }
 
-    :host-context([data-theme="dark"]) .stat .label {
+    :host-context(.dark) .stat .label {
       color: #ffcc80;
     }
 
@@ -370,7 +372,7 @@ import {
       box-shadow: 0 2px 10px rgba(255, 152, 0, 0.08);
     }
 
-    :host-context([data-theme="dark"]) .catalog-pill {
+    :host-context(.dark) .catalog-pill {
       background: rgba(38, 50, 56, 0.9);
       color: #eceff1;
     }
@@ -396,7 +398,7 @@ import {
       font-size: 0.72rem;
     }
 
-    :host-context([data-theme="dark"]) .catalog-pill small {
+    :host-context(.dark) .catalog-pill small {
       color: #ffcc80;
     }
 
@@ -413,7 +415,7 @@ import {
       transition: all 0.2s ease;
     }
 
-    :host-context([data-theme="dark"]) .quick-btn {
+    :host-context(.dark) .quick-btn {
       background: #37474f;
     }
 
@@ -437,7 +439,7 @@ import {
       color: #37474f;
     }
 
-    :host-context([data-theme="dark"]) .quick-btn .name {
+    :host-context(.dark) .quick-btn .name {
       color: #eceff1;
     }
 
@@ -461,8 +463,8 @@ import {
       color: #e65100;
     }
 
-    :host-context([data-theme="dark"]) .form-group label,
-    :host-context([data-theme="dark"]) .form-group .form-label {
+    :host-context(.dark) .form-group label,
+    :host-context(.dark) .form-group .form-label {
       color: #ffb74d;
     }
 
@@ -479,7 +481,7 @@ import {
       border: 1px solid rgba(255, 152, 0, 0.15);
     }
 
-    :host-context([data-theme="dark"]) .catalog-detail {
+    :host-context(.dark) .catalog-detail {
       background: rgba(38, 50, 56, 0.7);
       border-color: rgba(255, 183, 77, 0.18);
     }
@@ -499,7 +501,7 @@ import {
       color: #37474f;
     }
 
-    :host-context([data-theme="dark"]) .catalog-detail-header strong {
+    :host-context(.dark) .catalog-detail-header strong {
       color: #eceff1;
     }
 
@@ -526,7 +528,7 @@ import {
       transition: all 0.2s ease;
     }
 
-    :host-context([data-theme="dark"]) .type-btn {
+    :host-context(.dark) .type-btn {
       background: #455a64;
     }
 
@@ -535,7 +537,7 @@ import {
       background: #fff3e0;
     }
 
-    :host-context([data-theme="dark"]) .type-btn.selected {
+    :host-context(.dark) .type-btn.selected {
       background: #ff9800;
     }
 
@@ -548,7 +550,7 @@ import {
       color: #37474f;
     }
 
-    :host-context([data-theme="dark"]) .type-btn .name {
+    :host-context(.dark) .type-btn .name {
       color: #eceff1;
     }
 
@@ -562,7 +564,7 @@ import {
       background: white;
     }
 
-    :host-context([data-theme="dark"]) .form-group input {
+    :host-context(.dark) .form-group input {
       background: #455a64;
       border-color: rgba(255, 255, 255, 0.1);
       color: #eceff1;
@@ -595,7 +597,7 @@ import {
       background: rgba(255, 255, 255, 0.7);
     }
 
-    :host-context([data-theme="dark"]) .timer-btn {
+    :host-context(.dark) .timer-btn {
       background: rgba(255, 152, 0, 0.18);
       color: #eceff1;
     }
@@ -606,7 +608,7 @@ import {
       color: #e65100;
     }
 
-    :host-context([data-theme="dark"]) .timer-display {
+    :host-context(.dark) .timer-display {
       color: #ffcc80;
     }
 
@@ -620,7 +622,7 @@ import {
       transition: all 0.2s ease;
     }
 
-    :host-context([data-theme="dark"]) .preset-btn {
+    :host-context(.dark) .preset-btn {
       background: #455a64;
       color: #eceff1;
     }
@@ -630,7 +632,7 @@ import {
       background: #fff3e0;
     }
 
-    :host-context([data-theme="dark"]) .preset-btn.selected {
+    :host-context(.dark) .preset-btn.selected {
       background: #ff9800;
       color: white;
     }
@@ -651,7 +653,7 @@ import {
       transition: all 0.2s ease;
     }
 
-    :host-context([data-theme="dark"]) .intensity-btn {
+    :host-context(.dark) .intensity-btn {
       background: #455a64;
       color: #eceff1;
     }
@@ -661,7 +663,7 @@ import {
       background: #fff3e0;
     }
 
-    :host-context([data-theme="dark"]) .intensity-btn.selected {
+    :host-context(.dark) .intensity-btn.selected {
       background: #ff9800;
       color: white;
     }
@@ -674,7 +676,7 @@ import {
       border-radius: 0.75rem;
     }
 
-    :host-context([data-theme="dark"]) .calories-estimate {
+    :host-context(.dark) .calories-estimate {
       background: rgba(0, 0, 0, 0.2);
     }
 
@@ -683,7 +685,7 @@ import {
       color: #e65100;
     }
 
-    :host-context([data-theme="dark"]) .calories-estimate .value {
+    :host-context(.dark) .calories-estimate .value {
       color: #ffb74d;
     }
 
@@ -731,7 +733,7 @@ import {
       margin: 0 0 0.75rem;
     }
 
-    :host-context([data-theme="dark"]) .recent h4 {
+    :host-context(.dark) .recent h4 {
       color: #ffb74d;
     }
 
@@ -750,7 +752,7 @@ import {
       border-radius: 0.75rem;
     }
 
-    :host-context([data-theme="dark"]) .activity-item {
+    :host-context(.dark) .activity-item {
       background: rgba(0, 0, 0, 0.2);
     }
 
@@ -769,7 +771,7 @@ import {
       color: #37474f;
     }
 
-    :host-context([data-theme="dark"]) .activity-item .name {
+    :host-context(.dark) .activity-item .name {
       color: #eceff1;
     }
 
