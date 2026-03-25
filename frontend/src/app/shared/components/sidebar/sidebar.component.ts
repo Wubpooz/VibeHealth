@@ -53,6 +53,7 @@ export class SidebarComponent {
     { route: '/dashboard', labelKey: 'nav.dashboard', icon: 'dashboard' },
     { route: '/vitals', labelKey: 'nav.vitals', icon: 'directions_walk' },
     { route: '/activity', labelKey: 'nav.activity', icon: 'fitness_center' },
+    { route: '/workouts', labelKey: 'nav.workouts', icon: 'fitness_center' },
     { route: '/nutrition', labelKey: 'nav.nutrition', icon: 'restaurant' },
     { route: '/goals', labelKey: 'nav.goals', icon: 'track_changes' },
     { route: '/medical-id', labelKey: 'nav.medical_id', icon: 'badge' },

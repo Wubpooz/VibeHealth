@@ -28,6 +28,7 @@
     "wellness": "Wellness",
     "medical": "Medical",
     "activity": "Activity",
+    "workouts": "Workouts",
     "nutrition": "Nutrition",
     "goals": "Goals",
     "rewards": "Rewards"
@@ -709,5 +710,22 @@
       "CELEBRATE_SUBTITLE": "Your bunny believes in you. Keep showing up every day!",
       "CARROTS_EARNED": "carrots earned for setting a goal!"
     }
+  },
+  "WORKOUTS": {
+    "TITLE": "Workouts",
+    "SUBTITLE": "Personalized exercises based on your profile and goals",
+    "DIFFICULTY": "Difficulty",
+    "NEW_PLAN_NAME": "Workout plan name",
+    "NEW_PLAN_PLACEHOLDER": "e.g. Weekly Strength Starter",
+    "CREATE_PLAN": "Create plan",
+    "ACTIVE_PLAN": "Active plan",
+    "LOG_SET": "Log set",
+    "REST_TIMER": "Rest",
+    "SYNC_TITLE": "Health platform sync",
+    "SYNC_SUBTITLE": "Connect providers and configure placeholder continuous sync settings.",
+    "CONNECTED": "Connected",
+    "CONNECT": "Connect",
+    "AUTO_SYNC": "Auto-sync continuously",
+    "PULL_NOW": "Pull latest data"
   }
 }

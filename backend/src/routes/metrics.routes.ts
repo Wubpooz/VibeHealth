@@ -902,6 +902,73 @@ const goalProgressSchema = z.object({
   date: z.string().datetime().optional(),
 });
 
+const WORKOUT_DIFFICULTY_BY_FITNESS_LEVEL: Record<string, WorkoutDifficulty> = {
+  sedentary: 'BEGINNER',
+  light: 'BEGINNER',
+  moderate: 'INTERMEDIATE',
+  intermediate: 'INTERMEDIATE',
+  active: 'ADVANCED',
+  very_active: 'ADVANCED',
+};
+
+type ExerciseCategory = 'STRENGTH' | 'CARDIO' | 'MOBILITY' | 'FLEXIBILITY' | 'RECOVERY';
+type WorkoutDifficulty = 'BEGINNER' | 'INTERMEDIATE' | 'ADVANCED';
+
+const EXERCISE_CATEGORY_FOR_GOAL: Record<string, ExerciseCategory> = {
+  strength: 'STRENGTH',
+  cardio: 'CARDIO',
+  flexibility: 'FLEXIBILITY',
+  mobility: 'MOBILITY',
+};
+
+const workoutPlanCreateSchema = z.object({
+  name: z.string().trim().min(1).max(100),
+  description: z.string().trim().max(500).optional(),
+});
+
+const workoutPlanExerciseLogSchema = z.object({
+  workoutPlanExerciseId: z.string().trim().min(1),
+  repsCompleted: z.number().int().positive().max(200),
+});
+
+const healthSyncConnectSchema = z.object({
+  provider: z.enum(['GOOGLE_FIT', 'SAMSUNG_HEALTH']),
+});
+
+const healthSyncAutoSchema = z.object({
+  autoSync: z.boolean(),
+});
+
+function buildWorkoutSuggestionsFromProfile(profile: {
+  fitnessLevel: string | null;
+  goals: string[];
+} | null): {
+  categories: ExerciseCategory[];
+  difficulty: WorkoutDifficulty;
+} {
+  const difficulty = profile?.fitnessLevel
+    ? (WORKOUT_DIFFICULTY_BY_FITNESS_LEVEL[profile.fitnessLevel] ?? 'BEGINNER')
+    : 'BEGINNER';
+
+  const categories = new Set<ExerciseCategory>();
+  for (const goal of profile?.goals ?? []) {
+    const maybeCategory = EXERCISE_CATEGORY_FOR_GOAL[goal];
+    if (maybeCategory) {
+      categories.add(maybeCategory);
+    }
+  }
+
+  if (categories.size === 0) {
+    categories.add('CARDIO');
+    categories.add('STRENGTH');
+  }
+
+  return {
+    categories: [...categories],
+    difficulty,
+  };
+}
+
 // List all active goals for the user
 metricsRoutes.get('/goals', async (c) => {
   const user = c.get('user');
@@ -1089,6 +1156,312 @@ metricsRoutes.get("/goals/:id/progress", async (c) => {
   } catch (error) {
     console.error("Error fetching goal progress:", error);
     return c.json({ error: "Failed to fetch progress" }, 500);
+  }
+});
+
+// =============================================================================
+// Workout plans and exercise flow
+// =============================================================================
+
+metricsRoutes.get('/workouts/suggestions', async (c) => {
+  const user = c.get('user');
+
+  try {
+    const profile = await prisma.profile.findUnique({
+      where: { userId: user.id },
+      select: { fitnessLevel: true, goals: true },
+    });
+
+    const { categories, difficulty } = buildWorkoutSuggestionsFromProfile(profile);
+    const exercises = await prisma.exerciseCatalog.findMany({
+      where: {
+        isActive: true,
+        category: { in: categories },
+        difficulty: { in: difficulty === 'ADVANCED' ? ['INTERMEDIATE', 'ADVANCED'] : [difficulty] },
+      },
+      orderBy: [{ category: 'asc' }, { name: 'asc' }],
+      take: 18,
+    });
+
+    return c.json({
+      suggestions: {
+        categories,
+        difficulty,
+        exercises,
+      },
+    });
+  } catch (error) {
+    console.error('Error building workout suggestions:', error);
+    return c.json({ error: 'Failed to load workout suggestions' }, 500);
+  }
+});
+
+metricsRoutes.get('/workout-plans', async (c) => {
+  const user = c.get('user');
+
+  try {
+    const plans = await prisma.workoutPlan.findMany({
+      where: { userId: user.id, isActive: true },
+      include: {
+        exercises: {
+          include: { exercise: true },
+          orderBy: { orderIndex: 'asc' },
+        },
+      },
+      orderBy: { createdAt: 'desc' },
+    });
+
+    return c.json({ plans });
+  } catch (error) {
+    console.error('Error fetching workout plans:', error);
+    return c.json({ error: 'Failed to fetch workout plans' }, 500);
+  }
+});
+
+metricsRoutes.post('/workout-plans', async (c) => {
+  const user = c.get('user');
+  const body = await c.req.json();
+  const parsed = workoutPlanCreateSchema.safeParse(body);
+
+  if (!parsed.success) {
+    return c.json({ error: 'Invalid workout plan data', details: parsed.error.flatten() }, 400);
+  }
+
+  try {
+    const profile = await prisma.profile.findUnique({
+      where: { userId: user.id },
+      select: { fitnessLevel: true, goals: true },
+    });
+    const { categories, difficulty } = buildWorkoutSuggestionsFromProfile(profile);
+
+    const exercises = await prisma.exerciseCatalog.findMany({
+      where: {
+        isActive: true,
+        category: { in: categories },
+        difficulty: { in: difficulty === 'ADVANCED' ? ['INTERMEDIATE', 'ADVANCED'] : [difficulty] },
+      },
+      orderBy: [{ category: 'asc' }, { name: 'asc' }],
+      take: 6,
+    });
+
+    const defaultExercises = exercises.map((exercise: {
+      id: string;
+      defaultSets: number;
+      defaultRepsMin: number;
+      defaultRepsMax: number;
+      defaultRestSeconds: number;
+    }, index: number) => ({
+      exerciseCatalogId: exercise.id,
+      orderIndex: index + 1,
+      sets: exercise.defaultSets,
+      repsMin: exercise.defaultRepsMin,
+      repsMax: exercise.defaultRepsMax,
+      restSeconds: exercise.defaultRestSeconds,
+    }));
+
+    const plan = await prisma.workoutPlan.create({
+      data: {
+        userId: user.id,
+        name: parsed.data.name,
+        description: parsed.data.description,
+        difficulty,
+        exercises: { create: defaultExercises },
+      },
+      include: {
+        exercises: {
+          include: { exercise: true },
+          orderBy: { orderIndex: 'asc' },
+        },
+      },
+    });
+
+    return c.json({ success: true, plan }, 201);
+  } catch (error) {
+    console.error('Error creating workout plan:', error);
+    return c.json({ error: 'Failed to create workout plan' }, 500);
+  }
+});
+
+metricsRoutes.post('/workout-logs', async (c) => {
+  const user = c.get('user');
+  const body = await c.req.json();
+  const parsed = workoutPlanExerciseLogSchema.safeParse(body);
+
+  if (!parsed.success) {
+    return c.json({ error: 'Invalid workout log data', details: parsed.error.flatten() }, 400);
+  }
+
+  try {
+    const exerciseEntry = await prisma.workoutPlanExercise.findFirst({
+      where: {
+        id: parsed.data.workoutPlanExerciseId,
+        workoutPlan: { userId: user.id, isActive: true },
+      },
+      include: {
+        exercise: true,
+      },
+    });
+
+    if (!exerciseEntry) {
+      return c.json({ error: 'Workout exercise not found' }, 404);
+    }
+
+    return c.json({
+      success: true,
+      log: {
+        workoutPlanExerciseId: exerciseEntry.id,
+        repsCompleted: parsed.data.repsCompleted,
+        targetReps: `${exerciseEntry.repsMin}-${exerciseEntry.repsMax}`,
+        restSeconds: exerciseEntry.restSeconds,
+        exerciseName: exerciseEntry.exercise.name,
+      },
+      timer: {
+        restSeconds: exerciseEntry.restSeconds,
+      },
+    }, 201);
+  } catch (error) {
+    console.error('Error logging workout set:', error);
+    return c.json({ error: 'Failed to log workout set' }, 500);
+  }
+});
+
+// =============================================================================
+// Health sync (Google Fit / Samsung Health placeholders with safe contracts)
+// =============================================================================
+
+metricsRoutes.get('/sync/connections', async (c) => {
+  const user = c.get('user');
+
+  try {
+    const connections = await prisma.healthSyncConnection.findMany({
+      where: { userId: user.id },
+      orderBy: { provider: 'asc' },
+    });
+    return c.json({ connections });
+  } catch (error) {
+    console.error('Error fetching health sync connections:', error);
+    return c.json({ error: 'Failed to fetch health sync connections' }, 500);
+  }
+});
+
+metricsRoutes.post('/sync/connect', async (c) => {
+  const user = c.get('user');
+  const body = await c.req.json();
+  const parsed = healthSyncConnectSchema.safeParse(body);
+
+  if (!parsed.success) {
+    return c.json({ error: 'Invalid sync provider', details: parsed.error.flatten() }, 400);
+  }
+
+  try {
+    const connection = await prisma.healthSyncConnection.upsert({
+      where: {
+        userId_provider: {
+          userId: user.id,
+          provider: parsed.data.provider,
+        },
+      },
+      update: {
+        connected: true,
+      },
+      create: {
+        userId: user.id,
+        provider: parsed.data.provider,
+        connected: true,
+        autoSync: false,
+      },
+    });
+
+    return c.json({
+      success: true,
+      connection,
+      status: 'connected_placeholder',
+      message: 'Provider connected in placeholder mode. Continuous background sync will be enabled in a future release.',
+    });
+  } catch (error) {
+    console.error('Error connecting provider:', error);
+    return c.json({ error: 'Failed to connect provider' }, 500);
+  }
+});
+
+metricsRoutes.patch('/sync/:provider/auto', async (c) => {
+  const user = c.get('user');
+  const provider = c.req.param('provider');
+  const body = await c.req.json();
+
+  const providerParsed = healthSyncConnectSchema.safeParse({ provider });
+  if (!providerParsed.success) {
+    return c.json({ error: 'Invalid sync provider', details: providerParsed.error.flatten() }, 400);
+  }
+
+  const bodyParsed = healthSyncAutoSchema.safeParse(body);
+  if (!bodyParsed.success) {
+    return c.json({ error: 'Invalid auto sync payload', details: bodyParsed.error.flatten() }, 400);
+  }
+
+  try {
+    const updated = await prisma.healthSyncConnection.update({
+      where: {
+        userId_provider: {
+          userId: user.id,
+          provider: providerParsed.data.provider,
+        },
+      },
+      data: {
+        autoSync: bodyParsed.data.autoSync,
+      },
+    });
+
+    return c.json({
+      success: true,
+      connection: updated,
+      message: bodyParsed.data.autoSync
+        ? 'Auto-sync enabled for placeholder mode.'
+        : 'Auto-sync disabled.',
+    });
+  } catch (error) {
+    console.error('Error updating auto sync setting:', error);
+    return c.json({ error: 'Failed to update auto sync setting' }, 500);
+  }
+});
+
+metricsRoutes.post('/sync/:provider/pull', async (c) => {
+  const user = c.get('user');
+  const provider = c.req.param('provider');
+
+  const providerParsed = healthSyncConnectSchema.safeParse({ provider });
+  if (!providerParsed.success) {
+    return c.json({ error: 'Invalid sync provider', details: providerParsed.error.flatten() }, 400);
+  }
+
+  try {
+    const updated = await prisma.healthSyncConnection.update({
+      where: {
+        userId_provider: {
+          userId: user.id,
+          provider: providerParsed.data.provider,
+        },
+      },
+      data: {
+        lastSyncAt: new Date(),
+      },
+    });
+
+    return c.json({
+      success: true,
+      provider: providerParsed.data.provider,
+      pulled: {
+        vitals: 0,
+        activities: 0,
+        meals: 0,
+        hydration: 0,
+      },
+      mode: 'placeholder',
+      lastSyncAt: updated.lastSyncAt,
+    });
+  } catch (error) {
+    console.error('Error pulling provider sync:', error);
+    return c.json({ error: 'Failed to run provider pull sync' }, 500);
   }
 });
 

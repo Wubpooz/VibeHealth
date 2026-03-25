@@ -105,6 +105,14 @@ export const routes: Routes = [
     canActivate: [authGuard],
   },
   {
+    path: "workouts",
+    loadComponent: () =>
+      import("./features/metrics/workouts-page.component").then(
+        (m) => m.WorkoutsPageComponent,
+      ),
+    canActivate: [authGuard],
+  },
+  {
     path: "not-found",
     loadComponent: () =>
       import("./features/not-found/not-found.component").then(

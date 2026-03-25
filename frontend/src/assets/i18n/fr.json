@@ -28,6 +28,7 @@
     "wellness": "Bien-être",
     "medical": "Médical",
     "activity": "Activité",
+    "workouts": "Entraînements",
     "nutrition": "Nutrition",
     "goals": "Objectifs",
     "rewards": "Récompenses"
@@ -707,5 +708,22 @@
       "CELEBRATE_SUBTITLE": "Votre lapin croit en vous. Continuez à vous montrer chaque jour !",
       "CARROTS_EARNED": "carottes gagnées pour avoir fixé un objectif !"
     }
+  },
+  "WORKOUTS": {
+    "TITLE": "Entraînements",
+    "SUBTITLE": "Exercices personnalisés selon votre profil et vos objectifs",
+    "DIFFICULTY": "Difficulté",
+    "NEW_PLAN_NAME": "Nom du programme",
+    "NEW_PLAN_PLACEHOLDER": "ex. Départ force hebdomadaire",
+    "CREATE_PLAN": "Créer le plan",
+    "ACTIVE_PLAN": "Plan actif",
+    "LOG_SET": "Enregistrer la série",
+    "REST_TIMER": "Repos",
+    "SYNC_TITLE": "Synchronisation des plateformes santé",
+    "SYNC_SUBTITLE": "Connectez des fournisseurs et configurez les paramètres de synchronisation continue (mode placeholder).",
+    "CONNECTED": "Connecté",
+    "CONNECT": "Connecter",
+    "AUTO_SYNC": "Synchroniser automatiquement en continu",
+    "PULL_NOW": "Récupérer les dernières données"
   }
 }
