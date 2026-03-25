@@ -197,7 +197,7 @@ import { StatsGridComponent } from "../../shared/components/stats-grid/stats-gri
                   (auth.user()?.name || ("DASHBOARD.FRIEND" | translate)).split(
                     " "
                   )[0]
-                }}! 🐰
+                }}!
               </h2>
               <p class="text-lg text-gray-500 dark:text-gray-400 font-medium">
                 {{ "DASHBOARD.GREETING_SUBTITLE" | translate }}
