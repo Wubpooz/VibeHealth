@@ -179,17 +179,24 @@ type ViewMode = 'card' | 'edit';
             <!-- QR Code Section -->
             <div class="qr-section">
               <div class="qr-wrapper">
-                <button
-                  type="button"
-                  class="qr-placeholder"
-                  (click)="showQR.set(true)"
-                  aria-label="View QR Code"
-                >
-                  <svg class="qr-icon" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M3 3h6v6H3V3zm2 2v2h2V5H5zm8-2h6v6h-6V3zm2 2v2h2V5h-2zM3 13h6v6H3v-6zm2 2v2h2v-2H5zm13-2h3v2h-3v-2zm-5 0h2v3h-2v-3zm2 3h3v3h-2v-1h-1v-2zm3 0h2v2h-2v-2zm-2-3h2v2h-2v-2zm2 5v1h-3v-1h3zm-5 1v-1h2v1h-2z"/>
-                  </svg>
-                  <span>Tap for QR</span>
-                </button>
+                @if (showQR()) {
+                  <div class="qr-preview">
+                    <img [src]="qrCodeUrl()" alt="Medical ID QR Code" />
+                    <button class="qr-close" type="button" (click)="showQR.set(false)" aria-label="Close QR preview">✕</button>
+                  </div>
+                } @else {
+                  <button
+                    type="button"
+                    class="qr-placeholder"
+                    (click)="showQR.set(true)"
+                    aria-label="View QR Code"
+                  >
+                    <svg class="qr-icon" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M3 3h6v6H3V3zm2 2v2h2V5H5zm8-2h6v6h-6V3zm2 2v2h2V5h-2zM3 13h6v6H3v-6zm2 2v2h2v-2H5zm13-2h3v2h-3v-2zm-5 0h2v3h-2v-3zm2 3h3v3h-2v-1h-1v-2zm3 0h2v2h-2v-2zm-2-3h2v2h-2v-2zm2 5v1h-3v-1h3zm-5 1v-1h2v1h-2z"/>
+                    </svg>
+                    <span>Preview QR</span>
+                  </button>
+                }
               </div>
               <p class="qr-hint">Scan to access emergency info</p>
             </div>
@@ -869,6 +876,70 @@ type ViewMode = 'card' | 'edit';
       height: 80px;
     }
 
+    .qr-preview {
+      position: relative;
+      width: 240px;
+      height: 240px;
+      border-radius: 1rem;
+      overflow: hidden;
+      border: 1px solid rgba(15,23,42,0.2);
+      box-shadow: 0 8px 30px rgba(0,0,0,0.25);
+      background: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .qr-preview img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .qr-close {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      width: 24px;
+      height: 24px;
+      border: none;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.85);
+      color: white;
+      cursor: pointer;
+      font-size: 0.8rem;
+      display: grid;
+      place-items: center;
+      line-height: 1;
+    }
+
+    .qr-placeholder {
+      width: 100%;
+      height: 100%;
+      display: grid;
+      place-items: center;
+      border-radius: 1rem;
+      border: 1px dashed #94a3b8;
+      background: linear-gradient(135deg, rgba(255,255,255,0.8) 0%, rgba(241,245,249,0.8) 100%);
+      color: #334155;
+      gap: 0.5rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      border-color: #94a3b8;
+    }
+
+    .qr-placeholder:hover {
+      transform: translateY(-2px);
+      border-color: #64748b;
+      background: linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(226,232,240,0.9) 100%);
+    }
+
+    .qr-placeholder .qr-icon {
+      width: 1.5rem;
+      height: 1.5rem;
+      color: #0f172a;
+    }
+
     .qr-placeholder {
       width: 100%;
       height: 100%;
@@ -1386,6 +1457,13 @@ export class MedicalIdComponent implements OnInit {
   readonly commonAllergies = this.referenceDataService.allergies;
   readonly commonMedications = this.referenceDataService.medications;
   readonly commonConditions = this.referenceDataService.conditions;
+
+  readonly qrCodeUrl = computed(() => {
+    const payload = this.medicalIdService.generateQRData();
+    if (!payload) return '';
+    const encoded = encodeURIComponent(payload);
+    return `https://api.qrserver.com/v1/create-qr-code/?size=260x260&margin=8&data=${encoded}`;
+  });
 
   // Edit form data
   editData = {
