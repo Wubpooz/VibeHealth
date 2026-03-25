@@ -1,16 +1,49 @@
-<!-- Global Noise Texture -->
-<div class="noise-texture"></div>
+<mat-sidenav-container class="app-shell" autosize>
+  @if (isMobile() || showDesktopSidebar()) {
+    <mat-sidenav
+      #drawer
+      class="app-sidenav"
+      [mode]="isMobile() ? 'over' : 'side'"
+      [opened]="isMobile() ? false : showDesktopSidebar()"
+      [fixedInViewport]="true"
+      [disableClose]="!isMobile"
+    >
+      <app-sidebar (navItemClicked)="isMobile() && drawer?.close()" />
+    </mat-sidenav>
+  }
 
-<!-- Sidebar (conditionally shown) -->
-@if (showSidebar()) {
-  <app-sidebar />
-}
+  <mat-sidenav-content>
+    @if (showToolbar()) {
+      <mat-toolbar color="primary" class="app-toolbar">
+        @if (isMobile() && showSidebar()) {
+          <button
+            class="menu-toggle-button"
+            mat-icon-button
+            (click)="toggleMenu()"
+            aria-label="Open navigation menu"
+            [attr.aria-expanded]="drawer?.opened"
+            aria-controls="main-nav"
+          >
+            <mat-icon class="material-symbols-rounded" fontIcon="menu">menu</mat-icon>
+          </button>
+        }
+        <span class="app-toolbar-title">{{ pageTitle() }}</span>
+      </mat-toolbar>
+    }
 
-<!-- Main Content with Page Transitions -->
-<div class="route-container" [class.with-sidebar]="showSidebar()" [@routeAnimations]="getRouteAnimationData()">
-  <router-outlet />
-</div>
+    <div class="noise-texture"></div>
 
-<!-- Global UX primitives -->
-<app-goey-toast />
-<app-scroll-top-progress />
+    <div
+      class="route-container"
+      [class.with-sidebar]="showSidebar()"
+      [class.landing-no-margin]="isLanding()"
+      [class.not-found-no-margin]="isNotFoundPage()"
+      [@routeAnimations]="getRouteAnimationData()"
+    >
+      <router-outlet />
+    </div>
+
+    <app-goey-toast />
+    <app-scroll-top-progress />
+  </mat-sidenav-content>
+</mat-sidenav-container>

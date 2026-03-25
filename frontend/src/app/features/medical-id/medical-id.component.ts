@@ -3,6 +3,20 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { toDataURL } from 'qrcode';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatCardModule } from '@angular/material/card';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatBadgeModule } from '@angular/material/badge';
+import { MatGridListModule } from '@angular/material/grid-list';
+import { MedicalIdQrDialogComponent } from './medical-id-qr-dialog.component';
 import { MedicalIdService } from '../../core/medical-id/medical-id.service';
 import { ReferenceDataService } from '../../core/reference-data/reference-data.service';
 import { BackButtonComponent } from '../../shared/components/back-button/back-button.component';
@@ -16,7 +30,26 @@ type ViewMode = 'card' | 'edit';
 @Component({
   selector: 'app-medical-id',
   standalone: true,
-  imports: [CommonModule, FormsModule, TranslateModule, AutocompleteComponent, BackButtonComponent],
+  imports: [
+    CommonModule,
+    FormsModule,
+    TranslateModule,
+    AutocompleteComponent,
+    BackButtonComponent,
+    MatDialogModule,
+    MatButtonModule,
+    MatIconModule,
+    MatCardModule,
+    MatChipsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatAutocompleteModule,
+    MatProgressSpinnerModule,
+    MatSnackBarModule,
+    MatTooltipModule,
+    MatBadgeModule,
+    MatGridListModule,
+  ],
   template: `
     <div class="medical-id-page">
       <!-- Dramatic Emergency Header -->
@@ -183,12 +216,10 @@ type ViewMode = 'card' | 'edit';
                 <button
                   type="button"
                   class="qr-placeholder"
-                  (click)="showQR.set(true)"
-                  aria-label="View QR Code"
+                  (click)="openQrDialog()"
+                  aria-label="Open QR Code dialog"
                 >
-                  <svg class="qr-icon" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M3 3h6v6H3V3zm2 2v2h2V5H5zm8-2h6v6h-6V3zm2 2v2h2V5h-2zM3 13h6v6H3v-6zm2 2v2h2v-2H5zm13-2h3v2h-3v-2zm-5 0h2v3h-2v-3zm2 3h3v3h-2v-1h-1v-2zm3 0h2v2h-2v-2zm-2-3h2v2h-2v-2zm2 5v1h-3v-1h3zm-5 1v-1h2v1h-2z"/>
-                  </svg>
+                  <span class="material-symbols-rounded">qr_code</span>
                   <span>Preview QR</span>
                 </button>
               </div>
@@ -358,52 +389,6 @@ type ViewMode = 'card' | 'edit';
         }
       </main>
 
-      <!-- QR Modal -->
-      @if (showQR()) {
-        <div
-          class="qr-modal"
-          role="presentation"
-          (click)="showQR.set(false)"
-          (keydown.escape)="showQR.set(false)"
-        >
-          <div
-            class="qr-modal-content"
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="qr-modal-title"
-            (click)="$event.stopPropagation()"
-            (keydown)="$event.stopPropagation()"
-          >
-            <button
-              class="qr-close"
-              (click)="showQR.set(false)"
-              aria-label="Close QR Modal"
-            >
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16">
-                <line x1="18" y1="6" x2="6" y2="18"></line>
-                <line x1="6" y1="6" x2="18" y2="18"></line>
-              </svg>
-            </button>
-            <h3 id="qr-modal-title">Emergency QR Code</h3>
-            <div class="qr-large">
-              <!-- Computed QR from user medical ID data -->
-              @if (qrCodeUrl()) {
-                <img
-                  class="qr-svg"
-                  [src]="qrCodeUrl()"
-                  alt="Generated Medical ID QR Code"
-                  loading="lazy"
-                />
-              } @else {
-                <div class="qr-modal-loading">Generating QR code…</div>
-              }
-            </div>
-            <p class="qr-instructions">
-              First responders can scan this code to view your critical medical information
-            </p>
-          </div>
-        </div>
-      }
     </div>
   `,
   styles: [`
@@ -1427,10 +1412,11 @@ export class MedicalIdComponent implements OnInit {
   readonly profileService = inject(ProfileService);
   readonly auth = inject(AuthService);
   private readonly referenceDataService = inject(ReferenceDataService);
+  private readonly dialog = inject(MatDialog);
+  private readonly snackBar = inject(MatSnackBar);
 
   // View state
   readonly viewMode = signal<ViewMode>('card');
-  readonly showQR = signal(false);
   readonly saving = signal(false);
 
   // Constants
@@ -1473,6 +1459,21 @@ export class MedicalIdComponent implements OnInit {
       console.error('QR code generation failed', error);
       this.qrCodeUrl.set('');
     }
+  }
+
+  openQrDialog(): void {
+    const qrUrl = this.qrCodeUrl();
+    if (!qrUrl) {
+      this.snackBar.open('Please wait while QR code is generating', 'Close', { duration: 3000 });
+      return;
+    }
+    this.dialog.open(MedicalIdQrDialogComponent, {
+      data: { qrCodeUrl: qrUrl },
+      panelClass: 'medical-id-qr-dialog',
+      width: 'calc(100vw - 32px)',
+      maxWidth: '420px',
+      autoFocus: false
+    });
   }
 
   // Edit form data

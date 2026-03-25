@@ -1,25 +1,10 @@
-import { Component, inject, computed } from '@angular/core';
+import { Component, inject, computed, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
-import {
-  LucideLayoutDashboard,
-  LucideActivity,
-  LucideDumbbell,
-  LucideUtensils,
-  LucideTarget,
-  LucideBadgeCheck,
-  LucideCross,
-  LucideBookOpen,
-  LucideTrophy,
-  LucideSettings,
-  LucideSun,
-  LucideMoon,
-  LucideMonitor,
-  LucideLogOut,
-  LucideUser
-} from '@lucide/angular';
-
+import { MatListModule } from '@angular/material/list';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
 import { ThemeService, type Theme } from '../../../core/theme/theme.service';
 import { AuthService } from '../../../core/auth/auth.service';
 import { ProfileService } from '../../../core/profile/profile.service';
@@ -37,21 +22,9 @@ interface NavItem {
     CommonModule,
     RouterModule,
     TranslateModule,
-    LucideLayoutDashboard,
-    LucideActivity,
-    LucideDumbbell,
-    LucideUtensils,
-    LucideTarget,
-    LucideBadgeCheck,
-    LucideCross,
-    LucideBookOpen,
-    LucideTrophy,
-    LucideSettings,
-    LucideSun,
-    LucideMoon,
-    LucideMonitor,
-    LucideLogOut,
-    LucideUser,
+    MatListModule,
+    MatIconModule,
+    MatButtonModule,
     CarrotCounterComponent
   ],
   templateUrl: './sidebar.component.html',
@@ -67,6 +40,8 @@ export class SidebarComponent {
   readonly user = this.authService.user;
   readonly profile = this.profileService.profile;
 
+  readonly navItemClicked = output<void>();
+
   readonly mockAvatarUrl = 'https://api.dicebear.com/6.x/initials/svg?seed=VibeHealth';
 
   readonly userName = computed(() => {
@@ -75,15 +50,15 @@ export class SidebarComponent {
   });
 
   readonly navItems: NavItem[] = [
-    { route: '/dashboard', labelKey: 'nav.dashboard', icon: 'LayoutDashboard' },
-    { route: '/vitals', labelKey: 'nav.vitals', icon: 'Activity' },
-    { route: '/activity', labelKey: 'nav.activity', icon: 'Dumbbell' },
-    { route: '/nutrition', labelKey: 'nav.nutrition', icon: 'Utensils' },
-    { route: '/goals', labelKey: 'nav.goals', icon: 'Target' },
-    { route: '/medical-id', labelKey: 'nav.medical_id', icon: 'BadgeCheck' },
-    { route: '/first-aid', labelKey: 'nav.first_aid', icon: 'Cross' },
-    { route: '/journal', labelKey: 'nav.journal', icon: 'BookOpen' },
-    { route: '/rewards', labelKey: 'nav.rewards', icon: 'Trophy' }
+    { route: '/dashboard', labelKey: 'nav.dashboard', icon: 'dashboard' },
+    { route: '/vitals', labelKey: 'nav.vitals', icon: 'directions_walk' },
+    { route: '/activity', labelKey: 'nav.activity', icon: 'fitness_center' },
+    { route: '/nutrition', labelKey: 'nav.nutrition', icon: 'restaurant' },
+    { route: '/goals', labelKey: 'nav.goals', icon: 'track_changes' },
+    { route: '/medical-id', labelKey: 'nav.medical_id', icon: 'badge' },
+    { route: '/first-aid', labelKey: 'nav.first_aid', icon: 'medical_services' },
+    { route: '/journal', labelKey: 'nav.journal', icon: 'menu_book' },
+    { route: '/rewards', labelKey: 'nav.rewards', icon: 'emoji_events' }
   ];
 
 

@@ -1,18 +1,72 @@
-/* Route container adjusts for sidebar */
-.route-container {
-  min-height: 100vh;
-  transition: margin-left 0.3s ease;
+/* App layout for MatSidenav */
+.app-shell {
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
 }
 
-.route-container.with-sidebar {
-  margin-left: 18rem; /* Match sidebar width */
+.app-sidenav {
+  width: 18rem;
+  min-width: 18rem;
 }
 
-/* Mobile: no sidebar margin */
 @media (max-width: 768px) {
-  .route-container.with-sidebar {
-    margin-left: 0;
+  .app-sidenav {
+    width: 100%;
+    min-width: 100%;
+    z-index: 1001;
   }
+}
+
+.app-toolbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1100;
+  background: #fffaf8;
+  border-bottom: 1px solid rgba(255, 107, 107, 0.1);
+  backdrop-filter: none;
+}
+
+:host-context(.dark) .app-toolbar {
+  background: #1a1614;
+  border-bottom: 1px solid rgba(255, 117, 116, 0.15);
+}
+
+.menu-toggle-button {
+  display: none;
+}
+
+@media (max-width: 1023px) {
+  .menu-toggle-button {
+    display: inline-flex;
+  }
+}
+
+.route-container {
+  min-height: calc(100vh - 64px);
+  margin-top: 64px;
+  transition: margin-left 0.3s ease;
+  margin-left: 0;
+  padding: 1.25rem;
+}
+
+.route-container.not-found-no-margin {
+  margin-top: 0;
+  min-height: 100vh;
+  padding: 0;
+}
+
+.route-container.landing-no-margin {
+  margin: 0;
+  padding: 0;
+}
+
+.app-toolbar-title {
+  margin-left: 1rem;
+  font-size: 1.15rem;
+  font-weight: 600;
 }
 
 /* Reduced motion support */

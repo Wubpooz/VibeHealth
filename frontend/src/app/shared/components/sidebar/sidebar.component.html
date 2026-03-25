@@ -7,90 +7,23 @@
 
   <!-- Navigation -->
   <nav class="sidebar-nav">
-    @for (item of navItems; track item.route) {
-      <a
-        [routerLink]="item.route"
-        class="nav-link"
-        [class.active]="isActive(item.route)"
-        [attr.aria-current]="isActive(item.route) ? 'page' : null"
-      >
-        @switch (item.icon) {
-          @case ('LayoutDashboard') {
-            <svg lucideLayoutDashboard class="nav-icon"
-              [attr.fill]="isActive(item.route) ? 'currentColor' : 'none'"
-              stroke="currentColor"
-              stroke-width="2"
-              [attr.aria-hidden]="true"
-            ></svg>
-          }
-          @case ('Activity') {
-            <svg lucideActivity class="nav-icon"
-              [attr.fill]="isActive(item.route) ? 'currentColor' : 'none'"
-              stroke="currentColor"
-              stroke-width="2"
-              [attr.aria-hidden]="true"
-            ></svg>
-          }
-          @case ('Dumbbell') {
-            <svg lucideDumbbell class="nav-icon"
-              [attr.fill]="isActive(item.route) ? 'currentColor' : 'none'"
-              stroke="currentColor"
-              stroke-width="2"
-              [attr.aria-hidden]="true"
-            ></svg>
-          }
-          @case ('Utensils') {
-            <svg lucideUtensils class="nav-icon"
-              [attr.fill]="isActive(item.route) ? 'currentColor' : 'none'"
-              stroke="currentColor"
-              stroke-width="2"
-              [attr.aria-hidden]="true"
-            ></svg>
-          }
-          @case ('Target') {
-            <svg lucideTarget class="nav-icon"
-              [attr.fill]="isActive(item.route) ? 'currentColor' : 'none'"
-              stroke="currentColor"
-              stroke-width="2"
-              [attr.aria-hidden]="true"
-            ></svg>
-          }
-          @case ('BadgeCheck') {
-            <svg lucideBadgeCheck class="nav-icon"
-              [attr.fill]="isActive(item.route) ? 'currentColor' : 'none'"
-              stroke="currentColor"
-              stroke-width="2"
-              [attr.aria-hidden]="true"
-            ></svg>
-          }
-          @case ('Cross') {
-            <svg lucideCross class="nav-icon"
-              [attr.fill]="isActive(item.route) ? 'currentColor' : 'none'"
-              stroke="currentColor"
-              stroke-width="2"
-              [attr.aria-hidden]="true"
-            ></svg>
-          }
-          @case ('BookOpen') {
-            <svg lucideBookOpen class="nav-icon"
-              [attr.fill]="isActive(item.route) ? 'currentColor' : 'none'"
-              stroke="currentColor"
-              stroke-width="2"
-              [attr.aria-hidden]="true"
-            ></svg>
-          }
-          @case ('Trophy') {
-            <svg lucideTrophy class="nav-icon"
-              [attr.fill]="isActive(item.route) ? 'currentColor' : 'none'"
-              stroke="currentColor"
-              stroke-width="2"
-              [attr.aria-hidden]="true"
-            ></svg>
-          }
-        }
-        <span class="nav-label">{{ item.labelKey | translate }}</span>
-      </a>
-    }
+    <mat-nav-list>
+      @for (item of navItems; track item.route) {
+        <a
+          mat-list-item
+          [routerLink]="item.route"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: true }"
+          class="nav-link"
+          (click)="navItemClicked.emit()"
+        >
+        <div class="flex items-center gap-3">
+          <mat-icon class="material-symbols-rounded nav-icon">{{ item.icon }}</mat-icon>
+          <span class="nav-label">{{ item.labelKey | translate }}</span>
+        </div>
+        </a>
+      }
+    </mat-nav-list>
   </nav>
 
   <!-- Footer -->
@@ -109,7 +42,7 @@
         [attr.aria-label]="'SIDEBAR.THEME_LIGHT' | translate"
         [attr.aria-pressed]="currentTheme() === 'light'"
       >
-        <svg lucideSun [size]="16" [attr.aria-hidden]="true"></svg>
+        <mat-icon class="material-symbols-rounded" aria-hidden="true">light_mode</mat-icon>
         <span class="theme-label">{{ 'SIDEBAR.THEME_LIGHT' | translate }}</span>
       </button>
       <button
@@ -120,7 +53,7 @@
         [attr.aria-label]="'SIDEBAR.THEME_DARK' | translate"
         [attr.aria-pressed]="currentTheme() === 'dark'"
       >
-        <svg lucideMoon [size]="16" [attr.aria-hidden]="true"></svg>
+        <mat-icon class="material-symbols-rounded" aria-hidden="true">dark_mode</mat-icon>
         <span class="theme-label">{{ 'SIDEBAR.THEME_DARK' | translate }}</span>
       </button>
       <button
@@ -131,7 +64,7 @@
         [attr.aria-label]="'SIDEBAR.THEME_SYSTEM' | translate"
         [attr.aria-pressed]="currentTheme() === 'system'"
       >
-        <svg lucideMonitor [size]="16" [attr.aria-hidden]="true"></svg>
+        <mat-icon class="material-symbols-rounded" aria-hidden="true">computer</mat-icon>
         <span class="theme-label">{{ 'SIDEBAR.THEME_SYSTEM' | translate }}</span>
       </button>
     </div>
@@ -141,7 +74,7 @@
       <button
         type="button"
         class="user-profile-button"
-        (click)="goToProfile()"
+        (click)="navItemClicked.emit(); goToProfile()"
         [attr.aria-label]="'SIDEBAR.VIEW_PROFILE' | translate"
       >
         <div class="user-avatar">
@@ -153,19 +86,19 @@
       <button
         type="button"
         class="icon-button"
-        (click)="goToSettings()"
+        (click)="navItemClicked.emit(); goToSettings()"
         [attr.aria-label]="'nav.settings' | translate"
       >
-        <svg lucideSettings [size]="20" [attr.aria-hidden]="true"></svg>
+        <mat-icon class="material-symbols-rounded" aria-hidden="true">settings</mat-icon>
       </button>
 
       <button
         type="button"
         class="icon-button"
-        (click)="logout()"
+        (click)="navItemClicked.emit(); logout()"
         [attr.aria-label]="'SIDEBAR.LOGOUT' | translate"
       >
-        <svg lucideLogOut [size]="20" [attr.aria-hidden]="true"></svg>
+        <mat-icon class="material-symbols-rounded" aria-hidden="true">logout</mat-icon>
       </button>
     </div>
   </div>

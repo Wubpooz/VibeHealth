@@ -254,7 +254,8 @@ import { RouterLink } from '@angular/router';
     .orb {
       position: absolute;
       border-radius: 999px;
-      filter: blur(0);
+      filter: blur(24px);
+      opacity: 0.75;
       z-index: 1;
     }
 
