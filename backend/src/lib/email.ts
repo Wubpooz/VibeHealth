@@ -1,3 +1,6 @@
+import FormData from 'form-data';
+import Mailgun from 'mailgun.js';
+
 interface UsesendMailPayload {
   to: string;
   from: string;
@@ -26,7 +29,28 @@ type AuthEmailDelivery =
 
 const isDev = process.env.NODE_ENV === 'development';
 
+type EmailProvider = 'mailgun' | 'usesend';
+
+function selectedProvider(): EmailProvider {
+  const configured = process.env.EMAIL_PROVIDER?.trim().toLowerCase();
+  if (configured === 'usesend') {
+    return 'usesend';
+  }
+  if (configured === 'mailgun') {
+    return 'mailgun';
+  }
+  return process.env.MAILGUN_API_KEY?.trim() ? 'mailgun' : 'usesend';
+}
+
 function requiredEnv(name: 'USESEND_API_KEY' | 'USESEND_FROM_EMAIL'): string {
+  const value = process.env[name];
+  if (!value?.trim()) {
+    throw new Error(`Missing required environment variable: ${name}`);
+  }
+  return value.trim();
+}
+
+function requiredMailgunEnv(name: 'MAILGUN_API_KEY' | 'MAILGUN_SANDBOX_DOMAIN'): string {
   const value = process.env[name];
   if (!value?.trim()) {
     throw new Error(`Missing required environment variable: ${name}`);
@@ -38,7 +62,26 @@ function usesendBaseUrl(): string {
   return (process.env.USESEND_BASE_URL || 'https://app.usesend.com/api').replace(/\/$/, '');
 }
 
-export async function sendTransactionalEmail(payload: UsesendMailPayload): Promise<void> {
+function mailgunBaseUrl(): string {
+  return (process.env.MAILGUN_BASE_URL || 'https://api.mailgun.net').replace(/\/$/, '');
+}
+
+function mailgunFromAddress(): string {
+  const explicitFrom = process.env.MAILGUN_FROM_EMAIL?.trim();
+  if (explicitFrom) {
+    return explicitFrom;
+  }
+
+  const fallbackUsesendFrom = process.env.USESEND_FROM_EMAIL?.trim();
+  if (fallbackUsesendFrom) {
+    return fallbackUsesendFrom;
+  }
+
+  const domain = requiredMailgunEnv('MAILGUN_SANDBOX_DOMAIN');
+  return `Mailgun Sandbox <postmaster@${domain}>`;
+}
+
+async function sendWithUseSend(payload: UsesendMailPayload): Promise<void> {
   const apiKey = requiredEnv('USESEND_API_KEY');
   const response = await fetch(`${usesendBaseUrl()}/v1/emails`, {
     method: 'POST',
@@ -55,8 +98,35 @@ export async function sendTransactionalEmail(payload: UsesendMailPayload): Promi
   }
 }
 
+async function sendWithMailgun(payload: UsesendMailPayload): Promise<void> {
+  const mailgun = new Mailgun(FormData);
+  const client = mailgun.client({
+    username: 'api',
+    key: requiredMailgunEnv('MAILGUN_API_KEY'),
+    url: mailgunBaseUrl(),
+  });
+
+  const domain = requiredMailgunEnv('MAILGUN_SANDBOX_DOMAIN');
+  await client.messages.create(domain, {
+    from: payload.from,
+    to: [payload.to],
+    subject: payload.subject,
+    text: payload.text,
+    html: payload.html,
+  });
+}
+
+export async function sendTransactionalEmail(payload: UsesendMailPayload): Promise<void> {
+  if (selectedProvider() === 'mailgun') {
+    await sendWithMailgun(payload);
+    return;
+  }
+
+  await sendWithUseSend(payload);
+}
+
 export async function sendVerificationEmail(to: string, verifyUrl: string): Promise<void> {
-  const from = requiredEnv('USESEND_FROM_EMAIL');
+  const from = selectedProvider() === 'mailgun' ? mailgunFromAddress() : requiredEnv('USESEND_FROM_EMAIL');
   const subject = 'Verify your VibeHealth email';
   const html = `
     <p>Hello,</p>
@@ -70,7 +140,7 @@ export async function sendVerificationEmail(to: string, verifyUrl: string): Prom
 }
 
 export async function sendOtpEmail(to: string, otp: string, type: string): Promise<void> {
-  const from = requiredEnv('USESEND_FROM_EMAIL');
+  const from = selectedProvider() === 'mailgun' ? mailgunFromAddress() : requiredEnv('USESEND_FROM_EMAIL');
 
   const contentByType: Record<string, { subject: string; intro: string }> = {
     'sign-in': {
@@ -105,7 +175,7 @@ export async function sendOtpEmail(to: string, otp: string, type: string): Promi
 }
 
 export async function sendResetPasswordEmail(to: string, resetUrl: string): Promise<void> {
-  const from = requiredEnv('USESEND_FROM_EMAIL');
+  const from = selectedProvider() === 'mailgun' ? mailgunFromAddress() : requiredEnv('USESEND_FROM_EMAIL');
   const subject = 'Reset your VibeHealth password';
   const html = `
     <p>Hello,</p>
@@ -119,7 +189,7 @@ export async function sendResetPasswordEmail(to: string, resetUrl: string): Prom
 }
 
 export async function sendMagicLinkEmail(to: string, magicUrl: string): Promise<void> {
-  const from = requiredEnv('USESEND_FROM_EMAIL');
+  const from = selectedProvider() === 'mailgun' ? mailgunFromAddress() : requiredEnv('USESEND_FROM_EMAIL');
   const subject = 'Your VibeHealth magic sign-in link';
   const html = `
     <p>Hello,</p>

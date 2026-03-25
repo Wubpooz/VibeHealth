@@ -49,7 +49,7 @@
   margin-top: 64px;
   transition: margin-left 0.3s ease;
   margin-left: 0;
-  padding: 1.25rem;
+  /* padding: 1.25rem;  to remove */
 }
 
 .route-container.not-found-no-margin {
