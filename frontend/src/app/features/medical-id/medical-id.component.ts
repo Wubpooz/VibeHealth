@@ -1674,8 +1674,14 @@ export class MedicalIdComponent implements OnInit {
     printWindow.document.open();
     printWindow.document.write(printableHtml);
     printWindow.document.close();
-    printWindow.focus();
-    printWindow.print();
+
+    printWindow.onload = () => {
+      printWindow.focus();
+      printWindow.print();
+      printWindow.onafterprint = () => {
+        printWindow.close();
+      };
+    };
   }
 
   ngOnInit(): void {
