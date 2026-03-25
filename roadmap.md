@@ -145,6 +145,16 @@ gantt
 - Progress tracking with milestone celebrations (bunny reacts!)
 - Weekly and monthly report cards
 
+#### Current implementation status (Phase 1 snapshot)
+- ✅ Metrics backend + frontend shipped for vitals, hydration, activities, meals, goals.
+- ✅ Workouts foundation shipped on `/workouts` with:
+  - profile-based exercise suggestions
+  - workout plan generation from suggestions
+  - rep counters and rest timers in workout flow
+- ⚠️ Partial implementation:
+  - health platform sync endpoints for Google Fit / Samsung Health are currently placeholder mode (connection state, auto-sync flags, manual pull contract).
+  - Full provider OAuth ingestion, background sync orchestration, and conflict resolution remain to be implemented.
+
 ---
 
 ## Phase 2 — Medical Intelligence *(~8 weeks)*
