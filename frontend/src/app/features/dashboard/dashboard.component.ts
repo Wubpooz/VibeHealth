@@ -2,6 +2,7 @@ import {
   Component,
   inject,
   OnInit,
+  OnDestroy,
   signal,
   computed,
   ViewChildren,
@@ -17,9 +18,7 @@ import { ProfileService } from "../../core/profile/profile.service";
 import { RewardsService } from "../../core/rewards/rewards.service";
 import { BunnyMascotComponent } from "../../shared/components/bunny-mascot/bunny-mascot.component";
 import { CarrotCounterComponent } from "../../shared/components/carrot-counter/carrot-counter.component";
-import { ThemeToggleComponent } from "../../shared/components/theme-toggle/theme-toggle.component";
 import { CarrotFeedComponent } from "../../shared/components/carrot-feed/carrot-feed.component";
-import { BackButtonComponent } from "../../shared/components/back-button/back-button.component";
 import { HydrationTrackerComponent } from "../metrics/hydration-tracker.component";
 import { animate } from "motion/mini";
 import { StatsGridComponent } from "../../shared/components/stats-grid/stats-grid.component";
@@ -32,9 +31,7 @@ import { StatsGridComponent } from "../../shared/components/stats-grid/stats-gri
     TranslateModule,
     BunnyMascotComponent,
     CarrotCounterComponent,
-    ThemeToggleComponent,
     CarrotFeedComponent,
-    BackButtonComponent,
     HydrationTrackerComponent,
     StatsGridComponent
 ],
@@ -65,94 +62,24 @@ import { StatsGridComponent } from "../../shared/components/stats-grid/stats-gri
     <div
       class="min-h-screen bg-[#fdf8f8] dark:bg-gray-950 transition-colors duration-300"
     >
-      <!-- Back Button -->
-      <div class="fixed top-4 left-4 z-10">
-        <app-back-button />
+      <div class="px-4 sm:px-8 py-4">
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+          <div>
+            <!-- dashboard date/time -->
+            <div class="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300">
+              <span class="font-semibold">{{ currentDate }}</span>
+              <span class="opacity-50">•</span>
+              <span>{{ currentTime() }}</span>
+            </div>
+          </div>
+          <div>
+            <app-carrot-counter variant="mini" />
+          </div>
+        </div>
       </div>
 
       <!-- Main Content Area -->
       <div>
-        <!-- Top Header Bar -->
-        <header
-          class="sticky top-0 z-30 bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl border-b border-gray-100 dark:border-gray-800"
-        >
-          <div class="px-4 sm:px-8 py-4 flex items-center justify-between">
-
-            <!-- Date & Weather (desktop) -->
-            <div
-              class="hidden md:flex items-center gap-2 px-4 py-2 bg-gray-50 dark:bg-gray-800 rounded-full text-sm"
-            >
-              <span class="text-gray-500 dark:text-gray-400">📅</span>
-              <span class="font-medium text-gray-600 dark:text-gray-300">{{
-                currentDate
-              }}</span>
-              <span class="mx-2 text-gray-300 dark:text-gray-600">|</span>
-              <span>☀️</span>
-              <span class="font-medium text-gray-600 dark:text-gray-300">{{
-                "DASHBOARD.WEATHER_PLACEHOLDER" | translate
-              }}</span>
-            </div>
-
-            <!-- Right side controls -->
-            <div class="flex items-center gap-3">
-              <button
-                class="p-2.5 rounded-xl text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-              >
-                <svg
-                  class="w-5 h-5"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                  />
-                </svg>
-              </button>
-              <button
-                class="p-2.5 rounded-xl text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors relative"
-              >
-                <svg
-                  class="w-5 h-5"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
-                  />
-                </svg>
-                <span
-                  class="absolute top-1.5 right-1.5 w-2 h-2 bg-primary-500 rounded-full"
-                ></span>
-              </button>
-              <app-theme-toggle />
-              <app-carrot-counter variant="mini" class="hidden sm:block" />
-              <button
-                (click)="auth.signOut()"
-                class="hidden sm:flex items-center gap-2 pl-3 pr-4 py-2 bg-gray-50 dark:bg-gray-800 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-              >
-                @if (auth.user(); as user) {
-                  <div
-                    class="w-8 h-8 rounded-full bg-primary-100 dark:bg-primary-900/50 flex items-center justify-center"
-                  >
-                    <span class="text-sm">🐰</span>
-                  </div>
-                  <span
-                    class="text-sm font-bold text-gray-700 dark:text-gray-200"
-                    >{{ (user.name || "User").split(" ")[0] }}</span
-                  >
-                }
-              </button>
-            </div>
-          </div>
-        </header>
 
         <!-- Banners -->
         @if (showOnboardingPrompt() && !dismissedOnboarding()) {
@@ -624,22 +551,12 @@ import { StatsGridComponent } from "../../shared/components/stats-grid/stats-gri
             <app-hydration-tracker />
             <app-carrot-feed />
           </section>
-
-          <!-- Demo Button -->
-          <div class="text-center">
-            <button
-              (click)="awardTestCarrots()"
-              class="px-6 py-3 bg-orange-100 dark:bg-orange-900/20 text-orange-700 dark:text-orange-400 rounded-xl font-semibold text-sm hover:bg-orange-200 dark:hover:bg-orange-900/30 transition-all"
-            >
-              🥕 {{ "DASHBOARD.TEST_EARN_CARROTS" | translate }}
-            </button>
-          </div>
         </main>
       </div>
     </div>
   `,
 })
-export class DashboardComponent implements OnInit, AfterViewInit {
+export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
   readonly auth = inject(AuthService);
   readonly profileService = inject(ProfileService);
   readonly rewards = inject(RewardsService);
@@ -698,6 +615,12 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     month: "short",
     year: "numeric",
   });
+
+  // Current clock time
+  currentTime = signal(new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }));
+  private readonly timeInterval = globalThis.window?.setInterval(() => {
+    this.currentTime.set(new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }));
+  }, 60000);
 
   // Navigation items
   navItems = [
@@ -785,6 +708,12 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     );
   }
 
+  ngOnDestroy(): void {
+    if (this.timeInterval) {
+      clearInterval(this.timeInterval);
+    }
+  }
+
   ngOnInit() {
     this.checkProfileStatus();
     this.rewards.logDailyActivity();
@@ -859,10 +788,6 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   dismissEmailBanner() {
     this.dismissedEmailBanner.set(true);
     localStorage.setItem("vibehealth_dismissed_email_banner", "true");
-  }
-
-  awardTestCarrots() {
-    this.rewards.awardCarrots(5, "Test reward! 🎉", "bonus");
   }
 
 }
