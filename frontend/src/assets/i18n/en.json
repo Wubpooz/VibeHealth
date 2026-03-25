@@ -204,7 +204,16 @@
     "SCAN_QR": "Scan to access emergency info",
     "SHARE": "Share",
     "CONFIRM_SHARE": "You are about to share sensitive medical information. Do you want to continue?",
+    "SHARE_TITLE": "VibeHealth Medical ID",
+    "SHARE_NO_DATA": "No medical data available to share yet",
+    "SHARE_COPIED": "Medical ID copied to clipboard",
+    "SHARE_UNSUPPORTED": "Share is not supported on this device",
+    "SHARE_FAILED": "Unable to share Medical ID right now",
     "EXPORT_PDF": "Export PDF",
+    "EXPORT_NO_DATA": "No medical data available to export yet",
+    "EXPORT_POPUP_BLOCKED": "Please allow popups to export your Medical ID",
+    "UNKNOWN": "Unknown",
+    "EMERGENCY_CONTACT": "Emergency contact",
     "SAVE_CHANGES": "Save Medical ID",
     "EDIT_MODE": "Edit",
     "VIEW_MODE": "View Card"
@@ -735,6 +744,7 @@
     "CONNECTED": "Connected",
     "CONNECT": "Connect",
     "AUTO_SYNC": "Auto-sync continuously",
-    "PULL_NOW": "Pull latest data"
+    "PULL_NOW": "Pull latest data",
+    "POPUP_BLOCKED": "Please allow popups to continue provider OAuth setup."
   }
 }

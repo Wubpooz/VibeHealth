@@ -204,7 +204,16 @@
     "SCAN_QR": "Scanner pour accéder aux infos d'urgence",
     "SHARE": "Partager",
     "CONFIRM_SHARE": "Vous allez partager des informations médicales sensibles. Voulez-vous continuer ?",
+    "SHARE_TITLE": "Carte médicale VibeHealth",
+    "SHARE_NO_DATA": "Aucune donnée médicale à partager pour le moment",
+    "SHARE_COPIED": "Carte médicale copiée dans le presse-papiers",
+    "SHARE_UNSUPPORTED": "Le partage n'est pas pris en charge sur cet appareil",
+    "SHARE_FAILED": "Impossible de partager la carte médicale pour le moment",
     "EXPORT_PDF": "Exporter PDF",
+    "EXPORT_NO_DATA": "Aucune donnée médicale à exporter pour le moment",
+    "EXPORT_POPUP_BLOCKED": "Veuillez autoriser les popups pour exporter votre carte médicale",
+    "UNKNOWN": "Inconnu",
+    "EMERGENCY_CONTACT": "Contact d'urgence",
     "SAVE_CHANGES": "Enregistrer la carte médicale",
     "EDIT_MODE": "Modifier",
     "VIEW_MODE": "Voir la carte"
@@ -733,6 +742,7 @@
     "CONNECTED": "Connecté",
     "CONNECT": "Connecter",
     "AUTO_SYNC": "Synchroniser automatiquement en continu",
-    "PULL_NOW": "Récupérer les dernières données"
+    "PULL_NOW": "Récupérer les dernières données",
+    "POPUP_BLOCKED": "Veuillez autoriser les popups pour continuer la configuration OAuth du fournisseur."
   }
 }

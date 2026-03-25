@@ -12,9 +12,10 @@ import {
   signal,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { FormsModule } from '@angular/forms';
 import { animate } from 'motion/mini';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MetricsService } from '../../core/metrics/metrics.service';
 import type { WorkoutPlanExercise, HealthSyncProvider } from '../../core/metrics/metrics.types';
 import { BackButtonComponent } from '../../shared/components/back-button/back-button.component';
@@ -179,6 +180,7 @@ export class WorkoutsPageComponent implements AfterViewInit {
   private readonly metricsService = inject(MetricsService);
   private readonly destroyRef = inject(DestroyRef);
   private readonly toast = inject(ToastService);
+  private readonly translate = inject(TranslateService);
   readonly workoutSuggestions = this.metricsService.workoutSuggestions;
   readonly workoutPlans = this.metricsService.workoutPlans;
   readonly syncConnections = this.metricsService.syncConnections;
@@ -215,7 +217,9 @@ export class WorkoutsPageComponent implements AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.exerciseCards.changes.subscribe(() => this.animateExerciseCards());
+    this.exerciseCards.changes
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => this.animateExerciseCards());
     this.animateExerciseCards();
   }
 
@@ -263,7 +267,7 @@ export class WorkoutsPageComponent implements AfterViewInit {
     }
     const popup = window.open(oauth.authUrl, '_blank', 'noopener,noreferrer');
     if (!popup) {
-      this.toast.warning('Please allow popups to continue provider OAuth setup.');
+      this.toast.warning(this.translate.instant('WORKOUTS.POPUP_BLOCKED'));
     }
   }
 

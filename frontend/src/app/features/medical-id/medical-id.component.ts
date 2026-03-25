@@ -1601,7 +1601,11 @@ export class MedicalIdComponent implements OnInit {
   async shareMedicalId(): Promise<void> {
     const payload = this.buildEmergencyShareText();
     if (!payload) {
-      this.snackBar.open('No medical data available to share yet', 'Close', { duration: 3000 });
+      this.snackBar.open(
+        this.translate.instant('MEDICAL_ID.SHARE_NO_DATA'),
+        this.translate.instant('common.close'),
+        { duration: 3000 },
+      );
       return;
     }
 
@@ -1615,7 +1619,7 @@ export class MedicalIdComponent implements OnInit {
     try {
       if (navigator.share) {
         await navigator.share({
-          title: 'VibeHealth Medical ID',
+          title: this.translate.instant('MEDICAL_ID.SHARE_TITLE'),
           text: payload,
         });
         return;
@@ -1623,27 +1627,47 @@ export class MedicalIdComponent implements OnInit {
 
       if (navigator.clipboard?.writeText) {
         await navigator.clipboard.writeText(payload);
-        this.snackBar.open('Medical ID copied to clipboard', 'Close', { duration: 3000 });
+        this.snackBar.open(
+          this.translate.instant('MEDICAL_ID.SHARE_COPIED'),
+          this.translate.instant('common.close'),
+          { duration: 3000 },
+        );
         return;
       }
 
-      this.snackBar.open('Share is not supported on this device', 'Close', { duration: 3000 });
+      this.snackBar.open(
+        this.translate.instant('MEDICAL_ID.SHARE_UNSUPPORTED'),
+        this.translate.instant('common.close'),
+        { duration: 3000 },
+      );
     } catch (error) {
       console.error('Unable to share medical ID', error);
-      this.snackBar.open('Unable to share Medical ID right now', 'Close', { duration: 3000 });
+      this.snackBar.open(
+        this.translate.instant('MEDICAL_ID.SHARE_FAILED'),
+        this.translate.instant('common.close'),
+        { duration: 3000 },
+      );
     }
   }
 
   exportMedicalIdPdf(): void {
     const printableHtml = this.buildPrintableMedicalIdHtml();
     if (!printableHtml) {
-      this.snackBar.open('No medical data available to export yet', 'Close', { duration: 3000 });
+      this.snackBar.open(
+        this.translate.instant('MEDICAL_ID.EXPORT_NO_DATA'),
+        this.translate.instant('common.close'),
+        { duration: 3000 },
+      );
       return;
     }
 
     const printWindow = window.open('', 'MedicalIDExport', 'noopener,noreferrer,width=900,height=700');
     if (!printWindow) {
-      this.snackBar.open('Please allow popups to export your Medical ID', 'Close', { duration: 3000 });
+      this.snackBar.open(
+        this.translate.instant('MEDICAL_ID.EXPORT_POPUP_BLOCKED'),
+        this.translate.instant('common.close'),
+        { duration: 3000 },
+      );
       return;
     }
 
@@ -1759,17 +1783,21 @@ export class MedicalIdComponent implements OnInit {
     if (!data) return '';
 
     const contact = data.emergencyContacts[0];
-    const allergies = data.allergies.length > 0 ? data.allergies.join(', ') : 'None listed';
-    const medications = data.medications.length > 0 ? data.medications.join(', ') : 'None listed';
-    const conditions = data.medicalConditions.length > 0 ? data.medicalConditions.join(', ') : 'None listed';
+    const noneListed = this.translate.instant('MEDICAL_ID.NONE_LISTED');
+    const unknown = this.translate.instant('MEDICAL_ID.UNKNOWN');
+    const allergies = data.allergies.length > 0 ? data.allergies.join(', ') : noneListed;
+    const medications = data.medications.length > 0 ? data.medications.join(', ') : noneListed;
+    const conditions = data.medicalConditions.length > 0 ? data.medicalConditions.join(', ') : noneListed;
 
     return [
-      `Medical ID — ${this.displayName()}`,
-      `Blood type: ${data.bloodType || 'Unknown'}`,
-      `Allergies: ${allergies}`,
-      `Medications: ${medications}`,
-      `Conditions: ${conditions}`,
-      contact ? `Emergency contact: ${contact.name} (${contact.relationship}) ${contact.phone}` : 'Emergency contact: None listed',
+      `${this.translate.instant('MEDICAL_ID.SHARE_TITLE')} — ${this.displayName()}`,
+      `${this.translate.instant('MEDICAL_ID.BLOOD_TYPE')}: ${data.bloodType || unknown}`,
+      `${this.translate.instant('MEDICAL_ID.ALLERGIES')}: ${allergies}`,
+      `${this.translate.instant('MEDICAL_ID.MEDICATIONS')}: ${medications}`,
+      `${this.translate.instant('MEDICAL_ID.CONDITIONS')}: ${conditions}`,
+      contact
+        ? `${this.translate.instant('MEDICAL_ID.EMERGENCY_CONTACT')}: ${contact.name} (${contact.relationship}) ${contact.phone}`
+        : `${this.translate.instant('MEDICAL_ID.EMERGENCY_CONTACT')}: ${noneListed}`,
     ].join('\n');
   }
 
@@ -1777,18 +1805,28 @@ export class MedicalIdComponent implements OnInit {
     const data = this.medicalIdData();
     if (!data) return '';
 
-    const list = (items: string[]) => (items.length ? this.escapeHtml(items.join(', ')) : 'None listed');
+    const lang = this.translate.currentLang || this.translate.getDefaultLang() || 'en';
+    const noneListed = this.translate.instant('MEDICAL_ID.NONE_LISTED');
+    const unknown = this.translate.instant('MEDICAL_ID.UNKNOWN');
+    const title = this.translate.instant('MEDICAL_ID.SHARE_TITLE');
+    const bloodTypeLabel = this.translate.instant('MEDICAL_ID.BLOOD_TYPE');
+    const allergiesLabel = this.translate.instant('MEDICAL_ID.ALLERGIES');
+    const medicationsLabel = this.translate.instant('MEDICAL_ID.MEDICATIONS');
+    const conditionsLabel = this.translate.instant('MEDICAL_ID.CONDITIONS');
+    const emergencyContactsLabel = this.translate.instant('MEDICAL_ID.EMERGENCY_CONTACTS');
+
+    const list = (items: string[]) => (items.length ? this.escapeHtml(items.join(', ')) : this.escapeHtml(noneListed));
     const contacts = data.emergencyContacts.length
       ? data.emergencyContacts
           .map((contact) => `<li>${this.escapeHtml(contact.name)} — ${this.escapeHtml(contact.relationship)} — ${this.escapeHtml(contact.phone)}</li>`)
           .join('')
-      : '<li>None listed</li>';
+      : `<li>${this.escapeHtml(noneListed)}</li>`;
 
     return `<!doctype html>
-<html lang="en">
+<html lang="${this.escapeHtml(lang)}">
   <head>
     <meta charset="utf-8" />
-    <title>Medical ID - ${this.escapeHtml(this.displayName())}</title>
+    <title>${this.escapeHtml(title)} - ${this.escapeHtml(this.displayName())}</title>
     <style>
       body { font-family: Arial, sans-serif; padding: 24px; color: #111827; }
       h1 { margin: 0 0 12px; color: #b91c1c; }
@@ -1800,13 +1838,13 @@ export class MedicalIdComponent implements OnInit {
     </style>
   </head>
   <body>
-    <h1>VibeHealth Medical ID</h1>
+    <h1>${this.escapeHtml(title)}</h1>
     <p class="meta">${this.escapeHtml(this.displayName())}</p>
-    <section class="card"><span class="label">Blood Type</span>${this.escapeHtml(data.bloodType || 'Unknown')}</section>
-    <section class="card"><span class="label">Allergies</span>${list(data.allergies)}</section>
-    <section class="card"><span class="label">Medications</span>${list(data.medications)}</section>
-    <section class="card"><span class="label">Conditions</span>${list(data.medicalConditions)}</section>
-    <section class="card"><span class="label">Emergency Contacts</span><ul>${contacts}</ul></section>
+    <section class="card"><span class="label">${this.escapeHtml(bloodTypeLabel)}</span>${this.escapeHtml(data.bloodType || unknown)}</section>
+    <section class="card"><span class="label">${this.escapeHtml(allergiesLabel)}</span>${list(data.allergies)}</section>
+    <section class="card"><span class="label">${this.escapeHtml(medicationsLabel)}</span>${list(data.medications)}</section>
+    <section class="card"><span class="label">${this.escapeHtml(conditionsLabel)}</span>${list(data.medicalConditions)}</section>
+    <section class="card"><span class="label">${this.escapeHtml(emergencyContactsLabel)}</span><ul>${contacts}</ul></section>
   </body>
 </html>`;
   }

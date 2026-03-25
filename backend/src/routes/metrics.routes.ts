@@ -1404,6 +1404,7 @@ metricsRoutes.post('/workout-logs', async (c) => {
         workoutPlanExerciseId: exerciseEntry.id,
         repsCompleted: parsed.data.repsCompleted,
         targetReps: { min: exerciseEntry.repsMin, max: exerciseEntry.repsMax },
+        restSeconds: exerciseEntry.restSeconds,
         exerciseName: exerciseEntry.exercise.name,
       },
       timer: {
