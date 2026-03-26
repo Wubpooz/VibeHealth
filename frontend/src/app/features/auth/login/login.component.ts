@@ -2,7 +2,7 @@ import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule, Router } from '@angular/router';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { AuthService } from '../../../core/auth/auth.service';
 import { ToastService } from '../../../core/toast/toast.service';
 import { SpinnerComponent } from '../../../shared/components/spinner/spinner.component';
@@ -249,6 +249,7 @@ export class LoginComponent {
   readonly auth = inject(AuthService);
   private readonly router = inject(Router);
   private readonly toast = inject(ToastService);
+  private readonly translate = inject(TranslateService);
 
   email = '';
   password = '';
@@ -297,9 +298,12 @@ export class LoginComponent {
     if (success) {
       this.otpEmail = targetEmail;
       this.otpSent.set(true);
-      this.toast.success('Sign-in code sent. Check your inbox.', 'Email sent');
+      this.toast.success(
+        this.translate.instant('AUTH.OTP_SENT'),
+        this.translate.instant('AUTH.EMAIL_SENT'),
+      );
     } else if (this.auth.error()) {
-      this.toast.error(this.auth.error()!, 'Unable to send sign-in code');
+      this.toast.error(this.auth.error()!, this.translate.instant('AUTH.UNABLE_SEND_OTP'));
     }
   }
 
@@ -310,10 +314,13 @@ export class LoginComponent {
 
     const success = await this.auth.signInWithOtp(targetEmail, code);
     if (success) {
-      this.toast.success('Welcome back! Signed in with code.', 'Signed in');
+      this.toast.success(
+        this.translate.instant('AUTH.OTP_SIGNED_IN'),
+        this.translate.instant('AUTH.SIGN_IN'),
+      );
       this.router.navigate(['/dashboard']);
     } else if (this.auth.error()) {
-      this.toast.error(this.auth.error()!, 'OTP sign in failed');
+      this.toast.error(this.auth.error()!, this.translate.instant('AUTH.OTP_SIGN_IN_FAILED'));
     }
   }
 }

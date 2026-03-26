@@ -49,7 +49,6 @@
   margin-top: 0;
   transition: margin-left 0.3s ease;
   margin-left: 0;
-  /* padding: 1.25rem;  to remove */
 }
 
 @media (max-width: 1023px) {

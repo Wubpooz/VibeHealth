@@ -49,7 +49,8 @@ export class MetricsService {
   private readonly _mealCatalog = signal<MealCatalogEntry[]>([]);
   private readonly _workoutSuggestions = signal<WorkoutSuggestions | null>(null);
   private readonly _workoutPlans = signal<WorkoutPlan[]>([]);
-  private readonly _workoutLoading = signal(false);
+  private readonly _workoutSuggestionsLoading = signal(false);
+  private readonly _workoutPlansLoading = signal(false);
   private readonly _syncConnections = signal<HealthSyncConnection[]>([]);
   private readonly _syncLoading = signal(false);
 
@@ -70,7 +71,11 @@ export class MetricsService {
   readonly mealCatalog = this._mealCatalog.asReadonly();
   readonly workoutSuggestions = this._workoutSuggestions.asReadonly();
   readonly workoutPlans = this._workoutPlans.asReadonly();
-  readonly workoutLoading = this._workoutLoading.asReadonly();
+  readonly workoutSuggestionsLoading = this._workoutSuggestionsLoading.asReadonly();
+  readonly workoutPlansLoading = this._workoutPlansLoading.asReadonly();
+  readonly workoutLoading = computed(
+    () => this._workoutSuggestionsLoading() || this._workoutPlansLoading(),
+  );
   readonly syncConnections = this._syncConnections.asReadonly();
   readonly syncLoading = this._syncLoading.asReadonly();
   readonly nutritionToday = this._nutritionToday.asReadonly();
@@ -520,7 +525,7 @@ export class MetricsService {
   // =============================================================================
 
   async loadWorkoutSuggestions(): Promise<void> {
-    this._workoutLoading.set(true);
+    this._workoutSuggestionsLoading.set(true);
     try {
       const response = await firstValueFrom(
         this.http.get<{ suggestions: WorkoutSuggestions }>(`${this.apiUrl}/workouts/suggestions`, {
@@ -532,12 +537,12 @@ export class MetricsService {
       console.error('Failed to load workout suggestions:', error);
       this._workoutSuggestions.set(null);
     } finally {
-      this._workoutLoading.set(false);
+      this._workoutSuggestionsLoading.set(false);
     }
   }
 
   async loadWorkoutPlans(): Promise<void> {
-    this._workoutLoading.set(true);
+    this._workoutPlansLoading.set(true);
     try {
       const response = await firstValueFrom(
         this.http.get<{ plans: WorkoutPlan[] }>(`${this.apiUrl}/workout-plans`, {
@@ -549,7 +554,7 @@ export class MetricsService {
       console.error('Failed to load workout plans:', error);
       this._workoutPlans.set([]);
     } finally {
-      this._workoutLoading.set(false);
+      this._workoutPlansLoading.set(false);
     }
   }
 

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, signal, effect } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
@@ -219,6 +219,7 @@ export class ForgotPasswordComponent {
   private readonly toast = inject(ToastService);
   private readonly router = inject(Router);
   private readonly translate = inject(TranslateService);
+  private readonly destroyRef = inject(DestroyRef);
 
   email = '';
   otp = '';
@@ -232,10 +233,11 @@ export class ForgotPasswordComponent {
     // Auto-transition to step 2 after showing checkmark
     effect(() => {
       if (this.showSuccessState()) {
-        setTimeout(() => {
+        const handle = setTimeout(() => {
           this.stepTwo.set(true);
           this.showSuccessState.set(false);
         }, 1200);
+        this.destroyRef.onDestroy(() => clearTimeout(handle));
       }
     });
   }
@@ -285,7 +287,7 @@ export class ForgotPasswordComponent {
     }
 
     if (this.auth.error()) {
-      this.toast.error(this.auth.error()!, 'Unable to reset password');
+      this.toast.error(this.auth.error()!, this.translate.instant('AUTH.RESET_PASSWORD'));
     }
   }
 

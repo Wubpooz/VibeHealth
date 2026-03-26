@@ -96,7 +96,10 @@
     "VERIFY_CODE": "Verify code",
     "CONTINUE_WITH_GOOGLE": "Continue with Google",
     "CONTINUE_WITH_GITHUB": "Continue with GitHub",
-    "CONTINUE_WITH_APPLE": "Continue with Apple"
+    "CONTINUE_WITH_APPLE": "Continue with Apple",
+    "UNABLE_SEND_OTP": "Unable to send sign-in code",
+    "OTP_SIGNED_IN": "Welcome back! Signed in with code.",
+    "OTP_SIGN_IN_FAILED": "Sign-in with code failed"
   },
   "LANDING": {
     "HERO_TITLE": "Your Personal Health Companion",
@@ -745,7 +748,12 @@
   "WORKOUTS": {
     "TITLE": "Workouts",
     "SUBTITLE": "Personalized exercises based on your profile and goals",
-    "DIFFICULTY": "Difficulty",
+    "DIFFICULTY": {
+      "LABEL": "Difficulty",
+      "BEGINNER": "Beginner",
+      "INTERMEDIATE": "Intermediate",
+      "ADVANCED": "Advanced"
+    },
     "NEW_PLAN_NAME": "Workout plan name",
     "NEW_PLAN_PLACEHOLDER": "e.g. Weekly Strength Starter",
     "CREATE_PLAN": "Create plan",
@@ -764,6 +772,13 @@
     "CONNECT": "Connect",
     "AUTO_SYNC": "Auto-sync continuously",
     "PULL_NOW": "Pull latest data",
-    "POPUP_BLOCKED": "Please allow popups to continue provider OAuth setup."
+    "POPUP_BLOCKED": "Please allow popups to continue provider OAuth setup.",
+    "CATEGORY": {
+      "STRENGTH": "Strength",
+      "CARDIO": "Cardio",
+      "MOBILITY": "Mobility",
+      "FLEXIBILITY": "Flexibility",
+      "RECOVERY": "Recovery"
+    }
   }
 }

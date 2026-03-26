@@ -3,7 +3,7 @@ import { prisma } from '../lib/prisma';
 import { requireAuth } from '../middleware/auth.middleware';
 import type { Session as AuthSession, User as AuthUser } from 'better-auth';
 import { z } from 'zod';
-import type { VitalType, ActivityType, Intensity, MealType } from '@prisma/client';
+import type { VitalType, ActivityType, Intensity, MealType, Prisma } from '@prisma/client';
 
 type AuthContext = {
   Variables: {
@@ -1333,7 +1333,7 @@ metricsRoutes.post('/workout-plans', async (c) => {
       restSeconds: exercise.defaultRestSeconds,
     }));
 
-    const plan = await prisma.$transaction(async (tx: any) => {
+    const plan = await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
       // Deactivate any existing active workout plans for this user
       await tx.workoutPlan.updateMany({
         where: {

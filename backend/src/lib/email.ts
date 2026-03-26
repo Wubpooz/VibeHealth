@@ -251,6 +251,8 @@ export async function sendWithDevFallback(delivery: AuthEmailDelivery): Promise<
       throw error;
     }
     logDevFallback(delivery);
-    console.warn('⚠️ useSend delivery unavailable in development. Falling back to console output.');
+    console.warn(
+      `⚠️ Email delivery via ${selectedProvider()} is unavailable in development. Falling back to console output.`,
+    );
   }
 }
