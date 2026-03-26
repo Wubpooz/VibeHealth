@@ -38,11 +38,16 @@ import { ToastService } from '../../core/toast/toast.service';
         <p class="text-sm text-gray-500 dark:text-gray-400">{{ 'WORKOUTS.SUBTITLE' | translate }}</p>
         <div class="flex flex-wrap gap-3 text-sm">
           <span class="px-3 py-1 rounded-full bg-primary-50 text-primary-700 dark:bg-primary-900/30 dark:text-primary-300">
-            {{ 'WORKOUTS.DIFFICULTY' | translate }}: {{ workoutSuggestions()?.difficulty || '-' }}
+            {{ 'WORKOUTS.DIFFICULTY.LABEL' | translate }}:
+            @if (workoutSuggestions()?.difficulty) {
+              {{ ('WORKOUTS.DIFFICULTY.' + workoutSuggestions()!.difficulty) | translate }}
+            } @else {
+              -
+            }
           </span>
           @for (category of workoutSuggestions()?.categories ?? []; track category) {
             <span class="px-3 py-1 rounded-full bg-orange-50 text-orange-700 dark:bg-orange-900/30 dark:text-orange-300">
-              {{ category }}
+              {{ ('WORKOUTS.CATEGORY.' + category) | translate }}
             </span>
           }
         </div>

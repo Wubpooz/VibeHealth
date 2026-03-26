@@ -96,7 +96,10 @@
     "VERIFY_CODE": "Vérifier le code",
     "CONTINUE_WITH_GOOGLE": "Continuer avec Google",
     "CONTINUE_WITH_GITHUB": "Continuer avec GitHub",
-    "CONTINUE_WITH_APPLE": "Continuer avec Apple"
+    "CONTINUE_WITH_APPLE": "Continuer avec Apple",
+    "UNABLE_SEND_OTP": "Impossible d'envoyer le code de connexion",
+    "OTP_SIGNED_IN": "Bon retour ! Connexion avec le code réussie.",
+    "OTP_SIGN_IN_FAILED": "Échec de la connexion avec le code"
   },
   "LANDING": {
     "HERO_TITLE": "Votre Compagnon Santé Personnel",
@@ -641,7 +644,9 @@
       "GOAL_MET": "Objectif atteint",
       "BELOW_GOAL": "Sous l'objectif"
     },
-    "NUTRITION": {      "TITLE": "Nutrition",      "SCAN_BARCODE": "Scanner le code-barres",
+    "NUTRITION": {
+      "TITLE": "Nutrition",
+      "SCAN_BARCODE": "Scanner le code-barres",
       "ALIGN_BARCODE": "Alignez le code-barres dans le cadre",
       "SCANNER_COMING_SOON": "Lecteur de code-barres bientôt disponible !",
       "SCANNER_DESCRIPTION": "Nous travaillons sur l'intégration du scan de code-barres pour rendre l'enregistrement nutritionnel encore plus rapide. Pour l'instant, veuillez saisir les détails manuellement.",
@@ -743,7 +748,12 @@
   "WORKOUTS": {
     "TITLE": "Entraînements",
     "SUBTITLE": "Exercices personnalisés selon votre profil et vos objectifs",
-    "DIFFICULTY": "Difficulté",
+    "DIFFICULTY": {
+      "LABEL": "Difficulté",
+      "BEGINNER": "Débutant",
+      "INTERMEDIATE": "Intermédiaire",
+      "ADVANCED": "Avancé"
+    },
     "NEW_PLAN_NAME": "Nom du programme",
     "NEW_PLAN_PLACEHOLDER": "ex. Départ force hebdomadaire",
     "CREATE_PLAN": "Créer le plan",
@@ -762,6 +772,13 @@
     "CONNECT": "Connecter",
     "AUTO_SYNC": "Synchroniser automatiquement en continu",
     "PULL_NOW": "Récupérer les dernières données",
-    "POPUP_BLOCKED": "Veuillez autoriser les popups pour continuer la configuration OAuth du fournisseur."
+    "POPUP_BLOCKED": "Veuillez autoriser les popups pour continuer la configuration OAuth du fournisseur.",
+    "CATEGORY": {
+      "STRENGTH": "Force",
+      "CARDIO": "Cardio",
+      "MOBILITY": "Mobilité",
+      "FLEXIBILITY": "Souplesse",
+      "RECOVERY": "Récupération"
+    }
   }
 }
