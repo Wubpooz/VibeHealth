@@ -22,7 +22,18 @@ const app = new Hono();
 // Middleware
 app.use('*', logger());
 app.use('*', cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:4200',
+  origin: (origin) => {
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return null;
+    
+    const allowedOrigins = [
+      'http://localhost:4200',
+      'http://127.0.0.1:4200',
+      process.env.FRONTEND_URL
+    ].filter(Boolean);
+    
+    return allowedOrigins.includes(origin) ? origin : null;
+  },
   credentials: true,
 }));
 app.use('*', prettyJSON());

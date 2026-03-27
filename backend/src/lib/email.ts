@@ -66,22 +66,40 @@ export async function sendResetPasswordEmail(to: string, resetUrl: string): Prom
 }
 
 export async function sendWithDevFallback(
-  label: 'verify' | 'reset',
+  label: 'verify' | 'reset' | 'otp' | 'magic-link',
   recipient: string,
-  url: string,
+  urlOrOtp: string,
+  otpType?: string,
 ): Promise<void> {
   try {
     if (label === 'verify') {
-      await sendVerificationEmail(recipient, url);
+      await sendVerificationEmail(recipient, urlOrOtp);
       return;
     }
-    await sendResetPasswordEmail(recipient, url);
+    if (label === 'reset') {
+      await sendResetPasswordEmail(recipient, urlOrOtp);
+      return;
+    }
+    if (label === 'otp') {
+      // In dev, log OTP code
+      if (isDev) {
+        console.log(`\n📧 [DEV] OTP for ${recipient} (${otpType}): ${urlOrOtp}\n`);
+      }
+      return;
+    }
+    if (label === 'magic-link') {
+      // In dev, log magic link
+      if (isDev) {
+        console.log(`\n📧 [DEV] Magic link for ${recipient}:\n${urlOrOtp}\n`);
+      }
+      return;
+    }
   } catch (error) {
     if (!isDev) {
       throw error;
     }
-    const prefix = label === 'verify' ? 'Verify email' : 'Password reset';
-    console.log(`\n📧 [DEV] ${prefix} for ${recipient}:\n${url}\n`);
+    const prefix = label === 'verify' ? 'Verify email' : label === 'reset' ? 'Password reset' : label === 'otp' ? 'OTP' : 'Magic link';
+    console.log(`\n📧 [DEV] ${prefix} for ${recipient}:\n${urlOrOtp}\n`);
     console.warn('⚠️ useSend delivery unavailable in development. Falling back to console output.');
   }
 }

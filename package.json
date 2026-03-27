@@ -21,7 +21,8 @@
     "docker:up": "docker-compose up -d",
     "docker:down": "docker-compose down",
     "docker:logs": "docker-compose logs -f",
-    "db:studio": "cd backend && bun run db:studio"
+    "db:studio": "cd backend && bun run db:studio",
+    "dev:stack-dockerless": "cd backend && DATABASE_URL=postgresql://vibehealth:vibehealth_dev@localhost:5432/vibehealth bun run db:generate && bun run db:push && bun run db:seed && bun run dev"
   },
   "devDependencies": {
     "@types/bun": "latest",
@@ -31,6 +32,7 @@
     "typescript": "^5"
   },
   "dependencies": {
+    "n": "^10.2.0",
     "ng-animated-icons": "^1.9.0"
   }
 }

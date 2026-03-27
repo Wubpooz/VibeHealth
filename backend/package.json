@@ -17,7 +17,8 @@
     "db:seed": "bun run src/db/seed.ts",
     "setup:db": "bun run src/scripts/setup-db.ts",
     "setup:wait": "bun run src/scripts/wait-for-db.ts",
-    "dev:stack": "bun run setup:db && bun run setup:wait && bun run db:generate && bun run db:push && bun run db:seed && bun run dev"
+    "dev:stack": "bun run setup:db && bun run setup:wait && bun run db:generate && bun run db:push && bun run db:seed && bun run dev",
+    "dev:stack-dockerless": "bun run setup:wait && DATABASE_URL=postgresql://vibehealth:vibehealth_dev@localhost:5432/vibehealth bun run db:generate && bun run db:push && bun run db:seed && bun run dev"
   },
   "dependencies": {
     "@prisma/client": "^5.9.0",
