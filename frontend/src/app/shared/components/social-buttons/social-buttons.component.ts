@@ -1,8 +1,9 @@
 import { Component, input, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
+import type { OAuthProvider } from '../../../core/auth/auth.types';
 
-export type OAuthProvider = 'google' | 'github' | 'apple';
+export type { OAuthProvider } from '../../../core/auth/auth.types';
 
 @Component({
   selector: 'app-social-buttons',

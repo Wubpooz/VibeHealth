@@ -20,6 +20,12 @@ import type {
   NutritionSummary,
   WeeklyNutritionSummary,
   MealType,
+  WorkoutSuggestions,
+  WorkoutPlan,
+  WorkoutSetLogResult,
+  HealthSyncConnection,
+  HealthSyncProvider,
+  HealthSyncOAuthStartResponse,
 } from './metrics.types';
 
 @Injectable({ providedIn: 'root' })
@@ -41,6 +47,12 @@ export class MetricsService {
   private readonly _activityLoading = signal(false);
   private readonly _activityCatalog = signal<ActivityCatalogEntry[]>([]);
   private readonly _mealCatalog = signal<MealCatalogEntry[]>([]);
+  private readonly _workoutSuggestions = signal<WorkoutSuggestions | null>(null);
+  private readonly _workoutPlans = signal<WorkoutPlan[]>([]);
+  private readonly _workoutSuggestionsLoading = signal(false);
+  private readonly _workoutPlansLoading = signal(false);
+  private readonly _syncConnections = signal<HealthSyncConnection[]>([]);
+  private readonly _syncLoading = signal(false);
 
   // Nutrition state
   private readonly _nutritionToday = signal<NutritionSummary | null>(null);
@@ -57,6 +69,15 @@ export class MetricsService {
   readonly activityLoading = this._activityLoading.asReadonly();
   readonly activityCatalog = this._activityCatalog.asReadonly();
   readonly mealCatalog = this._mealCatalog.asReadonly();
+  readonly workoutSuggestions = this._workoutSuggestions.asReadonly();
+  readonly workoutPlans = this._workoutPlans.asReadonly();
+  readonly workoutSuggestionsLoading = this._workoutSuggestionsLoading.asReadonly();
+  readonly workoutPlansLoading = this._workoutPlansLoading.asReadonly();
+  readonly workoutLoading = computed(
+    () => this._workoutSuggestionsLoading() || this._workoutPlansLoading(),
+  );
+  readonly syncConnections = this._syncConnections.asReadonly();
+  readonly syncLoading = this._syncLoading.asReadonly();
   readonly nutritionToday = this._nutritionToday.asReadonly();
   readonly nutritionWeek = this._nutritionWeek.asReadonly();
   readonly nutritionLoading = this._nutritionLoading.asReadonly();
@@ -93,6 +114,7 @@ export class MetricsService {
   readonly proteinToday = computed(() => this._nutritionToday()?.totalProtein ?? 0);
   readonly carbsToday = computed(() => this._nutritionToday()?.totalCarbs ?? 0);
   readonly fatToday = computed(() => this._nutritionToday()?.totalFat ?? 0);
+  readonly hasWorkoutPlan = computed(() => this._workoutPlans().length > 0);
 
   // =============================================================================
   // Hydration Methods
@@ -496,5 +518,181 @@ export class MetricsService {
       this.loadMealCatalog(),
       this.loadNutritionToday(),
     ]);
+  }
+
+  // =============================================================================
+  // Workouts Methods
+  // =============================================================================
+
+  async loadWorkoutSuggestions(): Promise<void> {
+    this._workoutSuggestionsLoading.set(true);
+    try {
+      const response = await firstValueFrom(
+        this.http.get<{ suggestions: WorkoutSuggestions }>(`${this.apiUrl}/workouts/suggestions`, {
+          withCredentials: true,
+        })
+      );
+      this._workoutSuggestions.set(response.suggestions);
+    } catch (error) {
+      console.error('Failed to load workout suggestions:', error);
+      this._workoutSuggestions.set(null);
+    } finally {
+      this._workoutSuggestionsLoading.set(false);
+    }
+  }
+
+  async loadWorkoutPlans(): Promise<void> {
+    this._workoutPlansLoading.set(true);
+    try {
+      const response = await firstValueFrom(
+        this.http.get<{ plans: WorkoutPlan[] }>(`${this.apiUrl}/workout-plans`, {
+          withCredentials: true,
+        })
+      );
+      this._workoutPlans.set(response.plans ?? []);
+    } catch (error) {
+      console.error('Failed to load workout plans:', error);
+      this._workoutPlans.set([]);
+    } finally {
+      this._workoutPlansLoading.set(false);
+    }
+  }
+
+  async createWorkoutPlan(name: string, description?: string): Promise<WorkoutPlan | null> {
+    try {
+      const response = await firstValueFrom(
+        this.http.post<{ success: boolean; plan: WorkoutPlan }>(
+          `${this.apiUrl}/workout-plans`,
+          { name, description },
+          { withCredentials: true }
+        )
+      );
+      await this.loadWorkoutPlans();
+      return response.plan;
+    } catch (error) {
+      console.error('Failed to create workout plan:', error);
+      return null;
+    }
+  }
+
+  async logWorkoutSet(workoutPlanExerciseId: string, repsCompleted: number): Promise<WorkoutSetLogResult | null> {
+    try {
+      const response = await firstValueFrom(
+        this.http.post<{ success: boolean; log: WorkoutSetLogResult }>(
+          `${this.apiUrl}/workout-logs`,
+          { workoutPlanExerciseId, repsCompleted },
+          { withCredentials: true }
+        )
+      );
+      return response.log;
+    } catch (error) {
+      console.error('Failed to log workout set:', error);
+      return null;
+    }
+  }
+
+  // =============================================================================
+  // Health Sync Methods
+  // =============================================================================
+
+  async loadSyncConnections(): Promise<void> {
+    this._syncLoading.set(true);
+    try {
+      const response = await firstValueFrom(
+        this.http.get<{ connections: HealthSyncConnection[] }>(`${this.apiUrl}/sync/connections`, {
+          withCredentials: true,
+        })
+      );
+      this._syncConnections.set(response.connections ?? []);
+    } catch (error) {
+      console.error('Failed to load sync connections:', error);
+      this._syncConnections.set([]);
+    } finally {
+      this._syncLoading.set(false);
+    }
+  }
+
+  async connectSyncProvider(provider: HealthSyncProvider): Promise<boolean> {
+    try {
+      await firstValueFrom(
+        this.http.post(
+          `${this.apiUrl}/sync/connect`,
+          { provider },
+          { withCredentials: true }
+        )
+      );
+      await this.loadSyncConnections();
+      return true;
+    } catch (error) {
+      console.error('Failed to connect sync provider:', error);
+      return false;
+    }
+  }
+
+  async setSyncAuto(provider: HealthSyncProvider, autoSync: boolean): Promise<boolean> {
+    try {
+      await firstValueFrom(
+        this.http.patch(
+          `${this.apiUrl}/sync/${provider}/auto`,
+          { autoSync },
+          { withCredentials: true }
+        )
+      );
+      await this.loadSyncConnections();
+      return true;
+    } catch (error) {
+      console.error('Failed to update auto sync setting:', error);
+      return false;
+    }
+  }
+
+  async runSyncPull(provider: HealthSyncProvider): Promise<boolean> {
+    try {
+      await firstValueFrom(
+        this.http.post(
+          `${this.apiUrl}/sync/${provider}/pull`,
+          {},
+          { withCredentials: true }
+        )
+      );
+      await this.loadSyncConnections();
+      return true;
+    } catch (error) {
+      console.error('Failed to run pull sync:', error);
+      return false;
+    }
+  }
+
+  async startSyncOAuth(provider: HealthSyncProvider): Promise<HealthSyncOAuthStartResponse | null> {
+    try {
+      const response = await firstValueFrom(
+        this.http.post<HealthSyncOAuthStartResponse>(
+          `${this.apiUrl}/sync/oauth/start`,
+          { provider },
+          { withCredentials: true }
+        )
+      );
+      return response;
+    } catch (error) {
+      console.error('Failed to start sync OAuth flow:', error);
+      return null;
+    }
+  }
+
+  async completeSyncOAuth(state: string, code: string): Promise<boolean> {
+    try {
+      await firstValueFrom(
+        this.http.post(
+          `${this.apiUrl}/sync/oauth/callback`,
+          { state, code },
+          { withCredentials: true }
+        )
+      );
+      await this.loadSyncConnections();
+      return true;
+    } catch (error) {
+      console.error('Failed to complete sync OAuth flow:', error);
+      return false;
+    }
   }
 }

@@ -257,3 +257,81 @@ export const DAILY_GOALS = {
   activityMinutes: 30,
   sleepHours: 8,
 };
+
+// =============================================================================
+// Workouts + Health Sync Types
+// =============================================================================
+
+export type ExerciseCategory = 'STRENGTH' | 'CARDIO' | 'MOBILITY' | 'FLEXIBILITY' | 'RECOVERY';
+export type WorkoutDifficulty = 'BEGINNER' | 'INTERMEDIATE' | 'ADVANCED';
+export type HealthSyncProvider = 'GOOGLE_FIT' | 'SAMSUNG_HEALTH';
+
+export interface WorkoutExerciseSuggestion {
+  id: string;
+  key: string;
+  name: string;
+  category: ExerciseCategory;
+  difficulty: WorkoutDifficulty;
+  defaultSets: number;
+  defaultRepsMin: number;
+  defaultRepsMax: number;
+  defaultRestSeconds: number;
+  instructions?: string | null;
+  tags: string[];
+}
+
+export interface WorkoutPlanExercise {
+  id: string;
+  workoutPlanId: string;
+  exerciseCatalogId: string;
+  orderIndex: number;
+  sets: number;
+  repsMin: number;
+  repsMax: number;
+  restSeconds: number;
+  exercise: WorkoutExerciseSuggestion;
+}
+
+export interface WorkoutPlan {
+  id: string;
+  userId: string;
+  name: string;
+  description?: string | null;
+  difficulty: WorkoutDifficulty;
+  isActive: boolean;
+  exercises: WorkoutPlanExercise[];
+}
+
+export interface WorkoutSuggestions {
+  categories: ExerciseCategory[];
+  difficulty: WorkoutDifficulty;
+  exercises: WorkoutExerciseSuggestion[];
+}
+
+export interface WorkoutSetLogResult {
+  workoutPlanExerciseId: string;
+  repsCompleted: number;
+  targetReps: {
+    min: number;
+    max: number;
+  };
+  restSeconds: number;
+  exerciseName: string;
+}
+
+export interface HealthSyncConnection {
+  id: string;
+  userId: string;
+  provider: HealthSyncProvider;
+  connected: boolean;
+  autoSync: boolean;
+  lastSyncAt?: string | null;
+}
+
+export interface HealthSyncOAuthStartResponse {
+  success: boolean;
+  provider: HealthSyncProvider;
+  mode: 'oauth_placeholder';
+  authUrl: string;
+  expiresInSeconds: number;
+}

@@ -2,7 +2,7 @@ import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule, Router } from '@angular/router';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { AuthService } from '../../../core/auth/auth.service';
 import { ToastService } from '../../../core/toast/toast.service';
 import { SpinnerComponent } from '../../../shared/components/spinner/spinner.component';
@@ -120,11 +120,13 @@ import { BackButtonComponent } from '../../../shared/components/back-button/back
           </div>
 
           <!-- Social Login -->
-          <app-social-buttons
-            [providers]="['google', 'github', 'apple']"
-            [loading]="auth.isLoading()"
-            (onProviderClick)="onOAuthClick($event)"
-          />
+          @if (socialProviders().length > 0) {
+            <app-social-buttons
+              [providers]="socialProviders()"
+              [loading]="auth.isLoading()"
+              (onProviderClick)="onOAuthClick($event)"
+            />
+          }
 
           <!-- Magic Link -->
           <div class="mt-8 pt-6 border-t border-gray-100 dark:border-gray-800">
@@ -168,6 +170,68 @@ import { BackButtonComponent } from '../../../shared/components/back-button/back
               </div>
             }
           </div>
+
+          <!-- Email OTP Sign-In -->
+          <div class="mt-6 pt-6 border-t border-gray-100 dark:border-gray-800">
+            <button
+              type="button"
+              (click)="showOtpSignIn.set(!showOtpSignIn())"
+              class="w-full text-sm font-medium text-gray-600 hover:text-primary-600 transition-colors flex items-center justify-center gap-2 group dark:text-gray-400 dark:hover:text-primary-400"
+            >
+              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+              {{ 'AUTH.SIGN_IN_WITH_OTP' | translate }}
+            </button>
+
+            @if (showOtpSignIn()) {
+              <div class="mt-4 p-4 bg-gray-50 rounded-xl border border-gray-100 animate-fade-in dark:bg-gray-800/50 dark:border-gray-700 space-y-3">
+                <input
+                  type="email"
+                  [(ngModel)]="otpEmail"
+                  [placeholder]="'AUTH.ENTER_EMAIL' | translate"
+                  class="input-field !py-2.5 text-sm"
+                />
+
+                <div class="flex gap-2">
+                  <input
+                    type="text"
+                    [(ngModel)]="otpCode"
+                    [placeholder]="'AUTH.ENTER_OTP' | translate"
+                    inputmode="numeric"
+                    autocomplete="one-time-code"
+                    class="input-field !py-2.5 text-sm tracking-[0.3em]"
+                  />
+                  <button
+                    type="button"
+                    (click)="sendSignInOtp()"
+                    [disabled]="auth.isLoading()"
+                    class="px-4 py-2.5 bg-gray-900 text-white rounded-xl font-medium hover:bg-gray-800 transition-colors disabled:opacity-50 dark:bg-gray-700 dark:hover:bg-gray-600 whitespace-nowrap"
+                  >
+                    {{ 'AUTH.SEND_OTP_CODE' | translate }}
+                  </button>
+                </div>
+
+                <button
+                  type="button"
+                  (click)="signInWithOtp()"
+                  [disabled]="auth.isLoading() || !otpCode.trim()"
+                  class="w-full btn-primary"
+                >
+                  {{ 'AUTH.VERIFY_AND_SIGN_IN' | translate }}
+                </button>
+
+                @if (otpSent()) {
+                  <p class="text-sm text-green-600 font-medium flex items-center gap-1.5 dark:text-green-400">
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                    </svg>
+                    {{ 'AUTH.OTP_SENT' | translate }}
+                  </p>
+                }
+              </div>
+            }
+          </div>
         </div>
 
         <!-- Footer -->
@@ -185,12 +249,18 @@ export class LoginComponent {
   readonly auth = inject(AuthService);
   private readonly router = inject(Router);
   private readonly toast = inject(ToastService);
+  private readonly translate = inject(TranslateService);
 
   email = '';
   password = '';
   magicLinkEmail = '';
+  otpEmail = '';
+  otpCode = '';
   showMagicLink = signal(false);
   magicLinkSent = signal(false);
+  showOtpSignIn = signal(false);
+  otpSent = signal(false);
+  readonly socialProviders = this.auth.enabledProviders;
 
   async onSubmit(): Promise<void> {
     if (!this.email || !this.password) return;
@@ -217,6 +287,40 @@ export class LoginComponent {
       this.toast.success('Magic link sent. Check your inbox.', 'Email sent');
     } else if (this.auth.error()) {
       this.toast.error(this.auth.error()!, 'Unable to send magic link');
+    }
+  }
+
+  async sendSignInOtp(): Promise<void> {
+    const targetEmail = (this.otpEmail || this.email).trim();
+    if (!targetEmail) return;
+
+    const success = await this.auth.sendSignInOtp(targetEmail);
+    if (success) {
+      this.otpEmail = targetEmail;
+      this.otpSent.set(true);
+      this.toast.success(
+        this.translate.instant('AUTH.OTP_SENT'),
+        this.translate.instant('AUTH.EMAIL_SENT'),
+      );
+    } else if (this.auth.error()) {
+      this.toast.error(this.auth.error()!, this.translate.instant('AUTH.UNABLE_SEND_OTP'));
+    }
+  }
+
+  async signInWithOtp(): Promise<void> {
+    const targetEmail = (this.otpEmail || this.email).trim();
+    const code = this.otpCode.trim();
+    if (!targetEmail || !code) return;
+
+    const success = await this.auth.signInWithOtp(targetEmail, code);
+    if (success) {
+      this.toast.success(
+        this.translate.instant('AUTH.OTP_SIGNED_IN'),
+        this.translate.instant('AUTH.SIGN_IN'),
+      );
+      this.router.navigate(['/dashboard']);
+    } else if (this.auth.error()) {
+      this.toast.error(this.auth.error()!, this.translate.instant('AUTH.OTP_SIGN_IN_FAILED'));
     }
   }
 }

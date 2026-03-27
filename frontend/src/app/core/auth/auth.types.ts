@@ -43,3 +43,5 @@ export interface AuthError {
   error: string;
   message?: string;
 }
+
+export type OAuthProvider = 'google' | 'github' | 'apple';

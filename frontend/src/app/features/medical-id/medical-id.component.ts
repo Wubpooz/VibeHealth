@@ -16,6 +16,7 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatGridListModule } from '@angular/material/grid-list';
+import { TranslateService } from '@ngx-translate/core';
 import { MedicalIdQrDialogComponent } from './medical-id-qr-dialog.component';
 import { MedicalIdService } from '../../core/medical-id/medical-id.service';
 import { ReferenceDataService } from '../../core/reference-data/reference-data.service';
@@ -224,6 +225,15 @@ type ViewMode = 'card' | 'edit';
                 </button>
               </div>
               <p class="qr-hint">Scan to access emergency info</p>
+            </div>
+
+            <div class="share-export-actions">
+              <button type="button" class="share-btn" (click)="shareMedicalId()">
+                {{ 'MEDICAL_ID.SHARE' | translate }}
+              </button>
+              <button type="button" class="export-btn" (click)="exportMedicalIdPdf()">
+                {{ 'MEDICAL_ID.EXPORT_PDF' | translate }}
+              </button>
             </div>
 
             <!-- Offline indicator -->
@@ -942,6 +952,40 @@ type ViewMode = 'card' | 'edit';
       margin: 0;
     }
 
+    .share-export-actions {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.75rem;
+      padding: 1rem 1.25rem 0.25rem;
+    }
+
+    .share-btn,
+    .export-btn {
+      border: none;
+      border-radius: 999px;
+      padding: 0.625rem 1rem;
+      font-weight: 700;
+      font-size: 0.875rem;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .share-btn {
+      background: #eef2ff;
+      color: #3730a3;
+    }
+
+    .export-btn {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .share-btn:hover,
+    .export-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 16px rgba(15, 23, 42, 0.12);
+    }
+
     /* Offline Badge */
     .offline-badge {
       display: flex;
@@ -1414,6 +1458,7 @@ export class MedicalIdComponent implements OnInit {
   private readonly referenceDataService = inject(ReferenceDataService);
   private readonly dialog = inject(MatDialog);
   private readonly snackBar = inject(MatSnackBar);
+  private readonly translate = inject(TranslateService);
 
   // View state
   readonly viewMode = signal<ViewMode>('card');
@@ -1553,6 +1598,92 @@ export class MedicalIdComponent implements OnInit {
     return name.substring(0, 2).toUpperCase();
   });
 
+  async shareMedicalId(): Promise<void> {
+    const payload = this.buildEmergencyShareText();
+    if (!payload) {
+      this.snackBar.open(
+        this.translate.instant('MEDICAL_ID.SHARE_NO_DATA'),
+        this.translate.instant('common.close'),
+        { duration: 3000 },
+      );
+      return;
+    }
+
+    const confirmed = globalThis.confirm(
+      this.translate.instant('MEDICAL_ID.CONFIRM_SHARE'),
+    );
+    if (!confirmed) {
+      return;
+    }
+
+    try {
+      if (navigator.share) {
+        await navigator.share({
+          title: this.translate.instant('MEDICAL_ID.SHARE_TITLE'),
+          text: payload,
+        });
+        return;
+      }
+
+      if (navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(payload);
+        this.snackBar.open(
+          this.translate.instant('MEDICAL_ID.SHARE_COPIED'),
+          this.translate.instant('common.close'),
+          { duration: 3000 },
+        );
+        return;
+      }
+
+      this.snackBar.open(
+        this.translate.instant('MEDICAL_ID.SHARE_UNSUPPORTED'),
+        this.translate.instant('common.close'),
+        { duration: 3000 },
+      );
+    } catch (error) {
+      console.error('Unable to share medical ID', error);
+      this.snackBar.open(
+        this.translate.instant('MEDICAL_ID.SHARE_FAILED'),
+        this.translate.instant('common.close'),
+        { duration: 3000 },
+      );
+    }
+  }
+
+  exportMedicalIdPdf(): void {
+    const printableHtml = this.buildPrintableMedicalIdHtml();
+    if (!printableHtml) {
+      this.snackBar.open(
+        this.translate.instant('MEDICAL_ID.EXPORT_NO_DATA'),
+        this.translate.instant('common.close'),
+        { duration: 3000 },
+      );
+      return;
+    }
+
+    const printWindow = window.open('', 'MedicalIDExport', 'noopener,noreferrer,width=900,height=700');
+    if (!printWindow) {
+      this.snackBar.open(
+        this.translate.instant('MEDICAL_ID.EXPORT_POPUP_BLOCKED'),
+        this.translate.instant('common.close'),
+        { duration: 3000 },
+      );
+      return;
+    }
+
+    printWindow.document.open();
+    printWindow.document.write(printableHtml);
+    printWindow.document.close();
+
+    printWindow.onload = () => {
+      printWindow.focus();
+      printWindow.print();
+      printWindow.onafterprint = () => {
+        printWindow.close();
+      };
+    };
+  }
+
   ngOnInit(): void {
     void (async () => {
       await this.profileService.loadProfile();
@@ -1651,5 +1782,89 @@ export class MedicalIdComponent implements OnInit {
     } finally {
       this.saving.set(false);
     }
+  }
+
+  private buildEmergencyShareText(): string {
+    const data = this.medicalIdData();
+    if (!data) return '';
+
+    const contact = data.emergencyContacts[0];
+    const noneListed = this.translate.instant('MEDICAL_ID.NONE_LISTED');
+    const unknown = this.translate.instant('MEDICAL_ID.UNKNOWN');
+    const allergies = data.allergies.length > 0 ? data.allergies.join(', ') : noneListed;
+    const medications = data.medications.length > 0 ? data.medications.join(', ') : noneListed;
+    const conditions = data.medicalConditions.length > 0 ? data.medicalConditions.join(', ') : noneListed;
+
+    return [
+      `${this.translate.instant('MEDICAL_ID.SHARE_TITLE')} — ${this.displayName()}`,
+      `${this.translate.instant('MEDICAL_ID.BLOOD_TYPE')}: ${data.bloodType || unknown}`,
+      `${this.translate.instant('MEDICAL_ID.ALLERGIES')}: ${allergies}`,
+      `${this.translate.instant('MEDICAL_ID.MEDICATIONS')}: ${medications}`,
+      `${this.translate.instant('MEDICAL_ID.CONDITIONS')}: ${conditions}`,
+      contact
+        ? `${this.translate.instant('MEDICAL_ID.EMERGENCY_CONTACT')}: ${contact.name} (${contact.relationship}) ${contact.phone}`
+        : `${this.translate.instant('MEDICAL_ID.EMERGENCY_CONTACT')}: ${noneListed}`,
+    ].join('\n');
+  }
+
+  private buildPrintableMedicalIdHtml(): string {
+    const data = this.medicalIdData();
+    if (!data) return '';
+
+    const lang = this.translate.currentLang || this.translate.getDefaultLang() || 'en';
+    const noneListed = this.translate.instant('MEDICAL_ID.NONE_LISTED');
+    const unknown = this.translate.instant('MEDICAL_ID.UNKNOWN');
+    const title = this.translate.instant('MEDICAL_ID.SHARE_TITLE');
+    const bloodTypeLabel = this.translate.instant('MEDICAL_ID.BLOOD_TYPE');
+    const allergiesLabel = this.translate.instant('MEDICAL_ID.ALLERGIES');
+    const medicationsLabel = this.translate.instant('MEDICAL_ID.MEDICATIONS');
+    const conditionsLabel = this.translate.instant('MEDICAL_ID.CONDITIONS');
+    const emergencyContactsLabel = this.translate.instant('MEDICAL_ID.EMERGENCY_CONTACTS');
+
+    const list = (items: string[]) => (items.length ? this.escapeHtml(items.join(', ')) : this.escapeHtml(noneListed));
+    const contacts = data.emergencyContacts.length
+      ? data.emergencyContacts
+          .map((contact) => `<li>${this.escapeHtml(contact.name)} — ${this.escapeHtml(contact.relationship)} — ${this.escapeHtml(contact.phone)}</li>`)
+          .join('')
+      : `<li>${this.escapeHtml(noneListed)}</li>`;
+
+    return `<!doctype html>
+<html lang="${this.escapeHtml(lang)}">
+  <head>
+    <meta charset="utf-8" />
+    <title>${this.escapeHtml(title)} - ${this.escapeHtml(this.displayName())}</title>
+    <style>
+      body { font-family: Arial, sans-serif; padding: 24px; color: #111827; }
+      h1 { margin: 0 0 12px; color: #b91c1c; }
+      .meta { margin: 0 0 18px; color: #374151; }
+      .card { border: 2px solid #fecaca; border-radius: 12px; padding: 16px; margin-bottom: 12px; }
+      .label { font-weight: 700; display: block; margin-bottom: 6px; }
+      ul { margin: 0; padding-left: 18px; }
+      @media print { body { padding: 0; } }
+    </style>
+  </head>
+  <body>
+    <h1>${this.escapeHtml(title)}</h1>
+    <p class="meta">${this.escapeHtml(this.displayName())}</p>
+    <section class="card"><span class="label">${this.escapeHtml(bloodTypeLabel)}</span>${this.escapeHtml(data.bloodType || unknown)}</section>
+    <section class="card"><span class="label">${this.escapeHtml(allergiesLabel)}</span>${list(data.allergies)}</section>
+    <section class="card"><span class="label">${this.escapeHtml(medicationsLabel)}</span>${list(data.medications)}</section>
+    <section class="card"><span class="label">${this.escapeHtml(conditionsLabel)}</span>${list(data.medicalConditions)}</section>
+    <section class="card"><span class="label">${this.escapeHtml(emergencyContactsLabel)}</span><ul>${contacts}</ul></section>
+  </body>
+</html>`;
+  }
+
+  private escapeHtml(value: string): string {
+    return value.replace(/[&<>"']/g, (char) => {
+      const entities: Record<string, string> = {
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;',
+      };
+      return entities[char] ?? char;
+    });
   }
 }

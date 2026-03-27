@@ -41,17 +41,31 @@ export const auth = isTest
         enabled: true,
         // In dev mode, don't require email verification for easier testing
         requireEmailVerification: !isDev,
-        sendResetPassword: async ({ user, url }) => {
-          await sendWithDevFallback('reset', user.email, url);
-        },
       },
 
-      emailVerification: {
-        sendOnSignUp: true,
-        sendVerificationEmail: async ({ user, url }) => {
-          await sendWithDevFallback('verify', user.email, url);
-        },
-      },
+      plugins: [
+        emailOTP({
+          overrideDefaultEmailVerification: true,
+          sendVerificationOnSignUp: true,
+          async sendVerificationOTP({ email, otp, type }) {
+            await sendWithDevFallback({
+              kind: 'otp',
+              recipient: email,
+              otp,
+              otpType: type,
+            });
+          },
+        }),
+        magicLink({
+          async sendMagicLink({ email, url }) {
+            await sendWithDevFallback({
+              kind: 'magic-link',
+              recipient: email,
+              url,
+            });
+          },
+        }),
+      ],
 
       socialProviders: {
         google: {
