@@ -120,8 +120,14 @@ export const routes: Routes = [
       ),
     canActivate: [authGuard],
   },
-  {
-    path: "not-found",
+  {    path: "settings",
+    loadComponent: () =>
+      import("./features/settings/settings.component").then(
+        (m) => m.SettingsComponent,
+      ),
+    canActivate: [authGuard],
+  },
+  {    path: "not-found",
     loadComponent: () =>
       import("./features/not-found/not-found.component").then(
         (m) => m.NotFoundComponent,

@@ -780,5 +780,22 @@
       "FLEXIBILITY": "Flexibility",
       "RECOVERY": "Recovery"
     }
+  },
+  "SETTINGS": {
+    "TITLE": "Settings",
+    "SUBTITLE": "Customize your VibeHealth experience",
+    "COUNTRY": {
+      "TITLE": "Country Settings",
+      "DESCRIPTION": "Set your country to get accurate emergency numbers and local helplines.",
+      "SELECT_LABEL": "Select your country",
+      "SELECT_PLACEHOLDER": "Choose a country...",
+      "EMERGENCY_NUMBERS": "Emergency Numbers",
+      "GENERAL_EMERGENCY": "Emergency",
+      "POLICE": "Police",
+      "AMBULANCE": "Ambulance",
+      "FIRE": "Fire Department"
+    },
+    "SAVING": "Saving...",
+    "SAVED": "Settings saved successfully"
   }
 }

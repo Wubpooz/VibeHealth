@@ -780,5 +780,22 @@
       "FLEXIBILITY": "Souplesse",
       "RECOVERY": "Récupération"
     }
+  },
+  "SETTINGS": {
+    "TITLE": "Paramètres",
+    "SUBTITLE": "Personnalisez votre expérience VibeHealth",
+    "COUNTRY": {
+      "TITLE": "Paramètres de pays",
+      "DESCRIPTION": "Définissez votre pays pour obtenir des numéros d'urgence précis et des lignes d'écoute locales.",
+      "SELECT_LABEL": "Sélectionnez votre pays",
+      "SELECT_PLACEHOLDER": "Choisissez un pays...",
+      "EMERGENCY_NUMBERS": "Numéros d'urgence",
+      "GENERAL_EMERGENCY": "Urgences",
+      "POLICE": "Police",
+      "AMBULANCE": "Ambulance",
+      "FIRE": "Pompiers"
+    },
+    "SAVING": "Enregistrement...",
+    "SAVED": "Paramètres enregistrés avec succès"
   }
 }
