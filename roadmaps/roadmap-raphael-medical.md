@@ -19,8 +19,8 @@
 - [x] Add a settings page where the user can change their country.
 
 ## Milestone 2: Medication & Reminders
-- [ ] Add `MEDICATION` and `MEDICATION_REMINDER` to `schema.prisma`.
-- [ ] Create Hono CRUD routes to list, add, edit, and stop tracking medicines. **Ensure medicine names are internationalized or mapped to universal standards (e.g. WHO INN)**.
+- [x] Add `MEDICATION` and `MEDICATION_REMINDER` to `schema.prisma`.
+- [x] Create Hono CRUD routes to list, add, edit, and stop tracking medicines. **Ensure medicine names are internationalized or mapped to universal standards (e.g. WHO INN)**.
 - [ ] Build the Frontend UI to schedule doses, set duration, and view upcoming refill alerts.
 - [ ] Write Backend workers/crons to dispatch Web Push and Email notifications.
 
