@@ -41,10 +41,11 @@ import { EmergencyNumber } from '../first-aid/first-aid.types';
 
           <div class="space-y-4">
             <div>
-              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              <label for="countrySelect" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 {{ 'SETTINGS.COUNTRY.SELECT_LABEL' | translate }}
               </label>
               <select
+                id="countrySelect"
                 [ngModel]="selectedCountry()"
                 (ngModelChange)="onCountryChange($event)"
                 class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors"
@@ -154,7 +155,7 @@ export class SettingsComponent {
   readonly selectedCountry = signal<string>('');
   readonly saveStatus = signal<'idle' | 'saving' | 'saved'>('idle');
 
-  readonly availableCountries = signal<Array<{ code: string; name: string; flag: string }>>([
+  readonly availableCountries = signal<{ code: string; name: string; flag: string }[]>([
     { code: 'US', name: 'United States', flag: '🇺🇸' },
     { code: 'CA', name: 'Canada', flag: '🇨🇦' },
     { code: 'GB', name: 'United Kingdom', flag: '🇬🇧' },
