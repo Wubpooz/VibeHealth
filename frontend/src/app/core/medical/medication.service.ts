@@ -20,6 +20,7 @@ export interface Medication {
   name: string;
   standardName?: string | null;
   notes?: string | null;
+  duration?: number | null; // Duration in days
   reminders: MedicationReminder[];
   createdAt: string;
   updatedAt: string;
@@ -55,14 +56,14 @@ export class MedicationService {
     }
   }
 
-  async addMedication(name: string, standardName?: string, notes?: string): Promise<boolean> {
+  async addMedication(name: string, standardName?: string, notes?: string, duration?: number): Promise<boolean> {
     if (!name.trim()) return false;
 
     try {
       const response = await firstValueFrom(
         this.http.post<{ success: boolean; medication: Medication }>(
           this.apiUrl,
-          { name: name.trim(), standardName: standardName?.trim() || null, notes: notes?.trim() || null },
+          { name: name.trim(), standardName: standardName?.trim() || null, notes: notes?.trim() || null, duration: duration || null },
           { withCredentials: true }
         )
       );
@@ -83,7 +84,7 @@ export class MedicationService {
       const response = await firstValueFrom(
         this.http.put<{ success: boolean; medication: Medication }>(
           `${this.apiUrl}/${id}`,
-          { name: data.name, standardName: data.standardName, notes: data.notes },
+          { name: data.name, standardName: data.standardName, notes: data.notes, duration: data.duration },
           { withCredentials: true }
         )
       );
@@ -118,6 +119,97 @@ export class MedicationService {
     } catch (err) {
       console.error('Unable to delete medication', err);
       this._error.set('Failed to delete medication');
+      return false;
+    }
+  }
+
+  async addReminder(medicationId: string, timeOfDay: string, dosage: string, recurrence: 'DAILY' | 'WEEKLY' | 'MONTHLY' | 'ONE_TIME'): Promise<boolean> {
+    try {
+      const response = await firstValueFrom(
+        this.http.post<{ success: boolean; reminder: MedicationReminder }>(
+          `${this.apiUrl}/${medicationId}/reminders`,
+          { timeOfDay, dosage, recurrence },
+          { withCredentials: true }
+        )
+      );
+
+      if (response?.reminder) {
+        this._medications.update((list) =>
+          list.map((m) =>
+            m.id === medicationId
+              ? { ...m, reminders: [...m.reminders, response.reminder] }
+              : m
+          )
+        );
+        return true;
+      }
+
+      return false;
+    } catch (err) {
+      console.error('Unable to add reminder', err);
+      this._error.set('Failed to add reminder');
+      return false;
+    }
+  }
+
+  async updateReminder(medicationId: string, reminderId: string, timeOfDay: string, dosage: string, recurrence: 'DAILY' | 'WEEKLY' | 'MONTHLY' | 'ONE_TIME'): Promise<boolean> {
+    try {
+      const response = await firstValueFrom(
+        this.http.put<{ success: boolean; reminder: MedicationReminder }>(
+          `${this.apiUrl}/${medicationId}/reminders/${reminderId}`,
+          { timeOfDay, dosage, recurrence },
+          { withCredentials: true }
+        )
+      );
+
+      if (response?.reminder) {
+        this._medications.update((list) =>
+          list.map((m) =>
+            m.id === medicationId
+              ? {
+                  ...m,
+                  reminders: m.reminders.map((r) =>
+                    r.id === reminderId ? response.reminder : r
+                  ),
+                }
+              : m
+          )
+        );
+        return true;
+      }
+
+      return false;
+    } catch (err) {
+      console.error('Unable to update reminder', err);
+      this._error.set('Failed to update reminder');
+      return false;
+    }
+  }
+
+  async deleteReminder(medicationId: string, reminderId: string): Promise<boolean> {
+    try {
+      const response = await firstValueFrom(
+        this.http.delete<{ success: boolean }>(
+          `${this.apiUrl}/${medicationId}/reminders/${reminderId}`,
+          { withCredentials: true }
+        )
+      );
+
+      if (response?.success) {
+        this._medications.update((list) =>
+          list.map((m) =>
+            m.id === medicationId
+              ? { ...m, reminders: m.reminders.filter((r) => r.id !== reminderId) }
+              : m
+          )
+        );
+        return true;
+      }
+
+      return false;
+    } catch (err) {
+      console.error('Unable to delete reminder', err);
+      this._error.set('Failed to delete reminder');
       return false;
     }
   }

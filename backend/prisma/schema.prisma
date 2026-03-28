@@ -113,6 +113,7 @@ model Medication {
   name         String
   standardName String?             // Optional universal drug name (WHO INN, etc.)
   notes        String?
+  duration     Int?                // Duration in days (for refill alerts)
   createdAt    DateTime            @default(now())
   updatedAt    DateTime            @default(now()) @updatedAt
 

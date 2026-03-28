@@ -18,12 +18,20 @@ const medicationSchema = z.object({
   name: z.string().trim().min(1).max(120),
   standardName: z.string().trim().max(120).optional(),
   notes: z.string().trim().max(500).optional(),
+  duration: z.number().int().positive().max(365).optional(), // Duration in days
 });
 
 const medicationUpdateSchema = z.object({
   name: z.string().trim().min(1).max(120).optional(),
   standardName: z.string().trim().max(120).optional(),
   notes: z.string().trim().max(500).optional(),
+  duration: z.number().int().positive().max(365).optional(),
+});
+
+const reminderSchema = z.object({
+  timeOfDay: z.string().regex(/^([01]\d|2[0-3]):([0-5]\d)$/, 'Invalid time format (HH:MM)'),
+  dosage: z.string().trim().min(1).max(100),
+  recurrence: z.enum(['DAILY', 'WEEKLY', 'MONTHLY', 'ONE_TIME']),
 });
 
 medicalRoutes.use('*', requireAuth);
@@ -85,6 +93,7 @@ medicalRoutes.post('/', async (c) => {
         name: parsed.data.name,
         standardName: parsed.data.standardName || null,
         notes: parsed.data.notes || null,
+        duration: parsed.data.duration || null,
       },
     });
 
@@ -128,6 +137,7 @@ medicalRoutes.put('/:id', async (c) => {
         name: parsed.data.name ?? existingMedication.name,
         standardName: parsed.data.standardName ?? existingMedication.standardName,
         notes: parsed.data.notes ?? existingMedication.notes,
+        duration: parsed.data.duration ?? existingMedication.duration,
       },
     });
 
@@ -161,6 +171,124 @@ medicalRoutes.delete('/:id', async (c) => {
   } catch (error) {
     console.error('Error deleting medication:', error);
     return c.json({ error: 'Failed to delete medication' }, 500);
+  }
+});
+
+// Reminder routes
+medicalRoutes.post('/:medicationId/reminders', async (c) => {
+  const user = c.get('user');
+  const medId = c.req.param('medicationId');
+  const body = await c.req.json();
+
+  const parsed = reminderSchema.safeParse(body);
+  if (!parsed.success) {
+    return c.json({
+      error: 'Invalid reminder payload',
+      details: parsed.error.flatten(),
+    }, 400);
+  }
+
+  try {
+    // Verify medication ownership
+    const medication = await prisma.medication.findUnique({
+      where: { id: medId },
+      include: { profile: true },
+    });
+
+    if (!medication) {
+      return c.json({ error: 'Medication not found' }, 404);
+    }
+
+    if (medication.profile.userId !== user.id) {
+      return c.json({ error: 'Unauthorized' }, 403);
+    }
+
+    const reminder = await prisma.medicationReminder.create({
+      data: {
+        medicationId: medId,
+        timeOfDay: parsed.data.timeOfDay,
+        dosage: parsed.data.dosage,
+        recurrence: parsed.data.recurrence,
+      },
+    });
+
+    return c.json({ success: true, reminder }, 201);
+  } catch (error) {
+    console.error('Error creating reminder:', error);
+    return c.json({ error: 'Failed to create reminder' }, 500);
+  }
+});
+
+medicalRoutes.put('/:medicationId/reminders/:reminderId', async (c) => {
+  const user = c.get('user');
+  const medId = c.req.param('medicationId');
+  const reminderId = c.req.param('reminderId');
+  const body = await c.req.json();
+
+  const parsed = reminderSchema.safeParse(body);
+  if (!parsed.success) {
+    return c.json({
+      error: 'Invalid reminder payload',
+      details: parsed.error.flatten(),
+    }, 400);
+  }
+
+  try {
+    // Verify medication ownership
+    const medication = await prisma.medication.findUnique({
+      where: { id: medId },
+      include: { profile: true },
+    });
+
+    if (!medication) {
+      return c.json({ error: 'Medication not found' }, 404);
+    }
+
+    if (medication.profile.userId !== user.id) {
+      return c.json({ error: 'Unauthorized' }, 403);
+    }
+
+    const reminder = await prisma.medicationReminder.update({
+      where: { id: reminderId },
+      data: {
+        timeOfDay: parsed.data.timeOfDay,
+        dosage: parsed.data.dosage,
+        recurrence: parsed.data.recurrence,
+      },
+    });
+
+    return c.json({ success: true, reminder });
+  } catch (error) {
+    console.error('Error updating reminder:', error);
+    return c.json({ error: 'Failed to update reminder' }, 500);
+  }
+});
+
+medicalRoutes.delete('/:medicationId/reminders/:reminderId', async (c) => {
+  const user = c.get('user');
+  const medId = c.req.param('medicationId');
+  const reminderId = c.req.param('reminderId');
+
+  try {
+    // Verify medication ownership
+    const medication = await prisma.medication.findUnique({
+      where: { id: medId },
+      include: { profile: true },
+    });
+
+    if (!medication) {
+      return c.json({ error: 'Medication not found' }, 404);
+    }
+
+    if (medication.profile.userId !== user.id) {
+      return c.json({ error: 'Unauthorized' }, 403);
+    }
+
+    await prisma.medicationReminder.delete({ where: { id: reminderId } });
+    return c.json({ success: true });
+  } catch (error) {
+    console.error('Error deleting reminder:', error);
+    return c.json({ error: 'Failed to delete reminder' }, 500);
   }
 });
 
