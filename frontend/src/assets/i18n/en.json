@@ -31,7 +31,8 @@
     "workouts": "Workouts",
     "nutrition": "Nutrition",
     "goals": "Goals",
-    "rewards": "Rewards"
+    "rewards": "Rewards",
+    "wiki": "Health Wiki"
   },
   "SIDEBAR": {
     "BRAND_TAGLINE": "The Living Canvas",
@@ -116,9 +117,15 @@
     "FEATURE_DASHBOARD": "Personal Dashboard",
     "FEATURE_DASHBOARD_DESC": "Track your health journey with personalized insights"
   },
+  "WIKI": {
+    "TITLE": "Health Wiki",
+    "SUBTITLE": "Browse 20 common conditions and open-source medical articles.",
+    "SEARCH_PLACEHOLDER": "Search conditions",
+    "SOURCE_LABEL": "Source:",
+    "NO_CONDITION_SELECTED": "Select a condition to view its article"
+  },
   "DASHBOARD": {
-    "WELCOME": "Welcome to VibeHealth!",
-    "SETUP_COMPLETE": "You're all set up. Authentication is working!",
+    "WELCOME": "Welcome to VibeHealth!",    "SETUP_COMPLETE": "You're all set up. Authentication is working!",
     "YOUR_PROFILE": "Your Profile",
     "EMAIL_VERIFIED": "Email verified",
     "ROLE": "Role",

@@ -58,6 +58,7 @@ export class SidebarComponent {
     { route: '/goals', labelKey: 'nav.goals', icon: 'track_changes' },
     { route: '/medical-id', labelKey: 'nav.medical_id', icon: 'badge' },
     { route: '/first-aid', labelKey: 'nav.first_aid', icon: 'medical_services' },
+    { route: '/wiki', labelKey: 'nav.wiki', icon: 'local_library' },
     { route: '/journal', labelKey: 'nav.journal', icon: 'menu_book' },
     { route: '/rewards', labelKey: 'nav.rewards', icon: 'emoji_events' }
   ];

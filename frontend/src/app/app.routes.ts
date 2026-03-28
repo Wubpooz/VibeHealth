@@ -120,6 +120,14 @@ export const routes: Routes = [
       ),
     canActivate: [authGuard],
   },
+  {
+    path: "wiki",
+    loadComponent: () =>
+      import("./features/wiki/wiki.component").then(
+        (m) => m.WikiComponent,
+      ),
+    canActivate: [authGuard],
+  },
   {    path: "settings",
     loadComponent: () =>
       import("./features/settings/settings.component").then(

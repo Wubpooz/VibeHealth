@@ -14,8 +14,8 @@
 - [x] Build offline-first, quick-reference First Aid cards UI representing 8 emergency procedures (CPR, Choking, Burns, etc.).
 - [x] Implement severity tiers (🚨 Critical / ⚠️ Urgent / 💙 Moderate) with color-coded cards, keyword search, and severity filter pills.
 - [x] Add expandable step-by-step accordions with numbered steps.
-- [ ] Implement an offline-accessible local helpline directory (one-tap call links) including a sticky emergency call button always in the header. **Ensure helpline numbers and help websites are internationalized per region**.
-- [ ] Integrate a condition library and markdown document renderer for health articles.
+- [x] Implement an offline-accessible local helpline directory (one-tap call links) including a sticky emergency call button always in the header. **Ensure helpline numbers and help websites are internationalized per region**.
+- [x] Integrate a condition library and markdown document renderer for health articles.
 - [x] Add a settings page where the user can change their country.
 
 ## Milestone 2: Medication & Reminders

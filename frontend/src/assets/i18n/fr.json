@@ -31,7 +31,8 @@
     "workouts": "Entraînements",
     "nutrition": "Nutrition",
     "goals": "Objectifs",
-    "rewards": "Récompenses"
+    "rewards": "Récompenses",
+    "wiki": "Wiki santé"
   },
   "SIDEBAR": {
     "BRAND_TAGLINE": "La Toile Vivante",
@@ -41,9 +42,15 @@
     "VIEW_PROFILE": "Voir le profil",
     "LOGOUT": "Se déconnecter"
   },
+  "WIKI": {
+    "TITLE": "Wiki santé",
+    "SUBTITLE": "Parcourez 20 pathologies courantes et des articles médicaux en source libre.",
+    "SEARCH_PLACEHOLDER": "Rechercher une pathologie",
+    "SOURCE_LABEL": "Source :",
+    "NO_CONDITION_SELECTED": "Sélectionnez une pathologie pour afficher l'article"
+  },
   "AUTH": {
-    "LOGIN": "Se connecter",
-    "LOGOUT": "Se déconnecter",
+    "LOGIN": "Se connecter",    "LOGOUT": "Se déconnecter",
     "SIGN_IN": "Connexion",
     "SIGN_UP": "Inscription",
     "EMAIL": "Email",
