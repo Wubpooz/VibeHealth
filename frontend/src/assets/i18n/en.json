@@ -26,7 +26,7 @@
     "journal": "Journal",
     "vitals": "Vitals",
     "wellness": "Wellness",
-    "medical": "Medical",
+    "medical": "Medication",
     "activity": "Activity",
     "workouts": "Workouts",
     "nutrition": "Nutrition",
@@ -248,6 +248,20 @@
     "SAVE_CHANGES": "Save Medical ID",
     "EDIT_MODE": "Edit",
     "VIEW_MODE": "View Card"
+  },
+  "MEDICATION": {
+    "TITLE": "Medication Tracker",
+    "SUBTITLE": "Add your meds and keep them in sync with international names",
+    "INPUT_NAME": "Medication name",
+    "INPUT_STANDARD_NAME": "Standard (WHO INN) name (optional)",
+    "INPUT_NOTES": "Notes (dosage, schedule)",
+    "ADD_BUTTON": "Add medication",
+    "SAVE_BUTTON": "Save changes",
+    "LIST_TITLE": "My medications",
+    "STANDARD_NAME": "Standard name",
+    "LOADING": "Loading medications...",
+    "NO_RESULTS": "No medications added yet",
+    "EDIT_TITLE": "Edit medication"
   },
   "REWARDS": {
     "CARROTS": "Carrots",

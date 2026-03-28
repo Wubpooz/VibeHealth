@@ -26,7 +26,7 @@
     "journal": "Journal",
     "vitals": "Signes vitaux",
     "wellness": "Bien-être",
-    "medical": "Médical",
+    "medical": "Médicaments",
     "activity": "Activité",
     "workouts": "Entraînements",
     "nutrition": "Nutrition",
@@ -248,6 +248,20 @@
     "SAVE_CHANGES": "Enregistrer la carte médicale",
     "EDIT_MODE": "Modifier",
     "VIEW_MODE": "Voir la carte"
+  },
+  "MEDICATION": {
+    "TITLE": "Suivi des Médicaments",
+    "SUBTITLE": "Ajoutez vos médicaments et synchronisez-les avec les noms standards",
+    "INPUT_NAME": "Nom du médicament",
+    "INPUT_STANDARD_NAME": "Nom standard (WHO INN) (optionnel)",
+    "INPUT_NOTES": "Notes (posologie, horaire)",
+    "ADD_BUTTON": "Ajouter le médicament",
+    "SAVE_BUTTON": "Enregistrer les modifications",
+    "LIST_TITLE": "Mes médicaments",
+    "STANDARD_NAME": "Nom standard",
+    "LOADING": "Chargement des médicaments...",
+    "NO_RESULTS": "Aucun médicament ajouté pour le moment",
+    "EDIT_TITLE": "Modifier le médicament"
   },
   "REWARDS": {
     "CARROTS": "Carottes",

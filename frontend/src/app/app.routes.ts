@@ -65,6 +65,14 @@ export const routes: Routes = [
     canActivate: [authGuard],
   },
   {
+    path: "medication",
+    loadComponent: () =>
+      import("./features/medication/medication.component").then(
+        (m) => m.MedicationPageComponent,
+      ),
+    canActivate: [authGuard],
+  },
+  {
     path: "first-aid",
     loadComponent: () =>
       import("./features/first-aid/first-aid.component").then(
