@@ -122,7 +122,9 @@
     "SUBTITLE": "Browse 20 common conditions and open-source medical articles.",
     "SEARCH_PLACEHOLDER": "Search conditions",
     "SOURCE_LABEL": "Source:",
-    "NO_CONDITION_SELECTED": "Select a condition to view its article"
+    "NO_CONDITION_SELECTED": "Select a condition to view its article",
+    "FILTER_BY_TAGS": "Filter by tags",
+    "CLEAR_FILTERS": "Clear all filters"
   },
   "DASHBOARD": {
     "WELCOME": "Welcome to VibeHealth!",    "SETUP_COMPLETE": "You're all set up. Authentication is working!",

@@ -47,7 +47,9 @@
     "SUBTITLE": "Parcourez 20 pathologies courantes et des articles médicaux en source libre.",
     "SEARCH_PLACEHOLDER": "Rechercher une pathologie",
     "SOURCE_LABEL": "Source :",
-    "NO_CONDITION_SELECTED": "Sélectionnez une pathologie pour afficher l'article"
+    "NO_CONDITION_SELECTED": "Sélectionnez une pathologie pour afficher l'article",
+    "FILTER_BY_TAGS": "Filtrer par tags",
+    "CLEAR_FILTERS": "Effacer tous les filtres"
   },
   "AUTH": {
     "LOGIN": "Se connecter",    "LOGOUT": "Se déconnecter",

@@ -10,6 +10,7 @@ interface WikiCondition {
   summary: string;
   sourceUrl: string;
   sourceName: string;
+  tags: string[];
 }
 
 @Component({
@@ -33,6 +34,30 @@ interface WikiCondition {
             [placeholder]="'WIKI.SEARCH_PLACEHOLDER' | translate"
             class="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500"
           />
+        </div>
+
+        <!-- Tag Filters -->
+        <div class="rounded-2xl bg-white dark:bg-gray-800 p-4 border border-gray-200 dark:border-gray-700 shadow-sm mb-6">
+          <h3 class="text-sm font-semibold text-gray-900 dark:text-white mb-3">{{ 'WIKI.FILTER_BY_TAGS' | translate }}</h3>
+          <div class="flex flex-wrap gap-2">
+            @for (tag of availableTags(); track tag) {
+              <button
+                (click)="toggleTag(tag)"
+                [class.active]="isTagSelected(tag)"
+                class="tag-filter-button"
+              >
+                {{ tag }}
+              </button>
+            }
+          </div>
+          @if (selectedTags().length > 0) {
+            <button
+              (click)="selectedTags.set([])"
+              class="mt-3 text-sm text-primary-600 dark:text-primary-400 hover:underline"
+            >
+              {{ 'WIKI.CLEAR_FILTERS' | translate }}
+            </button>
+          }
         </div>
 
         <div class="lg:grid lg:grid-cols-3 gap-6">
@@ -70,9 +95,43 @@ interface WikiCondition {
       </div>
     </div>
   `,
+  styles: [`
+    .tag-filter-button {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.375rem 0.75rem;
+      border-radius: 9999px;
+      font-size: 0.875rem;
+      font-weight: 500;
+      border: 1px solid #d1d5db;
+      background: white;
+      color: #374151;
+      transition: all 0.2s;
+      cursor: pointer;
+    }
+
+    :host-context(.dark) .tag-filter-button {
+      background: #1f2937;
+      border-color: #374151;
+      color: #9ca3af;
+    }
+
+    .tag-filter-button:hover {
+      border-color: #f43f5e;
+      color: #f43f5e;
+    }
+
+    .tag-filter-button.active {
+      background: linear-gradient(135deg, #f43f5e, #e11d48);
+      border-color: transparent;
+      color: white;
+      box-shadow: 0 4px 12px rgba(244, 63, 94, 0.3);
+    }
+  `],
 })
 export class WikiComponent {
   searchQuery = signal('');
+  selectedTags = signal<string[]>([]);
 
   conditions: WikiCondition[] = [
     {
@@ -83,6 +142,7 @@ export class WikiComponent {
         'Hypertension is a chronic condition where arterial blood pressure is elevated; it increases risk for stroke, heart attack, and kidney disease.',
       sourceUrl: 'https://medlineplus.gov/highbloodpressure.html',
       sourceName: 'MedlinePlus',
+      tags: ['cardiovascular', 'chronic'],
     },
     {
       id: 'type-2-diabetes',
@@ -92,6 +152,7 @@ export class WikiComponent {
         'Type 2 Diabetes is a long-term metabolic disorder caused by insulin resistance and relative insulin deficiency; it requires lifestyle and medication management.',
       sourceUrl: 'https://medlineplus.gov/type2diabetes.html',
       sourceName: 'MedlinePlus',
+      tags: ['endocrine', 'metabolic', 'chronic'],
     },
     {
       id: 'asthma',
@@ -101,6 +162,7 @@ export class WikiComponent {
         'Asthma causes airway inflammation and bronchoconstriction producing wheeze, cough, shortness of breath and variable expiratory flow obstruction.',
       sourceUrl: 'https://medlineplus.gov/asthma.html',
       sourceName: 'MedlinePlus',
+      tags: ['respiratory', 'chronic', 'inflammatory'],
     },
     {
       id: 'chronic-kidney-disease',
@@ -110,6 +172,7 @@ export class WikiComponent {
         'Chronic kidney disease is long-term kidney damage leading to reduced glomerular filtration and risk of electrolyte imbalance and cardiovascular complications.',
       sourceUrl: 'https://medlineplus.gov/chronickidneydisease.html',
       sourceName: 'MedlinePlus',
+      tags: ['renal', 'chronic', 'metabolic'],
     },
     {
       id: 'copd',
@@ -119,6 +182,7 @@ export class WikiComponent {
         'COPD combines emphysema and chronic bronchitis; it is typically caused by smoking and leads to progressive airflow limitation and breathlessness.',
       sourceUrl: 'https://medlineplus.gov/copd.html',
       sourceName: 'MedlinePlus',
+      tags: ['respiratory', 'chronic', 'smoking-related'],
     },
     {
       id: 'depression',
@@ -128,6 +192,7 @@ export class WikiComponent {
         'Major depressive disorder is characterized by persistent low mood, loss of interest, and functional impairment, often requiring psychotherapy and medication.',
       sourceUrl: 'https://medlineplus.gov/depression.html',
       sourceName: 'MedlinePlus',
+      tags: ['mental health', 'mood disorder'],
     },
     {
       id: 'anxiety-disorders',
@@ -137,6 +202,7 @@ export class WikiComponent {
         'Anxiety disorders involve chronic worry, panic, or phobia symptoms that exceed normal stress responses and impair daily life.',
       sourceUrl: 'https://medlineplus.gov/anxiety.html',
       sourceName: 'MedlinePlus',
+      tags: ['mental health', 'anxiety'],
     },
     {
       id: 'anemia',
@@ -146,6 +212,7 @@ export class WikiComponent {
         'Anemia is a deficiency in hemoglobin or red cells, often causing fatigue, pallor and weakness; causes include iron deficiency, chronic disease, and genetic conditions.',
       sourceUrl: 'https://medlineplus.gov/anemia.html',
       sourceName: 'MedlinePlus',
+      tags: ['hematological', 'blood disorder'],
     },
     {
       id: 'osteoarthritis',
@@ -155,6 +222,7 @@ export class WikiComponent {
         'Osteoarthritis results from joint cartilage wear, causing pain, stiffness and reduced mobility especially in knees, hips and hands.',
       sourceUrl: 'https://medlineplus.gov/osteoarthritis.html',
       sourceName: 'MedlinePlus',
+      tags: ['musculoskeletal', 'degenerative', 'joints'],
     },
     {
       id: 'rheumatoid-arthritis',
@@ -164,6 +232,7 @@ export class WikiComponent {
         'Rheumatoid arthritis is an autoimmune condition with symmetric joint inflammation, pain and deformity; early treatment helps prevent damage.',
       sourceUrl: 'https://medlineplus.gov/rheumatoidarthritis.html',
       sourceName: 'MedlinePlus',
+      tags: ['autoimmune', 'musculoskeletal', 'inflammatory', 'joints'],
     },
     {
       id: 'migraine',
@@ -173,6 +242,7 @@ export class WikiComponent {
         'Migraine causes recurrent headaches with throbbing pain, nausea, and sensory sensitivity; attacks may last hours to days.',
       sourceUrl: 'https://medlineplus.gov/migraine.html',
       sourceName: 'MedlinePlus',
+      tags: ['neurological', 'headache', 'chronic'],
     },
     {
       id: 'hypothyroidism',
@@ -182,6 +252,7 @@ export class WikiComponent {
         'Hypothyroidism causes slow metabolism, fatigue, weight gain, and cold intolerance; it is often treated with levothyroxine.',
       sourceUrl: 'https://medlineplus.gov/hypothyroidism.html',
       sourceName: 'MedlinePlus',
+      tags: ['endocrine', 'thyroid', 'hormonal'],
     },
     {
       id: 'hyperthyroidism',
@@ -191,6 +262,7 @@ export class WikiComponent {
         'Hyperthyroidism can cause rapid heart rate, weight loss, anxiety and heat intolerance; common causes include Graves disease.',
       sourceUrl: 'https://medlineplus.gov/hyperthyroidism.html',
       sourceName: 'MedlinePlus',
+      tags: ['endocrine', 'thyroid', 'hormonal'],
     },
     {
       id: 'sleep-apnea',
@@ -200,6 +272,7 @@ export class WikiComponent {
         'Sleep apnea is repeated airway collapse during sleep causing interrupted breathing, daytime sleepiness, and cardiovascular risk.',
       sourceUrl: 'https://medlineplus.gov/sleepapnea.html',
       sourceName: 'MedlinePlus',
+      tags: ['respiratory', 'sleep disorder', 'chronic'],
     },
     {
       id: 'gastroesophageal-reflux',
@@ -209,6 +282,7 @@ export class WikiComponent {
         'Gastroesophageal reflux disease causes heartburn and regurgitation due to acid leakage from the stomach into the esophagus.',
       sourceUrl: 'https://medlineplus.gov/gerd.html',
       sourceName: 'MedlinePlus',
+      tags: ['gastrointestinal', 'digestive'],
     },
     {
       id: 'eczema',
@@ -218,6 +292,7 @@ export class WikiComponent {
         'Eczema is an inflammatory skin condition with itching, redness and dry patches; triggers include irritants, allergens and stress.',
       sourceUrl: 'https://medlineplus.gov/eczema.html',
       sourceName: 'MedlinePlus',
+      tags: ['dermatological', 'inflammatory', 'skin'],
     },
     {
       id: 'psoriasis',
@@ -227,6 +302,7 @@ export class WikiComponent {
         'Psoriasis produces red, scaly plaques due to immune overactivity; treatment may include topical agents, biologics, and phototherapy.',
       sourceUrl: 'https://medlineplus.gov/psoriasis.html',
       sourceName: 'MedlinePlus',
+      tags: ['dermatological', 'autoimmune', 'skin', 'chronic'],
     },
     {
       id: 'stroke',
@@ -236,6 +312,7 @@ export class WikiComponent {
         'Stroke is sudden brain injury from blocked or ruptured blood vessels; immediate care is critical to reduce lasting impairment.',
       sourceUrl: 'https://medlineplus.gov/stroke.html',
       sourceName: 'MedlinePlus',
+      tags: ['neurological', 'cardiovascular', 'acute'],
     },
     {
       id: 'heart-failure',
@@ -245,6 +322,7 @@ export class WikiComponent {
         'Heart failure occurs when the heart cannot pump enough blood to meet body needs, causing fatigue, swelling and shortness of breath.',
       sourceUrl: 'https://medlineplus.gov/heartfailure.html',
       sourceName: 'MedlinePlus',
+      tags: ['cardiovascular', 'chronic', 'heart'],
     },
     {
       id: 'alzheimer',
@@ -254,21 +332,42 @@ export class WikiComponent {
         'Alzheimer disease is a neurodegenerative disorder featuring memory loss, confusion, and behavioral change over years.',
       sourceUrl: 'https://medlineplus.gov/alzheimersdisease.html',
       sourceName: 'MedlinePlus',
+      tags: ['neurological', 'degenerative', 'cognitive', 'chronic'],
     },
   ];
 
   selectedConditionSignal = signal<WikiCondition | null>(this.conditions[0]);
 
+  availableTags = computed(() => {
+    const allTags = new Set<string>();
+    this.conditions.forEach(condition => {
+      condition.tags.forEach(tag => allTags.add(tag));
+    });
+    return Array.from(allTags).sort();
+  });
+
   filteredConditions = computed(() => {
+    let filtered = this.conditions;
+
+    // Filter by search query
     const query = this.searchQuery().trim().toLowerCase();
-    if (!query) {
-      return this.conditions;
+    if (query) {
+      filtered = filtered.filter((condition) =>
+        condition.title.toLowerCase().includes(query) ||
+        condition.subtitle.toLowerCase().includes(query) ||
+        condition.summary.toLowerCase().includes(query),
+      );
     }
-    return this.conditions.filter((condition) =>
-      condition.title.toLowerCase().includes(query) ||
-      condition.subtitle.toLowerCase().includes(query) ||
-      condition.summary.toLowerCase().includes(query),
-    );
+
+    // Filter by selected tags
+    const tags = this.selectedTags();
+    if (tags.length > 0) {
+      filtered = filtered.filter((condition) =>
+        tags.every(tag => condition.tags.includes(tag))
+      );
+    }
+
+    return filtered;
   });
 
   selectCondition(conditionId: string): void {
@@ -276,6 +375,19 @@ export class WikiComponent {
     if (found) {
       this.selectedConditionSignal.set(found);
     }
+  }
+
+  toggleTag(tag: string): void {
+    const currentTags = this.selectedTags();
+    if (currentTags.includes(tag)) {
+      this.selectedTags.set(currentTags.filter(t => t !== tag));
+    } else {
+      this.selectedTags.set([...currentTags, tag]);
+    }
+  }
+
+  isTagSelected(tag: string): boolean {
+    return this.selectedTags().includes(tag);
   }
 
   getSelectedCondition(): WikiCondition | null {
