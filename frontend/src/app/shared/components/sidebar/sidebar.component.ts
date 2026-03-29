@@ -56,6 +56,7 @@ export class SidebarComponent {
     { route: '/workouts', labelKey: 'nav.workouts', icon: 'fitness_center' },
     { route: '/nutrition', labelKey: 'nav.nutrition', icon: 'restaurant' },
     { route: '/medication', labelKey: 'nav.medical', icon: 'local_pharmacy' },
+    { route: '/pollen', labelKey: 'nav.pollen', icon: 'grass' },
     { route: '/goals', labelKey: 'nav.goals', icon: 'track_changes' },
     { route: '/medical-id', labelKey: 'nav.medical_id', icon: 'badge' },
     { route: '/first-aid', labelKey: 'nav.first_aid', icon: 'medical_services' },

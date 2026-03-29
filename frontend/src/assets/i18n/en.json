@@ -31,6 +31,7 @@
     "activity": "Activity",
     "workouts": "Workouts",
     "nutrition": "Nutrition",
+    "pollen": "Pollen",
     "goals": "Goals",
     "rewards": "Rewards",
     "wiki": "Health Wiki"
@@ -960,6 +961,26 @@
         "CH": "Switzerland",
         "EU": "European Union"
       }
+    },
+    "POLLEN": {
+      "TITLE": "Pollen Tracker",
+      "SUBTITLE": "Daily pollen levels based on your location",
+      "LOCATION_REQUIRED": "Location Required",
+      "LOCATION_DESCRIPTION": "To show pollen levels, we need your location. This data stays private and is only used for pollen tracking.",
+      "ENABLE_LOCATION": "Enable Location",
+      "LOADING": "Loading pollen data...",
+      "TOTAL_LEVEL": "Total pollen level",
+      "BREAKDOWN": "Pollen Breakdown",
+      "TREE": "Tree",
+      "GRASS": "Grass",
+      "WEED": "Weed",
+      "DOMINANT": "Dominant pollen type",
+      "RECOMMENDATIONS": "Recommendations",
+      "REFRESH": "Refresh",
+      "LAST_UPDATED": "Last updated",
+      "ERROR": "Unable to load pollen data",
+      "ERROR_DESCRIPTION": "We couldn't fetch pollen data for your location. Please try again later.",
+      "RETRY": "Try Again"
     },
     "SAVING": "Saving...",
     "SAVED": "Settings saved successfully"

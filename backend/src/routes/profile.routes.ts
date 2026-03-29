@@ -33,6 +33,8 @@ const onboardingProfileSchema = z.object({
   notificationPreferences: z.record(z.boolean()).optional(),
   preferredActivityKey: z.string().trim().min(1).max(120).optional(),
   preferredCountryCode: z.string().trim().length(2).optional(),
+  latitude: z.number().min(-90).max(90).optional(),
+  longitude: z.number().min(-180).max(180).optional(),
 });
 
 const preferredActivitySchema = z.object({
@@ -101,6 +103,8 @@ profileRoutes.post('/', async (c) => {
       currentMedications: payload.currentMedications || [],
       notificationPreferences: payload.notificationPreferences || {},
       preferredCountryCode: payload.preferredCountryCode || null,
+      latitude: payload.latitude || null,
+      longitude: payload.longitude || null,
     } as any;
     
     // Upsert profile (create if not exists, update if exists)
@@ -211,6 +215,56 @@ profileRoutes.patch('/preferred-country', async (c) => {
   } catch (error) {
     console.error('Error updating preferred country:', error);
     return c.json({ error: 'Failed to update preferred country' }, 500);
+  }
+});
+
+const locationSchema = z.object({
+  latitude: z.number().min(-90).max(90),
+  longitude: z.number().min(-180).max(180),
+});
+
+profileRoutes.patch('/location', async (c) => {
+  const user = c.get('user');
+  const body = await c.req.json();
+
+  const parsed = locationSchema.safeParse(body);
+  if (!parsed.success) {
+    return c.json({
+      error: 'Invalid location payload',
+      details: parsed.error.flatten(),
+    }, 400);
+  }
+
+  try {
+    const profile = await prisma.profile.upsert({
+      where: { userId: user.id },
+      update: {
+        latitude: parsed.data.latitude,
+        longitude: parsed.data.longitude,
+      },
+      create: {
+        userId: user.id,
+        dateOfBirth: null,
+        biologicalSex: null,
+        height: null,
+        weight: null,
+        fitnessLevel: null,
+        preferredActivityKey: null,
+        preferredCountryCode: null,
+        latitude: parsed.data.latitude,
+        longitude: parsed.data.longitude,
+        goals: [],
+        medicalConditions: [],
+        allergies: [],
+        currentMedications: [],
+        notificationPreferences: {},
+      },
+    });
+
+    return c.json({ success: true, profile });
+  } catch (error) {
+    console.error('Error updating location:', error);
+    return c.json({ error: 'Failed to update location' }, 500);
   }
 });
 

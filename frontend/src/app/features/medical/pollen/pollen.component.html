@@ -1,0 +1,116 @@
+<div class="pollen-container">
+  <div class="pollen-header">
+    <h2 class="pollen-title">{{ 'pollen.title' | translate }}</h2>
+    <p class="pollen-subtitle">{{ 'pollen.subtitle' | translate }}</p>
+  </div>
+
+  <!-- Location not set -->
+  @if (!hasLocation()) {
+    <div class="location-setup">
+      <div class="location-icon">📍</div>
+      <h3>{{ 'pollen.locationRequired' | translate }}</h3>
+      <p>{{ 'pollen.locationDescription' | translate }}</p>
+      <button
+        class="location-button"
+        (click)="requestLocationPermission()"
+        [disabled]="isLoading()">
+        {{ 'pollen.enableLocation' | translate }}
+      </button>
+    </div>
+  } @else {
+    <!-- Loading state -->
+    @if (isLoading()) {
+      <div class="loading-state">
+        <div class="spinner"></div>
+        <p>{{ 'pollen.loading' | translate }}</p>
+      </div>
+    } @else if (pollen()) {
+      <!-- Pollen data display -->
+      <div class="pollen-data">
+        <div class="pollen-overview">
+          <div class="total-pollen">
+            <div class="pollen-circle" [class]="'level-' + pollen()!.pollen.total">
+              <span class="pollen-number">{{ pollen()!.pollen.total }}</span>
+            </div>
+            <div class="pollen-info">
+              <h3 [class]="getPollenLevelColor(pollen()!.pollen.total)">
+                {{ getPollenLevelDescription(pollen()!.pollen.total) }}
+              </h3>
+              <p>{{ 'pollen.totalLevel' | translate }}</p>
+            </div>
+          </div>
+
+          @if (pollen()!.dominant) {
+            <div class="dominant-pollen">
+              <span class="dominant-label">{{ 'pollen.dominant' | translate }}:</span>
+              <span class="dominant-type">{{ pollen()!.dominant | translate }}</span>
+            </div>
+          }
+        </div>
+
+        <div class="pollen-breakdown">
+          <h4>{{ 'pollen.breakdown' | translate }}</h4>
+          <div class="pollen-types">
+            <div class="pollen-type">
+              <div class="type-icon">🌳</div>
+              <div class="type-info">
+                <span class="type-name">{{ 'pollen.tree' | translate }}</span>
+                <span class="type-level" [class]="getPollenLevelColor(pollen()!.pollen.tree)">
+                  {{ getPollenLevelDescription(pollen()!.pollen.tree) }}
+                </span>
+              </div>
+            </div>
+
+            <div class="pollen-type">
+              <div class="type-icon">🌱</div>
+              <div class="type-info">
+                <span class="type-name">{{ 'pollen.grass' | translate }}</span>
+                <span class="type-level" [class]="getPollenLevelColor(pollen()!.pollen.grass)">
+                  {{ getPollenLevelDescription(pollen()!.pollen.grass) }}
+                </span>
+              </div>
+            </div>
+
+            <div class="pollen-type">
+              <div class="type-icon">🌿</div>
+              <div class="type-info">
+                <span class="type-name">{{ 'pollen.weed' | translate }}</span>
+                <span class="type-level" [class]="getPollenLevelColor(pollen()!.pollen.weed)">
+                  {{ getPollenLevelDescription(pollen()!.pollen.weed) }}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        @if (pollen()!.recommendations.length > 0) {
+          <div class="pollen-recommendations">
+            <h4>{{ 'pollen.recommendations' | translate }}</h4>
+            <ul class="recommendations-list">
+              @for (recommendation of pollen()!.recommendations; track recommendation) {
+                <li class="recommendation-item">{{ recommendation }}</li>
+              }
+            </ul>
+          </div>
+        }
+
+        <div class="pollen-actions">
+          <button class="refresh-button" (click)="refreshPollenData()" [disabled]="isLoading()">
+            {{ 'pollen.refresh' | translate }}
+          </button>
+          <p class="last-updated">{{ 'pollen.lastUpdated' | translate }}: {{ pollen()!.date }}</p>
+        </div>
+      </div>
+    } @else {
+      <!-- Error state -->
+      <div class="error-state">
+        <div class="error-icon">⚠️</div>
+        <h3>{{ 'pollen.error' | translate }}</h3>
+        <p>{{ 'pollen.errorDescription' | translate }}</p>
+        <button class="retry-button" (click)="refreshPollenData()">
+          {{ 'pollen.retry' | translate }}
+        </button>
+      </div>
+    }
+  }
+</div>

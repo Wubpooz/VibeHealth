@@ -31,6 +31,7 @@
     "activity": "Activité",
     "workouts": "Entraînements",
     "nutrition": "Nutrition",
+    "pollen": "Pollen",
     "goals": "Objectifs",
     "rewards": "Récompenses",
     "wiki": "Wiki santé"
@@ -960,6 +961,26 @@
         "CH": "Suisse",
         "EU": "Union européenne"
       }
+    },
+    "POLLEN": {
+      "TITLE": "Suivi du Pollen",
+      "SUBTITLE": "Niveaux de pollen quotidiens selon votre position",
+      "LOCATION_REQUIRED": "Position Requise",
+      "LOCATION_DESCRIPTION": "Pour afficher les niveaux de pollen, nous avons besoin de votre position. Ces données restent privées et ne sont utilisées que pour le suivi du pollen.",
+      "ENABLE_LOCATION": "Activer la Position",
+      "LOADING": "Chargement des données de pollen...",
+      "TOTAL_LEVEL": "Niveau total de pollen",
+      "BREAKDOWN": "Répartition du Pollen",
+      "TREE": "Arbre",
+      "GRASS": "Herbe",
+      "WEED": "Mauvaise herbe",
+      "DOMINANT": "Type de pollen dominant",
+      "RECOMMENDATIONS": "Recommandations",
+      "REFRESH": "Actualiser",
+      "LAST_UPDATED": "Dernière mise à jour",
+      "ERROR": "Impossible de charger les données de pollen",
+      "ERROR_DESCRIPTION": "Nous n'avons pas pu récupérer les données de pollen pour votre position. Veuillez réessayer plus tard.",
+      "RETRY": "Réessayer"
     },
     "SAVING": "Enregistrement...",
     "SAVED": "Paramètres enregistrés avec succès"

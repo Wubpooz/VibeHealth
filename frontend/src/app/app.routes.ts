@@ -73,6 +73,14 @@ export const routes: Routes = [
     canActivate: [authGuard],
   },
   {
+    path: "pollen",
+    loadComponent: () =>
+      import("./features/medical/pollen/pollen.component").then(
+        (m) => m.PollenComponent,
+      ),
+    canActivate: [authGuard],
+  },
+  {
     path: "first-aid",
     loadComponent: () =>
       import("./features/first-aid/first-aid.component").then(

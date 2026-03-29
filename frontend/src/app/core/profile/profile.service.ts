@@ -13,6 +13,8 @@ export interface Profile {
   fitnessLevel: string | null;
   preferredActivityKey: string | null;
   preferredCountryCode: string | null;
+  latitude: number | null;
+  longitude: number | null;
   goals: string[];
   medicalConditions: string[];
   allergies: string[];
@@ -98,6 +100,28 @@ export class ProfileService {
       return response?.profile || null;
     } catch (error) {
       console.error('Failed to update preferred country:', error);
+      return null;
+    }
+  }
+
+  async updateLocation(latitude: number, longitude: number): Promise<Profile | null> {
+    try {
+      const response = await firstValueFrom(
+        this.http.patch<{ success: boolean; profile: Profile }>(
+          `${this.apiUrl}/location`,
+          { latitude, longitude },
+          { withCredentials: true },
+        )
+      );
+
+      if (response?.profile) {
+        this.profileSignal.set(response.profile);
+        this.hasProfileSignal.set(true);
+      }
+
+      return response?.profile || null;
+    } catch (error) {
+      console.error('Failed to update location:', error);
       return null;
     }
   }

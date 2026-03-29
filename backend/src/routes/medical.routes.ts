@@ -2,6 +2,7 @@ import { Hono } from 'hono';
 import { prisma } from '../lib/prisma';
 import { requireAuth } from '../middleware/auth.middleware';
 import { calculateNextDueAt } from '../lib/medication';
+import { getPollenData } from '../lib/pollen';
 import type { Session as AuthSession, User as AuthUser } from 'better-auth';
 import { z } from 'zod';
 
@@ -122,6 +123,35 @@ medicalRoutes.get('/openfda', async (c) => {
 });
 
 medicalRoutes.use('*', requireAuth);
+
+medicalRoutes.get('/pollen', async (c) => {
+  const user = c.get('user');
+
+  try {
+    const profile = await prisma.profile.findUnique({
+      where: { userId: user.id },
+    });
+
+    if (!profile) {
+      return c.json({ error: 'Profile not found' }, 404);
+    }
+
+    if (!profile.latitude || !profile.longitude) {
+      return c.json({ error: 'Location not set in profile' }, 400);
+    }
+
+    const pollenData = await getPollenData(profile.latitude, profile.longitude);
+
+    if (!pollenData) {
+      return c.json({ error: 'Pollen data not available for this location' }, 503);
+    }
+
+    return c.json(pollenData);
+  } catch (error) {
+    console.error('Error fetching pollen data:', error);
+    return c.json({ error: 'Failed to fetch pollen data' }, 500);
+  }
+});
 
 medicalRoutes.get('/', async (c) => {
   const user = c.get('user');
