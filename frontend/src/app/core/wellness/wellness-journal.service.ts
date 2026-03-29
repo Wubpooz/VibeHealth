@@ -254,10 +254,11 @@ export class WellnessJournalService {
 
     try {
       const formData = new FormData();
-      formData.append('title', payload.title || '');
+      if (payload.title) {
+        formData.append('title', payload.title);
+      }
       formData.append('richText', payload.richText);
 
-      // Append files with proper multipart form field name
       files.forEach((file) => {
         formData.append('media', file, file.name);
       });

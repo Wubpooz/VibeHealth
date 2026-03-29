@@ -807,7 +807,14 @@
       "EARN_CARROTS": "Earn Carrots",
       "REWARD_MOOD": "Log your mood",
       "REWARD_ENTRY": "Write an entry",
-      "MEDIA_FILES": "media files"
+      "MEDIA_FILES": "media files",
+      "SAVE_MOOD": "Save Mood",
+      "RETRY": "Retry",
+      "LOADING": "Loading...",
+      "LOAD_MORE": "Load More",
+      "CANCEL": "Cancel",
+      "CREATE_ENTRY": "Create Entry",
+      "CREATING": "Creating..."
     },
     "MOOD": {
       "VERY_SAD": "Very Sad",

@@ -50,12 +50,12 @@ import {
           @if (journalService.journalLoading()) {
             <div class="loading-spinner">
               <div class="spinner"></div>
-              <p class="dark:text-gray-300">{{ 'COMMON.LOADING' | translate }}</p>
+              <p class="dark:text-gray-300">{{ 'WELLNESS.JOURNAL.LOADING' | translate }}</p>
             </div>
           } @else if (journalService.journalError()) {
             <div class="error-message">
               <p>{{ journalService.journalError() }}</p>
-              <button class="btn-retry" (click)="retryFetch()">{{ 'COMMON.RETRY' | translate }}</button>
+              <button class="btn-retry" (click)="retryFetch()">{{ 'WELLNESS.JOURNAL.RETRY' | translate }}</button>
             </div>
           } @else if (journalService.journalEntries().length === 0) {
             <div class="empty-state">
@@ -102,7 +102,7 @@ import {
 
           @if (journalService.journalPagination().hasMore) {
             <button class="btn-load-more" (click)="loadMoreEntries()">
-              {{ 'COMMON.LOAD_MORE' | translate }}
+              {{ 'WELLNESS.JOURNAL.LOAD_MORE' | translate }}
             </button>
           }
         </section>
@@ -137,23 +137,15 @@ import {
                   [attr.title]="getMoodLabel(mood) | translate"
                 >
                   <span class="mood-emoji-large">{{ getMoodEmoji(mood) }}</span>
-                  <span class="mood-label">{{ getMoodLabel(mood) | translate | slice : 0 : 8 }}</span>
+                  <span class="mood-label">{{ getMoodLabel(mood) | translate }}</span>
                 </button>
               }
             </div>
 
             @if (selectedMood()) {
-              <div class="mood-note-input">
-                <textarea
-                  [(ngModel)]="moodNote"
-                  placeholder="{{ 'WELLNESS.JOURNAL.MOOD_NOTE_PLACEHOLDER' | translate }}"
-                  class="input-note dark:bg-gray-800 dark:text-white dark:border-gray-700"
-                  rows="3"
-                ></textarea>
-                <button class="btn-save-mood" (click)="saveMood()" [disabled]="journalService.moodLoading()">
-                  {{ 'COMMON.SAVE' | translate }}
-                </button>
-              </div>
+              <button class="btn-save-mood" (click)="saveMood()" [disabled]="journalService.moodLoading()">
+                {{ 'WELLNESS.JOURNAL.SAVE_MOOD' | translate }}
+              </button>
             }
           </div>
 
@@ -298,10 +290,10 @@ import {
 
               <div class="modal-actions">
                 <button type="button" class="btn-cancel" (click)="closeNewEntryDialog()">
-                  {{ 'COMMON.CANCEL' | translate }}
+                  {{ 'WELLNESS.JOURNAL.CANCEL' | translate }}
                 </button>
                 <button type="button" class="btn-submit" (click)="createEntry()" [disabled]="!entryForm.valid || isCreatingEntry()">
-                  {{ isCreatingEntry() ? ('COMMON.LOADING' | translate) : ('COMMON.CREATE' | translate) }}
+                  {{ isCreatingEntry() ? ('WELLNESS.JOURNAL.CREATING' | translate) : ('WELLNESS.JOURNAL.CREATE_ENTRY' | translate) }}
                 </button>
               </div>
             </form>
@@ -1340,7 +1332,6 @@ export class WellnessJournalPageComponent implements OnInit {
   readonly isCreatingEntry = signal(false);
   readonly selectedFiles = signal<File[]>([]);
 
-  moodNote = '';
   entryForm!: FormGroup;
 
   async ngOnInit(): Promise<void> {
@@ -1401,13 +1392,11 @@ export class WellnessJournalPageComponent implements OnInit {
     const payload: MoodUpsertPayload = {
       date: dateStr,
       mood,
-      note: this.moodNote || undefined,
       tags: [],
     };
 
     const result = await this.journalService.upsertMoodLog(payload);
     if (result) {
-      this.moodNote = '';
       this.selectedMood.set(null);
     }
   }

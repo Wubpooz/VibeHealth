@@ -807,7 +807,14 @@
       "EARN_CARROTS": "Gagnez des Carottes",
       "REWARD_MOOD": "Enregistrez votre humeur",
       "REWARD_ENTRY": "Écrivez une entrée",
-      "MEDIA_FILES": "fichiers médias"
+      "MEDIA_FILES": "fichiers médias",
+      "SAVE_MOOD": "Enregistrer l'Humeur",
+      "RETRY": "Réessayer",
+      "LOADING": "Chargement...",
+      "LOAD_MORE": "Charger Plus",
+      "CANCEL": "Annuler",
+      "CREATE_ENTRY": "Créer une Entrée",
+      "CREATING": "Création..."
     },
     "MOOD": {
       "VERY_SAD": "Très Triste",
