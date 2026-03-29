@@ -455,3 +455,71 @@ model HealthSyncConnection {
   @@index([userId])
   @@map("health_sync_connections")
 }
+
+// Mood Log (daily mood tracking — Phase 1.5 Wellness)
+model MoodLog {
+  id        String   @id @default(cuid())
+  userId    String
+  date      DateTime // Date of mood entry (stored as date, without time)
+  mood      MoodEmoji // 6-emoji mood scale
+  note      String? // Optional free-text mood note
+  tags      String[] // Mood tags (e.g., ["stressed", "energetic", "anxious"])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  journalEntries JournalEntry[]
+
+  @@unique([userId, date])
+  @@index([userId, date])
+  @@index([userId, createdAt])
+  @@map("mood_logs")
+}
+
+enum MoodEmoji {
+  VERY_SAD // 😢
+  SAD // 😕
+  NEUTRAL // 😐
+  HAPPY // 🙂
+  VERY_HAPPY // 😄
+  EXCITED // 🤩
+}
+
+// Journal Entry (journaling with rich text and media)
+model JournalEntry {
+  id          String   @id @default(cuid())
+  userId      String
+  title       String? // Optional title
+  richText    String // Rich text content (HTML or Markdown)
+  moodLogId   String? // Optional reference to mood entry
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  moodLog          MoodLog?           @relation(fields: [moodLogId], references: [id], onDelete: SetNull)
+  mediaAttachments MediaAttachment[]
+
+  @@index([userId, createdAt])
+  @@index([userId, updatedAt])
+  @@map("journal_entries")
+}
+
+// Media Attachment (images and audio for journal entries)
+model MediaAttachment {
+  id               String    @id @default(cuid())
+  journalEntryId   String
+  type             MediaType // IMAGE or AUDIO
+  url              String // URL to media file (S3, CDN, etc.)
+  mimeType         String // e.g., "image/jpeg", "audio/mp3"
+  durationSeconds  Int? // Duration in seconds (for audio only)
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+
+  journalEntry JournalEntry @relation(fields: [journalEntryId], references: [id], onDelete: Cascade)
+
+  @@index([journalEntryId])
+  @@map("media_attachments")
+}
+
+enum MediaType {
+  IMAGE
+  AUDIO
+}
