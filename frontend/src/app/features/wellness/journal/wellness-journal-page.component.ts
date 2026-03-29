@@ -239,6 +239,63 @@ import {
                   rows="6"
                 ></textarea>
               </div>
+
+              <!-- File Upload Section -->
+              <div class="form-group">
+                <label for="media-input" class="media-label">{{ 'WELLNESS.JOURNAL.ADD_MEDIA' | translate }}</label>
+                <input
+                  #fileInput
+                  id="media-input"
+                  type="file"
+                  multiple
+                  accept="image/*,audio/*"
+                  (change)="onFileSelected($event)"
+                  class="hidden-file-input"
+                  aria-label="{{ 'WELLNESS.JOURNAL.SELECT_MEDIA' | translate }}"
+                />
+                <button
+                  type="button"
+                  class="btn-add-media"
+                  (click)="fileInput.click()"
+                  (keydown.enter)="fileInput.click()"
+                  (keydown.space)="fileInput.click()"
+                  [attr.aria-label]="'WELLNESS.JOURNAL.SELECT_MEDIA' | translate"
+                >
+                  📎 {{ 'WELLNESS.JOURNAL.ATTACH_FILES' | translate }}
+                </button>
+
+                <!-- Selected Files Chips -->
+                @if (selectedFiles().length > 0) {
+                  <div class="media-chips">
+                    @for (file of selectedFiles(); track file.name + file.size) {
+                      <div class="media-chip" [class.is-audio]="isAudioFile(file)">
+                        <span class="media-icon">
+                          @if (isAudioFile(file)) {
+                            🎵
+                          } @else {
+                            🖼️
+                          }
+                        </span>
+                        <div class="media-info">
+                          <span class="media-name">{{ file.name }}</span>
+                          <span class="media-size">{{ formatFileSize(file.size) }}</span>
+                        </div>
+                        <button
+                          type="button"
+                          class="remove-media"
+                          (click)="removeFile(file.name)"
+                          (keydown.enter)="removeFile(file.name)"
+                          (keydown.space)="removeFile(file.name)"
+                          [attr.aria-label]="('WELLNESS.JOURNAL.REMOVE_FILE' | translate) + ': ' + file.name"
+                        >
+                          ✕
+                        </button>
+                      </div>
+                    }
+                  </div>
+                }
+              </div>
+
               <div class="modal-actions">
                 <button type="button" class="btn-cancel" (click)="closeNewEntryDialog()">
                   {{ 'COMMON.CANCEL' | translate }}
@@ -1067,6 +1124,152 @@ import {
       min-height: 120px;
     }
 
+    /* File Upload Styles */
+    .hidden-file-input {
+      display: none;
+    }
+
+    .media-label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: #333;
+    }
+
+    :host-context(.dark) .media-label {
+      color: #ddd;
+    }
+
+    .btn-add-media {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1rem;
+      background: rgba(255, 157, 135, 0.1);
+      border: 2px solid rgba(255, 157, 135, 0.3);
+      border-radius: 999px;
+      color: #ff9d87;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.9rem;
+      transition: all 0.2s ease;
+    }
+
+    :host-context(.dark) .btn-add-media {
+      background: rgba(255, 157, 135, 0.15);
+      border-color: rgba(255, 157, 135, 0.4);
+    }
+
+    .btn-add-media:hover {
+      background: rgba(255, 157, 135, 0.2);
+      border-color: rgba(255, 157, 135, 0.5);
+      transform: translateY(-1px);
+    }
+
+    :host-context(.dark) .btn-add-media:hover {
+      background: rgba(255, 157, 135, 0.25);
+    }
+
+    .btn-add-media:focus {
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(255, 157, 135, 0.2);
+    }
+
+    .media-chips {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+
+    .media-chip {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.75rem 1rem;
+      background: rgba(255, 157, 135, 0.08);
+      border: 1px solid rgba(255, 157, 135, 0.2);
+      border-radius: 999px;
+      border-left: 3px solid #ffa89e;
+    }
+
+    :host-context(.dark) .media-chip {
+      background: rgba(255, 157, 135, 0.12);
+      border-color: rgba(255, 157, 135, 0.3);
+    }
+
+    .media-chip.is-audio {
+      border-left-color: #ff9d87;
+    }
+
+    .media-icon {
+      font-size: 1.25rem;
+      flex-shrink: 0;
+    }
+
+    .media-info {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+      flex: 1;
+      min-width: 0;
+    }
+
+    .media-name {
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: #333;
+      word-break: break-all;
+    }
+
+    :host-context(.dark) .media-name {
+      color: #fff;
+    }
+
+    .media-size {
+      font-size: 0.75rem;
+      color: #999;
+      font-weight: 400;
+    }
+
+    :host-context(.dark) .media-size {
+      color: #bbb;
+    }
+
+    .remove-media {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      min-width: 28px;
+      background: rgba(255, 0, 0, 0.1);
+      border: 1px solid rgba(255, 0, 0, 0.2);
+      border-radius: 50%;
+      color: #d32f2f;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.9rem;
+      transition: all 0.2s ease;
+    }
+
+    :host-context(.dark) .remove-media {
+      background: rgba(255, 0, 0, 0.15);
+      border-color: rgba(255, 0, 0, 0.3);
+    }
+
+    .remove-media:hover {
+      background: #d32f2f;
+      color: white;
+      transform: scale(1.1);
+    }
+
+    .remove-media:focus {
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(255, 0, 0, 0.2);
+    }
+
     .modal-actions {
       display: flex;
       gap: 0.75rem;
@@ -1135,6 +1338,7 @@ export class WellnessJournalPageComponent implements OnInit {
   readonly selectedMood = signal<MoodEmoji | null>(null);
   readonly showNewEntryDialog = signal(false);
   readonly isCreatingEntry = signal(false);
+  readonly selectedFiles = signal<File[]>([]);
 
   moodNote = '';
   entryForm!: FormGroup;
@@ -1155,6 +1359,34 @@ export class WellnessJournalPageComponent implements OnInit {
 
   getMoodLabel(mood: MoodEmoji): string {
     return MOOD_LABELS[mood] || 'mood';
+  }
+
+  onFileSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input.files) {
+      const newFiles = Array.from(input.files);
+      const currentFiles = this.selectedFiles();
+      this.selectedFiles.set([...currentFiles, ...newFiles]);
+      // Reset input so same file can be selected again
+      input.value = '';
+    }
+  }
+
+  removeFile(fileName: string): void {
+    const currentFiles = this.selectedFiles();
+    this.selectedFiles.set(currentFiles.filter(f => f.name !== fileName));
+  }
+
+  isAudioFile(file: File): boolean {
+    return file.type.startsWith('audio/');
+  }
+
+  formatFileSize(bytes: number): string {
+    if (bytes === 0) return '0 B';
+    const k = 1024;
+    const sizes = ['B', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return Math.round((bytes / Math.pow(k, i)) * 100) / 100 + ' ' + sizes[i];
   }
 
   selectMood(mood: MoodEmoji): void {
@@ -1223,9 +1455,11 @@ export class WellnessJournalPageComponent implements OnInit {
         richText: this.entryForm.value.richText,
       };
 
-      const result = await this.journalService.createJournalEntry(payload);
+      const files = this.selectedFiles();
+      const result = await this.journalService.createJournalEntryWithMedia(payload, files);
       if (result) {
         this.closeNewEntryDialog();
+        this.selectedFiles.set([]);
         await this.journalService.fetchJournalEntries();
       }
     } finally {

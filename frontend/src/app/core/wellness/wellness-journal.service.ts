@@ -243,6 +243,46 @@ export class WellnessJournalService {
   }
 
   /**
+   * Create a new journal entry with file attachments
+   */
+  async createJournalEntryWithMedia(
+    payload: JournalEntryCreatePayload,
+    files: File[]
+  ): Promise<JournalEntry | null> {
+    this._journalLoading.set(true);
+    this._journalError.set(null);
+
+    try {
+      const formData = new FormData();
+      formData.append('title', payload.title || '');
+      formData.append('richText', payload.richText);
+
+      // Append files with proper multipart form field name
+      files.forEach((file) => {
+        formData.append('media', file, file.name);
+      });
+
+      const response = await firstValueFrom(
+        this.http.post<WellnessSingleResponse<JournalEntry>>(`${this.apiUrl}/journal`, formData),
+      );
+
+      if (response.success) {
+        this._journalEntries.update((entries) => [response.data, ...entries]);
+        return response.data;
+      } else {
+        this._journalError.set('Failed to create entry with media');
+        return null;
+      }
+    } catch (error) {
+      console.error('[WellnessJournal] Create entry with media failed:', error);
+      this._journalError.set('Error creating entry with media');
+      return null;
+    } finally {
+      this._journalLoading.set(false);
+    }
+  }
+
+  /**
    * Clear all state (useful on logout)
    */
   clearState(): void {
