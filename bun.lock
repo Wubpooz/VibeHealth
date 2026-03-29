@@ -5,6 +5,7 @@
     "": {
       "name": "vibehealth",
       "dependencies": {
+        "n": "^10.2.0",
         "ng-animated-icons": "^1.9.0",
       },
       "devDependencies": {
@@ -54,6 +55,8 @@
     "is-fullwidth-code-point": ["is-fullwidth-code-point@3.0.0", "", {}, "sha512-zymm5+u+sCsSWyD9qNaejV3DFvhCKclKdizYaJUuHA83RLjb7nSuGnddCHGv0hk+KY7BMAlsWeK4Ueg6EV6XQg=="],
 
     "lodash": ["lodash@4.17.23", "", {}, "sha512-LgVTMpQtIopCi79SJeDiP0TfWi5CNEc/L/aRdTh3yIvmZXTnheWpKjSZhnvMl8iXbC1tFg9gdHHDMLoV7CnG+w=="],
+
+    "n": ["n@10.2.0", "", { "os": "!win32", "bin": { "n": "bin/n" } }, "sha512-zlLXwSEMQgAHmsXtcZwNuA2W5rLdAJyg51DI47ubDWE0Bss0ji9sbK3eD6vM7kKgRLTFm/i4+FvE4SXvphaSHg=="],
 
     "ng-animated-icons": ["ng-animated-icons@1.9.0", "", { "dependencies": { "tslib": "^2.3.0" }, "peerDependencies": { "@angular/core": "^19.0.0 || ^20.0.0 || ^21.0.0" } }, "sha512-/8c1P4EK+QUGyQ3hoZHl5pX3J80LaROBETiAqPpNPDyG1WCUVMEyFYl4/nIUWfy08L9wnOGh8w8T0rLOGqGZGw=="],
 
