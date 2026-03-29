@@ -28,6 +28,16 @@ export interface MedicationReminderPayload {
   date?: string;
 }
 
+export interface OpenFdaDrugIntel {
+  name: string;
+  officialName: string;
+  openfda: Record<string, unknown>;
+  sideEffects: string[];
+  interactions: string[];
+  warnings: string[];
+  dosage: string[];
+}
+
 export interface AddMedicationPayload {
   name: string;
   standardName?: string;
@@ -74,6 +84,23 @@ export class MedicationService {
       this._error.set('Failed to load medications');
     } finally {
       this._loading.set(false);
+    }
+  }
+
+  async fetchDrugIntel(name: string): Promise<OpenFdaDrugIntel | null> {
+    if (!name.trim()) {
+      return null;
+    }
+
+    try {
+      const response = await firstValueFrom(
+        this.http.get<OpenFdaDrugIntel>(`${this.apiUrl}/openfda?name=${encodeURIComponent(name.trim())}`, { withCredentials: true })
+      );
+      return response;
+    } catch (err) {
+      console.error('Unable to fetch drug intel', err);
+      this._error.set('Failed to fetch drug information');
+      return null;
     }
   }
 
