@@ -6,6 +6,7 @@
   "common": {
     "save": "Enregistrer",
     "cancel": "Annuler",
+    "create": "Créer",
     "delete": "Supprimer",
     "back_to_dashboard": "Back",
     "edit": "Modifier",
@@ -788,6 +789,11 @@
       "RECENT_ENTRIES": "Entrées Récentes",
       "NO_ENTRIES": "Aucune entrée de journal pour l'instant. Commencez par créer votre première entrée !",
       "NEW_ENTRY": "Nouvelle entrée",
+      "NEW_ENTRY_TITLE": "Créer une Nouvelle Entrée",
+      "ENTRY_TITLE_LABEL": "Titre (Optionnel)",
+      "ENTRY_TITLE_PLACEHOLDER": "Donnez un titre à votre entrée...",
+      "ENTRY_TEXT_LABEL": "Qu'y a-t-il sur votre esprit ?",
+      "ENTRY_TEXT_PLACEHOLDER": "Écrivez vos pensées, sentiments et expériences...",
       "DELETE": "Supprimer l'entrée",
       "ENTRIES": "Entrées",
       "TODAY_MOOD": "Humeur du Jour",
@@ -798,6 +804,14 @@
       "REWARD_MOOD": "Enregistrez votre humeur",
       "REWARD_ENTRY": "Écrivez une entrée",
       "MEDIA_FILES": "fichiers médias"
+    },
+    "MOOD": {
+      "VERY_SAD": "Très Triste",
+      "SAD": "Triste",
+      "NEUTRAL": "Neutre",
+      "HAPPY": "Heureux",
+      "VERY_HAPPY": "Très Heureux",
+      "EXCITED": "Excité"
     }
   }
 }

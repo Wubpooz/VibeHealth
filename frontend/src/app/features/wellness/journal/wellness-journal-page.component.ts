@@ -1,18 +1,21 @@
 import { Component, inject, OnInit, signal, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
+import { ThemeService } from '../../../core/theme/theme.service';
 import { WellnessJournalService } from '../../../core/wellness/wellness-journal.service';
 import {
   type MoodEmoji,
   type MoodUpsertPayload,
+  type JournalEntryCreatePayload,
   MOOD_EMOJI_MAP,
+  MOOD_LABELS,
 } from '../../../core/wellness/wellness-journal.types';
 
 @Component({
   selector: 'app-wellness-journal-page',
   standalone: true,
-  imports: [CommonModule, FormsModule, TranslateModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, TranslateModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="wellness-journal-page">
@@ -20,7 +23,7 @@ import {
       <header class="wellness-header">
         <div class="header-container">
           <h1 class="text-3xl font-bold">{{ 'WELLNESS.JOURNAL.TITLE' | translate }}</h1>
-          <p class="text-sm text-gray-600 mt-1">{{ 'WELLNESS.JOURNAL.SUBTITLE' | translate }}</p>
+          <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">{{ 'WELLNESS.JOURNAL.SUBTITLE' | translate }}</p>
         </div>
         <div class="header-stats">
           <div class="stat-chip">
@@ -38,7 +41,7 @@ import {
         <!-- Left Panel: Timeline -->
         <section class="journal-timeline">
           <div class="timeline-header">
-            <h2 class="text-lg font-semibold">{{ 'WELLNESS.JOURNAL.RECENT_ENTRIES' | translate }}</h2>
+            <h2 class="text-lg font-semibold dark:text-white">{{ 'WELLNESS.JOURNAL.RECENT_ENTRIES' | translate }}</h2>
             <button class="btn-new-entry" (click)="openNewEntryDialog()" [attr.aria-label]="'WELLNESS.JOURNAL.NEW_ENTRY' | translate">
               ➕
             </button>
@@ -47,7 +50,7 @@ import {
           @if (journalService.journalLoading()) {
             <div class="loading-spinner">
               <div class="spinner"></div>
-              <p>{{ 'COMMON.LOADING' | translate }}</p>
+              <p class="dark:text-gray-300">{{ 'COMMON.LOADING' | translate }}</p>
             </div>
           } @else if (journalService.journalError()) {
             <div class="error-message">
@@ -57,7 +60,7 @@ import {
           } @else if (journalService.journalEntries().length === 0) {
             <div class="empty-state">
               <div class="empty-icon">📝</div>
-              <p class="text-center text-gray-500">{{ 'WELLNESS.JOURNAL.NO_ENTRIES' | translate }}</p>
+              <p class="text-center text-gray-500 dark:text-gray-400">{{ 'WELLNESS.JOURNAL.NO_ENTRIES' | translate }}</p>
             </div>
           } @else {
             <div class="entries-list">
@@ -67,9 +70,9 @@ import {
                     <div class="entry-date-mood">
                       @if (entry.mood) {
                         <span class="mood-emoji" [title]="entry.mood.mood">{{ getMoodEmoji(entry.mood.mood) }}</span>
-                        <time class="entry-date">{{ entry.createdAt | date : 'MMM d, yyyy' }}</time>
+                        <time class="entry-date dark:text-gray-400">{{ entry.createdAt | date : 'MMM d, yyyy' }}</time>
                       } @else {
-                        <time class="entry-date">{{ entry.createdAt | date : 'MMM d, yyyy' }}</time>
+                        <time class="entry-date dark:text-gray-400">{{ entry.createdAt | date : 'MMM d, yyyy' }}</time>
                       }
                     </div>
                     <button
@@ -83,9 +86,9 @@ import {
                   </div>
 
                   @if (entry.title) {
-                    <h3 class="entry-title">{{ entry.title }}</h3>
+                    <h3 class="entry-title dark:text-white">{{ entry.title }}</h3>
                   }
-                  <p class="entry-preview">{{ entry.richText | slice : 0 : 150 }}{{ entry.richText.length > 150 ? '...' : '' }}</p>
+                  <p class="entry-preview dark:text-gray-400">{{ entry.richText | slice : 0 : 150 }}{{ entry.richText.length > 150 ? '...' : '' }}</p>
 
                   @if (entry.media && entry.media.length > 0) {
                     <div class="entry-media-count">
@@ -118,7 +121,7 @@ import {
                 type="date"
                 [value]="selectedDate() | date : 'yyyy-MM-dd'"
                 (change)="onDateChange($event)"
-                class="input-date"
+                class="input-date dark:bg-gray-800 dark:text-white dark:border-gray-700"
               />
               <button class="btn-date-nav" (click)="nextDay()">
                 ▶️
@@ -131,10 +134,10 @@ import {
                   class="mood-btn"
                   [class.selected]="selectedMood() === mood"
                   (click)="selectMood(mood)"
-                  [attr.title]="mood | translate"
+                  [attr.title]="getMoodLabel(mood) | translate"
                 >
                   <span class="mood-emoji-large">{{ getMoodEmoji(mood) }}</span>
-                  <span class="mood-label">{{ mood | slice : 0 : 3 }}</span>
+                  <span class="mood-label">{{ getMoodLabel(mood) | translate | slice : 0 : 8 }}</span>
                 </button>
               }
             </div>
@@ -144,7 +147,7 @@ import {
                 <textarea
                   [(ngModel)]="moodNote"
                   placeholder="{{ 'WELLNESS.JOURNAL.MOOD_NOTE_PLACEHOLDER' | translate }}"
-                  class="input-note"
+                  class="input-note dark:bg-gray-800 dark:text-white dark:border-gray-700"
                   rows="3"
                 ></textarea>
                 <button class="btn-save-mood" (click)="saveMood()" [disabled]="journalService.moodLoading()">
@@ -165,7 +168,7 @@ import {
             } @else if (journalService.moodError()) {
               <p class="text-xs text-red-500">{{ journalService.moodError() }}</p>
             } @else if (journalService.moodLogs().length === 0) {
-              <p class="text-xs text-gray-400">{{ 'WELLNESS.JOURNAL.NO_MOOD_HISTORY' | translate }}</p>
+              <p class="text-xs text-gray-400 dark:text-gray-500">{{ 'WELLNESS.JOURNAL.NO_MOOD_HISTORY' | translate }}</p>
             } @else {
               <div class="mood-history-list">
                 @for (log of journalService.moodLogs() | slice : 0 : 7; track log.id) {
@@ -197,6 +200,57 @@ import {
           </div>
         </aside>
       </main>
+
+      <!-- New Entry Modal -->
+      @if (showNewEntryDialog()) {
+        <div class="modal-overlay" (click)="closeNewEntryDialog()" (keydown.escape)="closeNewEntryDialog()" role="presentation">
+          <div class="modal-content" (click)="$event.stopPropagation()" (keydown.enter)="$event.stopPropagation()" role="dialog" aria-modal="true">
+            <div class="modal-header">
+              <h2>{{ 'WELLNESS.JOURNAL.NEW_ENTRY_TITLE' | translate }}</h2>
+              <button 
+                type="button"
+                class="modal-close" 
+                (click)="closeNewEntryDialog()" 
+                (keydown.enter)="closeNewEntryDialog()" 
+                (keydown.space)="closeNewEntryDialog()" 
+                aria-label="Close"
+              >
+                &times;
+              </button>
+            </div>
+            <form [formGroup]="entryForm" class="modal-form">
+              <div class="form-group">
+                <label for="entry-title">{{ 'WELLNESS.JOURNAL.ENTRY_TITLE_LABEL' | translate }}</label>
+                <input
+                  id="entry-title"
+                  type="text"
+                  formControlName="title"
+                  placeholder="{{ 'WELLNESS.JOURNAL.ENTRY_TITLE_PLACEHOLDER' | translate }}"
+                  class="form-input dark:bg-gray-800 dark:text-white dark:border-gray-700"
+                />
+              </div>
+              <div class="form-group">
+                <label for="entry-text">{{ 'WELLNESS.JOURNAL.ENTRY_TEXT_LABEL' | translate }}</label>
+                <textarea
+                  id="entry-text"
+                  formControlName="richText"
+                  placeholder="{{ 'WELLNESS.JOURNAL.ENTRY_TEXT_PLACEHOLDER' | translate }}"
+                  class="form-textarea dark:bg-gray-800 dark:text-white dark:border-gray-700"
+                  rows="6"
+                ></textarea>
+              </div>
+              <div class="modal-actions">
+                <button type="button" class="btn-cancel" (click)="closeNewEntryDialog()">
+                  {{ 'COMMON.CANCEL' | translate }}
+                </button>
+                <button type="button" class="btn-submit" (click)="createEntry()" [disabled]="!entryForm.valid || isCreatingEntry()">
+                  {{ isCreatingEntry() ? ('COMMON.LOADING' | translate) : ('COMMON.CREATE' | translate) }}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      }
     </div>
   `,
   styles: `
@@ -205,7 +259,12 @@ import {
       flex-direction: column;
       min-height: 100vh;
       background: linear-gradient(135deg, #fff5f1 0%, #fffbf8 100%);
+      transition: background-color 0.3s ease;
       font-family: 'Satoshi', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+
+    :host-context(.dark) .wellness-journal-page {
+      background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
     }
 
     .wellness-header {
@@ -309,6 +368,10 @@ import {
       color: #333;
     }
 
+    :host-context(.dark) .timeline-header h2 {
+      color: #fff;
+    }
+
     .btn-new-entry {
       display: flex;
       align-items: center;
@@ -342,6 +405,28 @@ import {
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
     }
 
+    :host-context(.dark) .loading-spinner {
+      background: #2d2d2d;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    .empty-state {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      padding: 4rem 2rem;
+      background: white;
+      border-radius: 1.5rem;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    }
+
+    :host-context(.dark) .empty-state {
+      background: #2d2d2d;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+
     .spinner {
       width: 40px;
       height: 40px;
@@ -368,6 +453,11 @@ import {
       color: #d32f2f;
     }
 
+    :host-context(.dark) .error-message {
+      background: #2d2d2d;
+      border-color: rgba(255, 0, 0, 0.3);
+    }
+
     .error-message p {
       margin: 0;
       font-size: 0.9rem;
@@ -388,18 +478,6 @@ import {
 
     .btn-retry:hover {
       background: #b71c1c;
-    }
-
-    .empty-state {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 1rem;
-      padding: 4rem 2rem;
-      background: white;
-      border-radius: 1.5rem;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
     }
 
     .empty-icon {
@@ -423,6 +501,12 @@ import {
       border-radius: 1.25rem;
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
       transition: all 0.3s ease;
+    }
+
+    :host-context(.dark) .entry-card {
+      background: #2d2d2d;
+      border-color: rgba(255, 157, 135, 0.2);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
     }
 
     .entry-card:hover {
@@ -459,6 +543,10 @@ import {
       font-weight: 500;
     }
 
+    :host-context(.dark) .entry-date {
+      color: #999;
+    }
+
     .btn-delete-entry {
       display: flex;
       align-items: center;
@@ -471,6 +559,11 @@ import {
       color: #d32f2f;
       cursor: pointer;
       transition: all 0.2s ease;
+    }
+
+    :host-context(.dark) .btn-delete-entry {
+      background: rgba(255, 0, 0, 0.1);
+      border-color: rgba(255, 0, 0, 0.2);
     }
 
     .btn-delete-entry:hover:not(:disabled) {
@@ -490,11 +583,19 @@ import {
       color: #333;
     }
 
+    :host-context(.dark) .entry-title {
+      color: #fff;
+    }
+
     .entry-preview {
       margin: 0;
       font-size: 0.9rem;
       color: #666;
       line-height: 1.5;
+    }
+
+    :host-context(.dark) .entry-preview {
+      color: #bbb;
     }
 
     .entry-media-count {
@@ -513,6 +614,10 @@ import {
       font-weight: 500;
     }
 
+    :host-context(.dark) .badge {
+      background: rgba(255, 157, 135, 0.2);
+    }
+
     .btn-load-more {
       padding: 1rem;
       background: white;
@@ -525,9 +630,18 @@ import {
       transition: all 0.2s ease;
     }
 
+    :host-context(.dark) .btn-load-more {
+      background: #2d2d2d;
+      border-color: rgba(255, 157, 135, 0.3);
+    }
+
     .btn-load-more:hover {
       border-color: rgba(255, 157, 135, 0.6);
       background: rgba(255, 157, 135, 0.05);
+    }
+
+    :host-context(.dark) .btn-load-more:hover {
+      background: rgba(255, 157, 135, 0.1);
     }
 
     .wellness-sidebar {
@@ -544,6 +658,21 @@ import {
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
     }
 
+    .card {
+      padding: 1.5rem;
+      background: white;
+      border: 1px solid rgba(255, 157, 135, 0.1);
+      border-radius: 1.25rem;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      transition: all 0.3s ease;
+    }
+
+    :host-context(.dark) .card {
+      background: #2d2d2d;
+      border-color: rgba(255, 157, 135, 0.2);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    }
+
     .section-title {
       margin: 0 0 1rem 0;
       font-size: 0.95rem;
@@ -552,6 +681,10 @@ import {
       text-transform: uppercase;
       letter-spacing: 0.5px;
       opacity: 0.8;
+    }
+
+    :host-context(.dark) .section-title {
+      color: #ddd;
     }
 
     .mood-date-picker {
@@ -614,14 +747,23 @@ import {
       border-radius: 1rem;
       cursor: pointer;
       transition: all 0.2s ease;
-      font-size: 0.75rem;
+      font-size: 0.65rem;
       font-weight: 500;
       color: #666;
+    }
+
+    :host-context(.dark) .mood-btn {
+      background: rgba(255, 157, 135, 0.1);
+      color: #aaa;
     }
 
     .mood-btn:hover {
       background: rgba(255, 157, 135, 0.15);
       border-color: rgba(255, 157, 135, 0.3);
+    }
+
+    :host-context(.dark) .mood-btn:hover {
+      background: rgba(255, 157, 135, 0.2);
     }
 
     .mood-btn.selected {
@@ -636,8 +778,9 @@ import {
     }
 
     .mood-label {
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
+      text-transform: capitalize;
+      letter-spacing: 0.3px;
+      max-width: 100%;
     }
 
     .mood-note-input {
@@ -700,10 +843,18 @@ import {
       border-radius: 0.75rem;
     }
 
+    :host-context(.dark) .mood-history-item {
+      background: rgba(255, 157, 135, 0.1);
+    }
+
     .mood-date {
       font-size: 0.7rem;
       color: #999;
       font-weight: 500;
+    }
+
+    :host-context(.dark) .mood-date {
+      color: #666;
     }
 
     .mood-emoji {
@@ -729,6 +880,10 @@ import {
     .rewards-section {
       background: linear-gradient(135deg, rgba(255, 157, 135, 0.1) 0%, rgba(255, 168, 158, 0.05) 100%);
       border: 2px dashed rgba(255, 157, 135, 0.3);
+    }
+
+    :host-context(.dark) .rewards-section {
+      background: linear-gradient(135deg, rgba(255, 157, 135, 0.15) 0%, rgba(255, 168, 158, 0.08) 100%);
     }
 
     .rewards-header {
@@ -770,29 +925,236 @@ import {
       color: #666;
     }
 
+    :host-context(.dark) .reward-text {
+      color: #aaa;
+    }
+
     .reward-value {
       font-weight: 700;
       color: #ff9d87;
       font-size: 1rem;
     }
+
+    /* Modal Styles */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      animation: fadeIn 0.2s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+
+    .modal-content {
+      background: white;
+      border-radius: 1.5rem;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+      max-width: 500px;
+      width: 90%;
+      max-height: 90vh;
+      overflow-y: auto;
+      animation: slideUp 0.3s ease-out;
+    }
+
+    :host-context(.dark) .modal-content {
+      background: #2d2d2d;
+    }
+
+    @keyframes slideUp {
+      from {
+        transform: translateY(20px);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.5rem;
+      border-bottom: 1px solid rgba(255, 157, 135, 0.1);
+    }
+
+    .modal-header h2 {
+      margin: 0;
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: #333;
+    }
+
+    :host-context(.dark) .modal-header h2 {
+      color: #fff;
+    }
+
+    .modal-close {
+      width: 36px;
+      height: 36px;
+      border: none;
+      background: rgba(255, 157, 135, 0.1);
+      border-radius: 50%;
+      color: #ff9d87;
+      font-size: 1.5rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-close:hover {
+      background: rgba(255, 157, 135, 0.2);
+    }
+
+    .modal-form {
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .form-group label {
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: #333;
+    }
+
+    :host-context(.dark) .form-group label {
+      color: #ddd;
+    }
+
+    .form-input,
+    .form-textarea {
+      padding: 0.75rem;
+      border: 1px solid rgba(255, 157, 135, 0.2);
+      border-radius: 0.75rem;
+      font-family: inherit;
+      font-size: 0.9rem;
+    }
+
+    .form-input:focus,
+    .form-textarea:focus {
+      outline: none;
+      border-color: #ff9d87;
+      box-shadow: 0 0 0 3px rgba(255, 157, 135, 0.1);
+    }
+
+    .form-textarea {
+      resize: vertical;
+      min-height: 120px;
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 0.75rem;
+      justify-content: flex-end;
+      padding: 1.5rem;
+      border-top: 1px solid rgba(255, 157, 135, 0.1);
+    }
+
+    .btn-cancel {
+      padding: 0.75rem 1.5rem;
+      border: 1px solid rgba(255, 157, 135, 0.3);
+      background: white;
+      border-radius: 999px;
+      color: #666;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.2s ease;
+    }
+
+    :host-context(.dark) .btn-cancel {
+      background: #3a3a3a;
+      color: #aaa;
+      border-color: rgba(255, 157, 135, 0.2);
+    }
+
+    .btn-cancel:hover {
+      background: rgba(255, 157, 135, 0.1);
+      color: #333;
+    }
+
+    :host-context(.dark) .btn-cancel:hover {
+      background: rgba(255, 157, 135, 0.15);
+      color: #ddd;
+    }
+
+    .btn-submit {
+      padding: 0.75rem 1.5rem;
+      background: linear-gradient(135deg, #ff9d87 0%, #ffa89e 100%);
+      border: none;
+      border-radius: 999px;
+      color: white;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.2s ease;
+    }
+
+    .btn-submit:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(255, 157, 135, 0.3);
+    }
+
+    .btn-submit:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
   `,
 })
 export class WellnessJournalPageComponent implements OnInit {
   readonly journalService = inject(WellnessJournalService);
+  readonly themeService = inject(ThemeService);
+  readonly formBuilder = inject(FormBuilder);
 
   readonly moods: MoodEmoji[] = ['VERY_SAD', 'SAD', 'NEUTRAL', 'HAPPY', 'VERY_HAPPY', 'EXCITED'];
 
   readonly selectedDate = signal(new Date());
   readonly selectedMood = signal<MoodEmoji | null>(null);
+  readonly showNewEntryDialog = signal(false);
+  readonly isCreatingEntry = signal(false);
+
   moodNote = '';
+  entryForm!: FormGroup;
 
   async ngOnInit(): Promise<void> {
+    this.entryForm = this.formBuilder.group({
+      title: [''],
+      richText: ['', Validators.required],
+    });
+
     await this.journalService.fetchJournalEntries();
     await this.journalService.fetchMoodLogs();
   }
 
   getMoodEmoji(mood: MoodEmoji): string {
     return MOOD_EMOJI_MAP[mood] || '😐';
+  }
+
+  getMoodLabel(mood: MoodEmoji): string {
+    return MOOD_LABELS[mood] || 'mood';
   }
 
   selectMood(mood: MoodEmoji): void {
@@ -843,8 +1205,32 @@ export class WellnessJournalPageComponent implements OnInit {
   }
 
   openNewEntryDialog(): void {
-    // TODO: Implement modal/dialog for creating new entry
-    console.log('Open new entry dialog');
+    this.showNewEntryDialog.set(true);
+  }
+
+  closeNewEntryDialog(): void {
+    this.showNewEntryDialog.set(false);
+    this.entryForm.reset();
+  }
+
+  async createEntry(): Promise<void> {
+    if (!this.entryForm.valid) return;
+
+    this.isCreatingEntry.set(true);
+    try {
+      const payload: JournalEntryCreatePayload = {
+        title: this.entryForm.value.title || undefined,
+        richText: this.entryForm.value.richText,
+      };
+
+      const result = await this.journalService.createJournalEntry(payload);
+      if (result) {
+        this.closeNewEntryDialog();
+        await this.journalService.fetchJournalEntries();
+      }
+    } finally {
+      this.isCreatingEntry.set(false);
+    }
   }
 
   async retryFetch(): Promise<void> {

@@ -6,6 +6,7 @@
   "common": {
     "save": "Save",
     "cancel": "Cancel",
+    "create": "Create",
     "back_to_dashboard": "Back",
     "delete": "Delete",
     "edit": "Edit",
@@ -788,6 +789,11 @@
       "RECENT_ENTRIES": "Recent Entries",
       "NO_ENTRIES": "No journal entries yet. Start by creating your first entry!",
       "NEW_ENTRY": "New entry",
+      "NEW_ENTRY_TITLE": "Create New Entry",
+      "ENTRY_TITLE_LABEL": "Title (Optional)",
+      "ENTRY_TITLE_PLACEHOLDER": "Give your entry a title...",
+      "ENTRY_TEXT_LABEL": "What's on your mind?",
+      "ENTRY_TEXT_PLACEHOLDER": "Write your thoughts, feelings, and experiences...",
       "DELETE": "Delete entry",
       "ENTRIES": "Entries",
       "TODAY_MOOD": "Today's Mood",
@@ -798,6 +804,14 @@
       "REWARD_MOOD": "Log your mood",
       "REWARD_ENTRY": "Write an entry",
       "MEDIA_FILES": "media files"
+    },
+    "MOOD": {
+      "VERY_SAD": "Very Sad",
+      "SAD": "Sad",
+      "NEUTRAL": "Neutral",
+      "HAPPY": "Happy",
+      "VERY_HAPPY": "Very Happy",
+      "EXCITED": "Excited"
     }
   }
 }
