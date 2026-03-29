@@ -1,7 +1,7 @@
 {
   "app": {
     "title": "VibeHealth",
-    "tagline": "Your personal health companion 🐰"
+    "tagline": "Your personal health companion"
   },
   "common": {
     "save": "Save",
@@ -771,8 +771,14 @@
     "ACTIVE_GOALS": "Active Goals",
     "PAST_GOALS": "Past & Archived",
     "EMPTY_TITLE": "No goals yet!",
-    "EMPTY_SUBTITLE": "Set your first SMART goal and the bunny will cheer you on 🐰",
+    "EMPTY_SUBTITLE": "Set your first smart goal to start building healthy habits.",
     "CREATE_FIRST": "Create my first goal",
+    "COACH_TITLE": "Bunny goal coach",
+    "COACH_SUBTITLE": "Small steps every day beat one big step once.",
+    "MASCOT_LOADING": "Thinking through your goal progress...",
+    "MASCOT_EMPTY": "Let's create your first goal together!",
+    "MASCOT_CELEBRATE": "Amazing work! You're hitting your goals today!",
+    "MASCOT_FOCUS": "You're doing great — log one step at a time.",
     "WIZARD": {
       "STEP1_TITLE": "What do you want to achieve?",
       "STEP1_SUBTITLE": "Pick a category to get started",
@@ -886,7 +892,25 @@
       "GENERAL_EMERGENCY": "Emergency",
       "POLICE": "Police",
       "AMBULANCE": "Ambulance",
-      "FIRE": "Fire Department"
+      "FIRE": "Fire Department",
+      "NAMES": {
+        "US": "United States",
+        "CA": "Canada",
+        "GB": "United Kingdom",
+        "FR": "France",
+        "DE": "Germany",
+        "AU": "Australia",
+        "JP": "Japan",
+        "IN": "India",
+        "BR": "Brazil",
+        "MX": "Mexico",
+        "ES": "Spain",
+        "IT": "Italy",
+        "NL": "Netherlands",
+        "BE": "Belgium",
+        "CH": "Switzerland",
+        "EU": "European Union"
+      }
     },
     "SAVING": "Saving...",
     "SAVED": "Settings saved successfully"

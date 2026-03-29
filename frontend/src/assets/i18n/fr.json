@@ -1,7 +1,7 @@
 {
   "app": {
     "title": "VibeHealth",
-    "tagline": "Votre compagnon santé personnel 🐰"
+    "tagline": "Votre compagnon santé personnel"
   },
   "common": {
     "save": "Enregistrer",
@@ -771,8 +771,14 @@
     "ACTIVE_GOALS": "Objectifs actifs",
     "PAST_GOALS": "Passés et archivés",
     "EMPTY_TITLE": "Aucun objectif pour le moment !",
-    "EMPTY_SUBTITLE": "Fixez votre premier objectif SMART et le lapin vous encouragera 🐰",
+    "EMPTY_SUBTITLE": "Fixez votre premier objectif intelligent pour commencer à gagner des carottes et à construire de bonnes habitudes !",
     "CREATE_FIRST": "Créer mon premier objectif",
+    "COACH_TITLE": "Coach objectifs du lapin",
+    "COACH_SUBTITLE": "De petits pas chaque jour valent mieux qu'un seul grand pas.",
+    "MASCOT_LOADING": "Je réfléchis à la progression de vos objectifs...",
+    "MASCOT_EMPTY": "Créons votre premier objectif ensemble !",
+    "MASCOT_CELEBRATE": "Excellent travail ! Vous atteignez vos objectifs aujourd'hui !",
+    "MASCOT_FOCUS": "Vous progressez bien — notez une étape à la fois.",
     "WIZARD": {
       "STEP1_TITLE": "Que voulez-vous accomplir ?",
       "STEP1_SUBTITLE": "Choisissez une catégorie pour commencer",
@@ -886,7 +892,25 @@
       "GENERAL_EMERGENCY": "Urgences",
       "POLICE": "Police",
       "AMBULANCE": "Ambulance",
-      "FIRE": "Pompiers"
+      "FIRE": "Pompiers",
+      "NAMES": {
+        "US": "États-Unis",
+        "CA": "Canada",
+        "GB": "Royaume-Uni",
+        "FR": "France",
+        "DE": "Allemagne",
+        "AU": "Australie",
+        "JP": "Japon",
+        "IN": "Inde",
+        "BR": "Brésil",
+        "MX": "Mexique",
+        "ES": "Espagne",
+        "IT": "Italie",
+        "NL": "Pays-Bas",
+        "BE": "Belgique",
+        "CH": "Suisse",
+        "EU": "Union européenne"
+      }
     },
     "SAVING": "Enregistrement...",
     "SAVED": "Paramètres enregistrés avec succès"
