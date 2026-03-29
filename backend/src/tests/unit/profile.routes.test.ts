@@ -183,6 +183,24 @@ describe('POST /profile', () => {
     );
   });
 
+  it('includes preferredCountryCode in stored profile when provided', async () => {
+    const app = buildApp();
+    await postProfile(app, {
+      height: 175,
+      heightUnit: 'cm',
+      weight: 70,
+      weightUnit: 'kg',
+      preferredCountryCode: 'FR',
+    });
+
+    expect(upsertSpy).toHaveBeenCalledWith(
+      expect.objectContaining({
+        create: expect.objectContaining({ preferredCountryCode: 'FR' }),
+        update: expect.objectContaining({ preferredCountryCode: 'FR' }),
+      }),
+    );
+  });
+
   // ── Unit-conversion math ───────────────────────────────────────────────────
 
   it('converts feet → centimetres: 6 ft = 183 cm', async () => {
@@ -398,6 +416,53 @@ describe('PATCH /profile/preferred-workout', () => {
     expect(upsertSpy).toHaveBeenCalledWith(
       expect.objectContaining({
         update: { preferredActivityKey: null },
+      }),
+    );
+  });
+});
+
+describe('PATCH /profile/preferred-country', () => {
+  let upsertSpy: ReturnType<typeof spyOn>;
+
+  beforeEach(() => {
+    upsertSpy = spyOn(prisma.profile, 'upsert');
+    upsertSpy.mockResolvedValue({ ...existingProfile, preferredCountryCode: 'FR' } as never);
+  });
+
+  afterEach(() => {
+    upsertSpy?.mockRestore();
+  });
+
+  it('stores the preferred country code and returns success', async () => {
+    const app = buildApp();
+    const res = await app.request('/profile/preferred-country', {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ preferredCountryCode: 'FR' }),
+    });
+    const body: any = await res.json();
+
+    expect(res.status).toBe(200);
+    expect(body.success).toBe(true);
+    expect(upsertSpy).toHaveBeenCalledWith(
+      expect.objectContaining({
+        where: { userId: mockUser.id },
+        update: { preferredCountryCode: 'FR' },
+      }),
+    );
+  });
+
+  it('accepts clearing the preferred country with null', async () => {
+    const app = buildApp();
+    await app.request('/profile/preferred-country', {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ preferredCountryCode: null }),
+    });
+
+    expect(upsertSpy).toHaveBeenCalledWith(
+      expect.objectContaining({
+        update: { preferredCountryCode: null },
       }),
     );
   });

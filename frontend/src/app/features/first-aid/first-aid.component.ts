@@ -48,7 +48,9 @@ import { fadeInOut, slideInUp, scaleIn } from '../../shared/animations';
                 <span class="text-2xl">{{ emergency.flag }}</span>
                 <div>
                   <p class="font-semibold text-red-900 dark:text-red-100">{{ 'FIRST_AID.EMERGENCY_NUMBERS' | translate }}</p>
-                  <p class="text-sm text-red-700 dark:text-red-300">{{ emergency.country }}</p>
+                  <p class="text-sm text-red-700 dark:text-red-300">
+                    {{ ('SETTINGS.COUNTRY.NAMES.' + (service.userCountryCode() || emergency.countryCode)) | translate }}
+                  </p>
                 </div>
               </div>
               <a

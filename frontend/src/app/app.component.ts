@@ -10,6 +10,8 @@ import { GoeyToastComponent, ScrollTopProgressComponent, SidebarComponent } from
 import { routeAnimations } from './shared/animations';
 import { AuthService } from './core/auth/auth.service';
 import { ThemeService } from './core/theme/theme.service';
+import { ProfileService } from './core/profile/profile.service';
+import { FirstAidService } from './features/first-aid/first-aid.service';
 
 @Component({
   selector: 'app-root',
@@ -32,6 +34,8 @@ import { ThemeService } from './core/theme/theme.service';
 export class AppComponent implements OnInit {
   private readonly contexts = inject(ChildrenOutletContexts);
   private readonly authService = inject(AuthService);
+  private readonly profileService = inject(ProfileService);
+  private readonly firstAidService = inject(FirstAidService);
   private readonly themeService = inject(ThemeService);
   private readonly router = inject(Router);
   private readonly currentUrl = signal(this.router.url);
@@ -48,7 +52,14 @@ export class AppComponent implements OnInit {
   readonly isMobile = signal(false);
 
   ngOnInit(): void {
-    void this.authService.initSession();
+    void this.authService.initSession().then(async () => {
+      const profile = await this.profileService.loadProfile();
+      const countryCode = profile?.preferredCountryCode;
+      if (countryCode) {
+        this.firstAidService.setUserCountry(countryCode);
+      }
+    });
+
     this.updateIsMobile();
     window.addEventListener('resize', this.updateIsMobile);
   }

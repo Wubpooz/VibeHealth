@@ -12,6 +12,7 @@ export interface Profile {
   weight: number | null;
   fitnessLevel: string | null;
   preferredActivityKey: string | null;
+  preferredCountryCode: string | null;
   goals: string[];
   medicalConditions: string[];
   allergies: string[];
@@ -75,6 +76,28 @@ export class ProfileService {
       return response?.profile || null;
     } catch (error) {
       console.error('Failed to update preferred workout:', error);
+      return null;
+    }
+  }
+
+  async updatePreferredCountry(preferredCountryCode: string | null): Promise<Profile | null> {
+    try {
+      const response = await firstValueFrom(
+        this.http.patch<{ success: boolean; profile: Profile }>(
+          `${this.apiUrl}/preferred-country`,
+          { preferredCountryCode },
+          { withCredentials: true },
+        )
+      );
+
+      if (response?.profile) {
+        this.profileSignal.set(response.profile);
+        this.hasProfileSignal.set(true);
+      }
+
+      return response?.profile || null;
+    } catch (error) {
+      console.error('Failed to update preferred country:', error);
       return null;
     }
   }

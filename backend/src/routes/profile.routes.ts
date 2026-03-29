@@ -32,6 +32,7 @@ const onboardingProfileSchema = z.object({
   currentMedications: z.array(z.string().trim().min(1).max(120)).max(100).optional(),
   notificationPreferences: z.record(z.boolean()).optional(),
   preferredActivityKey: z.string().trim().min(1).max(120).optional(),
+  preferredCountryCode: z.string().trim().length(2).optional(),
 });
 
 const preferredActivitySchema = z.object({
@@ -99,6 +100,7 @@ profileRoutes.post('/', async (c) => {
       allergies: payload.allergies || [],
       currentMedications: payload.currentMedications || [],
       notificationPreferences: payload.notificationPreferences || {},
+      preferredCountryCode: payload.preferredCountryCode || null,
     } as any;
     
     // Upsert profile (create if not exists, update if exists)
@@ -152,6 +154,7 @@ profileRoutes.patch('/preferred-workout', async (c) => {
         weight: null,
         fitnessLevel: null,
         preferredActivityKey: parsed.data.preferredActivityKey,
+        preferredCountryCode: null,
         goals: [],
         medicalConditions: [],
         allergies: [],
@@ -164,6 +167,50 @@ profileRoutes.patch('/preferred-workout', async (c) => {
   } catch (error) {
     console.error('Error updating preferred workout:', error);
     return c.json({ error: 'Failed to update preferred workout' }, 500);
+  }
+});
+
+const preferredCountrySchema = z.object({
+  preferredCountryCode: z.string().trim().length(2).nullable(),
+});
+
+profileRoutes.patch('/preferred-country', async (c) => {
+  const user = c.get('user');
+  const body = await c.req.json();
+
+  const parsed = preferredCountrySchema.safeParse(body);
+  if (!parsed.success) {
+    return c.json({
+      error: 'Invalid profile payload',
+      details: parsed.error.flatten(),
+    }, 400);
+  }
+
+  try {
+    const profile = await prisma.profile.upsert({
+      where: { userId: user.id },
+      update: { preferredCountryCode: parsed.data.preferredCountryCode },
+      create: {
+        userId: user.id,
+        dateOfBirth: null,
+        biologicalSex: null,
+        height: null,
+        weight: null,
+        fitnessLevel: null,
+        preferredActivityKey: null,
+        preferredCountryCode: parsed.data.preferredCountryCode,
+        goals: [],
+        medicalConditions: [],
+        allergies: [],
+        currentMedications: [],
+        notificationPreferences: {},
+      },
+    });
+
+    return c.json({ success: true, profile });
+  } catch (error) {
+    console.error('Error updating preferred country:', error);
+    return c.json({ error: 'Failed to update preferred country' }, 500);
   }
 });
 

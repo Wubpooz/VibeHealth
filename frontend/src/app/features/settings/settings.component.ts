@@ -1,15 +1,15 @@
-import { Component, inject, signal, ChangeDetectionStrategy } from '@angular/core';
+import { Component, inject, signal, computed, effect, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { FormsModule } from '@angular/forms';
 import { FirstAidService } from '../first-aid/first-aid.service';
+import { ProfileService } from '../../core/profile/profile.service';
 import { BackButtonComponent } from '../../shared/components/back-button/back-button.component';
 import { EmergencyNumber } from '../first-aid/first-aid.types';
 
 @Component({
   selector: 'app-settings',
-  imports: [CommonModule, RouterLink, TranslateModule, FormsModule, BackButtonComponent],
+  imports: [CommonModule, TranslateModule, FormsModule, BackButtonComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="min-h-screen bg-gradient-to-br from-rose-50 via-white to-sage-50 dark:from-gray-950 dark:via-gray-900 dark:to-gray-950">
@@ -150,46 +150,62 @@ import { EmergencyNumber } from '../first-aid/first-aid.types';
 })
 export class SettingsComponent {
   private readonly firstAidService = inject(FirstAidService);
+  private readonly profileService = inject(ProfileService);
   private readonly translate = inject(TranslateService);
 
-  readonly selectedCountry = signal<string>('');
+  // Track current language to re-render translated labels when switching locale
+  readonly languageSignal = signal('en');
+
+  readonly selectedCountry = computed(() => this.firstAidService.userCountryCode() ?? '');
   readonly saveStatus = signal<'idle' | 'saving' | 'saved'>('idle');
 
-  readonly availableCountries = signal<{ code: string; name: string; flag: string }[]>([
-    { code: 'US', name: 'United States', flag: '🇺🇸' },
-    { code: 'CA', name: 'Canada', flag: '🇨🇦' },
-    { code: 'GB', name: 'United Kingdom', flag: '🇬🇧' },
-    { code: 'FR', name: 'France', flag: '🇫🇷' },
-    { code: 'DE', name: 'Germany', flag: '🇩🇪' },
-    { code: 'AU', name: 'Australia', flag: '🇦🇺' },
-    { code: 'JP', name: 'Japan', flag: '🇯🇵' },
-    { code: 'IN', name: 'India', flag: '🇮🇳' },
-    { code: 'BR', name: 'Brazil', flag: '🇧🇷' },
-    { code: 'MX', name: 'Mexico', flag: '🇲🇽' },
-  ]);
+  static readonly SUPPORTED_COUNTRIES = ['GB', 'FR'];
 
-  readonly emergencyNumbers = signal<EmergencyNumber['numbers']>({
-    general: '',
+  readonly availableCountries = computed(() => {
+    // Touch language signal to recompute on language change
+    this.languageSignal();
+
+    return this.firstAidService.emergencyNumbers()
+      .filter(country => SettingsComponent.SUPPORTED_COUNTRIES.includes(country.countryCode))
+      .map(country => ({
+        code: country.countryCode,
+        flag: country.flag,
+        name: this.getCountryLabel(country.countryCode, country.country),
+      }));
   });
 
+  readonly emergencyNumbers = computed<EmergencyNumber['numbers']>(() =>
+    this.firstAidService.userEmergencyNumber()?.numbers ?? { general: '' }
+  );
+
   constructor() {
-    // Initialize with current country
-    const currentCountry = this.firstAidService.userCountryCode();
-    if (currentCountry) {
-      this.selectedCountry.set(currentCountry);
-      this.updateEmergencyNumbers(currentCountry);
-    }
+    // Keep translation labels in sync with language changes
+    this.translate.onLangChange.subscribe((event) => {
+      this.languageSignal.set(event.lang);
+    });
+
+    effect(() => {
+      const preferred = this.profileService.profile()?.preferredCountryCode;
+      if (preferred) {
+        const language = this.mapCountryToLanguage(preferred);
+        this.translate.use(language);
+        this.firstAidService.setUserCountry(preferred);
+      }
+    });
   }
 
   onCountryChange(countryCode: string): void {
-    this.selectedCountry.set(countryCode);
     this.saveStatus.set('saving');
 
-    // Update the service
+    // Set app language based on country
+    const language = this.mapCountryToLanguage(countryCode);
+    this.translate.use(language);
+
+    // Update the service (updated country + emergency numbers)
     this.firstAidService.setUserCountry(countryCode);
 
-    // Update emergency numbers display
-    this.updateEmergencyNumbers(countryCode);
+    // Persist to profile DB and persist preferred language if needed
+    void this.profileService.updatePreferredCountry(countryCode);
 
     // Show saved status briefly
     setTimeout(() => {
@@ -200,12 +216,16 @@ export class SettingsComponent {
     }, 500);
   }
 
-  private updateEmergencyNumbers(countryCode: string): void {
-    const emergency = this.firstAidService.getEmergencyNumber(countryCode);
-    if (emergency) {
-      this.emergencyNumbers.set(emergency.numbers);
-    } else {
-      this.emergencyNumbers.set({ general: '' });
-    }
+  private mapCountryToLanguage(countryCode: string): string {
+    if (countryCode === 'FR') return 'fr';
+    if (countryCode === 'GB') return 'en';
+    // fallback to default locale
+    return 'en';
+  }
+
+  private getCountryLabel(code: string, fallback: string): string {
+    const key = `SETTINGS.COUNTRY.NAMES.${code}`;
+    const translation = this.translate.instant(key);
+    return translation === key ? fallback : translation;
   }
 }
