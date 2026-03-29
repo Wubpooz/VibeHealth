@@ -14,6 +14,7 @@ import { TrendChartComponent, type TrendDataPoint } from '../../shared/component
 import { DAILY_GOALS, MEAL_TYPE_INFO } from '../../core/metrics/metrics.types';
 import { BackButtonComponent } from '../../shared/components/back-button/back-button.component';
 import { LucideLeaf, LucideTriangleAlert } from '@lucide/angular';
+import { HydrationTrackerComponent } from './hydration-tracker.component';
 
 @Component({
   selector: 'app-nutrition-page',
@@ -25,6 +26,7 @@ import { LucideLeaf, LucideTriangleAlert } from '@lucide/angular';
     BackButtonComponent,
     LucideLeaf,
     LucideTriangleAlert,
+    HydrationTrackerComponent
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
@@ -154,10 +156,15 @@ import { LucideLeaf, LucideTriangleAlert } from '@lucide/angular';
       </div>
 
       <!-- Main content: logger + sidebar -->
-      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <!-- Nutrition Logger (2 cols) -->
-        <div class="lg:col-span-2">
-          <app-nutrition-logger />
+      <div class="grid grid-cols-1 gap-6">
+        <!-- Nutrition + Hydration panels -->
+        <div class="grid grid-cols-1 gap-6 lg:grid-cols-3 lg:col-span-2">
+          <div class="lg:col-span-2">
+            <app-nutrition-logger />
+          </div>
+          <div class="lg:col-span-1">
+            <app-hydration-tracker />
+          </div>
         </div>
 
         <!-- Sidebar -->
