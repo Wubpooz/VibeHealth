@@ -1,4 +1,4 @@
-import webPush from 'web-push';
+import * as webPush from 'web-push';
 import { sendTransactionalEmail } from './email';
 import { prisma } from './prisma';
 

@@ -93,8 +93,12 @@ medicalRoutes.get('/openfda', async (c) => {
       return c.json({ error: 'OpenFDA service unavailable' }, 502);
     }
 
-    const data = await res.json();
-    const drug = data?.results?.[0];
+    type OpenFdaResponse = {
+      results?: Array<Record<string, unknown>>;
+    };
+
+    const data = (await res.json()) as OpenFdaResponse | null;
+    const drug = data?.results?.[0] as Record<string, any> | undefined;
 
     if (!drug) {
       return c.json({ error: 'Drug not found in OpenFDA', name }, 404);
