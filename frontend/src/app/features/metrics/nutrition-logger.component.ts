@@ -18,17 +18,20 @@ import {
   DAILY_GOALS,
   type MealType,
 } from '../../core/metrics/metrics.types';
+import { LucideLeaf } from '@lucide/angular';
 
 @Component({
   selector: 'app-nutrition-logger',
-  imports: [CommonModule, FormsModule, TranslateModule, BarcodeScannerComponent, AutocompleteComponent],
+  imports: [CommonModule, FormsModule, TranslateModule, BarcodeScannerComponent, AutocompleteComponent, LucideLeaf],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="nutrition-card">
       <!-- Header -->
       <div class="header">
         <div class="title-row">
-          <span class="icon">🥗</span>
+          <span class="icon" aria-hidden="true">
+            <svg lucideLeaf [size]="24" [strokeWidth]="2"></svg>
+          </span>
           <h3>{{ 'METRICS.NUTRITION.TITLE' | translate }}</h3>
         </div>
         <button 
@@ -245,7 +248,7 @@ import {
             [disabled]="!canSubmit() || logging()"
           >
             @if (logging()) {
-              <span class="spinner">⏳</span>
+              <span class="spinner" aria-hidden="true"></span>
             } @else {
               {{ 'METRICS.NUTRITION.LOG_MEAL' | translate }}
             }
@@ -300,7 +303,14 @@ import {
     }
 
     .title-row .icon {
-      font-size: 1.5rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: #2e7d32;
+    }
+
+    :host-context(.dark) .title-row .icon {
+      color: #d0f7d0;
     }
 
     .title-row h3 {
@@ -707,7 +717,13 @@ import {
     }
 
     .spinner {
-      animation: spin 1s linear infinite;
+      display: inline-block;
+      width: 1rem;
+      height: 1rem;
+      border: 2px solid rgba(255, 255, 255, 0.45);
+      border-top-color: #ffffff;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
     }
 
     @keyframes spin {
@@ -856,7 +872,7 @@ export class NutritionLoggerComponent {
   }
 
   getMealEmoji(type: string): string {
-    return MEAL_TYPE_INFO[type as MealType]?.emoji ?? '🍽️';
+    return MEAL_TYPE_INFO[type as MealType]?.emoji ?? '•';
   }
 
   isMealLogged(type: MealType): boolean {

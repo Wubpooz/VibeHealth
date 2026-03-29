@@ -8,16 +8,42 @@ import { CommonModule } from '@angular/common';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { RewardsService, CarrotReward } from '../../../core/rewards/rewards.service';
 import { BunnyMascotComponent } from '../bunny-mascot/bunny-mascot.component';
+import {
+  LucideActivity,
+  LucideCarrot,
+  LucideDroplets,
+  LucideFlame,
+  LucideGift,
+  LucideLeaf,
+  LucideMedal,
+  LucidePencil,
+  LucideTrophy,
+} from '@lucide/angular';
 
 @Component({
   selector: 'app-carrot-feed',
-  imports: [CommonModule, TranslateModule, BunnyMascotComponent],
+  imports: [
+    CommonModule,
+    TranslateModule,
+    BunnyMascotComponent,
+    LucideActivity,
+    LucideCarrot,
+    LucideDroplets,
+    LucideFlame,
+    LucideGift,
+    LucideLeaf,
+    LucideMedal,
+    LucidePencil,
+    LucideTrophy,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="feed-container">
       <div class="feed-header">
         <h3 class="feed-title">
-          <span class="feed-icon">🥕</span>
+          <span class="feed-icon" aria-hidden="true">
+            <svg lucideCarrot [size]="18" [strokeWidth]="2"></svg>
+          </span>
           {{ 'STATS.RECENT_ACTIVITY' | translate }}
         </h3>
       </div>
@@ -41,13 +67,46 @@ import { BunnyMascotComponent } from '../bunny-mascot/bunny-mascot.component';
               [class.new]="i === 0 && isRecent(reward)"
               [style.animation-delay.ms]="i * 50"
             >
-              <span class="item-icon">{{ getCategoryIcon(reward.category) }}</span>
+              <span class="item-icon" aria-hidden="true">
+                @switch (reward.category) {
+                  @case ('logging') {
+                    <svg lucidePencil [size]="18" [strokeWidth]="2"></svg>
+                  }
+                  @case ('streak') {
+                    <svg lucideFlame [size]="18" [strokeWidth]="2"></svg>
+                  }
+                  @case ('milestone') {
+                    <svg lucideTrophy [size]="18" [strokeWidth]="2"></svg>
+                  }
+                  @case ('achievement') {
+                    <svg lucideMedal [size]="18" [strokeWidth]="2"></svg>
+                  }
+                  @case ('bonus') {
+                    <svg lucideGift [size]="18" [strokeWidth]="2"></svg>
+                  }
+                  @case ('hydration') {
+                    <svg lucideDroplets [size]="18" [strokeWidth]="2"></svg>
+                  }
+                  @case ('activity') {
+                    <svg lucideActivity [size]="18" [strokeWidth]="2"></svg>
+                  }
+                  @case ('nutrition') {
+                    <svg lucideLeaf [size]="18" [strokeWidth]="2"></svg>
+                  }
+                  @default {
+                    <svg lucideCarrot [size]="18" [strokeWidth]="2"></svg>
+                  }
+                }
+              </span>
               <div class="item-content">
                 <span class="item-reason">{{ reward.reason }}</span>
                 <span class="item-time">{{ formatTime(reward.earnedAt) }}</span>
               </div>
               <span class="item-amount" [class.bonus]="reward.amount >= 5">
-                +{{ reward.amount }} 🥕
+                +{{ reward.amount }}
+                <span class="item-amount-icon" aria-hidden="true">
+                  <svg lucideCarrot [size]="13" [strokeWidth]="2"></svg>
+                </span>
               </span>
             </li>
           }
@@ -86,7 +145,10 @@ import { BunnyMascotComponent } from '../bunny-mascot/bunny-mascot.component';
     }
 
     .feed-icon {
-      font-size: 1.25rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: #f09a52;
     }
 
     .empty-state {
@@ -164,8 +226,11 @@ import { BunnyMascotComponent } from '../bunny-mascot/bunny-mascot.component';
     }
 
     .item-icon {
-      font-size: 1.25rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
       flex-shrink: 0;
+      color: #ff8e53;
     }
 
     .item-content {
@@ -197,6 +262,15 @@ import { BunnyMascotComponent } from '../bunny-mascot/bunny-mascot.component';
       font-size: 0.875rem;
       color: #ff9f43;
       flex-shrink: 0;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.2rem;
+    }
+
+    .item-amount-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .item-amount.bonus {
@@ -275,20 +349,6 @@ export class CarrotFeedComponent {
   readonly recentRewards = computed(() => {
     return this.rewards.recentRewards().slice(0, 5);
   });
-
-  getCategoryIcon(category: CarrotReward['category']): string {
-    const icons: Record<CarrotReward['category'], string> = {
-      logging: '📝',
-      streak: '🔥',
-      milestone: '🏆',
-      achievement: '⭐',
-      bonus: '🎁',
-      hydration: '💧',
-      activity: '🏃',
-      nutrition: '🥗',
-    };
-    return icons[category] || '🥕';
-  }
 
   isRecent(reward: CarrotReward): boolean {
     const timeSince = Date.now() - reward.earnedAt.getTime();
