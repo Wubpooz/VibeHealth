@@ -56,7 +56,13 @@ import { BunnyMascotComponent } from '../bunny-mascot/bunny-mascot.component';
     </div>
   `,
   styles: [`
+    :host {
+      display: block;
+      width: 100%;
+    }
+
     .feed-container {
+      width: 100%;
       background: white;
       border-radius: 1.5rem;
       padding: 1.25rem;

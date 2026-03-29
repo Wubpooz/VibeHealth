@@ -546,9 +546,8 @@ import { StatsGridComponent } from "../../shared/components/stats-grid/stats-gri
             </div>
           </section>
 
-          <!-- Hydration & Carrots Row -->
-          <section class="grid md:grid-cols-2 gap-6">
-            <app-hydration-tracker />
+          <!-- Carrots Row -->
+          <section class="flex">
             <app-carrot-feed />
           </section>
         </main>
