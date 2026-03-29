@@ -318,13 +318,41 @@ wellnessRoutes.get('/journal/:id', async (c) => {
 /**
  * POST /journal
  * Create a new journal entry with optional media attachments.
+ * Accepts both application/json and multipart/form-data.
  */
 wellnessRoutes.post('/journal', async (c) => {
   const user = c.get('user');
 
   try {
-    const body = await c.req.json();
-    const validated = journalEntryCreateSchema.parse(body);
+    // Parse request body - handle both JSON and multipart/form-data
+    let body: Record<string, unknown>;
+    const contentType = c.req.header('content-type') || '';
+
+    console.log(`[Journal] POST /journal - Content-Type: ${contentType}`);
+
+    if (contentType.includes('multipart/form-data')) {
+      // Handle multipart/form-data (with file uploads)
+      console.log('[Journal] Parsing multipart/form-data...');
+      const formData = await c.req.formData();
+      body = {
+        title: formData.get('title') || undefined,
+        richText: formData.get('richText'),
+        moodLogId: formData.get('moodLogId') || undefined,
+        media: formData.getAll('media'),
+      };
+      console.log(`[Journal] Received ${(body.media as unknown[])?.length || 0} file(s)`);
+    } else {
+      // Handle application/json
+      console.log('[Journal] Parsing application/json...');
+      body = await c.req.json();
+    }
+
+    // Validate core fields
+    const validated = journalEntryCreateSchema.parse({
+      title: body.title,
+      richText: body.richText,
+      moodLogId: body.moodLogId,
+    });
 
     // Verify mood log exists if provided
     if (validated.moodLogId) {
@@ -352,6 +380,14 @@ wellnessRoutes.post('/journal', async (c) => {
         mediaAttachments: true,
       },
     });
+
+    // TODO: Process and store media files
+    // For now, files are extracted but not persisted
+    const media = body.media as File[] | undefined;
+    if (media && Array.isArray(media) && media.length > 0) {
+      console.log(`[Journal] Received ${media.length} file(s) for entry ${entry.id}`);
+      // In future: validate file types, upload to blob storage, create MediaAttachment records
+    }
 
     // Award carrots for creating journal entry
     await awardCarrots(user.id, 3);

@@ -814,7 +814,8 @@
       "LOAD_MORE": "Charger Plus",
       "CANCEL": "Annuler",
       "CREATE_ENTRY": "Créer une Entrée",
-      "CREATING": "Création..."
+      "CREATING": "Création...",
+      "ENTRY_CREATED": "Entrée créée avec succès!"
     },
     "MOOD": {
       "VERY_SAD": "Très Triste",

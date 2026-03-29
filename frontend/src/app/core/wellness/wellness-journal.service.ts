@@ -243,7 +243,7 @@ export class WellnessJournalService {
   }
 
   /**
-   * Create a new journal entry with file attachments
+   * Create a new journal entry with optional file attachments
    */
   async createJournalEntryWithMedia(
     payload: JournalEntryCreatePayload,
@@ -253,30 +253,40 @@ export class WellnessJournalService {
     this._journalError.set(null);
 
     try {
-      const formData = new FormData();
-      if (payload.title) {
-        formData.append('title', payload.title);
+      let response;
+
+      if (files.length > 0) {
+        // Use FormData for multipart submission when there are files
+        const formData = new FormData();
+        if (payload.title) {
+          formData.append('title', payload.title);
+        }
+        formData.append('richText', payload.richText);
+
+        files.forEach((file) => {
+          formData.append('media', file, file.name);
+        });
+
+        response = await firstValueFrom(
+          this.http.post<WellnessSingleResponse<JournalEntry>>(`${this.apiUrl}/journal`, formData),
+        );
+      } else {
+        // Use JSON for regular request when no files
+        response = await firstValueFrom(
+          this.http.post<WellnessSingleResponse<JournalEntry>>(`${this.apiUrl}/journal`, payload),
+        );
       }
-      formData.append('richText', payload.richText);
-
-      files.forEach((file) => {
-        formData.append('media', file, file.name);
-      });
-
-      const response = await firstValueFrom(
-        this.http.post<WellnessSingleResponse<JournalEntry>>(`${this.apiUrl}/journal`, formData),
-      );
 
       if (response.success) {
         this._journalEntries.update((entries) => [response.data, ...entries]);
         return response.data;
       } else {
-        this._journalError.set('Failed to create entry with media');
+        this._journalError.set('Failed to create entry');
         return null;
       }
     } catch (error) {
-      console.error('[WellnessJournal] Create entry with media failed:', error);
-      this._journalError.set('Error creating entry with media');
+      console.error('[WellnessJournal] Create entry failed:', error);
+      this._journalError.set('Error creating entry');
       return null;
     } finally {
       this._journalLoading.set(false);

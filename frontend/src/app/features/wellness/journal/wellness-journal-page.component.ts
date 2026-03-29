@@ -4,6 +4,7 @@ import { FormsModule, FormBuilder, FormGroup, Validators, ReactiveFormsModule } 
 import { TranslateModule } from '@ngx-translate/core';
 import { ThemeService } from '../../../core/theme/theme.service';
 import { WellnessJournalService } from '../../../core/wellness/wellness-journal.service';
+import { ToastService } from '../../../core/toast/toast.service';
 import {
   type MoodEmoji,
   type MoodUpsertPayload,
@@ -1323,6 +1324,7 @@ export class WellnessJournalPageComponent implements OnInit {
   readonly journalService = inject(WellnessJournalService);
   readonly themeService = inject(ThemeService);
   readonly formBuilder = inject(FormBuilder);
+  readonly toastService = inject(ToastService);
 
   readonly moods: MoodEmoji[] = ['VERY_SAD', 'SAD', 'NEUTRAL', 'HAPPY', 'VERY_HAPPY', 'EXCITED'];
 
@@ -1447,10 +1449,26 @@ export class WellnessJournalPageComponent implements OnInit {
       const files = this.selectedFiles();
       const result = await this.journalService.createJournalEntryWithMedia(payload, files);
       if (result) {
+        this.toastService.show({
+          message: 'WELLNESS.JOURNAL.ENTRY_CREATED',
+          tone: 'success',
+        });
         this.closeNewEntryDialog();
         this.selectedFiles.set([]);
         await this.journalService.fetchJournalEntries();
+      } else {
+        const error = this.journalService.journalError();
+        this.toastService.show({
+          message: error || 'Failed to create entry',
+          tone: 'error',
+        });
       }
+    } catch (error) {
+      console.error('[Journal] Create entry error:', error);
+      this.toastService.show({
+        message: 'Error creating entry',
+        tone: 'error',
+      });
     } finally {
       this.isCreatingEntry.set(false);
     }
