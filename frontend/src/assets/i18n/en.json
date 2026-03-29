@@ -278,7 +278,16 @@
     "RECURRENCE_DAILY": "Daily",
     "RECURRENCE_WEEKLY": "Weekly",
     "RECURRENCE_MONTHLY": "Monthly",
-    "RECURRENCE_ONE_TIME": "One time"
+    "RECURRENCE_ONE_TIME": "One time",
+    "WEEKDAY_MONDAY": "Monday",
+    "WEEKDAY_TUESDAY": "Tuesday",
+    "WEEKDAY_WEDNESDAY": "Wednesday",
+    "WEEKDAY_THURSDAY": "Thursday",
+    "WEEKDAY_FRIDAY": "Friday",
+    "WEEKDAY_SATURDAY": "Saturday",
+    "WEEKDAY_SUNDAY": "Sunday",
+    "INPUT_DAY_OF_MONTH": "Day of month (1-31)",
+    "DAY_SUFFIX": "th"
   },
   "REWARDS": {
     "CARROTS": "Carrots",

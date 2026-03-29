@@ -32,6 +32,37 @@ const reminderSchema = z.object({
   timeOfDay: z.string().regex(/^([01]\d|2[0-3]):([0-5]\d)$/, 'Invalid time format (HH:MM)'),
   dosage: z.string().trim().min(1).max(100),
   recurrence: z.enum(['DAILY', 'WEEKLY', 'MONTHLY', 'ONE_TIME']),
+  dayOfWeek: z.coerce.number().int().min(1).max(7).optional(),
+  dayOfMonth: z.coerce.number().int().min(1).max(31).optional(),
+  date: z.string().optional(),
+}).superRefine((data, ctx) => {
+  const hasDayOfWeek = data.dayOfWeek !== undefined && data.dayOfWeek !== null;
+  const hasDayOfMonth = data.dayOfMonth !== undefined && data.dayOfMonth !== null;
+  const hasDate = data.date !== undefined && data.date !== null;
+
+  switch (data.recurrence) {
+    case 'DAILY':
+      if (hasDayOfWeek) ctx.addIssue({ path: ['dayOfWeek'], code: z.ZodIssueCode.custom, message: 'dayOfWeek must not be set for DAILY recurrence' });
+      if (hasDayOfMonth) ctx.addIssue({ path: ['dayOfMonth'], code: z.ZodIssueCode.custom, message: 'dayOfMonth must not be set for DAILY recurrence' });
+      if (hasDate) ctx.addIssue({ path: ['date'], code: z.ZodIssueCode.custom, message: 'date must not be set for DAILY recurrence' });
+      break;
+    case 'WEEKLY':
+      if (!hasDayOfWeek) ctx.addIssue({ path: ['dayOfWeek'], code: z.ZodIssueCode.custom, message: 'dayOfWeek is required for WEEKLY recurrence' });
+      if (hasDayOfMonth) ctx.addIssue({ path: ['dayOfMonth'], code: z.ZodIssueCode.custom, message: 'dayOfMonth must not be set for WEEKLY recurrence' });
+      if (hasDate) ctx.addIssue({ path: ['date'], code: z.ZodIssueCode.custom, message: 'date must not be set for WEEKLY recurrence' });
+      break;
+    case 'MONTHLY':
+      if (!hasDayOfMonth) ctx.addIssue({ path: ['dayOfMonth'], code: z.ZodIssueCode.custom, message: 'dayOfMonth is required for MONTHLY recurrence' });
+      if (hasDayOfWeek) ctx.addIssue({ path: ['dayOfWeek'], code: z.ZodIssueCode.custom, message: 'dayOfWeek must not be set for MONTHLY recurrence' });
+      if (hasDate) ctx.addIssue({ path: ['date'], code: z.ZodIssueCode.custom, message: 'date must not be set for MONTHLY recurrence' });
+      break;
+    case 'ONE_TIME':
+      if (!hasDate) ctx.addIssue({ path: ['date'], code: z.ZodIssueCode.custom, message: 'date is required for ONE_TIME recurrence' });
+      else if (isNaN(Date.parse(data.date!))) ctx.addIssue({ path: ['date'], code: z.ZodIssueCode.custom, message: 'date must be a valid ISO date string' });
+      if (hasDayOfWeek) ctx.addIssue({ path: ['dayOfWeek'], code: z.ZodIssueCode.custom, message: 'dayOfWeek must not be set for ONE_TIME recurrence' });
+      if (hasDayOfMonth) ctx.addIssue({ path: ['dayOfMonth'], code: z.ZodIssueCode.custom, message: 'dayOfMonth must not be set for ONE_TIME recurrence' });
+      break;
+  }
 });
 
 medicalRoutes.use('*', requireAuth);
@@ -209,6 +240,9 @@ medicalRoutes.post('/:medicationId/reminders', async (c) => {
         timeOfDay: parsed.data.timeOfDay,
         dosage: parsed.data.dosage,
         recurrence: parsed.data.recurrence,
+        dayOfWeek: parsed.data.recurrence === 'WEEKLY' ? parsed.data.dayOfWeek ?? null : null,
+        dayOfMonth: parsed.data.recurrence === 'MONTHLY' ? parsed.data.dayOfMonth ?? null : null,
+        date: parsed.data.recurrence === 'ONE_TIME' ? new Date(parsed.data.date!) : null,
       },
     });
 
@@ -254,6 +288,9 @@ medicalRoutes.put('/:medicationId/reminders/:reminderId', async (c) => {
         timeOfDay: parsed.data.timeOfDay,
         dosage: parsed.data.dosage,
         recurrence: parsed.data.recurrence,
+        dayOfWeek: parsed.data.recurrence === 'WEEKLY' ? parsed.data.dayOfWeek ?? null : null,
+        dayOfMonth: parsed.data.recurrence === 'MONTHLY' ? parsed.data.dayOfMonth ?? null : null,
+        date: parsed.data.recurrence === 'ONE_TIME' ? new Date(parsed.data.date!) : null,
       },
     });
 

@@ -9,9 +9,21 @@ export interface MedicationReminder {
   timeOfDay: string;
   dosage: string;
   recurrence: 'DAILY' | 'WEEKLY' | 'MONTHLY' | 'ONE_TIME';
+  dayOfWeek?: number;
+  dayOfMonth?: number;
+  date?: string;
   nextDueAt?: string;
   createdAt: string;
   updatedAt: string;
+}
+
+export interface MedicationReminderPayload {
+  timeOfDay: string;
+  dosage: string;
+  recurrence: 'DAILY' | 'WEEKLY' | 'MONTHLY' | 'ONE_TIME';
+  dayOfWeek?: number;
+  dayOfMonth?: number;
+  date?: string;
 }
 
 export interface Medication {
@@ -123,12 +135,25 @@ export class MedicationService {
     }
   }
 
-  async addReminder(medicationId: string, timeOfDay: string, dosage: string, recurrence: 'DAILY' | 'WEEKLY' | 'MONTHLY' | 'ONE_TIME'): Promise<boolean> {
+  async addReminder(
+    medicationId: string,
+    timeOfDay: string,
+    dosage: string,
+    recurrence: 'DAILY' | 'WEEKLY' | 'MONTHLY' | 'ONE_TIME',
+    dayOfWeek?: number,
+    dayOfMonth?: number,
+    date?: string
+  ): Promise<boolean> {
     try {
+      const body: MedicationReminderPayload = { timeOfDay, dosage, recurrence };
+      if (recurrence === 'WEEKLY') body.dayOfWeek = dayOfWeek;
+      if (recurrence === 'MONTHLY') body.dayOfMonth = dayOfMonth;
+      if (recurrence === 'ONE_TIME') body.date = date;
+
       const response = await firstValueFrom(
         this.http.post<{ success: boolean; reminder: MedicationReminder }>(
           `${this.apiUrl}/${medicationId}/reminders`,
-          { timeOfDay, dosage, recurrence },
+          body,
           { withCredentials: true }
         )
       );
@@ -152,12 +177,26 @@ export class MedicationService {
     }
   }
 
-  async updateReminder(medicationId: string, reminderId: string, timeOfDay: string, dosage: string, recurrence: 'DAILY' | 'WEEKLY' | 'MONTHLY' | 'ONE_TIME'): Promise<boolean> {
+  async updateReminder(
+    medicationId: string,
+    reminderId: string,
+    timeOfDay: string,
+    dosage: string,
+    recurrence: 'DAILY' | 'WEEKLY' | 'MONTHLY' | 'ONE_TIME',
+    dayOfWeek?: number,
+    dayOfMonth?: number,
+    date?: string
+  ): Promise<boolean> {
     try {
+      const body: MedicationReminderPayload = { timeOfDay, dosage, recurrence };
+      if (recurrence === 'WEEKLY') body.dayOfWeek = dayOfWeek;
+      if (recurrence === 'MONTHLY') body.dayOfMonth = dayOfMonth;
+      if (recurrence === 'ONE_TIME') body.date = date;
+
       const response = await firstValueFrom(
         this.http.put<{ success: boolean; reminder: MedicationReminder }>(
           `${this.apiUrl}/${medicationId}/reminders/${reminderId}`,
-          { timeOfDay, dosage, recurrence },
+          body,
           { withCredentials: true }
         )
       );

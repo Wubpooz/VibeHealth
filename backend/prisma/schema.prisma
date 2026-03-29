@@ -130,6 +130,9 @@ model MedicationReminder {
   timeOfDay     String            // e.g. "08:00" or "20:30"
   dosage        String
   recurrence    ReminderRecurrence
+  dayOfWeek     Int?              // 1=Monday..7=Sunday for WEEKLY recurrence
+  dayOfMonth    Int?              // 1..31 for MONTHLY recurrence
+  date          DateTime?         // exact date for ONE_TIME recurrence
   nextDueAt     DateTime?
   createdAt     DateTime          @default(now())
   updatedAt     DateTime          @default(now()) @updatedAt

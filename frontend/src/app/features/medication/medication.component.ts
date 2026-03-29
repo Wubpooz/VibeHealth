@@ -113,6 +113,15 @@ import { MedicationService, Medication, MedicationReminder } from '../../core/me
                           <span class="text-sm font-mono">{{ reminder.timeOfDay }}</span>
                           <span class="text-sm">{{ reminder.dosage }}</span>
                           <span class="text-xs px-2 py-1 bg-slate-200 dark:bg-slate-700 rounded">{{ 'MEDICATION.RECURRENCE_' + reminder.recurrence | translate }}</span>
+                          @if (reminder.recurrence === 'WEEKLY' && reminder.dayOfWeek) {
+                            <span class="text-xs text-slate-500 dark:text-slate-300">{{ 'MEDICATION.WEEKDAY_' + ['','MONDAY','TUESDAY','WEDNESDAY','THURSDAY','FRIDAY','SATURDAY','SUNDAY'][reminder.dayOfWeek] | translate }}</span>
+                          }
+                          @if (reminder.recurrence === 'MONTHLY' && reminder.dayOfMonth) {
+                            <span class="text-xs text-slate-500 dark:text-slate-300">{{ reminder.dayOfMonth }}{{ 'MEDICATION.DAY_SUFFIX' | translate }}</span>
+                          }
+                          @if (reminder.recurrence === 'ONE_TIME' && reminder.date) {
+                            <span class="text-xs text-slate-500 dark:text-slate-300">{{ reminder.date | date:'shortDate' }}</span>
+                          }
                         </div>
                         <div class="flex gap-1">
                           <button class="text-xs px-2 py-1 bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 rounded" (click)="startEditReminder(med.id, reminder)">{{ 'common.edit' | translate }}</button>
@@ -186,12 +195,33 @@ import { MedicationService, Medication, MedicationReminder } from '../../core/me
           <div class="grid grid-cols-1 sm:grid-cols-4 gap-3">
             <input type="time" [(ngModel)]="reminderTime" class="rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2" />
             <input type="text" [(ngModel)]="reminderDosage" class="rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2" placeholder="{{ 'MEDICATION.INPUT_DOSAGE' | translate }}" />
-            <select [(ngModel)]="reminderRecurrence" class="rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2">
+            <select [(ngModel)]="reminderRecurrence" (ngModelChange)="onReminderRecurrenceChange($event)" class="rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2">
               <option value="DAILY">{{ 'MEDICATION.RECURRENCE_DAILY' | translate }}</option>
               <option value="WEEKLY">{{ 'MEDICATION.RECURRENCE_WEEKLY' | translate }}</option>
               <option value="MONTHLY">{{ 'MEDICATION.RECURRENCE_MONTHLY' | translate }}</option>
               <option value="ONE_TIME">{{ 'MEDICATION.RECURRENCE_ONE_TIME' | translate }}</option>
             </select>
+
+            @if (reminderRecurrence === 'WEEKLY') {
+              <select [(ngModel)]="reminderDayOfWeek" class="rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2">
+                <option [value]="1">{{ 'MEDICATION.WEEKDAY_MONDAY' | translate }}</option>
+                <option [value]="2">{{ 'MEDICATION.WEEKDAY_TUESDAY' | translate }}</option>
+                <option [value]="3">{{ 'MEDICATION.WEEKDAY_WEDNESDAY' | translate }}</option>
+                <option [value]="4">{{ 'MEDICATION.WEEKDAY_THURSDAY' | translate }}</option>
+                <option [value]="5">{{ 'MEDICATION.WEEKDAY_FRIDAY' | translate }}</option>
+                <option [value]="6">{{ 'MEDICATION.WEEKDAY_SATURDAY' | translate }}</option>
+                <option [value]="7">{{ 'MEDICATION.WEEKDAY_SUNDAY' | translate }}</option>
+              </select>
+            }
+
+            @if (reminderRecurrence === 'MONTHLY') {
+              <input type="number" min="1" max="31" [(ngModel)]="reminderDayOfMonth" placeholder="{{ 'MEDICATION.INPUT_DAY_OF_MONTH' | translate }}" class="rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2" />
+            }
+
+            @if (reminderRecurrence === 'ONE_TIME') {
+              <input type="date" [(ngModel)]="reminderDate" class="rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2" />
+            }
+
             <button class="rounded-xl bg-green-600 text-white px-4 py-2" (click)="submitAddReminder()">{{ 'MEDICATION.ADD_REMINDER_BUTTON' | translate }}</button>
             <button class="rounded-xl border border-slate-300 px-4 py-2 col-span-3" (click)="cancelAddReminder()">{{ 'common.cancel' | translate }}</button>
           </div>
@@ -205,12 +235,33 @@ import { MedicationService, Medication, MedicationReminder } from '../../core/me
           <div class="grid grid-cols-1 sm:grid-cols-4 gap-3">
             <input type="time" [(ngModel)]="reminderTime" class="rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2" />
             <input type="text" [(ngModel)]="reminderDosage" class="rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2" placeholder="{{ 'MEDICATION.INPUT_DOSAGE' | translate }}" />
-            <select [(ngModel)]="reminderRecurrence" class="rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2">
+            <select [(ngModel)]="reminderRecurrence" (ngModelChange)="onReminderRecurrenceChange($event)" class="rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2">
               <option value="DAILY">{{ 'MEDICATION.RECURRENCE_DAILY' | translate }}</option>
               <option value="WEEKLY">{{ 'MEDICATION.RECURRENCE_WEEKLY' | translate }}</option>
               <option value="MONTHLY">{{ 'MEDICATION.RECURRENCE_MONTHLY' | translate }}</option>
               <option value="ONE_TIME">{{ 'MEDICATION.RECURRENCE_ONE_TIME' | translate }}</option>
             </select>
+
+            @if (reminderRecurrence === 'WEEKLY') {
+              <select [(ngModel)]="reminderDayOfWeek" class="rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2">
+                <option [value]="1">{{ 'MEDICATION.WEEKDAY_MONDAY' | translate }}</option>
+                <option [value]="2">{{ 'MEDICATION.WEEKDAY_TUESDAY' | translate }}</option>
+                <option [value]="3">{{ 'MEDICATION.WEEKDAY_WEDNESDAY' | translate }}</option>
+                <option [value]="4">{{ 'MEDICATION.WEEKDAY_THURSDAY' | translate }}</option>
+                <option [value]="5">{{ 'MEDICATION.WEEKDAY_FRIDAY' | translate }}</option>
+                <option [value]="6">{{ 'MEDICATION.WEEKDAY_SATURDAY' | translate }}</option>
+                <option [value]="7">{{ 'MEDICATION.WEEKDAY_SUNDAY' | translate }}</option>
+              </select>
+            }
+
+            @if (reminderRecurrence === 'MONTHLY') {
+              <input type="number" min="1" max="31" [(ngModel)]="reminderDayOfMonth" placeholder="{{ 'MEDICATION.INPUT_DAY_OF_MONTH' | translate }}" class="rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2" />
+            }
+
+            @if (reminderRecurrence === 'ONE_TIME') {
+              <input type="date" [(ngModel)]="reminderDate" class="rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2" />
+            }
+
             <button class="rounded-xl bg-purple-600 text-white px-4 py-2" (click)="submitEditReminder()">{{ 'MEDICATION.SAVE_REMINDER_BUTTON' | translate }}</button>
             <button class="rounded-xl border border-slate-300 px-4 py-2 col-span-3" (click)="cancelEditReminder()">{{ 'common.cancel' | translate }}</button>
           </div>
@@ -239,6 +290,9 @@ export class MedicationPageComponent {
   reminderTime = '';
   reminderDosage = '';
   reminderRecurrence: 'DAILY' | 'WEEKLY' | 'MONTHLY' | 'ONE_TIME' = 'DAILY';
+  reminderDayOfWeek?: number;
+  reminderDayOfMonth?: number;
+  reminderDate?: string;
 
   readonly medications = this.medicationService.medications;
   readonly isEditing = computed(() => Boolean(this.editingId()));
@@ -330,16 +384,47 @@ export class MedicationPageComponent {
     }
   }
 
+  onReminderRecurrenceChange(recurrence: 'DAILY' | 'WEEKLY' | 'MONTHLY' | 'ONE_TIME'): void {
+    this.reminderRecurrence = recurrence;
+    switch (recurrence) {
+      case 'WEEKLY':
+        this.reminderDayOfWeek = this.reminderDayOfWeek ?? 1;
+        this.reminderDayOfMonth = undefined;
+        this.reminderDate = undefined;
+        break;
+      case 'MONTHLY':
+        this.reminderDayOfWeek = undefined;
+        this.reminderDayOfMonth = this.reminderDayOfMonth ?? 1;
+        this.reminderDate = undefined;
+        break;
+      case 'ONE_TIME':
+        this.reminderDayOfWeek = undefined;
+        this.reminderDayOfMonth = undefined;
+        this.reminderDate = this.reminderDate ?? new Date().toISOString().split('T')[0];
+        break;
+      default:
+        this.reminderDayOfWeek = undefined;
+        this.reminderDayOfMonth = undefined;
+        this.reminderDate = undefined;
+    }
+  }
+
   startAddReminder(medicationId: string): void {
     this.addingReminderFor.set(medicationId);
     this.editingReminderId.set(null); // Clear any previous edit state
     this.reminderTime = '';
     this.reminderDosage = '';
     this.reminderRecurrence = 'DAILY';
+    this.reminderDayOfWeek = undefined;
+    this.reminderDayOfMonth = undefined;
+    this.reminderDate = undefined;
   }
 
   cancelAddReminder(): void {
     this.addingReminderFor.set(null);
+    this.reminderDayOfWeek = undefined;
+    this.reminderDayOfMonth = undefined;
+    this.reminderDate = undefined;
   }
 
   async submitAddReminder(): Promise<void> {
@@ -350,7 +435,10 @@ export class MedicationPageComponent {
       medicationId,
       this.reminderTime,
       this.reminderDosage,
-      this.reminderRecurrence
+      this.reminderRecurrence,
+      this.reminderDayOfWeek,
+      this.reminderDayOfMonth,
+      this.reminderDate
     );
     if (added) {
       this.cancelAddReminder();
@@ -363,11 +451,18 @@ export class MedicationPageComponent {
     this.reminderTime = reminder.timeOfDay;
     this.reminderDosage = reminder.dosage;
     this.reminderRecurrence = reminder.recurrence;
+    this.reminderDayOfWeek = reminder.dayOfWeek;
+    this.reminderDayOfMonth = reminder.dayOfMonth;
+    this.reminderDate = reminder.date?.split('T')[0];
+    this.onReminderRecurrenceChange(reminder.recurrence);
   }
 
   cancelEditReminder(): void {
     this.editingReminderId.set(null);
     this.addingReminderFor.set(null);
+    this.reminderDayOfWeek = undefined;
+    this.reminderDayOfMonth = undefined;
+    this.reminderDate = undefined;
   }
 
   async submitEditReminder(): Promise<void> {
@@ -380,7 +475,10 @@ export class MedicationPageComponent {
       reminderId,
       this.reminderTime,
       this.reminderDosage,
-      this.reminderRecurrence
+      this.reminderRecurrence,
+      this.reminderDayOfWeek,
+      this.reminderDayOfMonth,
+      this.reminderDate
     );
     if (updated) {
       this.cancelEditReminder();
