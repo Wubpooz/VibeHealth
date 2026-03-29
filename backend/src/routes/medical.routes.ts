@@ -1,6 +1,7 @@
 import { Hono } from 'hono';
 import { prisma } from '../lib/prisma';
 import { requireAuth } from '../middleware/auth.middleware';
+import { calculateNextDueAt } from '../lib/medication';
 import type { Session as AuthSession, User as AuthUser } from 'better-auth';
 import { z } from 'zod';
 
@@ -234,6 +235,15 @@ medicalRoutes.post('/:medicationId/reminders', async (c) => {
       return c.json({ error: 'Unauthorized' }, 403);
     }
 
+    const nextDueAt = calculateNextDueAt(
+      parsed.data.timeOfDay,
+      parsed.data.recurrence,
+      parsed.data.recurrence === 'WEEKLY' ? parsed.data.dayOfWeek ?? null : null,
+      parsed.data.recurrence === 'MONTHLY' ? parsed.data.dayOfMonth ?? null : null,
+      parsed.data.recurrence === 'ONE_TIME' ? new Date(parsed.data.date!) : null
+    );
+    console.log('Calculated nextDueAt:', nextDueAt);
+
     const reminder = await prisma.medicationReminder.create({
       data: {
         medicationId: medId,
@@ -243,6 +253,7 @@ medicalRoutes.post('/:medicationId/reminders', async (c) => {
         dayOfWeek: parsed.data.recurrence === 'WEEKLY' ? parsed.data.dayOfWeek ?? null : null,
         dayOfMonth: parsed.data.recurrence === 'MONTHLY' ? parsed.data.dayOfMonth ?? null : null,
         date: parsed.data.recurrence === 'ONE_TIME' ? new Date(parsed.data.date!) : null,
+        nextDueAt,
       },
     });
 
@@ -282,6 +293,15 @@ medicalRoutes.put('/:medicationId/reminders/:reminderId', async (c) => {
       return c.json({ error: 'Unauthorized' }, 403);
     }
 
+    const nextDueAt = calculateNextDueAt(
+      parsed.data.timeOfDay,
+      parsed.data.recurrence,
+      parsed.data.recurrence === 'WEEKLY' ? parsed.data.dayOfWeek ?? null : null,
+      parsed.data.recurrence === 'MONTHLY' ? parsed.data.dayOfMonth ?? null : null,
+      parsed.data.recurrence === 'ONE_TIME' ? new Date(parsed.data.date!) : null
+    );
+    console.log('Calculated nextDueAt for update:', nextDueAt);
+
     const reminder = await prisma.medicationReminder.update({
       where: { id: reminderId },
       data: {
@@ -291,6 +311,7 @@ medicalRoutes.put('/:medicationId/reminders/:reminderId', async (c) => {
         dayOfWeek: parsed.data.recurrence === 'WEEKLY' ? parsed.data.dayOfWeek ?? null : null,
         dayOfMonth: parsed.data.recurrence === 'MONTHLY' ? parsed.data.dayOfMonth ?? null : null,
         date: parsed.data.recurrence === 'ONE_TIME' ? new Date(parsed.data.date!) : null,
+        nextDueAt,
       },
     });
 
