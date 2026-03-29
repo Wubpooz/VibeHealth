@@ -22,6 +22,8 @@ import type {
   MealType,
   WorkoutSuggestions,
   WorkoutPlan,
+  WorkoutPlanExerciseCreateInput,
+  WorkoutPlanExerciseReorderInput,
   WorkoutSetLogResult,
   HealthSyncConnection,
   HealthSyncProvider,
@@ -575,6 +577,62 @@ export class MetricsService {
     }
   }
 
+  async addExerciseToWorkoutPlan(
+    planId: string,
+    payload: WorkoutPlanExerciseCreateInput,
+  ): Promise<WorkoutPlan | null> {
+    try {
+      const response = await firstValueFrom(
+        this.http.post<{ success: boolean; plan: WorkoutPlan }>(
+          `${this.apiUrl}/workout-plans/${planId}/exercises`,
+          payload,
+          { withCredentials: true }
+        )
+      );
+      this.replaceWorkoutPlan(response.plan);
+      return response.plan;
+    } catch (error) {
+      console.error('Failed to add exercise to workout plan:', error);
+      return null;
+    }
+  }
+
+  async removeExerciseFromWorkoutPlan(planId: string, planExerciseId: string): Promise<WorkoutPlan | null> {
+    try {
+      const response = await firstValueFrom(
+        this.http.delete<{ success: boolean; plan: WorkoutPlan }>(
+          `${this.apiUrl}/workout-plans/${planId}/exercises/${planExerciseId}`,
+          { withCredentials: true }
+        )
+      );
+      this.replaceWorkoutPlan(response.plan);
+      return response.plan;
+    } catch (error) {
+      console.error('Failed to remove exercise from workout plan:', error);
+      return null;
+    }
+  }
+
+  async reorderWorkoutPlanExercises(
+    planId: string,
+    payload: WorkoutPlanExerciseReorderInput,
+  ): Promise<WorkoutPlan | null> {
+    try {
+      const response = await firstValueFrom(
+        this.http.patch<{ success: boolean; plan: WorkoutPlan }>(
+          `${this.apiUrl}/workout-plans/${planId}/exercises/reorder`,
+          payload,
+          { withCredentials: true }
+        )
+      );
+      this.replaceWorkoutPlan(response.plan);
+      return response.plan;
+    } catch (error) {
+      console.error('Failed to reorder workout plan exercises:', error);
+      return null;
+    }
+  }
+
   async logWorkoutSet(workoutPlanExerciseId: string, repsCompleted: number): Promise<WorkoutSetLogResult | null> {
     try {
       const response = await firstValueFrom(
@@ -589,6 +647,19 @@ export class MetricsService {
       console.error('Failed to log workout set:', error);
       return null;
     }
+  }
+
+  private replaceWorkoutPlan(plan: WorkoutPlan): void {
+    const current = this._workoutPlans();
+    const index = current.findIndex((item) => item.id === plan.id);
+    if (index === -1) {
+      this._workoutPlans.set([plan, ...current]);
+      return;
+    }
+
+    const next = [...current];
+    next[index] = plan;
+    this._workoutPlans.set(next);
   }
 
   // =============================================================================

@@ -4,12 +4,14 @@
  */
 import { prisma } from '../lib/prisma';
 import { seedActivityCatalog } from './activity-catalog.seed';
+import { seedExerciseCatalog } from './exercise-catalog.seed';
 import { seedMealCatalog } from './meal-catalog.seed';
 
 async function seed(): Promise<void> {
   console.log('🌱 Seeding database...');
 
   await seedActivityCatalog();
+  await seedExerciseCatalog();
   await seedMealCatalog();
 
   // Check if test user already exists

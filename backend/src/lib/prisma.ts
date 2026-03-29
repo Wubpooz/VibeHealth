@@ -55,11 +55,18 @@ const testPrisma = {
   },
   exerciseCatalog: {
     findMany: () => Promise.resolve([]),
+    findFirst: () => Promise.resolve(null),
+    findUnique: () => Promise.resolve(null),
+    upsert: () => Promise.resolve(null),
     createMany: () => Promise.resolve({ count: 0 }),
   },
   workoutPlanExercise: {
     findFirst: () => Promise.resolve(null),
     findUnique: () => Promise.resolve(null),
+    findMany: () => Promise.resolve([]),
+    create: () => Promise.resolve(null),
+    update: () => Promise.resolve(null),
+    delete: () => Promise.resolve(null),
   },
   healthSyncConnection: {
     findMany: () => Promise.resolve([]),

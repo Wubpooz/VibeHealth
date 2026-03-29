@@ -102,7 +102,15 @@ export type ActivityType =
   | 'HIIT'
   | 'SPORTS'
   | 'DANCE'
-  | 'OTHER';
+  | 'OTHER'
+  | 'ROWING'
+  | 'CLIMB'
+  | 'MARTIAL_ARTS'
+  | 'WINTER_SPORTS'
+  | 'WATER_SPORTS'
+  | 'RACKET_SPORTS'
+  | 'TEAM_SPORTS'
+  | 'MINDFULNESS';
 
 export type Intensity = 'LOW' | 'MODERATE' | 'HIGH' | 'VERY_HIGH';
 
@@ -180,6 +188,14 @@ export const ACTIVITY_PRESETS: Record<ActivityType, { label: string; emoji: stri
   SPORTS: { label: 'Sports', emoji: '⚽', caloriesPerMin: 7 },
   DANCE: { label: 'Dance', emoji: '💃', caloriesPerMin: 6 },
   OTHER: { label: 'Other', emoji: '🎯', caloriesPerMin: 5 },
+  ROWING: { label: 'Rowing', emoji: '🚣', caloriesPerMin: 8 },
+  CLIMB: { label: 'Climb', emoji: '🧗', caloriesPerMin: 9 },
+  MARTIAL_ARTS: { label: 'Martial Arts', emoji: '🥋', caloriesPerMin: 10 },
+  WINTER_SPORTS: { label: 'Winter Sports', emoji: '⛷️', caloriesPerMin: 8 },
+  WATER_SPORTS: { label: 'Water Sports', emoji: '🌊', caloriesPerMin: 7 },
+  RACKET_SPORTS: { label: 'Racket Sports', emoji: '🎾', caloriesPerMin: 8 },
+  TEAM_SPORTS: { label: 'Team Sports', emoji: '🏀', caloriesPerMin: 8 },
+  MINDFULNESS: { label: 'Mindfulness', emoji: '🧘‍♀️', caloriesPerMin: 3 },
 };
 
 export const INTENSITY_LABELS: Record<Intensity, { label: string; multiplier: number }> = {
@@ -317,6 +333,18 @@ export interface WorkoutSetLogResult {
   };
   restSeconds: number;
   exerciseName: string;
+}
+
+export interface WorkoutPlanExerciseCreateInput {
+  exerciseCatalogId: string;
+  sets?: number;
+  repsMin?: number;
+  repsMax?: number;
+  restSeconds?: number;
+}
+
+export interface WorkoutPlanExerciseReorderInput {
+  exerciseIds: string[];
 }
 
 export interface HealthSyncConnection {

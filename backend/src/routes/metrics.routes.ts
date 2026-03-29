@@ -926,6 +926,28 @@ const workoutPlanCreateSchema = z.object({
   description: z.string().trim().max(500).optional(),
 });
 
+const workoutPlanExerciseCreateSchema = z
+  .object({
+    exerciseCatalogId: z.string().trim().min(1),
+    sets: z.number().int().positive().max(20).optional(),
+    repsMin: z.number().int().positive().max(200).optional(),
+    repsMax: z.number().int().positive().max(200).optional(),
+    restSeconds: z.number().int().min(0).max(600).optional(),
+  })
+  .superRefine((value, ctx) => {
+    if (value.repsMin !== undefined && value.repsMax !== undefined && value.repsMax < value.repsMin) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: 'repsMax must be greater than or equal to repsMin',
+        path: ['repsMax'],
+      });
+    }
+  });
+
+const workoutPlanExerciseReorderSchema = z.object({
+  exerciseIds: z.array(z.string().trim().min(1)).min(1),
+});
+
 const workoutPlanExerciseLogSchema = z.object({
   workoutPlanExerciseId: z.string().trim().min(1),
   repsCompleted: z.number().int().positive().max(200),
@@ -1371,6 +1393,233 @@ metricsRoutes.post('/workout-plans', async (c) => {
   }
 });
 
+metricsRoutes.post('/workout-plans/:planId/exercises', async (c) => {
+  const user = c.get('user');
+  const planId = c.req.param('planId');
+  const body = await c.req.json();
+  const parsed = workoutPlanExerciseCreateSchema.safeParse(body);
+
+  if (!parsed.success) {
+    return c.json({ error: 'Invalid workout exercise data', details: parsed.error.flatten() }, 400);
+  }
+
+  try {
+    const plan = await prisma.workoutPlan.findFirst({
+      where: {
+        id: planId,
+        userId: user.id,
+        isActive: true,
+      },
+      include: {
+        exercises: {
+          orderBy: { orderIndex: 'asc' },
+          select: {
+            id: true,
+            orderIndex: true,
+            exerciseCatalogId: true,
+          },
+        },
+      },
+    });
+
+    if (!plan) {
+      return c.json({ error: 'Workout plan not found' }, 404);
+    }
+
+    const duplicateExercise = plan.exercises.some(
+      (exercise: { exerciseCatalogId: string }) =>
+        exercise.exerciseCatalogId === parsed.data.exerciseCatalogId,
+    );
+
+    if (duplicateExercise) {
+      return c.json({ error: 'Exercise already exists in this plan' }, 409);
+    }
+
+    const catalogExercise = await prisma.exerciseCatalog.findFirst({
+      where: {
+        id: parsed.data.exerciseCatalogId,
+        isActive: true,
+      },
+      select: {
+        id: true,
+        defaultSets: true,
+        defaultRepsMin: true,
+        defaultRepsMax: true,
+        defaultRestSeconds: true,
+      },
+    });
+
+    if (!catalogExercise) {
+      return c.json({ error: 'Exercise catalog entry not found' }, 404);
+    }
+
+    const nextOrderIndex = (plan.exercises[plan.exercises.length - 1]?.orderIndex ?? 0) + 1;
+
+    await prisma.workoutPlanExercise.create({
+      data: {
+        workoutPlanId: plan.id,
+        exerciseCatalogId: catalogExercise.id,
+        orderIndex: nextOrderIndex,
+        sets: parsed.data.sets ?? catalogExercise.defaultSets,
+        repsMin: parsed.data.repsMin ?? catalogExercise.defaultRepsMin,
+        repsMax: parsed.data.repsMax ?? catalogExercise.defaultRepsMax,
+        restSeconds: parsed.data.restSeconds ?? catalogExercise.defaultRestSeconds,
+      },
+    });
+
+    const updatedPlan = await prisma.workoutPlan.findFirst({
+      where: { id: plan.id, userId: user.id, isActive: true },
+      include: {
+        exercises: {
+          include: { exercise: true },
+          orderBy: { orderIndex: 'asc' },
+        },
+      },
+    });
+
+    return c.json({ success: true, plan: updatedPlan }, 201);
+  } catch (error) {
+    console.error('Error adding workout exercise to plan:', error);
+    return c.json({ error: 'Failed to add exercise to workout plan' }, 500);
+  }
+});
+
+metricsRoutes.delete('/workout-plans/:planId/exercises/:planExerciseId', async (c) => {
+  const user = c.get('user');
+  const planId = c.req.param('planId');
+  const planExerciseId = c.req.param('planExerciseId');
+
+  try {
+    const plan = await prisma.workoutPlan.findFirst({
+      where: {
+        id: planId,
+        userId: user.id,
+        isActive: true,
+      },
+      include: {
+        exercises: {
+          orderBy: { orderIndex: 'asc' },
+          select: {
+            id: true,
+          },
+        },
+      },
+    });
+
+    if (!plan) {
+      return c.json({ error: 'Workout plan not found' }, 404);
+    }
+
+    const exerciseExists = plan.exercises.some((exercise: { id: string }) => exercise.id === planExerciseId);
+    if (!exerciseExists) {
+      return c.json({ error: 'Workout exercise not found in plan' }, 404);
+    }
+
+    await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
+      await tx.workoutPlanExercise.delete({ where: { id: planExerciseId } });
+
+      const remainingExercises = await tx.workoutPlanExercise.findMany({
+        where: { workoutPlanId: plan.id },
+        orderBy: { orderIndex: 'asc' },
+        select: { id: true },
+      });
+
+      for (let index = 0; index < remainingExercises.length; index += 1) {
+        await tx.workoutPlanExercise.update({
+          where: { id: remainingExercises[index].id },
+          data: { orderIndex: index + 1 },
+        });
+      }
+    });
+
+    const updatedPlan = await prisma.workoutPlan.findFirst({
+      where: { id: plan.id, userId: user.id, isActive: true },
+      include: {
+        exercises: {
+          include: { exercise: true },
+          orderBy: { orderIndex: 'asc' },
+        },
+      },
+    });
+
+    return c.json({ success: true, plan: updatedPlan });
+  } catch (error) {
+    console.error('Error removing workout exercise from plan:', error);
+    return c.json({ error: 'Failed to remove exercise from workout plan' }, 500);
+  }
+});
+
+metricsRoutes.patch('/workout-plans/:planId/exercises/reorder', async (c) => {
+  const user = c.get('user');
+  const planId = c.req.param('planId');
+  const body = await c.req.json();
+  const parsed = workoutPlanExerciseReorderSchema.safeParse(body);
+
+  if (!parsed.success) {
+    return c.json({ error: 'Invalid workout reorder data', details: parsed.error.flatten() }, 400);
+  }
+
+  const uniqueExerciseIds = new Set(parsed.data.exerciseIds);
+  if (uniqueExerciseIds.size !== parsed.data.exerciseIds.length) {
+    return c.json({ error: 'Exercise IDs must be unique' }, 400);
+  }
+
+  try {
+    const plan = await prisma.workoutPlan.findFirst({
+      where: {
+        id: planId,
+        userId: user.id,
+        isActive: true,
+      },
+      include: {
+        exercises: {
+          orderBy: { orderIndex: 'asc' },
+          select: { id: true },
+        },
+      },
+    });
+
+    if (!plan) {
+      return c.json({ error: 'Workout plan not found' }, 404);
+    }
+
+    if (plan.exercises.length !== parsed.data.exerciseIds.length) {
+      return c.json({ error: 'Reorder payload must include every exercise in the plan' }, 400);
+    }
+
+    const existingIds = new Set(plan.exercises.map((exercise: { id: string }) => exercise.id));
+    const everyIdBelongsToPlan = parsed.data.exerciseIds.every((id) => existingIds.has(id));
+
+    if (!everyIdBelongsToPlan) {
+      return c.json({ error: 'Reorder payload contains invalid exercise IDs' }, 400);
+    }
+
+    await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
+      for (let index = 0; index < parsed.data.exerciseIds.length; index += 1) {
+        await tx.workoutPlanExercise.update({
+          where: { id: parsed.data.exerciseIds[index] },
+          data: { orderIndex: index + 1 },
+        });
+      }
+    });
+
+    const updatedPlan = await prisma.workoutPlan.findFirst({
+      where: { id: plan.id, userId: user.id, isActive: true },
+      include: {
+        exercises: {
+          include: { exercise: true },
+          orderBy: { orderIndex: 'asc' },
+        },
+      },
+    });
+
+    return c.json({ success: true, plan: updatedPlan });
+  } catch (error) {
+    console.error('Error reordering workout exercises in plan:', error);
+    return c.json({ error: 'Failed to reorder workout exercises' }, 500);
+  }
+});
+
 metricsRoutes.post('/workout-logs', async (c) => {
   const user = c.get('user');
   const body = await c.req.json();
@@ -1394,7 +1643,11 @@ metricsRoutes.post('/workout-logs', async (c) => {
       },
     });
 
-    if (!exerciseEntry || exerciseEntry.workoutPlan.userId !== user.id || !exerciseEntry.workoutPlan.isActive) {
+    if (
+      !exerciseEntry ||
+      exerciseEntry.workoutPlan?.userId !== user.id ||
+      !exerciseEntry.workoutPlan?.isActive
+    ) {
       return c.json({ error: 'Workout exercise not found' }, 404);
     }
 
