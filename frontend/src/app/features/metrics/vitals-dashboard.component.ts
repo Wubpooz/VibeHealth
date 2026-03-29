@@ -7,13 +7,11 @@ import {
 import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 import { RouterModule } from '@angular/router';
-import { MetricsService } from '../../core/metrics/metrics.service';
-import { CarrotFeedComponent } from '../../shared/components/carrot-feed/carrot-feed.component';
-import { TrendChartComponent, type TrendDataPoint } from '../../shared/components/trend-chart/trend-chart.component';
-import { HydrationTrackerComponent } from './hydration-tracker.component';
 import { VitalsLoggerComponent } from './vitals-logger.component';
+import { TrendChartComponent, type TrendDataPoint } from '../../shared/components/trend-chart/trend-chart.component';
 import { BackButtonComponent } from '../../shared/components/back-button/back-button.component';
 import { LucideHeartPulse } from '@lucide/angular';
+import { MetricsService } from '../../core/metrics/metrics.service';
 
 @Component({
   selector: 'app-vitals-dashboard',
@@ -21,17 +19,15 @@ import { LucideHeartPulse } from '@lucide/angular';
     CommonModule,
     TranslateModule,
     RouterModule,
-    CarrotFeedComponent,
-    TrendChartComponent,
-    HydrationTrackerComponent,
     VitalsLoggerComponent,
     BackButtonComponent,
     LucideHeartPulse,
+    TrendChartComponent
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="min-h-screen bg-[#fdf8f8] dark:bg-gray-950 transition-colors duration-300 no-select">
-      <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pb-28 space-y-6">
+    <div class="min-h-screen flex flex-col bg-[#fdf8f8] dark:bg-gray-950 transition-colors duration-300 no-select">
+      <div class="px-4 sm:px-6 lg:px-8 py-8 pb-28 space-y-6">
 
         <!-- Page Header -->
         <div class="flex items-center justify-between">
@@ -53,33 +49,28 @@ import { LucideHeartPulse } from '@lucide/angular';
           <app-back-button [label]="'common.back_to_dashboard' | translate" [showLabel]="true" />
         </div>
 
-        <!-- Stats Grid + Carrot Feed -->
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <app-carrot-feed />
+        <div class="flex flex-col gap-6">
+          <!-- Vitals Logger -->
+          <div>
+            <app-vitals-logger />
+          </div>
+
+          <!-- 7-Day Steps Trend -->
+          <app-trend-chart
+            [title]="'METRICS.VITALS.STEPS' | translate"
+            [subtitle]="'METRICS.LAST_7_DAYS' | translate"
+            [data]="weeklyStepsData()"
+            unit=" steps"
+          />
+
+          <!-- 7-Day Sleep Trend -->
+          <app-trend-chart
+            [title]="'METRICS.VITALS.SLEEP' | translate"
+            [subtitle]="'METRICS.LAST_7_DAYS' | translate"
+            [data]="weeklySleepData()"
+            unit="h"
+          />
         </div>
-
-        <!-- Vitals Logger + Hydration Tracker -->
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <app-vitals-logger />
-          <app-hydration-tracker />
-        </div>
-
-        <!-- 7-Day Steps Trend -->
-        <app-trend-chart
-          [title]="'METRICS.VITALS.STEPS' | translate"
-          [subtitle]="'METRICS.LAST_7_DAYS' | translate"
-          [data]="weeklyStepsData()"
-          unit=" steps"
-        />
-
-        <!-- 7-Day Sleep Trend -->
-        <app-trend-chart
-          [title]="'METRICS.VITALS.SLEEP' | translate"
-          [subtitle]="'METRICS.LAST_7_DAYS' | translate"
-          [data]="weeklySleepData()"
-          unit="h"
-        />
-
       </div>
     </div>
   `,
