@@ -25,7 +25,7 @@
 - [x] Write Backend workers/crons to dispatch Web Push and Email notifications.
 
 ## Milestone 3: External Intelligence & Sync
-- [ ] Hook into OpenFDA (or ANSM open data) to display potential side effects and interactions.
+- [x] Hook into OpenFDA (or ANSM open data) to display potential side effects and interactions.
 - [ ] Integrate a 3rd-party Pollen Tracking API to broadcast daily levels dynamically based on location.
 - [ ] Build the Appointment tracker (with recommended screenings and vaccines based on user profile age/sex).
 - [ ] Plan Doctor Maps API integration (Free open APIs like OpenStreetMap) for finding nearby specialists.

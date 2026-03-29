@@ -287,7 +287,17 @@
     "WEEKDAY_FRIDAY": "Vendredi",
     "WEEKDAY_SATURDAY": "Samedi",
     "WEEKDAY_SUNDAY": "Dimanche",
-    "INPUT_DAY_OF_MONTH": "Jour du mois (1-31)"
+    "INPUT_DAY_OF_MONTH": "Jour du mois (1-31)",
+    "INTEL_TITLE": "Infos Médicales",
+    "INTEL_INPUT": "Rechercher un médicament, par ex. Aspirine",
+    "INTEL_LOOKUP": "Rechercher les effets secondaires",
+    "INTEL_LOADING": "Recherche des données en cours...",
+    "INTEL_DRUG": "Médicament",
+    "INTEL_SOURCE": "Source : OpenFDA",
+    "INTEL_WARNINGS": "Mises en garde",
+    "INTEL_SIDE_EFFECTS": "Effets secondaires",
+    "INTEL_INTERACTIONS": "Interactions",
+    "INTEL_DOSAGE": "Posologie"
   },
   "REWARDS": {
     "CARROTS": "Carottes",

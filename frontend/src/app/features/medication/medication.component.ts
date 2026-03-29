@@ -2,7 +2,7 @@ import { Component, ChangeDetectionStrategy, inject, signal, computed } from '@a
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
-import { MedicationService, Medication, MedicationReminder } from '../../core/medical/medication.service';
+import { MedicationService, Medication, MedicationReminder, OpenFdaDrugIntel } from '../../core/medical/medication.service';
 
 @Component({
   selector: 'app-medication-page',
@@ -65,6 +65,84 @@ import { MedicationService, Medication, MedicationReminder } from '../../core/me
         @if (medicationService.error()) {
           <div class="text-red-600 dark:text-red-300 text-sm">
             {{ medicationService.error() }}
+          </div>
+        }
+      </div>
+
+      <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-4 space-y-3 shadow-sm">
+        <h2 class="text-lg font-semibold">{{ 'MEDICATION.INTEL_TITLE' | translate }}</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <input
+            type="text"
+            [(ngModel)]="drugSearchTerm"
+            placeholder="{{ 'MEDICATION.INTEL_INPUT' | translate }}"
+            class="rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2 text-sm w-full"
+          />
+          <button
+            class="rounded-xl bg-indigo-500 text-white font-semibold px-4 py-2 hover:bg-indigo-600 transition"
+            (click)="searchDrugInfo()"
+            [disabled]="drugIntelLoading()"
+          >
+            {{ 'MEDICATION.INTEL_LOOKUP' | translate }}
+          </button>
+        </div>
+
+        @if (drugIntelError()) {
+          <div class="text-red-600 dark:text-red-300 text-sm">{{ drugIntelError() }}</div>
+        }
+
+        @if (drugIntelLoading()) {
+          <div class="text-sm text-slate-500 dark:text-slate-300">{{ 'MEDICATION.INTEL_LOADING' | translate }}</div>
+        }
+
+        @if (drugIntel(); as intel) {
+          <div class="mt-2 space-y-2">
+            <p class="text-sm font-semibold">{{ 'MEDICATION.INTEL_DRUG' | translate }}: {{ intel.officialName || intel.name }}</p>
+            <p class="text-xs text-slate-500 dark:text-slate-400">{{ 'MEDICATION.INTEL_SOURCE' | translate }}</p>
+
+            @if (intel.warnings.length > 0) {
+              <div class="bg-amber-50 dark:bg-amber-900/20 p-2 rounded">
+                <p class="text-xs font-semibold">{{ 'MEDICATION.INTEL_WARNINGS' | translate }}</p>
+                <ul class="list-disc list-inside text-xs space-y-1">
+                  @for (warning of intel.warnings; track warning) {
+                    <li>{{ warning }}</li>
+                  }
+                </ul>
+              </div>
+            }
+
+            @if (intel.sideEffects.length > 0) {
+              <div class="bg-red-50 dark:bg-red-900/20 p-2 rounded">
+                <p class="text-xs font-semibold">{{ 'MEDICATION.INTEL_SIDE_EFFECTS' | translate }}</p>
+                <ul class="list-disc list-inside text-xs space-y-1">
+                  @for (effect of intel.sideEffects; track effect) {
+                    <li>{{ effect }}</li>
+                  }
+                </ul>
+              </div>
+            }
+
+            @if (intel.interactions.length > 0) {
+              <div class="bg-blue-50 dark:bg-blue-900/20 p-2 rounded">
+                <p class="text-xs font-semibold">{{ 'MEDICATION.INTEL_INTERACTIONS' | translate }}</p>
+                <ul class="list-disc list-inside text-xs space-y-1">
+                  @for (interaction of intel.interactions; track interaction) {
+                    <li>{{ interaction }}</li>
+                  }
+                </ul>
+              </div>
+            }
+
+            @if (intel.dosage.length > 0) {
+              <div class="bg-emerald-50 dark:bg-emerald-900/20 p-2 rounded">
+                <p class="text-xs font-semibold">{{ 'MEDICATION.INTEL_DOSAGE' | translate }}</p>
+                <ul class="list-disc list-inside text-xs space-y-1">
+                  @for (dose of intel.dosage; track dose) {
+                    <li>{{ dose }}</li>
+                  }
+                </ul>
+              </div>
+            }
           </div>
         }
       </div>
@@ -278,6 +356,11 @@ export class MedicationPageComponent {
   newNotes = '';
   newDuration = '';
 
+  drugSearchTerm = '';
+  drugIntel = signal<OpenFdaDrugIntel | null>(null);
+  drugIntelLoading = signal(false);
+  drugIntelError = signal<string | null>(null);
+
   private editingId = signal<string | null>(null);
   editedName = '';
   editedStandardName = '';
@@ -302,17 +385,14 @@ export class MedicationPageComponent {
   readonly upcomingReminders = computed(() => {
     const now = new Date();
     const today = now.toISOString().split('T')[0];
-    const currentTime = now.toTimeString().slice(0, 5);
 
     const reminders: { medication: Medication; reminder: MedicationReminder; nextTime: string }[] = [];
 
     for (const med of this.medications()) {
       for (const reminder of med.reminders) {
-        var time = new Date(reminder.nextDueAt!).getTime() - now.getTime(); // time until next due time
-        var soon = time > 0 && time < 1000 * 60 * 60 * 24; // within the next day
+        const time = new Date(reminder.nextDueAt!).getTime() - now.getTime(); // time until next due time
+        const soon = time > 0 && time < 1000 * 60 * 60 * 24; // within the next day
 
-        var nextDueDay = reminder.nextDueAt?.split('T')[0];
-        // if (today == nextDueDay && reminder.timeOfDay >= currentTime) {
         if (soon) {
           reminders.push({
             medication: med,
@@ -369,6 +449,33 @@ export class MedicationPageComponent {
       this.newStandardName = '';
       this.newNotes = '';
       this.newDuration = '';
+    }
+  }
+
+  async searchDrugInfo(): Promise<void> {
+    if (!this.drugSearchTerm.trim()) {
+      this.drugIntel.set(null);
+      this.drugIntelError.set('Please provide a drug name to search');
+      return;
+    }
+
+    this.drugIntelLoading.set(true);
+    this.drugIntelError.set(null);
+
+    try {
+      const intel = await this.medicationService.fetchDrugIntel(this.drugSearchTerm);
+      if (!intel) {
+        this.drugIntelError.set('No drug info found.');
+        this.drugIntel.set(null);
+      } else {
+        this.drugIntel.set(intel);
+      }
+    } catch (error) {
+      console.error('Drug info lookup failed', error);
+      this.drugIntelError.set('Unable to fetch drug details');
+      this.drugIntel.set(null);
+    } finally {
+      this.drugIntelLoading.set(false);
     }
   }
 

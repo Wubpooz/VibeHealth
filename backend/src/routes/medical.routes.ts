@@ -15,6 +15,10 @@ type AuthContext = {
 
 const medicalRoutes = new Hono<AuthContext>();
 
+const openFdaQuerySchema = z.object({
+  name: z.string().trim().min(1),
+});
+
 const medicationSchema = z.object({
   name: z.string().trim().min(1).max(120),
   standardName: z.string().trim().max(120).optional(),
@@ -63,6 +67,57 @@ const reminderSchema = z.object({
       if (hasDayOfWeek) ctx.addIssue({ path: ['dayOfWeek'], code: z.ZodIssueCode.custom, message: 'dayOfWeek must not be set for ONE_TIME recurrence' });
       if (hasDayOfMonth) ctx.addIssue({ path: ['dayOfMonth'], code: z.ZodIssueCode.custom, message: 'dayOfMonth must not be set for ONE_TIME recurrence' });
       break;
+  }
+});
+
+medicalRoutes.get('/openfda', async (c) => {
+  const name = c.req.query('name')?.trim();
+
+  if (!name) {
+    return c.json({ error: 'Missing required query parameter: name' }, 400);
+  }
+
+  const validated = openFdaQuerySchema.safeParse({ name });
+  if (!validated.success) {
+    return c.json({ error: 'Invalid name query parameter', details: validated.error.flatten() }, 400);
+  }
+
+  const encodedQuery = encodeURIComponent(`openfda.generic_name.exact:"${name}" OR openfda.brand_name.exact:"${name}"`);
+  const openFdaUrl = `https://api.fda.gov/drug/label.json?search=${encodedQuery}&limit=1`;
+
+  try {
+    const res = await fetch(openFdaUrl, { method: 'GET' });
+    if (!res.ok) {
+      const payload = await res.text();
+      console.error('OpenFDA request failed', res.status, payload);
+      return c.json({ error: 'OpenFDA service unavailable' }, 502);
+    }
+
+    const data = await res.json();
+    const drug = data?.results?.[0];
+
+    if (!drug) {
+      return c.json({ error: 'Drug not found in OpenFDA', name }, 404);
+    }
+
+    const openfda = drug.openfda ?? {};
+    const sideEffects = Array.isArray(drug.adverse_reactions) ? drug.adverse_reactions : [];
+    const interactions = Array.isArray(drug.drug_interactions) ? drug.drug_interactions : [];
+    const warnings = Array.isArray(drug.warnings) ? drug.warnings : [];
+    const dosage = Array.isArray(drug.dosage_and_administration) ? drug.dosage_and_administration : [];
+
+    return c.json({
+      name,
+      officialName: openfda.generic_name?.[0] ?? openfda.brand_name?.[0] ?? name,
+      openfda,
+      sideEffects,
+      interactions,
+      warnings,
+      dosage,
+    });
+  } catch (error) {
+    console.error('Error calling OpenFDA:', error);
+    return c.json({ error: 'Failed to fetch OpenFDA data' }, 502);
   }
 });
 
