@@ -17,7 +17,12 @@ import { FormsModule } from '@angular/forms';
 import { animate } from 'motion/mini';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MetricsService } from '../../core/metrics/metrics.service';
-import type { WorkoutPlanExercise, HealthSyncProvider } from '../../core/metrics/metrics.types';
+import type {
+  WorkoutExerciseSuggestion,
+  WorkoutPlan,
+  WorkoutPlanExercise,
+  HealthSyncProvider,
+} from '../../core/metrics/metrics.types';
 import { BackButtonComponent } from '../../shared/components/back-button/back-button.component';
 import { ToastService } from '../../core/toast/toast.service';
 
@@ -76,11 +81,52 @@ import { ToastService } from '../../core/toast/toast.service';
         </div>
       </section>
 
+      <section class="bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-3xl p-5 sm:p-6 space-y-4">
+        <div class="flex items-center justify-between gap-3">
+          <h2 class="text-lg font-bold text-gray-900 dark:text-white">{{ 'WORKOUTS.SUGGESTED_EXERCISES' | translate }}</h2>
+          @if (!activePlan()) {
+            <span class="text-xs font-semibold px-3 py-1 rounded-full bg-orange-50 text-orange-700 dark:bg-orange-900/30 dark:text-orange-300">
+              {{ 'WORKOUTS.CREATE_PLAN_FIRST' | translate }}
+            </span>
+          }
+        </div>
+        @if (suggestedExercises().length > 0) {
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-3">
+            @for (exercise of suggestedExercises(); track exercise.id) {
+              <article class="rounded-2xl border border-gray-100 dark:border-gray-700 p-4 flex flex-col gap-3">
+                <div>
+                  <p class="font-semibold text-gray-900 dark:text-white">{{ exercise.name }}</p>
+                  <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                    {{ ('WORKOUTS.CATEGORY.' + exercise.category) | translate }} •
+                    {{ exercise.defaultSets }} sets •
+                    {{ exercise.defaultRepsMin }}-{{ exercise.defaultRepsMax }} reps
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  class="self-start rounded-full px-4 py-2 text-sm font-semibold"
+                  [class.bg-primary-500]="!isExerciseInActivePlan(exercise.id)"
+                  [class.text-white]="!isExerciseInActivePlan(exercise.id)"
+                  [class.bg-gray-200]="isExerciseInActivePlan(exercise.id)"
+                  [class.text-gray-600]="isExerciseInActivePlan(exercise.id)"
+                  [disabled]="planMutationLoading() || !activePlan() || isExerciseInActivePlan(exercise.id)"
+                  (click)="addExerciseToPlan(exercise)"
+                >
+                  {{ isExerciseInActivePlan(exercise.id) ? ('WORKOUTS.ALREADY_IN_PLAN' | translate) : ('WORKOUTS.ADD_TO_PLAN' | translate) }}
+                </button>
+              </article>
+            }
+          </div>
+        } @else {
+          <p class="text-sm text-gray-500 dark:text-gray-400">{{ 'WORKOUTS.NO_SUGGESTIONS' | translate }}</p>
+        }
+      </section>
+
       @if (activePlanExercises().length > 0) {
         <section class="bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-3xl p-5 sm:p-6 space-y-4">
           <h2 class="text-lg font-bold text-gray-900 dark:text-white">{{ 'WORKOUTS.ACTIVE_PLAN' | translate }}</h2>
           <div class="grid gap-3">
-            @for (exercise of activePlanExercises(); track exercise.id) {
+            @for (exercise of activePlanExercises(); track exercise.id; let isFirst = $first; let isLast = $last) {
               <div #exerciseCard class="rounded-2xl border border-gray-100 dark:border-gray-700 p-4">
                 <div class="flex items-start justify-between gap-4">
                   <div>
@@ -101,11 +147,38 @@ import { ToastService } from '../../core/toast/toast.service';
                     <button
                       type="button"
                       class="rounded-full bg-primary-500 text-white text-sm font-semibold px-4 py-2"
+                      [disabled]="planMutationLoading()"
                       (click)="logSet(exercise)"
                     >
                       {{ 'WORKOUTS.LOG_SET' | translate }}
                     </button>
                   </div>
+                </div>
+                <div class="mt-3 flex flex-wrap gap-2">
+                  <button
+                    type="button"
+                    class="rounded-full border border-gray-200 dark:border-gray-600 px-3 py-1.5 text-xs font-semibold text-gray-700 dark:text-gray-200"
+                    [disabled]="isFirst || planMutationLoading()"
+                    (click)="moveExercise(exercise.id, 'up')"
+                  >
+                    {{ 'WORKOUTS.MOVE_UP' | translate }}
+                  </button>
+                  <button
+                    type="button"
+                    class="rounded-full border border-gray-200 dark:border-gray-600 px-3 py-1.5 text-xs font-semibold text-gray-700 dark:text-gray-200"
+                    [disabled]="isLast || planMutationLoading()"
+                    (click)="moveExercise(exercise.id, 'down')"
+                  >
+                    {{ 'WORKOUTS.MOVE_DOWN' | translate }}
+                  </button>
+                  <button
+                    type="button"
+                    class="rounded-full border border-red-200 dark:border-red-900/50 px-3 py-1.5 text-xs font-semibold text-red-600 dark:text-red-300"
+                    [disabled]="planMutationLoading()"
+                    (click)="removeExerciseFromPlan(exercise)"
+                  >
+                    {{ 'WORKOUTS.REMOVE_EXERCISE' | translate }}
+                  </button>
                 </div>
                 @if (restTimers()[exercise.id] && restTimers()[exercise.id]! > 0) {
                   <p class="mt-2 text-xs text-orange-600 dark:text-orange-300">
@@ -196,10 +269,16 @@ export class WorkoutsPageComponent implements AfterViewInit {
   readonly newPlanName = signal('');
   readonly repsByExercise = signal<Record<string, number>>({});
   readonly restTimers = signal<Record<string, number>>({});
+  readonly planMutationLoading = signal(false);
   private readonly timerHandles = new Map<string, ReturnType<typeof setInterval>>();
   @ViewChildren('exerciseCard') private readonly exerciseCards!: QueryList<ElementRef<HTMLElement>>;
 
-  readonly activePlanExercises = computed(() => this.workoutPlans()[0]?.exercises ?? []);
+  readonly activePlan = computed<WorkoutPlan | null>(() => this.workoutPlans()[0] ?? null);
+  readonly activePlanExercises = computed(() => this.activePlan()?.exercises ?? []);
+  readonly activePlanExerciseCatalogIds = computed(
+    () => new Set(this.activePlanExercises().map((exercise) => exercise.exerciseCatalogId)),
+  );
+  readonly suggestedExercises = computed(() => this.workoutSuggestions()?.exercises ?? []);
   readonly workoutSummary = computed(() => {
     const calories = this.activityToday()?.totalCalories ?? 0;
     const heartRate = this.vitalsToday()?.summary.HEART_RATE?.value;
@@ -246,6 +325,71 @@ export class WorkoutsPageComponent implements AfterViewInit {
     const plan = await this.metricsService.createWorkoutPlan(name);
     if (plan) {
       this.newPlanName.set('');
+    }
+  }
+
+  isExerciseInActivePlan(exerciseCatalogId: string): boolean {
+    return this.activePlanExerciseCatalogIds().has(exerciseCatalogId);
+  }
+
+  async addExerciseToPlan(exercise: WorkoutExerciseSuggestion): Promise<void> {
+    const plan = this.activePlan();
+    if (!plan || this.isExerciseInActivePlan(exercise.id)) return;
+
+    this.planMutationLoading.set(true);
+    try {
+      await this.metricsService.addExerciseToWorkoutPlan(plan.id, {
+        exerciseCatalogId: exercise.id,
+      });
+    } finally {
+      this.planMutationLoading.set(false);
+    }
+  }
+
+  async removeExerciseFromPlan(exercise: WorkoutPlanExercise): Promise<void> {
+    const plan = this.activePlan();
+    if (!plan) return;
+
+    this.planMutationLoading.set(true);
+    try {
+      await this.metricsService.removeExerciseFromWorkoutPlan(plan.id, exercise.id);
+      this.clearTimer(exercise.id);
+      this.restTimers.update((state) => {
+        const next = { ...state };
+        delete next[exercise.id];
+        return next;
+      });
+      this.repsByExercise.update((state) => {
+        const next = { ...state };
+        delete next[exercise.id];
+        return next;
+      });
+    } finally {
+      this.planMutationLoading.set(false);
+    }
+  }
+
+  async moveExercise(exerciseId: string, direction: 'up' | 'down'): Promise<void> {
+    const plan = this.activePlan();
+    if (!plan) return;
+
+    const ordered = [...this.activePlanExercises()];
+    const currentIndex = ordered.findIndex((exercise) => exercise.id === exerciseId);
+    if (currentIndex < 0) return;
+
+    const targetIndex = direction === 'up' ? currentIndex - 1 : currentIndex + 1;
+    if (targetIndex < 0 || targetIndex >= ordered.length) return;
+
+    const [moved] = ordered.splice(currentIndex, 1);
+    ordered.splice(targetIndex, 0, moved);
+
+    this.planMutationLoading.set(true);
+    try {
+      await this.metricsService.reorderWorkoutPlanExercises(plan.id, {
+        exerciseIds: ordered.map((exercise) => exercise.id),
+      });
+    } finally {
+      this.planMutationLoading.set(false);
     }
   }
 
@@ -325,8 +469,8 @@ export class WorkoutsPageComponent implements AfterViewInit {
   }
 
   private async tryFinalizeSyncOAuthFromUrl(): Promise<void> {
-    if (!window.location.search) return;
-    const currentUrl = new URL(window.location.href);
+    if (!globalThis.location.search) return;
+    const currentUrl = new URL(globalThis.location.href);
     const state =
       currentUrl.searchParams.get('oauth_state') ??
       currentUrl.searchParams.get('state');
@@ -346,11 +490,11 @@ export class WorkoutsPageComponent implements AfterViewInit {
       currentUrl.searchParams,
       currentUrl.hash,
     );
-    window.history.replaceState({}, '', cleanedUrl);
+    globalThis.history.replaceState({}, '', cleanedUrl);
   }
 
   private buildUrlFromParts(pathname: string, params: URLSearchParams, hash: string): string {
     const query = params.toString();
-    return `${pathname}${query ? `?${query}` : ''}${hash || ''}`;
+    return pathname + (query ? `?${query}` : '') + (hash || '');
   }
 }
