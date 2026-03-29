@@ -177,21 +177,21 @@ gantt
 > Medicines, health checks, vaccines, guides, first aid, pollen.
 
 ### 2.1 Medicine Tracker & Reminders
-- Add medications: name, dose, frequency, time(s), duration
-- Reminder notifications (web push, device push, email) with snooze
-- **Side effects database** — sourced from free/open APIs (OpenFDA, ANSM open data)
-- Personal notes per medication
-- Interaction warnings when multiple meds are tracked
-- Refill reminders
+- [x] Add medications: name, dose, frequency, time(s), duration
+- [x] Reminder notifications (web push, device push, email) with snooze (UI + backend scheduling path exists, work-in-progress delivery workers)
+- [ ] **Side effects database** — sourced from free/open APIs (OpenFDA, ANSM open data)
+- [x] Personal notes per medication
+- [ ] Interaction warnings when multiple meds are tracked
+- [x] Refill reminders
 
 ### 2.2 Health Checks & Vaccines
-- Recommended screenings based on age + sex + conditions
-- Vaccine schedule (childhood, adult boosters, travel)
-- **Personalized reminders** factoring:
+- [ ] Recommended screenings based on age + sex + conditions
+- [ ] Vaccine schedule (childhood, adult boosters, travel)
+- [ ] **Personalized reminders** factoring:
   - Age, sex, medical history
   - Current medications
   - Estimated delay before appointment (configurable)
-- Appointment logging with past/upcoming views
+- [ ] Appointment logging with past/upcoming views
 
 ### 2.3 Guides & Articles
 - Condition library: searchable, categorized
