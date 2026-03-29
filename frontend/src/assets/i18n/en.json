@@ -6,6 +6,7 @@
   "common": {
     "save": "Save",
     "cancel": "Cancel",
+    "create": "Create",
     "back_to_dashboard": "Back",
     "delete": "Delete",
     "edit": "Edit",
@@ -827,6 +828,50 @@
       "MOBILITY": "Mobility",
       "FLEXIBILITY": "Flexibility",
       "RECOVERY": "Recovery"
+    }
+  },
+  "WELLNESS": {
+    "JOURNAL": {
+      "TITLE": "My Journal",
+      "SUBTITLE": "Capture your thoughts, moods, and wellness journey",
+      "RECENT_ENTRIES": "Recent Entries",
+      "NO_ENTRIES": "No journal entries yet. Start by creating your first entry!",
+      "NEW_ENTRY": "New entry",
+      "NEW_ENTRY_TITLE": "Create New Entry",
+      "ENTRY_TITLE_LABEL": "Title (Optional)",
+      "ENTRY_TITLE_PLACEHOLDER": "Give your entry a title...",
+      "ENTRY_TEXT_LABEL": "What's on your mind?",
+      "ENTRY_TEXT_PLACEHOLDER": "Write your thoughts, feelings, and experiences...",
+      "ADD_MEDIA": "Add Photos or Audio",
+      "ATTACH_FILES": "Attach Files",
+      "SELECT_MEDIA": "Select image or audio files to attach to your entry",
+      "REMOVE_FILE": "Remove file",
+      "DELETE": "Delete entry",
+      "ENTRIES": "Entries",
+      "TODAY_MOOD": "Today's Mood",
+      "MOOD_HISTORY": "Mood History",
+      "NO_MOOD_HISTORY": "No mood history yet",
+      "MOOD_NOTE_PLACEHOLDER": "Add a note about your mood...",
+      "EARN_CARROTS": "Earn Carrots",
+      "REWARD_MOOD": "Log your mood",
+      "REWARD_ENTRY": "Write an entry",
+      "MEDIA_FILES": "media files",
+      "SAVE_MOOD": "Save Mood",
+      "RETRY": "Retry",
+      "LOADING": "Loading...",
+      "LOAD_MORE": "Load More",
+      "CANCEL": "Cancel",
+      "CREATE_ENTRY": "Create Entry",
+      "CREATING": "Creating...",
+      "ENTRY_CREATED": "Entry created successfully!"
+    },
+    "MOOD": {
+      "VERY_SAD": "Very Sad",
+      "SAD": "Sad",
+      "NEUTRAL": "Neutral",
+      "HAPPY": "Happy",
+      "VERY_HAPPY": "Very Happy",
+      "EXCITED": "Excited"
     }
   },
   "SETTINGS": {

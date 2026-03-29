@@ -6,6 +6,7 @@
   "common": {
     "save": "Enregistrer",
     "cancel": "Annuler",
+    "create": "Créer",
     "delete": "Supprimer",
     "back_to_dashboard": "Back",
     "edit": "Modifier",
@@ -827,6 +828,50 @@
       "MOBILITY": "Mobilité",
       "FLEXIBILITY": "Souplesse",
       "RECOVERY": "Récupération"
+    }
+  },
+  "WELLNESS": {
+    "JOURNAL": {
+      "TITLE": "Mon Journal",
+      "SUBTITLE": "Capturez vos pensées, vos humeurs et votre parcours de bien-être",
+      "RECENT_ENTRIES": "Entrées Récentes",
+      "NO_ENTRIES": "Aucune entrée de journal pour l'instant. Commencez par créer votre première entrée !",
+      "NEW_ENTRY": "Nouvelle entrée",
+      "NEW_ENTRY_TITLE": "Créer une Nouvelle Entrée",
+      "ENTRY_TITLE_LABEL": "Titre (Optionnel)",
+      "ENTRY_TITLE_PLACEHOLDER": "Donnez un titre à votre entrée...",
+      "ENTRY_TEXT_LABEL": "Qu'y a-t-il sur votre esprit ?",
+      "ENTRY_TEXT_PLACEHOLDER": "Écrivez vos pensées, sentiments et expériences...",
+      "ADD_MEDIA": "Ajouter des Photos ou de l'Audio",
+      "ATTACH_FILES": "Joindre des Fichiers",
+      "SELECT_MEDIA": "Sélectionnez les fichiers image ou audio à joindre à votre entrée",
+      "REMOVE_FILE": "Supprimer le fichier",
+      "DELETE": "Supprimer l'entrée",
+      "ENTRIES": "Entrées",
+      "TODAY_MOOD": "Humeur du Jour",
+      "MOOD_HISTORY": "Historique des Humeurs",
+      "NO_MOOD_HISTORY": "Pas d'historique d'humeur pour l'instant",
+      "MOOD_NOTE_PLACEHOLDER": "Ajoutez une note sur votre humeur...",
+      "EARN_CARROTS": "Gagnez des Carottes",
+      "REWARD_MOOD": "Enregistrez votre humeur",
+      "REWARD_ENTRY": "Écrivez une entrée",
+      "MEDIA_FILES": "fichiers médias",
+      "SAVE_MOOD": "Enregistrer l'Humeur",
+      "RETRY": "Réessayer",
+      "LOADING": "Chargement...",
+      "LOAD_MORE": "Charger Plus",
+      "CANCEL": "Annuler",
+      "CREATE_ENTRY": "Créer une Entrée",
+      "CREATING": "Création...",
+      "ENTRY_CREATED": "Entrée créée avec succès!"
+    },
+    "MOOD": {
+      "VERY_SAD": "Très Triste",
+      "SAD": "Triste",
+      "NEUTRAL": "Neutre",
+      "HAPPY": "Heureux",
+      "VERY_HAPPY": "Très Heureux",
+      "EXCITED": "Excité"
     }
   },
   "SETTINGS": {
