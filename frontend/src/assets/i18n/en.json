@@ -286,8 +286,7 @@
     "WEEKDAY_FRIDAY": "Friday",
     "WEEKDAY_SATURDAY": "Saturday",
     "WEEKDAY_SUNDAY": "Sunday",
-    "INPUT_DAY_OF_MONTH": "Day of month (1-31)",
-    "DAY_SUFFIX": "th"
+    "INPUT_DAY_OF_MONTH": "Day of month (1-31)"
   },
   "REWARDS": {
     "CARROTS": "Carrots",

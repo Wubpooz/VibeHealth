@@ -117,7 +117,7 @@ import { MedicationService, Medication, MedicationReminder } from '../../core/me
                             <span class="text-xs text-slate-500 dark:text-slate-300">{{ 'MEDICATION.WEEKDAY_' + ['','MONDAY','TUESDAY','WEDNESDAY','THURSDAY','FRIDAY','SATURDAY','SUNDAY'][reminder.dayOfWeek] | translate }}</span>
                           }
                           @if (reminder.recurrence === 'MONTHLY' && reminder.dayOfMonth) {
-                            <span class="text-xs text-slate-500 dark:text-slate-300">{{ reminder.dayOfMonth }}{{ 'MEDICATION.DAY_SUFFIX' | translate }}</span>
+                            <span class="text-xs text-slate-500 dark:text-slate-300">{{ reminder.dayOfMonth }}{{ getOrdinalSuffix(reminder.dayOfMonth) }}</span>
                           }
                           @if (reminder.recurrence === 'ONE_TIME' && reminder.date) {
                             <span class="text-xs text-slate-500 dark:text-slate-300">{{ reminder.date | date:'shortDate' }}</span>
@@ -342,6 +342,16 @@ export class MedicationPageComponent {
 
   constructor() {
     void this.medicationService.loadMedications();
+  }
+
+  getOrdinalSuffix(day: number): string {
+    if (day > 3 && day < 21) return 'th';
+    switch (day % 10) {
+      case 1: return 'st';
+      case 2: return 'nd';
+      case 3: return 'rd';
+      default: return 'th';
+    }
   }
 
   async submit(event: Event): Promise<void> {
