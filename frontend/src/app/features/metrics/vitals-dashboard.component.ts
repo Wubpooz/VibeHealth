@@ -13,6 +13,7 @@ import { TrendChartComponent, type TrendDataPoint } from '../../shared/component
 import { HydrationTrackerComponent } from './hydration-tracker.component';
 import { VitalsLoggerComponent } from './vitals-logger.component';
 import { BackButtonComponent } from '../../shared/components/back-button/back-button.component';
+import { LucideHeartPulse } from '@lucide/angular';
 
 @Component({
   selector: 'app-vitals-dashboard',
@@ -25,6 +26,7 @@ import { BackButtonComponent } from '../../shared/components/back-button/back-bu
     HydrationTrackerComponent,
     VitalsLoggerComponent,
     BackButtonComponent,
+    LucideHeartPulse,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
@@ -35,7 +37,9 @@ import { BackButtonComponent } from '../../shared/components/back-button/back-bu
         <div class="flex items-center justify-between">
           <div class="flex items-center gap-3">
             <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center shadow-lg shadow-purple-500/20">
-              <span class="text-2xl">💓</span>
+              <span class="text-white inline-flex" aria-hidden="true">
+                <svg lucideHeartPulse [size]="24" [strokeWidth]="2"></svg>
+              </span>
             </div>
             <div>
               <h1 class="text-2xl font-bold text-gray-900 dark:text-white font-heading">

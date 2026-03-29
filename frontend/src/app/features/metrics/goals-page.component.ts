@@ -18,6 +18,7 @@ import { RewardsService } from "../../core/rewards/rewards.service";
 import { GoalWizardComponent } from "./goal-wizard.component";
 import { BackButtonComponent } from '../../shared/components/back-button/back-button.component';
 import { BunnyMascotComponent } from '../../shared/components/bunny-mascot/bunny-mascot.component';
+import { LucideFlame, LucideStar, LucideTrophy } from '@lucide/angular';
 
 @Component({
   selector: "app-goals-page",
@@ -27,6 +28,9 @@ import { BunnyMascotComponent } from '../../shared/components/bunny-mascot/bunny
     GoalWizardComponent,
     BackButtonComponent,
     BunnyMascotComponent,
+    LucideFlame,
+    LucideStar,
+    LucideTrophy,
     // TrendChartComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -41,7 +45,9 @@ import { BunnyMascotComponent } from '../../shared/components/bunny-mascot/bunny
           <div
             class="w-12 h-12 rounded-2xl bg-gradient-to-br from-violet-500 to-purple-700 flex items-center justify-center shadow-lg shadow-violet-500/20"
           >
-            <span class="text-2xl">🎯</span>
+            <span class="inline-flex text-white" aria-hidden="true">
+              <svg lucideTrophy [size]="24" [strokeWidth]="2"></svg>
+            </span>
           </div>
           <div>
             <h1
@@ -77,19 +83,19 @@ import { BunnyMascotComponent } from '../../shared/components/bunny-mascot/bunny
       @if (goalsService.hasGoals()) {
         <div class="grid grid-cols-3 gap-4">
           <div class="summary-card">
-            <span class="summary-emoji">🎯</span>
+            <span class="summary-icon" aria-hidden="true"><svg lucideTrophy [size]="24" [strokeWidth]="2"></svg></span>
             <p class="summary-value">{{ goalsService.activeGoals().length }}</p>
             <p class="summary-label">{{ "GOALS.ACTIVE" | translate }}</p>
           </div>
           <div class="summary-card">
-            <span class="summary-emoji">✅</span>
+            <span class="summary-icon" aria-hidden="true"><svg lucideStar [size]="24" [strokeWidth]="2"></svg></span>
             <p class="summary-value">{{ completedTodayCount() }}</p>
             <p class="summary-label">
               {{ "GOALS.COMPLETED_TODAY" | translate }}
             </p>
           </div>
           <div class="summary-card">
-            <span class="summary-emoji">🔥</span>
+            <span class="summary-icon" aria-hidden="true"><svg lucideFlame [size]="24" [strokeWidth]="2"></svg></span>
             <p class="summary-value">{{ rewardsService.streak() }}</p>
             <p class="summary-label">{{ "STATS.DAY_STREAK" | translate }}</p>
           </div>
@@ -115,7 +121,7 @@ import { BunnyMascotComponent } from '../../shared/components/bunny-mascot/bunny
           <h2 class="empty-title">{{ "GOALS.EMPTY_TITLE" | translate }}</h2>
           <p class="empty-subtitle">{{ "GOALS.EMPTY_SUBTITLE" | translate }}</p>
           <button class="new-goal-btn large" (click)="showWizard.set(true)">
-            🎯 {{ "GOALS.CREATE_FIRST" | translate }}
+            {{ "GOALS.CREATE_FIRST" | translate }}
           </button>
         </div>
       }
@@ -124,7 +130,7 @@ import { BunnyMascotComponent } from '../../shared/components/bunny-mascot/bunny
       @if (!goalsService.loading() && goalsService.activeGoals().length > 0) {
         <section class="space-y-4">
           <h2 class="section-heading">
-            <span>🎯</span> {{ "GOALS.ACTIVE_GOALS" | translate }}
+            <span class="section-heading-icon" aria-hidden="true"><svg lucideTrophy [size]="18" [strokeWidth]="2"></svg></span> {{ "GOALS.ACTIVE_GOALS" | translate }}
             <span class="count-badge">{{
               goalsService.activeGoals().length
             }}</span>
@@ -196,7 +202,7 @@ import { BunnyMascotComponent } from '../../shared/components/bunny-mascot/bunny
                         {{ goal.targetUnit }} to go
                       </span>
                     } @else {
-                      <span class="achieved-label">🎉 Goal achieved!</span>
+                      <span class="achieved-label">Goal achieved!</span>
                     }
                   </div>
                 </div>
@@ -209,7 +215,7 @@ import { BunnyMascotComponent } from '../../shared/components/bunny-mascot/bunny
                     [style.border-color]="typeColor(goal.type) + '66'"
                   >
                     {{
-                      showLogForm() === goal.id ? "▲ Hide" : "📊 Log Progress"
+                      showLogForm() === goal.id ? "Hide" : "Log Progress"
                     }}
                   </button>
 
@@ -251,7 +257,7 @@ import { BunnyMascotComponent } from '../../shared/components/bunny-mascot/bunny
       ) {
         <section class="space-y-4">
           <h2 class="section-heading muted">
-            <span>✅</span> {{ "GOALS.PAST_GOALS" | translate }}
+            <span class="section-heading-icon" aria-hidden="true"><svg lucideStar [size]="18" [strokeWidth]="2"></svg></span> {{ "GOALS.PAST_GOALS" | translate }}
           </h2>
           <div class="goals-grid">
             @for (goal of goalsService.completedGoals(); track goal.id) {
@@ -403,8 +409,11 @@ import { BunnyMascotComponent } from '../../shared/components/bunny-mascot/bunny
         border-color: #374151;
       }
 
-      .summary-emoji {
-        font-size: 1.5rem;
+      .summary-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        color: #7c4dff;
       }
 
       .summary-value {
@@ -509,6 +518,12 @@ import { BunnyMascotComponent } from '../../shared/components/bunny-mascot/bunny
 
       :host-context([data-theme="dark"]) .section-heading {
         color: #f9fafb;
+      }
+
+      .section-heading-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
       }
 
       .section-heading.muted {
@@ -1008,7 +1023,7 @@ export class GoalsPageComponent {
       if (pct >= 100) {
         this.rewardsService.awardCarrots(
           10,
-          `Goal achieved: ${goal.title} 🎉`,
+          `Goal achieved: ${goal.title}`,
           "milestone",
         );
       } else {

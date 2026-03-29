@@ -17,17 +17,20 @@ import {
   VITAL_ICONS,
   type VitalType,
 } from '../../core/metrics/metrics.types';
+import { LucideHeartPulse } from '@lucide/angular';
 
 @Component({
   selector: 'app-vitals-logger',
-  imports: [CommonModule, FormsModule, TranslateModule],
+  imports: [CommonModule, FormsModule, TranslateModule, LucideHeartPulse],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="vitals-card">
       <!-- Header -->
       <div class="header">
         <div class="title-row">
-          <span class="icon">💓</span>
+          <span class="icon" aria-hidden="true">
+            <svg lucideHeartPulse [size]="24" [strokeWidth]="2"></svg>
+          </span>
           <h3>{{ 'METRICS.VITALS.TITLE' | translate }}</h3>
         </div>
         @if (lastReading()) {
@@ -86,7 +89,7 @@ import {
       <!-- Success flash -->
       @if (justLogged()) {
         <div class="success-flash">
-          ✅ +2 🥕 — {{ 'METRICS.VITALS.LAST_READING' | translate }} saved!
+          +2 carrots — {{ 'METRICS.VITALS.LAST_READING' | translate }} saved!
         </div>
       }
     </div>
@@ -169,7 +172,9 @@ import {
     }
 
     .title-row .icon {
-      font-size: 1.5rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .title-row h3 {
@@ -447,7 +452,7 @@ export class VitalsLoggerComponent {
     const success = await this.metricsService.logVital(type, value, VITAL_UNITS[type]);
 
     if (success) {
-      this.rewardsService.awardCarrots(2, 'Vital logged! 💓', 'logging');
+      this.rewardsService.awardCarrots(2, 'Vital logged', 'logging');
       this.justLogged.set(true);
       this.inputValue.set(null);
       setTimeout(() => this.justLogged.set(false), 2200);

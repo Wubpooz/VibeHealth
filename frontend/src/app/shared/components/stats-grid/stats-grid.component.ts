@@ -9,17 +9,56 @@ import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 import { RewardsService } from '../../../core/rewards/rewards.service';
 import { AuthService } from '../../../core/auth/auth.service';
-import { LucideCarrot } from '@lucide/angular';
+import {
+  LucideCarrot,
+  LucideFlame,
+  LucideGem,
+  LucideMoon,
+  LucideSparkles,
+  LucideStar,
+  LucideSun,
+  LucideSunrise,
+  LucideSunset,
+  LucideTrophy,
+} from '@lucide/angular';
 
 @Component({
   selector: 'app-stats-grid',
-  imports: [CommonModule, TranslateModule, LucideCarrot],
+  imports: [
+    CommonModule,
+    TranslateModule,
+    LucideCarrot,
+    LucideFlame,
+    LucideGem,
+    LucideMoon,
+    LucideSparkles,
+    LucideStar,
+    LucideSun,
+    LucideSunrise,
+    LucideSunset,
+    LucideTrophy,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="stats-container">
       <!-- Time-of-day Greeting -->
       <div class="greeting-section">
-        <span class="greeting-emoji">{{ greetingEmoji() }}</span>
+        <span class="greeting-icon" aria-hidden="true">
+          @switch (greetingPeriod()) {
+            @case ('night') {
+              <svg lucideMoon [size]="30" [strokeWidth]="2"></svg>
+            }
+            @case ('morning') {
+              <svg lucideSunrise [size]="30" [strokeWidth]="2"></svg>
+            }
+            @case ('day') {
+              <svg lucideSun [size]="30" [strokeWidth]="2"></svg>
+            }
+            @default {
+              <svg lucideSunset [size]="30" [strokeWidth]="2"></svg>
+            }
+          }
+        </span>
         <div class="greeting-text">
           <h2 class="greeting">{{ greetingKey() | translate }}, {{ userName() || ('STATS.THERE' | translate) }}!</h2>
           <p class="greeting-subtitle">{{ greetingSubtitleKey() | translate }}</p>
@@ -30,19 +69,38 @@ import { LucideCarrot } from '@lucide/angular';
       <div class="stats-grid">
         <!-- Streak -->
         <div class="stat-card streak-card">
-          <div class="stat-icon">🔥</div>
+          <div class="stat-icon" aria-hidden="true">
+            <svg lucideFlame [size]="24" [strokeWidth]="2"></svg>
+          </div>
           <div class="stat-content">
             <span class="stat-value">{{ rewards.streak() }}</span>
             <span class="stat-label">{{ 'STATS.DAY_STREAK' | translate }}</span>
           </div>
           @if (rewards.streak() >= 3) {
-            <div class="stat-badge">{{ streakBadge() }}</div>
+            <div class="stat-badge" aria-hidden="true">
+              @switch (streakTier()) {
+                @case ('legendary') {
+                  <svg lucideTrophy [size]="16" [strokeWidth]="2"></svg>
+                }
+                @case ('elite') {
+                  <svg lucideGem [size]="16" [strokeWidth]="2"></svg>
+                }
+                @case ('pro') {
+                  <svg lucideStar [size]="16" [strokeWidth]="2"></svg>
+                }
+                @default {
+                  <svg lucideSparkles [size]="16" [strokeWidth]="2"></svg>
+                }
+              }
+            </div>
           }
         </div>
 
         <!-- Level -->
         <div class="stat-card level-card">
-          <div class="stat-icon">⭐</div>
+          <div class="stat-icon" aria-hidden="true">
+            <svg lucideStar [size]="24" [strokeWidth]="2"></svg>
+          </div>
           <div class="stat-content">
             <span class="stat-value">{{ rewards.level() }}</span>
             <span class="stat-label">{{ 'STATS.LEVEL' | translate }}</span>
@@ -66,7 +124,10 @@ import { LucideCarrot } from '@lucide/angular';
         <div class="xp-header">
           <span class="xp-label">{{ 'STATS.LEVEL_PROGRESS' | translate }}</span>
           <span class="xp-numbers">
-            {{ rewards.carrots() }} / {{ rewards.nextLevelAt() }} 🥕
+            {{ rewards.carrots() }} / {{ rewards.nextLevelAt() }}
+            <span class="xp-carrot" aria-hidden="true">
+              <svg lucideCarrot [size]="14" [strokeWidth]="2"></svg>
+            </span>
           </span>
         </div>
         <div class="xp-bar-bg">
@@ -101,15 +162,22 @@ import { LucideCarrot } from '@lucide/angular';
       border-bottom: 1px solid rgba(255, 107, 107, 0.1);
     }
 
-    .greeting-emoji {
-      font-size: 2.5rem;
-      animation: wave 2s ease-in-out infinite;
+    .greeting-icon {
+      width: 2.5rem;
+      height: 2.5rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: #ff6b6b;
     }
 
-    @keyframes wave {
-      0%, 100% { transform: rotate(0deg); }
-      25% { transform: rotate(20deg); }
-      75% { transform: rotate(-10deg); }
+    .greeting-icon svg {
+      animation: float-icon 2.2s ease-in-out infinite;
+    }
+
+    @keyframes float-icon {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-3px); }
     }
 
     .greeting-text {
@@ -157,7 +225,9 @@ import { LucideCarrot } from '@lucide/angular';
     }
 
     .stat-icon {
-      font-size: 1.75rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
       margin-bottom: 0.5rem;
     }
 
@@ -195,7 +265,14 @@ import { LucideCarrot } from '@lucide/angular';
       position: absolute;
       top: -0.25rem;
       right: -0.25rem;
-      font-size: 0.875rem;
+      width: 1.5rem;
+      height: 1.5rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 9999px;
+      background: rgba(255, 255, 255, 0.85);
+      color: #ff8e53;
     }
 
     .streak-card {
@@ -237,6 +314,16 @@ import { LucideCarrot } from '@lucide/angular';
       font-size: 0.875rem;
       font-weight: 700;
       color: #2d3436;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+
+    .xp-carrot {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: #f09a52;
     }
 
     .xp-bar-bg {
@@ -334,7 +421,7 @@ import { LucideCarrot } from '@lucide/angular';
     }
 
     @media (prefers-reduced-motion: reduce) {
-      .greeting-emoji {
+      .greeting-icon svg {
         animation: none;
       }
       
@@ -365,13 +452,13 @@ export class StatsGridComponent {
     return 'STATS.GREETING_NIGHT';
   });
 
-  readonly greetingEmoji = computed(() => {
+  readonly greetingPeriod = computed<'night' | 'morning' | 'day' | 'evening'>(() => {
     const hour = new Date().getHours();
-    if (hour < 6) return '🌙';
-    if (hour < 12) return '🌅';
-    if (hour < 17) return '☀️';
-    if (hour < 21) return '🌆';
-    return '🌙';
+    if (hour < 6) return 'night';
+    if (hour < 12) return 'morning';
+    if (hour < 17) return 'day';
+    if (hour < 21) return 'evening';
+    return 'night';
   });
 
   readonly greetingSubtitleKey = computed(() => {
@@ -382,13 +469,13 @@ export class StatsGridComponent {
     return 'STATS.SUBTITLE_START';
   });
 
-  readonly streakBadge = computed(() => {
+  readonly streakTier = computed<'legendary' | 'elite' | 'pro' | 'starter' | null>(() => {
     const streak = this.rewards.streak();
-    if (streak >= 30) return '🏆';
-    if (streak >= 14) return '💎';
-    if (streak >= 7) return '🌟';
-    if (streak >= 3) return '✨';
-    return '';
+    if (streak >= 30) return 'legendary';
+    if (streak >= 14) return 'elite';
+    if (streak >= 7) return 'pro';
+    if (streak >= 3) return 'starter';
+    return null;
   });
 
   readonly carrotsToNextLevel = computed(() => {

@@ -12,12 +12,12 @@ import { MetricsService } from '../../core/metrics/metrics.service';
 import { RewardsService } from '../../core/rewards/rewards.service';
 import { ActivityLoggerComponent } from './activity-logger.component';
 import { TrendChartComponent, type TrendDataPoint } from '../../shared/components/trend-chart/trend-chart.component';
-import { ACTIVITY_PRESETS } from '../../core/metrics/metrics.types';
 import { BackButtonComponent } from '../../shared/components/back-button/back-button.component';
+import { LucideActivity } from '@lucide/angular';
 
 @Component({
   selector: 'app-activity-page',
-  imports: [CommonModule, RouterModule, TranslateModule, ActivityLoggerComponent, TrendChartComponent, BackButtonComponent],
+  imports: [CommonModule, RouterModule, TranslateModule, ActivityLoggerComponent, TrendChartComponent, BackButtonComponent, LucideActivity],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="min-h-screen bg-[#fdf8f8] dark:bg-gray-950 px-4 sm:px-6 lg:px-8 py-8 pb-24 space-y-6 no-select">
@@ -26,7 +26,9 @@ import { BackButtonComponent } from '../../shared/components/back-button/back-bu
       <div class="flex items-center justify-between">
         <app-back-button [label]="'common.back_to_dashboard' | translate" [showLabel]="true" />
         <div class="flex items-center gap-3">
-          <span class="text-3xl">🏃</span>
+          <span class="text-primary-500 inline-flex" aria-hidden="true">
+            <svg lucideActivity [size]="30" [strokeWidth]="2"></svg>
+          </span>
           <div>
             <h1 class="text-2xl font-bold text-gray-900 dark:text-white font-heading">
               {{ 'ACTIVITY.TITLE' | translate }}
@@ -88,7 +90,9 @@ import { BackButtonComponent } from '../../shared/components/back-button/back-bu
               <h3 class="text-sm font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest">{{ 'ACTIVITY.TODAY_BY_TYPE' | translate }}</h3>
               @for (entry of typeBreakdown(); track entry.type) {
                 <div class="flex items-center gap-3">
-                  <span class="text-xl">{{ entry.emoji }}</span>
+                  <span class="inline-flex text-primary-500" aria-hidden="true">
+                    <svg lucideActivity [size]="18" [strokeWidth]="2"></svg>
+                  </span>
                   <div class="flex-1">
                     <div class="flex justify-between text-xs mb-1">
                       <span class="font-semibold text-gray-700 dark:text-gray-200">{{ entry.type }}</span>
@@ -146,7 +150,6 @@ export class ActivityPageComponent {
     return Object.entries(today.byType)
       .map(([type, stats]) => ({
         type,
-        emoji: ACTIVITY_PRESETS[type as keyof typeof ACTIVITY_PRESETS]?.emoji ?? '🏃',
         minutes: stats.minutes,
         calories: stats.calories,
         pct: Math.min(Math.round((stats.minutes / total) * 100), 100),
