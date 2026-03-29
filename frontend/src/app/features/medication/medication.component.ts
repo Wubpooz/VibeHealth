@@ -308,7 +308,12 @@ export class MedicationPageComponent {
 
     for (const med of this.medications()) {
       for (const reminder of med.reminders) {
-        if (reminder.timeOfDay >= currentTime) {
+        var time = new Date(reminder.nextDueAt!).getTime() - now.getTime(); // time until next due time
+        var soon = time > 0 && time < 1000 * 60 * 60 * 24; // within the next day
+
+        var nextDueDay = reminder.nextDueAt?.split('T')[0];
+        // if (today == nextDueDay && reminder.timeOfDay >= currentTime) {
+        if (soon) {
           reminders.push({
             medication: med,
             reminder,
