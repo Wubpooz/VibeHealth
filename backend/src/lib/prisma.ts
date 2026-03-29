@@ -11,6 +11,7 @@ const testPrisma = {
     update: () => Promise.resolve(null),
     updateMany: () => Promise.resolve({ count: 0 }),
     delete: () => Promise.resolve(null),
+    deleteMany: () => Promise.resolve({ count: 0 }),
     findMany: () => Promise.resolve([]),
   },
   medicalId: {
@@ -19,6 +20,7 @@ const testPrisma = {
     create: () => Promise.resolve(null),
     update: () => Promise.resolve(null),
     delete: () => Promise.resolve(null),
+    deleteMany: () => Promise.resolve({ count: 0 }),
     findMany: () => Promise.resolve([]),
   },
   activityCatalog: {
@@ -49,6 +51,7 @@ const testPrisma = {
     findFirst: () => Promise.resolve(null),
     update: () => Promise.resolve(null),
     updateMany: () => Promise.resolve({ count: 0 }),
+    deleteMany: () => Promise.resolve({ count: 0 }),
   },
   exerciseCatalog: {
     findMany: () => Promise.resolve([]),
@@ -62,9 +65,48 @@ const testPrisma = {
     findMany: () => Promise.resolve([]),
     upsert: () => Promise.resolve(null),
     update: () => Promise.resolve(null),
+    deleteMany: () => Promise.resolve({ count: 0 }),
+  },
+  vitalLog: {
+    findMany: () => Promise.resolve([]),
+    deleteMany: () => Promise.resolve({ count: 0 }),
+  },
+  hydrationLog: {
+    findMany: () => Promise.resolve([]),
+    deleteMany: () => Promise.resolve({ count: 0 }),
+  },
+  activityLog: {
+    findMany: () => Promise.resolve([]),
+    deleteMany: () => Promise.resolve({ count: 0 }),
+  },
+  mealLog: {
+    findMany: () => Promise.resolve([]),
+    deleteMany: () => Promise.resolve({ count: 0 }),
+  },
+  goal: {
+    findMany: () => Promise.resolve([]),
+    deleteMany: () => Promise.resolve({ count: 0 }),
+  },
+  moodLog: {
+    findMany: () => Promise.resolve([]),
+    deleteMany: () => Promise.resolve({ count: 0 }),
+  },
+  journalEntry: {
+    findMany: () => Promise.resolve([]),
+    deleteMany: () => Promise.resolve({ count: 0 }),
   },
   $disconnect: () => Promise.resolve(),
-  $transaction: (fn: (prisma: unknown) => unknown) => fn(testPrisma),
+  $transaction: (input: unknown) => {
+    if (typeof input === 'function') {
+      return (input as (prisma: unknown) => unknown)(testPrisma);
+    }
+
+    if (Array.isArray(input)) {
+      return Promise.all(input);
+    }
+
+    return Promise.resolve(input);
+  },
 };
 
 const runtimePrisma = globalForPrisma.prisma ?? new PrismaClient({

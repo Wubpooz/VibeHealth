@@ -32,6 +32,7 @@ const onboardingProfileSchema = z.object({
   currentMedications: z.array(z.string().trim().min(1).max(120)).max(100).optional(),
   notificationPreferences: z.record(z.boolean()).optional(),
   preferredActivityKey: z.string().trim().min(1).max(120).optional(),
+  preferredCountryCode: z.string().trim().length(2).optional(),
 });
 
 const preferredActivitySchema = z.object({
@@ -99,6 +100,7 @@ profileRoutes.post('/', async (c) => {
       allergies: payload.allergies || [],
       currentMedications: payload.currentMedications || [],
       notificationPreferences: payload.notificationPreferences || {},
+      preferredCountryCode: payload.preferredCountryCode || null,
     } as any;
     
     // Upsert profile (create if not exists, update if exists)
@@ -152,6 +154,7 @@ profileRoutes.patch('/preferred-workout', async (c) => {
         weight: null,
         fitnessLevel: null,
         preferredActivityKey: parsed.data.preferredActivityKey,
+        preferredCountryCode: null,
         goals: [],
         medicalConditions: [],
         allergies: [],
@@ -164,6 +167,145 @@ profileRoutes.patch('/preferred-workout', async (c) => {
   } catch (error) {
     console.error('Error updating preferred workout:', error);
     return c.json({ error: 'Failed to update preferred workout' }, 500);
+  }
+});
+
+const preferredCountrySchema = z.object({
+  preferredCountryCode: z.string().trim().length(2).nullable(),
+});
+
+profileRoutes.patch('/preferred-country', async (c) => {
+  const user = c.get('user');
+  const body = await c.req.json();
+
+  const parsed = preferredCountrySchema.safeParse(body);
+  if (!parsed.success) {
+    return c.json({
+      error: 'Invalid profile payload',
+      details: parsed.error.flatten(),
+    }, 400);
+  }
+
+  try {
+    const profile = await prisma.profile.upsert({
+      where: { userId: user.id },
+      update: { preferredCountryCode: parsed.data.preferredCountryCode },
+      create: {
+        userId: user.id,
+        dateOfBirth: null,
+        biologicalSex: null,
+        height: null,
+        weight: null,
+        fitnessLevel: null,
+        preferredActivityKey: null,
+        preferredCountryCode: parsed.data.preferredCountryCode,
+        goals: [],
+        medicalConditions: [],
+        allergies: [],
+        currentMedications: [],
+        notificationPreferences: {},
+      },
+    });
+
+    return c.json({ success: true, profile });
+  } catch (error) {
+    console.error('Error updating preferred country:', error);
+    return c.json({ error: 'Failed to update preferred country' }, 500);
+  }
+});
+
+profileRoutes.get('/export-data', async (c) => {
+  const user = c.get('user');
+
+  try {
+    const [profile, medicalId, vitalLogs, hydrationLogs, activityLogs, mealLogs, goals, workoutPlans, healthSyncConnections, moodLogs, journalEntries] = await prisma.$transaction([
+      prisma.profile.findUnique({ where: { userId: user.id } }),
+      prisma.medicalId.findUnique({ where: { userId: user.id } }),
+      prisma.vitalLog.findMany({ where: { userId: user.id }, orderBy: { loggedAt: 'desc' } }),
+      prisma.hydrationLog.findMany({ where: { userId: user.id }, orderBy: { loggedAt: 'desc' } }),
+      prisma.activityLog.findMany({ where: { userId: user.id }, orderBy: { loggedAt: 'desc' } }),
+      prisma.mealLog.findMany({ where: { userId: user.id }, orderBy: { loggedAt: 'desc' } }),
+      prisma.goal.findMany({
+        where: { userId: user.id },
+        include: {
+          progress: {
+            orderBy: { date: 'desc' },
+          },
+        },
+        orderBy: { createdAt: 'desc' },
+      }),
+      prisma.workoutPlan.findMany({
+        where: { userId: user.id },
+        include: {
+          exercises: {
+            include: {
+              exercise: true,
+            },
+            orderBy: { orderIndex: 'asc' },
+          },
+        },
+        orderBy: { createdAt: 'desc' },
+      }),
+      prisma.healthSyncConnection.findMany({ where: { userId: user.id }, orderBy: { updatedAt: 'desc' } }),
+      prisma.moodLog.findMany({ where: { userId: user.id }, orderBy: { date: 'desc' } }),
+      prisma.journalEntry.findMany({
+        where: { userId: user.id },
+        include: {
+          mediaAttachments: true,
+        },
+        orderBy: { createdAt: 'desc' },
+      }),
+    ]);
+
+    return c.json({
+      exportedAt: new Date().toISOString(),
+      user: {
+        id: user.id,
+        email: user.email,
+        name: user.name,
+      },
+      data: {
+        profile,
+        medicalId,
+        vitalLogs,
+        hydrationLogs,
+        activityLogs,
+        mealLogs,
+        goals,
+        workoutPlans,
+        healthSyncConnections,
+        moodLogs,
+        journalEntries,
+      },
+    });
+  } catch (error) {
+    console.error('Error exporting user data:', error);
+    return c.json({ error: 'Failed to export user data' }, 500);
+  }
+});
+
+profileRoutes.delete('/delete-data', async (c) => {
+  const user = c.get('user');
+
+  try {
+    await prisma.$transaction([
+      prisma.vitalLog.deleteMany({ where: { userId: user.id } }),
+      prisma.hydrationLog.deleteMany({ where: { userId: user.id } }),
+      prisma.activityLog.deleteMany({ where: { userId: user.id } }),
+      prisma.mealLog.deleteMany({ where: { userId: user.id } }),
+      prisma.goal.deleteMany({ where: { userId: user.id } }),
+      prisma.workoutPlan.deleteMany({ where: { userId: user.id } }),
+      prisma.healthSyncConnection.deleteMany({ where: { userId: user.id } }),
+      prisma.moodLog.deleteMany({ where: { userId: user.id } }),
+      prisma.journalEntry.deleteMany({ where: { userId: user.id } }),
+      prisma.medicalId.deleteMany({ where: { userId: user.id } }),
+      prisma.profile.deleteMany({ where: { userId: user.id } }),
+    ]);
+
+    return c.json({ success: true });
+  } catch (error) {
+    console.error('Error deleting user data:', error);
+    return c.json({ error: 'Failed to delete user data' }, 500);
   }
 });
 

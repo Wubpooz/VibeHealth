@@ -102,20 +102,7 @@ export const auth = isTest
             input: false,
           },
         },
-      },
-
-      plugins: [
-        emailOTP({
-          sendVerificationOTP: async ({ email, otp, type }) => {
-            await sendWithDevFallback('otp', email, otp, type);
-          },
-        }),
-        magicLink({
-          sendMagicLink: async ({ email, url }) => {
-            await sendWithDevFallback('magic-link', email, url);
-          },
-        }),
-      ],
+      }
     });
 
 export type Auth = typeof auth;

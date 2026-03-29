@@ -19,7 +19,6 @@ import { RewardsService } from "../../core/rewards/rewards.service";
 import { BunnyMascotComponent } from "../../shared/components/bunny-mascot/bunny-mascot.component";
 import { CarrotCounterComponent } from "../../shared/components/carrot-counter/carrot-counter.component";
 import { CarrotFeedComponent } from "../../shared/components/carrot-feed/carrot-feed.component";
-import { HydrationTrackerComponent } from "../metrics/hydration-tracker.component";
 import { animate } from "motion/mini";
 import { StatsGridComponent } from "../../shared/components/stats-grid/stats-grid.component";
 
@@ -32,7 +31,6 @@ import { StatsGridComponent } from "../../shared/components/stats-grid/stats-gri
     BunnyMascotComponent,
     CarrotCounterComponent,
     CarrotFeedComponent,
-    HydrationTrackerComponent,
     StatsGridComponent
 ],
   styles: [
@@ -193,11 +191,7 @@ import { StatsGridComponent } from "../../shared/components/stats-grid/stats-gri
                 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white font-heading tracking-tight"
               >
                 {{ greeting() | translate }},
-                {{
-                  (auth.user()?.name || ("DASHBOARD.FRIEND" | translate)).split(
-                    " "
-                  )[0]
-                }}!
+                {{ dashboardName() || ("DASHBOARD.FRIEND" | translate) }}!
               </h2>
               <p class="text-lg text-gray-500 dark:text-gray-400 font-medium">
                 {{ "DASHBOARD.GREETING_SUBTITLE" | translate }}
@@ -546,9 +540,8 @@ import { StatsGridComponent } from "../../shared/components/stats-grid/stats-gri
             </div>
           </section>
 
-          <!-- Hydration & Carrots Row -->
-          <section class="grid md:grid-cols-2 gap-6">
-            <app-hydration-tracker />
+          <!-- Carrots Row -->
+          <section class="flex w-full">
             <app-carrot-feed />
           </section>
         </main>
@@ -591,6 +584,12 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
     if (hour < 12) return "DASHBOARD.GOOD_MORNING";
     if (hour < 18) return "DASHBOARD.GOOD_AFTERNOON";
     return "DASHBOARD.GOOD_EVENING";
+  });
+
+  dashboardName = computed(() => {
+    const rawName = this.auth.user()?.name?.trim();
+    if (!rawName) return null;
+    return rawName.split(' ')[0];
   });
 
   // Mascot messages

@@ -312,7 +312,7 @@ import { ReferenceDataService } from '../../core/reference-data/reference-data.s
               <div class="step-content animate-fade-in-up">
                 <div class="text-center mb-6">
                   <app-bunny-mascot
-                    [mood]="'curious'"
+                    [mood]="'thinking'"
                     [size]="140"
                     [message]="'This info helps keep you safe!'"
                   />

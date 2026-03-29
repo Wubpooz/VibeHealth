@@ -78,10 +78,6 @@ export class SidebarComponent {
     this.router.navigate(['/settings']);
   }
 
-  goToProfile(): void {
-    this.router.navigate(['/profile']);
-  }
-
   async logout(): Promise<void> {
     await this.authService.signOut();
     this.router.navigate(['/']);

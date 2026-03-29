@@ -1,7 +1,7 @@
 {
   "app": {
     "title": "VibeHealth",
-    "tagline": "Your personal health companion 🐰"
+    "tagline": "Your personal health companion"
   },
   "common": {
     "save": "Save",
@@ -771,8 +771,14 @@
     "ACTIVE_GOALS": "Active Goals",
     "PAST_GOALS": "Past & Archived",
     "EMPTY_TITLE": "No goals yet!",
-    "EMPTY_SUBTITLE": "Set your first SMART goal and the bunny will cheer you on 🐰",
+    "EMPTY_SUBTITLE": "Set your first smart goal to start building healthy habits.",
     "CREATE_FIRST": "Create my first goal",
+    "COACH_TITLE": "Bunny goal coach",
+    "COACH_SUBTITLE": "Small steps every day beat one big step once.",
+    "MASCOT_LOADING": "Thinking through your goal progress...",
+    "MASCOT_EMPTY": "Let's create your first goal together!",
+    "MASCOT_CELEBRATE": "Amazing work! You're hitting your goals today!",
+    "MASCOT_FOCUS": "You're doing great — log one step at a time.",
     "WIZARD": {
       "STEP1_TITLE": "What do you want to achieve?",
       "STEP1_SUBTITLE": "Pick a category to get started",
@@ -877,6 +883,45 @@
   "SETTINGS": {
     "TITLE": "Settings",
     "SUBTITLE": "Customize your VibeHealth experience",
+    "ACCOUNT": {
+      "TITLE": "Account",
+      "DESCRIPTION": "Manage your identity details linked to your account.",
+      "USERNAME": "Username",
+      "NAME": "Name",
+      "EMAIL": "Email",
+      "SAVE": "Save account details",
+      "SAVING": "Saving account...",
+      "SAVED": "Account details updated successfully.",
+      "UPDATE_FAILED": "Unable to update account details right now."
+    },
+    "SECURITY": {
+      "TITLE": "Security",
+      "CURRENT_PASSWORD": "Current password",
+      "NEW_PASSWORD": "New password",
+      "CONFIRM_PASSWORD": "Confirm new password",
+      "CHANGE_PASSWORD": "Change password",
+      "SAVING": "Updating password...",
+      "CURRENT_PASSWORD_REQUIRED": "Please provide your current password.",
+      "PASSWORD_TOO_SHORT": "New password must be at least 8 characters.",
+      "PASSWORD_MISMATCH": "New password and confirmation do not match.",
+      "PASSWORD_UPDATED": "Password updated successfully.",
+      "UPDATE_FAILED": "Unable to update password right now."
+    },
+    "DATA": {
+      "TITLE": "Data & Privacy",
+      "DOWNLOAD_DATA": "Download my data",
+      "DOWNLOAD_SUCCESS": "Your data export has been downloaded.",
+      "DOWNLOAD_FAILED": "Unable to export your data right now.",
+      "DELETE_DATA": "Delete app data",
+      "DELETE_DATA_CONFIRM": "Delete all your VibeHealth app data (profile, medical, metrics, journal)? This cannot be undone.",
+      "DELETE_SUCCESS": "Your app data has been deleted.",
+      "DELETE_FAILED": "Unable to delete app data right now.",
+      "DELETE_ACCOUNT": "Delete account",
+      "DELETE_ACCOUNT_CONFIRM": "This will permanently delete your account and sign you out. Continue?",
+      "DELETE_ACCOUNT_PASSWORD_PROMPT": "Enter your current password to confirm account deletion:",
+      "PASSWORD_REQUIRED": "Password is required to delete your account.",
+      "DELETE_ACCOUNT_FAILED": "Unable to delete account right now."
+    },
     "COUNTRY": {
       "TITLE": "Country Settings",
       "DESCRIPTION": "Set your country to get accurate emergency numbers and local helplines.",
@@ -886,7 +931,25 @@
       "GENERAL_EMERGENCY": "Emergency",
       "POLICE": "Police",
       "AMBULANCE": "Ambulance",
-      "FIRE": "Fire Department"
+      "FIRE": "Fire Department",
+      "NAMES": {
+        "US": "United States",
+        "CA": "Canada",
+        "GB": "United Kingdom",
+        "FR": "France",
+        "DE": "Germany",
+        "AU": "Australia",
+        "JP": "Japan",
+        "IN": "India",
+        "BR": "Brazil",
+        "MX": "Mexico",
+        "ES": "Spain",
+        "IT": "Italy",
+        "NL": "Netherlands",
+        "BE": "Belgium",
+        "CH": "Switzerland",
+        "EU": "European Union"
+      }
     },
     "SAVING": "Saving...",
     "SAVED": "Settings saved successfully"

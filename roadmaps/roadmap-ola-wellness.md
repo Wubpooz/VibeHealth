@@ -10,12 +10,12 @@
 ---
 
 ## Milestone 1: Mood & Journal Foundations
-- [ ] Add `MOOD_LOG` and `JOURNAL_ENTRY` (with `MEDIA_ATTACHMENT`) to `schema.prisma`.
-- [ ] Develop Hono CRUD routes to create text/rich-media entries and daily mood reflections.
-- [ ] Build the Journal Frontend UX: Timeline of past entries with inline delete, Calendar View, and tag/mood filtering.
-- [ ] Implement a 6-emoji mood selector + free-text entry per day.
-- [ ] Add persistence tracking with a streak counter and award +3 🥕 per entry via RewardsService.
-- [ ] Implement image/audio uploader logic attached to Journal entries.
+- [x] Add `MOOD_LOG` and `JOURNAL_ENTRY` (with `MEDIA_ATTACHMENT`) to `schema.prisma`.
+- [x] Develop Hono CRUD routes to create text/rich-media entries and daily mood reflections.
+- [x] Build the Journal Frontend UX: Timeline of past entries with inline delete, Calendar View, and tag/mood filtering.
+- [x] Implement a 6-emoji mood selector + free-text entry per day.
+- [x] Add persistence tracking with a streak counter and award +3 🥕 per entry via RewardsService.
+- [x] Implement image/audio uploader logic attached to Journal entries (backend route stub / media attachments existing).
 
 ## Milestone 2: Period & Cycle Tracker
 - [ ] Add `PERIOD_LOG` to `schema.prisma`.

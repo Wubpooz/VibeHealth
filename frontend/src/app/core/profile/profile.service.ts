@@ -12,6 +12,7 @@ export interface Profile {
   weight: number | null;
   fitnessLevel: string | null;
   preferredActivityKey: string | null;
+  preferredCountryCode: string | null;
   goals: string[];
   medicalConditions: string[];
   allergies: string[];
@@ -76,6 +77,60 @@ export class ProfileService {
     } catch (error) {
       console.error('Failed to update preferred workout:', error);
       return null;
+    }
+  }
+
+  async updatePreferredCountry(preferredCountryCode: string | null): Promise<Profile | null> {
+    try {
+      const response = await firstValueFrom(
+        this.http.patch<{ success: boolean; profile: Profile }>(
+          `${this.apiUrl}/preferred-country`,
+          { preferredCountryCode },
+          { withCredentials: true },
+        )
+      );
+
+      if (response?.profile) {
+        this.profileSignal.set(response.profile);
+        this.hasProfileSignal.set(true);
+      }
+
+      return response?.profile || null;
+    } catch (error) {
+      console.error('Failed to update preferred country:', error);
+      return null;
+    }
+  }
+
+  async exportUserData(): Promise<Record<string, unknown> | null> {
+    try {
+      const response = await firstValueFrom(
+        this.http.get<Record<string, unknown>>(`${this.apiUrl}/export-data`, {
+          withCredentials: true,
+        })
+      );
+
+      return response ?? null;
+    } catch (error) {
+      console.error('Failed to export user data:', error);
+      return null;
+    }
+  }
+
+  async deleteUserData(): Promise<boolean> {
+    try {
+      await firstValueFrom(
+        this.http.delete<{ success: boolean }>(`${this.apiUrl}/delete-data`, {
+          withCredentials: true,
+        })
+      );
+
+      this.profileSignal.set(null);
+      this.hasProfileSignal.set(false);
+      return true;
+    } catch (error) {
+      console.error('Failed to delete user data:', error);
+      return false;
     }
   }
   

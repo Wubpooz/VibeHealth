@@ -17,6 +17,7 @@ import {
 import { RewardsService } from "../../core/rewards/rewards.service";
 import { GoalWizardComponent } from "./goal-wizard.component";
 import { BackButtonComponent } from '../../shared/components/back-button/back-button.component';
+import { BunnyMascotComponent } from '../../shared/components/bunny-mascot/bunny-mascot.component';
 
 @Component({
   selector: "app-goals-page",
@@ -25,6 +26,7 @@ import { BackButtonComponent } from '../../shared/components/back-button/back-bu
     TranslateModule,
     GoalWizardComponent,
     BackButtonComponent,
+    BunnyMascotComponent,
     // TrendChartComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -57,6 +59,18 @@ import { BackButtonComponent } from '../../shared/components/back-button/back-bu
           <span class="text-lg">+</span>
           {{ "GOALS.NEW_GOAL" | translate }}
         </button>
+      </div>
+
+      <!-- Bunny coach -->
+      <div class="mascot-coach-card">
+        <div class="mascot-coach-visual">
+          <app-bunny-mascot [mood]="mascotMood()" [size]="88" />
+        </div>
+        <div class="mascot-coach-copy">
+          <p class="mascot-coach-title">{{ "GOALS.COACH_TITLE" | translate }}</p>
+          <p class="mascot-coach-subtitle">{{ mascotMessageKey() | translate }}</p>
+          <p class="mascot-coach-tip">{{ "GOALS.COACH_SUBTITLE" | translate }}</p>
+        </div>
       </div>
 
       <!-- Summary strip -->
@@ -95,7 +109,9 @@ import { BackButtonComponent } from '../../shared/components/back-button/back-bu
       <!-- Empty state -->
       @if (!goalsService.loading() && !goalsService.hasGoals()) {
         <div class="empty-state">
-          <div class="empty-mascot">🐰</div>
+          <!-- <div class="empty-mascot-wrap">
+            <app-bunny-mascot [mood]="'wave'" [size]="144" />
+          </div> -->
           <h2 class="empty-title">{{ "GOALS.EMPTY_TITLE" | translate }}</h2>
           <p class="empty-subtitle">{{ "GOALS.EMPTY_SUBTITLE" | translate }}</p>
           <button class="new-goal-btn large" (click)="showWizard.set(true)">
@@ -300,6 +316,74 @@ import { BackButtonComponent } from '../../shared/components/back-button/back-bu
         font-size: 1rem;
       }
 
+      /* ── Mascot coach card ──────────────────────────────────────────── */
+      .mascot-coach-card {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 1rem 1.25rem;
+        background: linear-gradient(135deg, #fff5ff 0%, #ffffff 100%);
+        border: 1px solid #efe9ff;
+        border-radius: 1.25rem;
+        box-shadow: 0 4px 16px rgba(124, 77, 255, 0.12);
+      }
+
+      :host-context([data-theme="dark"]) .mascot-coach-card {
+        background: linear-gradient(135deg, rgba(124, 77, 255, 0.16) 0%, rgba(31, 41, 55, 0.8) 100%);
+        border-color: rgba(167, 139, 250, 0.28);
+      }
+
+      .mascot-coach-visual {
+        width: 5.75rem;
+        height: 5.75rem;
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .mascot-coach-copy {
+        min-width: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 0.2rem;
+      }
+
+      .mascot-coach-title {
+        margin: 0;
+        font-family: "Satoshi", sans-serif;
+        font-weight: 800;
+        font-size: 0.95rem;
+        color: #1f2937;
+      }
+
+      :host-context([data-theme="dark"]) .mascot-coach-title {
+        color: #f9fafb;
+      }
+
+      .mascot-coach-subtitle {
+        margin: 0;
+        font-family: "Satoshi", sans-serif;
+        font-weight: 600;
+        font-size: 0.82rem;
+        color: #5b21b6;
+      }
+
+      :host-context([data-theme="dark"]) .mascot-coach-subtitle {
+        color: #ddd6fe;
+      }
+
+      .mascot-coach-tip {
+        margin: 0;
+        font-family: "Satoshi", sans-serif;
+        font-size: 0.78rem;
+        color: #6b7280;
+      }
+
+      :host-context([data-theme="dark"]) .mascot-coach-tip {
+        color: #c4c8d1;
+      }
+
       /* ── Summary strip ────────────────────────────────────────────────── */
       .summary-card {
         display: flex;
@@ -373,9 +457,12 @@ import { BackButtonComponent } from '../../shared/components/back-button/back-bu
         text-align: center;
       }
 
-      .empty-mascot {
-        font-size: 4rem;
-        animation: float 3s ease-in-out infinite;
+      .empty-mascot-wrap {
+        width: 9rem;
+        height: 9rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
       }
 
       @keyframes float {
@@ -785,11 +872,23 @@ import { BackButtonComponent } from '../../shared/components/back-button/back-bu
         .goal-card,
         .progress-fill,
         .log-form,
-        .empty-mascot,
         .loading-ring,
         .mini-spinner {
           animation: none;
           transition: none;
+        }
+      }
+
+      @media (max-width: 640px) {
+        .mascot-coach-card {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 0.5rem;
+        }
+
+        .mascot-coach-visual {
+          width: 4.8rem;
+          height: 4.8rem;
         }
       }
     `,
@@ -813,6 +912,21 @@ export class GoalsPageComponent {
       this.goalsService.activeGoals().filter((g) => this.isGoalComplete(g))
         .length,
   );
+
+  readonly mascotMood = computed(() => {
+    if (this.goalsService.loading()) return 'thinking';
+    if (!this.goalsService.hasGoals()) return 'wave';
+    if (this.completedTodayCount() > 0) return 'celebrate';
+    if (this.goalsService.activeGoals().length >= 3) return 'happy';
+    return 'curious';
+  });
+
+  readonly mascotMessageKey = computed(() => {
+    if (this.goalsService.loading()) return 'GOALS.MASCOT_LOADING';
+    if (!this.goalsService.hasGoals()) return 'GOALS.MASCOT_EMPTY';
+    if (this.completedTodayCount() > 0) return 'GOALS.MASCOT_CELEBRATE';
+    return 'GOALS.MASCOT_FOCUS';
+  });
 
   // ── Lifecycle ─────────────────────────────────────────────────────────────
 

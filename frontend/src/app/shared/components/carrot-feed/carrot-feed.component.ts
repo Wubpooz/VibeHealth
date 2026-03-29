@@ -7,10 +7,11 @@ import {
 import { CommonModule } from '@angular/common';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { RewardsService, CarrotReward } from '../../../core/rewards/rewards.service';
+import { BunnyMascotComponent } from '../bunny-mascot/bunny-mascot.component';
 
 @Component({
   selector: 'app-carrot-feed',
-  imports: [CommonModule, TranslateModule],
+  imports: [CommonModule, TranslateModule, BunnyMascotComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="feed-container">
@@ -23,7 +24,12 @@ import { RewardsService, CarrotReward } from '../../../core/rewards/rewards.serv
 
       @if (recentRewards().length === 0) {
         <div class="empty-state">
-          <span class="empty-emoji">🐰</span>
+          <app-bunny-mascot
+            class="empty-mascot"
+            mood="curious"
+            [size]="64"
+            [message]="'STATS.START_EARNING' | translate"
+          ></app-bunny-mascot>
           <p class="empty-text">{{ 'STATS.NO_ACTIVITY_YET' | translate }}</p>
           <p class="empty-hint">{{ 'STATS.START_EARNING' | translate }}</p>
         </div>
@@ -50,7 +56,13 @@ import { RewardsService, CarrotReward } from '../../../core/rewards/rewards.serv
     </div>
   `,
   styles: [`
+    :host {
+      display: block;
+      width: 100%;
+    }
+
     .feed-container {
+      width: 100%;
       background: white;
       border-radius: 1.5rem;
       padding: 1.25rem;
@@ -80,6 +92,12 @@ import { RewardsService, CarrotReward } from '../../../core/rewards/rewards.serv
     .empty-state {
       text-align: center;
       padding: 2rem 1rem;
+    }
+
+    .empty-mascot {
+      margin: 0 auto 0.75rem;
+      width: 64px;
+      height: 64px;
     }
 
     .empty-emoji {
