@@ -61,193 +61,198 @@ import { LucideActivity } from '@lucide/angular';
         </div>
       </div>
 
-      @if (topCatalogActivities().length > 0) {
-        <div class="catalog-strip">
-          @for (activity of topCatalogActivities(); track activity.key) {
-            <button class="catalog-pill" type="button" (click)="selectCatalogActivity(activity.key)">
-              <span class="emoji" aria-hidden="true">
-                <svg lucideActivity [size]="18" [strokeWidth]="2"></svg>
-              </span>
-              <span class="meta">
-                <strong>{{ activity.name }}</strong>
-                <small>{{ activity.metValue }} MET</small>
-              </span>
-            </button>
+      <div class="logger-layout">
+        <div class="logger-main">
+          @if (topCatalogActivities().length > 0) {
+            <div class="catalog-strip">
+              @for (activity of topCatalogActivities(); track activity.key) {
+                <button class="catalog-pill" type="button" (click)="selectCatalogActivity(activity.key)">
+                  <span class="emoji" aria-hidden="true">
+                    <svg lucideActivity [size]="18" [strokeWidth]="2"></svg>
+                  </span>
+                  <span class="meta">
+                    <strong>{{ activity.name }}</strong>
+                    <small>{{ activity.metValue }} MET</small>
+                  </span>
+                </button>
+              }
+            </div>
           }
-        </div>
-      }
 
-      <!-- Quick Activity Buttons -->
-      @if (!showForm()) {
-        <div class="quick-buttons">
-          @for (activity of quickActivities; track activity.type) {
-            <button
-              class="quick-btn"
-              (click)="quickLog(activity.type)"
-              [disabled]="logging()"
-            >
-              <span class="emoji">{{ activity.emoji }}</span>
-              <span class="name">{{ activity.label }}</span>
-            </button>
-          }
-        </div>
-      }
-
-      <!-- Log Form -->
-      @if (showForm()) {
-        <form class="log-form" (ngSubmit)="submitForm()">
-          <!-- Activity Type -->
-          <div class="form-group">
-            <div class="form-label" id="activityTypeLabel">{{ 'METRICS.ACTIVITY.TYPE' | translate }}</div>
-            <div class="type-grid" role="group" aria-labelledby="activityTypeLabel">
-              @for (activity of allActivities; track activity.type) {
+          <!-- Quick Activity Buttons -->
+          @if (!showForm()) {
+            <div class="quick-buttons">
+              @for (activity of quickActivities; track activity.type) {
                 <button
-                  type="button"
-                  class="type-btn"
-                  [class.selected]="selectedType() === activity.type"
-                  (click)="onActivityTypeChange(activity.type)"
+                  class="quick-btn"
+                  (click)="quickLog(activity.type)"
+                  [disabled]="logging()"
                 >
                   <span class="emoji">{{ activity.emoji }}</span>
                   <span class="name">{{ activity.label }}</span>
                 </button>
               }
             </div>
-          </div>
-
-          <!-- Activity Catalog Search -->
-          <div class="form-group">
-            <div class="form-label">Search the activity catalog</div>
-            <app-autocomplete
-              [suggestions]="activitySuggestions()"
-              [selectedItems]="selectedActivitySearch()"
-              [placeholder]="'Search activities by name'"
-              [allowCustom]="false"
-              [multiple]="false"
-              (itemsChange)="onActivitySearchChange($event)"
-            />
-          </div>
-
-          @if (selectedCatalogActivity()) {
-            <div class="catalog-detail">
-              <div class="catalog-detail-header">
-                <span class="emoji">{{ selectedCatalogActivity()!.emoji }}</span>
-                <div>
-                  <strong>{{ selectedCatalogActivity()!.name }}</strong>
-                  <p>{{ selectedCatalogActivity()!.category }} · {{ selectedCatalogActivity()!.metValue }} MET</p>
-                </div>
-              </div>
-              @if (selectedCatalogActivity()!.description) {
-                <p class="catalog-detail-description">{{ selectedCatalogActivity()!.description }}</p>
-              }
-            </div>
           }
 
-          <!-- Activity Name -->
-          <div class="form-group">
-            <label for="activityName">{{ 'METRICS.ACTIVITY.NAME' | translate }}</label>
-            <input
-              type="text"
-              id="activityName"
-              [ngModel]="activityName()"
-              (ngModelChange)="activityName.set($event)"
-              [placeholder]="'METRICS.ACTIVITY.NAME_PLACEHOLDER' | translate"
-              required
-            />
-          </div>
-
-          <!-- Duration -->
-          <div class="form-group">
-            <div class="form-label" id="durationLabel">{{ 'METRICS.ACTIVITY.DURATION' | translate }}</div>
-            <div class="duration-presets" role="group" aria-labelledby="durationLabel">
-              @for (preset of durationPresets; track preset) {
-                <button
-                  type="button"
-                  class="preset-btn"
-                  [class.selected]="duration() === preset"
-                  (click)="duration.set(preset)"
-                >
-                  {{ preset }}min
-                </button>
-              }
-            </div>
-            <div class="timer-row">
-              <button type="button" class="timer-btn" (click)="toggleTimer()">
-                {{ timerRunning() ? 'Stop timer' : 'Start timer' }}
-              </button>
-              <button type="button" class="timer-btn secondary" (click)="resetTimer()">
-                Reset
-              </button>
-              <span class="timer-display">{{ timerDisplay() }}</span>
-            </div>
-            <input
-              type="number"
-              id="durationInput"
-              [ngModel]="duration()"
-              (ngModelChange)="duration.set($event)"
-              min="1"
-              max="480"
-              placeholder="Custom"
-              aria-labelledby="durationLabel"
-            />
-          </div>
-
-          <!-- Intensity -->
-          <div class="form-group">
-            <div class="form-label" id="intensityLabel">{{ 'METRICS.ACTIVITY.INTENSITY' | translate }}</div>
-            <div class="intensity-slider" role="group" aria-labelledby="intensityLabel">
-              @for (int of intensityLevels; track int.key) {
-                <button
-                  type="button"
-                  class="intensity-btn"
-                  [class.selected]="intensity() === int.key"
-                  (click)="intensity.set(int.key)"
-                >
-                  {{ int.label }}
-                </button>
-              }
-            </div>
-          </div>
-
-          <!-- Estimated Calories -->
-          <div class="calories-estimate">
-            <span class="label">{{ 'METRICS.ACTIVITY.EST_CALORIES' | translate }}:</span>
-            <span class="value">~{{ estimatedCalories() }} kcal</span>
-          </div>
-
-          <!-- Submit -->
-          <button
-            type="submit"
-            class="submit-btn"
-            [disabled]="!canSubmit() || logging()"
-          >
-            @if (logging()) {
-              <span class="spinner" aria-hidden="true"></span>
-            } @else {
-              {{ 'METRICS.ACTIVITY.LOG_ACTIVITY' | translate }}
-            }
-          </button>
-        </form>
-      }
-
-      <!-- Recent Activities -->
-      @if (recentActivities().length > 0 && !showForm()) {
-        <div class="recent">
-          <h4>{{ 'METRICS.ACTIVITY.RECENT' | translate }}</h4>
-          <div class="activity-list">
-            @for (activity of recentActivities(); track activity.id) {
-              <div class="activity-item">
-                <span class="emoji" aria-hidden="true">
-                  <svg lucideActivity [size]="18" [strokeWidth]="2"></svg>
-                </span>
-                <div class="details">
-                  <span class="name">{{ activity.name }}</span>
-                  <span class="meta">{{ activity.duration }}min · {{ activity.calories || 0 }}kcal</span>
+          <!-- Log Form -->
+          @if (showForm()) {
+            <form class="log-form" (ngSubmit)="submitForm()">
+              <!-- Activity Type -->
+              <div class="form-group">
+                <div class="form-label" id="activityTypeLabel">{{ 'METRICS.ACTIVITY.TYPE' | translate }}</div>
+                <div class="type-grid" role="group" aria-labelledby="activityTypeLabel">
+                  @for (activity of allActivities; track activity.type) {
+                    <button
+                      type="button"
+                      class="type-btn"
+                      [class.selected]="selectedType() === activity.type"
+                      (click)="onActivityTypeChange(activity.type)"
+                    >
+                      <span class="emoji">{{ activity.emoji }}</span>
+                      <span class="name">{{ activity.label }}</span>
+                    </button>
+                  }
                 </div>
               </div>
-            }
-          </div>
+
+              <!-- Activity Catalog Search -->
+              <div class="form-group">
+                <div class="form-label">Search the activity catalog</div>
+                <app-autocomplete
+                  [suggestions]="activitySuggestions()"
+                  [selectedItems]="selectedActivitySearch()"
+                  [placeholder]="'Search activities by name'"
+                  [allowCustom]="false"
+                  [multiple]="false"
+                  (itemsChange)="onActivitySearchChange($event)"
+                />
+              </div>
+
+              @if (selectedCatalogActivity()) {
+                <div class="catalog-detail">
+                  <div class="catalog-detail-header">
+                    <span class="emoji">{{ selectedCatalogActivity()!.emoji }}</span>
+                    <div>
+                      <strong>{{ selectedCatalogActivity()!.name }}</strong>
+                      <p>{{ selectedCatalogActivity()!.category }} · {{ selectedCatalogActivity()!.metValue }} MET</p>
+                    </div>
+                  </div>
+                  @if (selectedCatalogActivity()!.description) {
+                    <p class="catalog-detail-description">{{ selectedCatalogActivity()!.description }}</p>
+                  }
+                </div>
+              }
+
+              <!-- Activity Name -->
+              <div class="form-group">
+                <label for="activityName">{{ 'METRICS.ACTIVITY.NAME' | translate }}</label>
+                <input
+                  type="text"
+                  id="activityName"
+                  [ngModel]="activityName()"
+                  (ngModelChange)="activityName.set($event)"
+                  [placeholder]="'METRICS.ACTIVITY.NAME_PLACEHOLDER' | translate"
+                  required
+                />
+              </div>
+
+              <!-- Duration -->
+              <div class="form-group">
+                <div class="form-label" id="durationLabel">{{ 'METRICS.ACTIVITY.DURATION' | translate }}</div>
+                <div class="duration-presets" role="group" aria-labelledby="durationLabel">
+                  @for (preset of durationPresets; track preset) {
+                    <button
+                      type="button"
+                      class="preset-btn"
+                      [class.selected]="duration() === preset"
+                      (click)="duration.set(preset)"
+                    >
+                      {{ preset }}min
+                    </button>
+                  }
+                </div>
+                <div class="timer-row">
+                  <button type="button" class="timer-btn" (click)="toggleTimer()">
+                    {{ timerRunning() ? 'Stop timer' : 'Start timer' }}
+                  </button>
+                  <button type="button" class="timer-btn secondary" (click)="resetTimer()">
+                    Reset
+                  </button>
+                  <span class="timer-display">{{ timerDisplay() }}</span>
+                </div>
+                <input
+                  type="number"
+                  id="durationInput"
+                  [ngModel]="duration()"
+                  (ngModelChange)="duration.set($event)"
+                  min="1"
+                  max="480"
+                  placeholder="Custom"
+                  aria-labelledby="durationLabel"
+                />
+              </div>
+
+              <!-- Intensity -->
+              <div class="form-group">
+                <div class="form-label" id="intensityLabel">{{ 'METRICS.ACTIVITY.INTENSITY' | translate }}</div>
+                <div class="intensity-slider" role="group" aria-labelledby="intensityLabel">
+                  @for (int of intensityLevels; track int.key) {
+                    <button
+                      type="button"
+                      class="intensity-btn"
+                      [class.selected]="intensity() === int.key"
+                      (click)="intensity.set(int.key)"
+                    >
+                      {{ int.label }}
+                    </button>
+                  }
+                </div>
+              </div>
+
+              <!-- Estimated Calories -->
+              <div class="calories-estimate">
+                <span class="label">{{ 'METRICS.ACTIVITY.EST_CALORIES' | translate }}:</span>
+                <span class="value">~{{ estimatedCalories() }} kcal</span>
+              </div>
+
+              <!-- Submit -->
+              <button
+                type="submit"
+                class="submit-btn"
+                [disabled]="!canSubmit() || logging()"
+              >
+                @if (logging()) {
+                  <span class="spinner" aria-hidden="true"></span>
+                } @else {
+                  {{ 'METRICS.ACTIVITY.LOG_ACTIVITY' | translate }}
+                }
+              </button>
+            </form>
+          }
         </div>
-      }
+
+        <aside class="recent-recap" aria-live="polite">
+          <h4>{{ 'METRICS.ACTIVITY.RECENT' | translate }}</h4>
+          @if (recentActivities().length > 0) {
+            <div class="activity-list">
+              @for (activity of recentActivities(); track activity.id) {
+                <div class="activity-item">
+                  <span class="emoji" aria-hidden="true">
+                    <svg lucideActivity [size]="18" [strokeWidth]="2"></svg>
+                  </span>
+                  <div class="details">
+                    <span class="name">{{ activity.name }}</span>
+                    <span class="meta">{{ activity.duration }}min · {{ activity.calories || 0 }}kcal</span>
+                  </div>
+                </div>
+              }
+            </div>
+          } @else {
+            <p class="empty-recap">{{ 'STATS.NO_ACTIVITY_YET' | translate }}</p>
+          }
+        </aside>
+      </div>
     </div>
   `,
   styles: [`
@@ -358,6 +363,23 @@ import { LucideActivity } from '@lucide/angular';
 
     :host-context(.dark) .stat .label {
       color: #ffcc80;
+    }
+
+    .logger-layout {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1rem;
+      align-items: stretch;
+    }
+
+    .logger-main {
+      min-width: 0;
+    }
+
+    @media (min-width: 1024px) {
+      .logger-layout {
+        grid-template-columns: 1fr;
+      }
     }
 
     .quick-buttons {
@@ -738,6 +760,50 @@ import { LucideActivity } from '@lucide/angular';
       cursor: not-allowed;
     }
 
+    .recent-recap {
+      margin-top: 0;
+      padding: 1rem;
+      border-radius: 1rem;
+      background: rgba(255, 255, 255, 0.56);
+      border: 1px solid rgba(255, 152, 0, 0.18);
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    @media (min-width: 1024px) {
+      .recent-recap {
+        height: 100%;
+      }
+    }
+
+    :host-context(.dark) .recent-recap {
+      background: rgba(0, 0, 0, 0.2);
+      border-color: rgba(255, 183, 77, 0.24);
+    }
+
+    .recent-recap h4 {
+      font-family: 'Satoshi', sans-serif;
+      font-size: 0.875rem;
+      color: #e65100;
+      margin: 0;
+    }
+
+    :host-context(.dark) .recent-recap h4 {
+      color: #ffb74d;
+    }
+
+    .empty-recap {
+      margin: 0;
+      font-size: 0.85rem;
+      color: #78909c;
+      line-height: 1.4;
+    }
+
+    :host-context(.dark) .empty-recap {
+      color: #b0bec5;
+    }
+
     .spinner {
       display: inline-block;
       width: 1rem;
@@ -750,23 +816,6 @@ import { LucideActivity } from '@lucide/angular';
 
     @keyframes spin {
       to { transform: rotate(360deg); }
-    }
-
-    .recent {
-      margin-top: 1rem;
-      padding-top: 1rem;
-      border-top: 1px solid rgba(255, 255, 255, 0.5);
-    }
-
-    .recent h4 {
-      font-family: 'Satoshi', sans-serif;
-      font-size: 0.875rem;
-      color: #e65100;
-      margin: 0 0 0.75rem;
-    }
-
-    :host-context(.dark) .recent h4 {
-      color: #ffb74d;
     }
 
     .activity-list {
