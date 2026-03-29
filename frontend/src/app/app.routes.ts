@@ -137,6 +137,14 @@ export const routes: Routes = [
     canActivate: [authGuard],
   },
   {
+    path: "rewards",
+    loadComponent: () =>
+      import("./features/rewards/rewards-page.component").then(
+        (m) => m.RewardsPageComponent,
+      ),
+    canActivate: [authGuard],
+  },
+  {
     path: "wiki",
     loadComponent: () =>
       import("./features/wiki/wiki.component").then(
