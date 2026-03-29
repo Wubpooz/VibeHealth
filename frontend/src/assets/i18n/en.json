@@ -27,12 +27,13 @@
     "journal": "Journal",
     "vitals": "Vitals",
     "wellness": "Wellness",
-    "medical": "Medical",
+    "medical": "Medication",
     "activity": "Activity",
     "workouts": "Workouts",
     "nutrition": "Nutrition",
     "goals": "Goals",
-    "rewards": "Rewards"
+    "rewards": "Rewards",
+    "wiki": "Health Wiki"
   },
   "SIDEBAR": {
     "BRAND_TAGLINE": "The Living Canvas",
@@ -117,9 +118,17 @@
     "FEATURE_DASHBOARD": "Personal Dashboard",
     "FEATURE_DASHBOARD_DESC": "Track your health journey with personalized insights"
   },
+  "WIKI": {
+    "TITLE": "Health Wiki",
+    "SUBTITLE": "Browse 20 common conditions and open-source medical articles.",
+    "SEARCH_PLACEHOLDER": "Search conditions",
+    "SOURCE_LABEL": "Source:",
+    "NO_CONDITION_SELECTED": "Select a condition to view its article",
+    "FILTER_BY_TAGS": "Filter by tags",
+    "CLEAR_FILTERS": "Clear all filters"
+  },
   "DASHBOARD": {
-    "WELCOME": "Welcome to VibeHealth!",
-    "SETUP_COMPLETE": "You're all set up. Authentication is working!",
+    "WELCOME": "Welcome to VibeHealth!",    "SETUP_COMPLETE": "You're all set up. Authentication is working!",
     "YOUR_PROFILE": "Your Profile",
     "EMAIL_VERIFIED": "Email verified",
     "ROLE": "Role",
@@ -240,6 +249,45 @@
     "SAVE_CHANGES": "Save Medical ID",
     "EDIT_MODE": "Edit",
     "VIEW_MODE": "View Card"
+  },
+  "MEDICATION": {
+    "TITLE": "Medication Tracker",
+    "SUBTITLE": "Add your meds and keep them in sync with international names",
+    "INPUT_NAME": "Medication name",
+    "INPUT_STANDARD_NAME": "Standard (WHO INN) name (optional)",
+    "INPUT_NOTES": "Notes (dosage, schedule)",
+    "INPUT_DURATION": "Duration (days)",
+    "INPUT_DOSAGE": "Dosage",
+    "ADD_BUTTON": "Add medication",
+    "SAVE_BUTTON": "Save changes",
+    "LIST_TITLE": "My medications",
+    "STANDARD_NAME": "Standard name",
+    "DURATION": "Duration",
+    "DAYS": "days",
+    "LOADING": "Loading medications...",
+    "NO_RESULTS": "No medications added yet",
+    "EDIT_TITLE": "Edit medication",
+    "ADD_REMINDER": "Add reminder",
+    "ADD_REMINDER_TITLE": "Add reminder",
+    "ADD_REMINDER_BUTTON": "Add reminder",
+    "EDIT_REMINDER_TITLE": "Edit reminder",
+    "SAVE_REMINDER_BUTTON": "Save reminder",
+    "REMINDERS": "Reminders",
+    "UPCOMING_REMINDERS": "Upcoming reminders",
+    "REFILL_ALERTS": "Refill alerts",
+    "DAYS_LEFT": "days left",
+    "RECURRENCE_DAILY": "Daily",
+    "RECURRENCE_WEEKLY": "Weekly",
+    "RECURRENCE_MONTHLY": "Monthly",
+    "RECURRENCE_ONE_TIME": "One time",
+    "WEEKDAY_MONDAY": "Monday",
+    "WEEKDAY_TUESDAY": "Tuesday",
+    "WEEKDAY_WEDNESDAY": "Wednesday",
+    "WEEKDAY_THURSDAY": "Thursday",
+    "WEEKDAY_FRIDAY": "Friday",
+    "WEEKDAY_SATURDAY": "Saturday",
+    "WEEKDAY_SUNDAY": "Sunday",
+    "INPUT_DAY_OF_MONTH": "Day of month (1-31)"
   },
   "REWARDS": {
     "CARROTS": "Carrots",
@@ -825,5 +873,22 @@
       "VERY_HAPPY": "Very Happy",
       "EXCITED": "Excited"
     }
+  },
+  "SETTINGS": {
+    "TITLE": "Settings",
+    "SUBTITLE": "Customize your VibeHealth experience",
+    "COUNTRY": {
+      "TITLE": "Country Settings",
+      "DESCRIPTION": "Set your country to get accurate emergency numbers and local helplines.",
+      "SELECT_LABEL": "Select your country",
+      "SELECT_PLACEHOLDER": "Choose a country...",
+      "EMERGENCY_NUMBERS": "Emergency Numbers",
+      "GENERAL_EMERGENCY": "Emergency",
+      "POLICE": "Police",
+      "AMBULANCE": "Ambulance",
+      "FIRE": "Fire Department"
+    },
+    "SAVING": "Saving...",
+    "SAVED": "Settings saved successfully"
   }
 }

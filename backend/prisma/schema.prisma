@@ -94,7 +94,53 @@ model Profile {
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
+  // Medication management (new model relation)
+  medicationEntries Medication[]
+
   @@map("profiles")
+}
+
+enum ReminderRecurrence {
+  DAILY
+  WEEKLY
+  MONTHLY
+  ONE_TIME
+}
+
+model Medication {
+  id           String              @id @default(cuid())
+  profileId    String
+  name         String
+  standardName String?             // Optional universal drug name (WHO INN, etc.)
+  notes        String?
+  duration     Int?                // Duration in days (for refill alerts)
+  createdAt    DateTime            @default(now())
+  updatedAt    DateTime            @default(now()) @updatedAt
+
+  profile   Profile             @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  reminders MedicationReminder[]
+
+  @@index([profileId])
+  @@map("medications")
+}
+
+model MedicationReminder {
+  id            String            @id @default(cuid())
+  medicationId  String
+  timeOfDay     String            // e.g. "08:00" or "20:30"
+  dosage        String
+  recurrence    ReminderRecurrence
+  dayOfWeek     Int?              // 1=Monday..7=Sunday for WEEKLY recurrence
+  dayOfMonth    Int?              // 1..31 for MONTHLY recurrence
+  date          DateTime?         // exact date for ONE_TIME recurrence
+  nextDueAt     DateTime?
+  createdAt     DateTime          @default(now())
+  updatedAt     DateTime          @default(now()) @updatedAt
+
+  medication   Medication         @relation(fields: [medicationId], references: [id], onDelete: Cascade)
+
+  @@index([medicationId])
+  @@map("medication_reminders")
 }
 
 // Medical ID (Phase 0.5)

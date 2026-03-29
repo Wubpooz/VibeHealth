@@ -5,6 +5,7 @@ import { prettyJSON } from 'hono/pretty-json';
 import { authRoutes } from './routes/auth.routes';
 import { profileRoutes } from './routes/profile.routes';
 import { medicalIdRoutes } from './routes/medical-id.routes';
+import { medicalRoutes } from './routes/medical.routes';
 import { metricsRoutes } from './routes/metrics.routes';
 import referenceDataRoutes from './routes/reference-data.routes';
 import wellnessRoutes from './routes/wellness.routes';
@@ -23,7 +24,18 @@ const app = new Hono();
 // Middleware
 app.use('*', logger());
 app.use('*', cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:4200',
+  origin: (origin) => {
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return null;
+    
+    const allowedOrigins = [
+      'http://localhost:4200',
+      'http://127.0.0.1:4200',
+      process.env.FRONTEND_URL
+    ].filter(Boolean);
+    
+    return allowedOrigins.includes(origin) ? origin : null;
+  },
   credentials: true,
 }));
 app.use('*', prettyJSON());
@@ -57,6 +69,9 @@ api.route('/profile', profileRoutes);
 
 // Medical ID routes
 api.route('/medical-id', medicalIdRoutes);
+
+// Medication routes (new)
+api.route('/medical', medicalRoutes);
 
 // Reference data routes (public)
 api.route('/references', referenceDataRoutes);

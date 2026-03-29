@@ -12,15 +12,16 @@
 ## Milestone 1: First Aid & Guides (Offline First)
 - [x] Configure Angular Service Workers to forcefully cache First Aid content.
 - [x] Build offline-first, quick-reference First Aid cards UI representing 8 emergency procedures (CPR, Choking, Burns, etc.).
-- [ ] Implement severity tiers (🚨 Critical / ⚠️ Urgent / 💙 Moderate) with color-coded cards, keyword search, and severity filter pills.
-- [ ] Add expandable step-by-step accordions with numbered steps.
-- [ ] Implement an offline-accessible local helpline directory (one-tap call links) including a sticky emergency call button always in the header. **Ensure helpline numbers and help websites are internationalized per region**.
-- [ ] Integrate a condition library and markdown document renderer for health articles.
+- [x] Implement severity tiers (🚨 Critical / ⚠️ Urgent / 💙 Moderate) with color-coded cards, keyword search, and severity filter pills.
+- [x] Add expandable step-by-step accordions with numbered steps.
+- [x] Implement an offline-accessible local helpline directory (one-tap call links) including a sticky emergency call button always in the header. **Ensure helpline numbers and help websites are internationalized per region**.
+- [x] Integrate a condition library and markdown document renderer for health articles.
+- [x] Add a settings page where the user can change their country.
 
 ## Milestone 2: Medication & Reminders
-- [ ] Add `MEDICATION` and `MEDICATION_REMINDER` to `schema.prisma`.
-- [ ] Create Hono CRUD routes to list, add, edit, and stop tracking medicines. **Ensure medicine names are internationalized or mapped to universal standards (e.g. WHO INN)**.
-- [ ] Build the Frontend UI to schedule doses, set duration, and view upcoming refill alerts.
+- [x] Add `MEDICATION` and `MEDICATION_REMINDER` to `schema.prisma`.
+- [x] Create Hono CRUD routes to list, add, edit, and stop tracking medicines. **Ensure medicine names are internationalized or mapped to universal standards (e.g. WHO INN)**.
+- [x] Build the Frontend UI to schedule doses, set duration, and view upcoming refill alerts.
 - [ ] Write Backend workers/crons to dispatch Web Push and Email notifications.
 
 ## Milestone 3: External Intelligence & Sync

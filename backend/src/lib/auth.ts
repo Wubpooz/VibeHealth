@@ -32,7 +32,9 @@ export const auth = isTest
       baseURL: process.env.AUTH_URL || 'http://localhost:3000',
 
       trustedOrigins: [
-        process.env.FRONTEND_URL || 'http://localhost:4200',
+        'http://localhost:4200',
+        'http://127.0.0.1:4200',
+        ...(process.env.FRONTEND_URL ? [process.env.FRONTEND_URL] : []),
       ],
 
       emailAndPassword: {
@@ -101,6 +103,19 @@ export const auth = isTest
           },
         },
       },
+
+      plugins: [
+        emailOTP({
+          sendVerificationOTP: async ({ email, otp, type }) => {
+            await sendWithDevFallback('otp', email, otp, type);
+          },
+        }),
+        magicLink({
+          sendMagicLink: async ({ email, url }) => {
+            await sendWithDevFallback('magic-link', email, url);
+          },
+        }),
+      ],
     });
 
 export type Auth = typeof auth;

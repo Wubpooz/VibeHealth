@@ -65,6 +65,14 @@ export const routes: Routes = [
     canActivate: [authGuard],
   },
   {
+    path: "medication",
+    loadComponent: () =>
+      import("./features/medication/medication.component").then(
+        (m) => m.MedicationPageComponent,
+      ),
+    canActivate: [authGuard],
+  },
+  {
     path: "first-aid",
     loadComponent: () =>
       import("./features/first-aid/first-aid.component").then(
@@ -125,6 +133,22 @@ export const routes: Routes = [
     loadComponent: () =>
       import("./features/wellness/journal/wellness-journal-page.component").then(
         (m) => m.WellnessJournalPageComponent,
+      ),
+    canActivate: [authGuard],
+  },
+  {
+    path: "wiki",
+    loadComponent: () =>
+      import("./features/wiki/wiki.component").then(
+        (m) => m.WikiComponent,
+      ),
+    canActivate: [authGuard],
+  },
+  {
+    path: "settings",
+    loadComponent: () =>
+      import("./features/settings/settings.component").then(
+        (m) => m.SettingsComponent,
       ),
     canActivate: [authGuard],
   },

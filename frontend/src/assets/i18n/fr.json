@@ -27,12 +27,13 @@
     "journal": "Journal",
     "vitals": "Signes vitaux",
     "wellness": "Bien-être",
-    "medical": "Médical",
+    "medical": "Médicaments",
     "activity": "Activité",
     "workouts": "Entraînements",
     "nutrition": "Nutrition",
     "goals": "Objectifs",
-    "rewards": "Récompenses"
+    "rewards": "Récompenses",
+    "wiki": "Wiki santé"
   },
   "SIDEBAR": {
     "BRAND_TAGLINE": "La Toile Vivante",
@@ -42,9 +43,17 @@
     "VIEW_PROFILE": "Voir le profil",
     "LOGOUT": "Se déconnecter"
   },
+  "WIKI": {
+    "TITLE": "Wiki santé",
+    "SUBTITLE": "Parcourez 20 pathologies courantes et des articles médicaux en source libre.",
+    "SEARCH_PLACEHOLDER": "Rechercher une pathologie",
+    "SOURCE_LABEL": "Source :",
+    "NO_CONDITION_SELECTED": "Sélectionnez une pathologie pour afficher l'article",
+    "FILTER_BY_TAGS": "Filtrer par tags",
+    "CLEAR_FILTERS": "Effacer tous les filtres"
+  },
   "AUTH": {
-    "LOGIN": "Se connecter",
-    "LOGOUT": "Se déconnecter",
+    "LOGIN": "Se connecter",    "LOGOUT": "Se déconnecter",
     "SIGN_IN": "Connexion",
     "SIGN_UP": "Inscription",
     "EMAIL": "Email",
@@ -240,6 +249,45 @@
     "SAVE_CHANGES": "Enregistrer la carte médicale",
     "EDIT_MODE": "Modifier",
     "VIEW_MODE": "Voir la carte"
+  },
+  "MEDICATION": {
+    "TITLE": "Suivi des Médicaments",
+    "SUBTITLE": "Ajoutez vos médicaments et synchronisez-les avec les noms standards",
+    "INPUT_NAME": "Nom du médicament",
+    "INPUT_STANDARD_NAME": "Nom standard (WHO INN) (optionnel)",
+    "INPUT_NOTES": "Notes (posologie, horaire)",
+    "INPUT_DURATION": "Durée (jours)",
+    "INPUT_DOSAGE": "Dosage",
+    "ADD_BUTTON": "Ajouter le médicament",
+    "SAVE_BUTTON": "Enregistrer les modifications",
+    "LIST_TITLE": "Mes médicaments",
+    "STANDARD_NAME": "Nom standard",
+    "DURATION": "Durée",
+    "DAYS": "jours",
+    "LOADING": "Chargement des médicaments...",
+    "NO_RESULTS": "Aucun médicament ajouté pour le moment",
+    "EDIT_TITLE": "Modifier le médicament",
+    "ADD_REMINDER": "Ajouter un rappel",
+    "ADD_REMINDER_TITLE": "Ajouter un rappel",
+    "ADD_REMINDER_BUTTON": "Ajouter un rappel",
+    "EDIT_REMINDER_TITLE": "Modifier le rappel",
+    "SAVE_REMINDER_BUTTON": "Enregistrer le rappel",
+    "REMINDERS": "Rappels",
+    "UPCOMING_REMINDERS": "Rappels à venir",
+    "REFILL_ALERTS": "Alertes de renouvellement",
+    "DAYS_LEFT": "jours restants",
+    "RECURRENCE_DAILY": "Quotidien",
+    "RECURRENCE_WEEKLY": "Hebdomadaire",
+    "RECURRENCE_MONTHLY": "Mensuel",
+    "RECURRENCE_ONE_TIME": "Une fois",
+    "WEEKDAY_MONDAY": "Lundi",
+    "WEEKDAY_TUESDAY": "Mardi",
+    "WEEKDAY_WEDNESDAY": "Mercredi",
+    "WEEKDAY_THURSDAY": "Jeudi",
+    "WEEKDAY_FRIDAY": "Vendredi",
+    "WEEKDAY_SATURDAY": "Samedi",
+    "WEEKDAY_SUNDAY": "Dimanche",
+    "INPUT_DAY_OF_MONTH": "Jour du mois (1-31)"
   },
   "REWARDS": {
     "CARROTS": "Carottes",
@@ -825,5 +873,22 @@
       "VERY_HAPPY": "Très Heureux",
       "EXCITED": "Excité"
     }
+  },
+  "SETTINGS": {
+    "TITLE": "Paramètres",
+    "SUBTITLE": "Personnalisez votre expérience VibeHealth",
+    "COUNTRY": {
+      "TITLE": "Paramètres de pays",
+      "DESCRIPTION": "Définissez votre pays pour obtenir des numéros d'urgence précis et des lignes d'écoute locales.",
+      "SELECT_LABEL": "Sélectionnez votre pays",
+      "SELECT_PLACEHOLDER": "Choisissez un pays...",
+      "EMERGENCY_NUMBERS": "Numéros d'urgence",
+      "GENERAL_EMERGENCY": "Urgences",
+      "POLICE": "Police",
+      "AMBULANCE": "Ambulance",
+      "FIRE": "Pompiers"
+    },
+    "SAVING": "Enregistrement...",
+    "SAVED": "Paramètres enregistrés avec succès"
   }
 }
