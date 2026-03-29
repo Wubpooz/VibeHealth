@@ -780,5 +780,24 @@
       "FLEXIBILITY": "Souplesse",
       "RECOVERY": "Récupération"
     }
+  },
+  "WELLNESS": {
+    "JOURNAL": {
+      "TITLE": "Mon Journal",
+      "SUBTITLE": "Capturez vos pensées, vos humeurs et votre parcours de bien-être",
+      "RECENT_ENTRIES": "Entrées Récentes",
+      "NO_ENTRIES": "Aucune entrée de journal pour l'instant. Commencez par créer votre première entrée !",
+      "NEW_ENTRY": "Nouvelle entrée",
+      "DELETE": "Supprimer l'entrée",
+      "ENTRIES": "Entrées",
+      "TODAY_MOOD": "Humeur du Jour",
+      "MOOD_HISTORY": "Historique des Humeurs",
+      "NO_MOOD_HISTORY": "Pas d'historique d'humeur pour l'instant",
+      "MOOD_NOTE_PLACEHOLDER": "Ajoutez une note sur votre humeur...",
+      "EARN_CARROTS": "Gagnez des Carottes",
+      "REWARD_MOOD": "Enregistrez votre humeur",
+      "REWARD_ENTRY": "Écrivez une entrée",
+      "MEDIA_FILES": "fichiers médias"
+    }
   }
 }

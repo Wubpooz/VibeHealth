@@ -45,7 +45,7 @@ export class WellnessJournalService {
   /**
    * Fetch recent mood logs (paginated)
    */
-  async fetchMoodLogs(limit: number = 30, offset: number = 0): Promise<void> {
+  async fetchMoodLogs(limit = 30, offset = 0): Promise<void> {
     this._moodLoading.set(true);
     this._moodError.set(null);
 
@@ -83,7 +83,6 @@ export class WellnessJournalService {
 
       if (response.success) {
         // Update the local list
-        const dateStr = new Date(payload.date).toISOString().split('T')[0];
         const existingDate = new Date(payload.date).toISOString().split('T')[0];
         const existing = this._moodLogs().findIndex(
           (log) => new Date(log.date).toISOString().split('T')[0] === existingDate,
@@ -112,7 +111,7 @@ export class WellnessJournalService {
   /**
    * Fetch journal entries (paginated)
    */
-  async fetchJournalEntries(limit: number = 20, offset: number = 0): Promise<void> {
+  async fetchJournalEntries(limit = 20, offset = 0): Promise<void> {
     this._journalLoading.set(true);
     this._journalError.set(null);
 

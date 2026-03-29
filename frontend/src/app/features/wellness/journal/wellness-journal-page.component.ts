@@ -1,21 +1,19 @@
-import { Component, inject, OnInit, signal, computed } from '@angular/core';
+import { Component, inject, OnInit, signal, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { WellnessJournalService } from '../../../core/wellness/wellness-journal.service';
 import {
   type MoodEmoji,
-  type JournalEntry,
   type MoodUpsertPayload,
-  type JournalEntryCreatePayload,
   MOOD_EMOJI_MAP,
-  MOOD_LABELS,
 } from '../../../core/wellness/wellness-journal.types';
 
 @Component({
   selector: 'app-wellness-journal-page',
   standalone: true,
   imports: [CommonModule, FormsModule, TranslateModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="wellness-journal-page">
       <!-- Header -->
@@ -148,7 +146,7 @@ import {
                   placeholder="{{ 'WELLNESS.JOURNAL.MOOD_NOTE_PLACEHOLDER' | translate }}"
                   class="input-note"
                   rows="3"
-                />
+                ></textarea>
                 <button class="btn-save-mood" (click)="saveMood()" [disabled]="journalService.moodLoading()">
                   {{ 'COMMON.SAVE' | translate }}
                 </button>

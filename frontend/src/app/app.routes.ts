@@ -121,6 +121,14 @@ export const routes: Routes = [
     canActivate: [authGuard],
   },
   {
+    path: "journal",
+    loadComponent: () =>
+      import("./features/wellness/journal/wellness-journal-page.component").then(
+        (m) => m.WellnessJournalPageComponent,
+      ),
+    canActivate: [authGuard],
+  },
+  {
     path: "not-found",
     loadComponent: () =>
       import("./features/not-found/not-found.component").then(
