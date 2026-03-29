@@ -126,6 +126,7 @@ medicalRoutes.post('/', async (c) => {
         notes: parsed.data.notes || null,
         duration: parsed.data.duration || null,
       },
+      include: { reminders: true },
     });
 
     return c.json({ success: true, medication }, 201);
@@ -170,6 +171,7 @@ medicalRoutes.put('/:id', async (c) => {
         notes: parsed.data.notes ?? existingMedication.notes,
         duration: parsed.data.duration ?? existingMedication.duration,
       },
+      include: { reminders: true },
     });
 
     return c.json({ success: true, medication });

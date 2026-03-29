@@ -1,12 +1,15 @@
-import { Component, ChangeDetectionStrategy, inject, signal, computed } from '@angular/core';
+import { Component, ChangeDetectionStrategy, inject, signal, computed, afterNextRender } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
-import { MedicationService, Medication, MedicationReminder } from '../../core/medical/medication.service';
+import { MedicationService, Medication, MedicationReminder, MedicationRecurrence } from '../../core/medical/medication.service';
+import { ToastService } from '../../core/toast/toast.service';
+import { AutocompleteComponent } from '../../shared/components/autocomplete/autocomplete.component';
+import { ReferenceDataService } from '../../core/reference-data/reference-data.service';
 
 @Component({
   selector: 'app-medication-page',
-  imports: [CommonModule, FormsModule, TranslateModule],
+  imports: [CommonModule, FormsModule, TranslateModule, AutocompleteComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="min-h-screen bg-[#f8fafc] dark:bg-[#0f172a] px-4 sm:px-6 lg:px-10 py-8 pb-24 space-y-5">
@@ -22,46 +25,107 @@ import { MedicationService, Medication, MedicationReminder } from '../../core/me
       </div>
 
       <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-4 space-y-4 shadow-sm">
-        <form class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3" (submit)="submit($event)">
-          <input
-            type="text"
-            name="name"
-            placeholder="{{ 'MEDICATION.INPUT_NAME' | translate }}"
-            [(ngModel)]="newName"
-            class="rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2 text-sm w-full"
-            required
-          />
-          <input
-            type="text"
-            name="standardName"
-            placeholder="{{ 'MEDICATION.INPUT_STANDARD_NAME' | translate }}"
-            [(ngModel)]="newStandardName"
-            class="rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2 text-sm w-full"
-          />
+        <form class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-3" (submit)="submit($event)">
+          <div class="sm:col-span-2 space-y-1">
+            <div class="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide">
+              {{ 'MEDICATION.INPUT_NAME' | translate }}
+            </div>
+            <app-autocomplete
+              [suggestions]="medicationSuggestions()"
+              [selectedItems]="newNameSelection"
+              [placeholder]="'MEDICATION.INPUT_NAME' | translate"
+              [allowCustom]="true"
+              [multiple]="false"
+              (itemsChange)="onNewNameSelectionChange($event)"
+            />
+          </div>
+
+          <div class="sm:col-span-2 space-y-1">
+            <div class="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide">
+              {{ 'MEDICATION.INPUT_STANDARD_NAME' | translate }}
+            </div>
+            <app-autocomplete
+              [suggestions]="medicationSuggestions()"
+              [selectedItems]="newStandardNameSelection"
+              [placeholder]="'MEDICATION.INPUT_STANDARD_NAME' | translate"
+              [allowCustom]="true"
+              [multiple]="false"
+              (itemsChange)="onNewStandardNameSelectionChange($event)"
+            />
+          </div>
+
           <input
             type="text"
             name="notes"
             placeholder="{{ 'MEDICATION.INPUT_NOTES' | translate }}"
             [(ngModel)]="newNotes"
-            class="rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2 text-sm w-full"
+            class="sm:col-span-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2 text-sm w-full"
           />
-          <input
-            type="number"
-            name="duration"
-            placeholder="{{ 'MEDICATION.INPUT_DURATION' | translate }}"
-            [(ngModel)]="newDuration"
-            class="rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2 text-sm w-full"
-            min="1"
-            max="365"
-          />
+
+          <div class="sm:col-span-2 lg:col-span-3 space-y-2">
+            <div class="flex items-center gap-2 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide">
+              <span>{{ 'MEDICATION.INPUT_DURATION' | translate }}</span>
+              <span class="relative inline-flex items-center group">
+                <button
+                  type="button"
+                  class="w-4 h-4 rounded-full bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300 text-[10px] font-bold"
+                  [attr.aria-label]="'MEDICATION.TOOLTIP_DURATION' | translate"
+                >
+                  ?
+                </button>
+                <span
+                  role="tooltip"
+                  class="pointer-events-none absolute left-0 top-full mt-2 w-56 rounded-lg bg-slate-900 text-white text-[11px] leading-relaxed px-2.5 py-2 opacity-0 translate-y-1 group-hover:opacity-100 group-hover:translate-y-0 group-focus-within:opacity-100 group-focus-within:translate-y-0 transition"
+                >
+                  {{ 'MEDICATION.TOOLTIP_DURATION' | translate }}
+                </span>
+              </span>
+            </div>
+            <input
+              type="number"
+              name="duration"
+              placeholder="{{ 'MEDICATION.INPUT_DURATION' | translate }}"
+              [(ngModel)]="newDuration"
+              class="rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2 text-sm w-full"
+              min="1"
+              max="365"
+            />
+            <div class="flex flex-wrap gap-2">
+              @for (days of durationQuickPicks; track days) {
+                <button
+                  type="button"
+                  class="px-2.5 py-1 text-xs rounded-full border border-emerald-200 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-100 dark:hover:bg-emerald-900/50 transition"
+                  (click)="setNewDuration(days)"
+                >
+                  {{ days }} {{ 'MEDICATION.DAYS' | translate }}
+                </button>
+              }
+            </div>
+          </div>
+
           <button
             type="submit"
-            class="rounded-xl bg-emerald-500 text-white font-semibold px-4 py-2 hover:bg-emerald-600 transition"
-            [disabled]="medicationService.loading()"
+            class="sm:col-span-2 lg:col-span-3 rounded-xl bg-emerald-500 text-white font-semibold px-4 py-2 hover:bg-emerald-600 transition"
+            [disabled]="medicationService.loading() || !newName.trim()"
           >
             {{ 'MEDICATION.ADD_BUTTON' | translate }}
           </button>
         </form>
+
+        @if (quickMedicationSuggestions().length > 0) {
+          <div class="flex flex-wrap gap-2">
+            @for (suggestion of quickMedicationSuggestions(); track suggestion) {
+              <button
+                type="button"
+                class="px-3 py-1.5 text-xs rounded-full border border-rose-200 dark:border-rose-800 bg-rose-50/70 dark:bg-rose-900/20 text-rose-700 dark:text-rose-300 hover:bg-rose-100 dark:hover:bg-rose-900/35 transition"
+                (click)="prefillMedication(suggestion)"
+              >
+                {{ suggestion }}
+              </button>
+            }
+          </div>
+        }
+
         @if (medicationService.error()) {
           <div class="text-red-600 dark:text-red-300 text-sm">
             {{ medicationService.error() }}
@@ -177,13 +241,62 @@ import { MedicationService, Medication, MedicationReminder } from '../../core/me
       @if (isEditing()) {
         <div class="bg-yellow-50 dark:bg-yellow-900/30 rounded-2xl p-4">
           <h3 class="font-semibold mb-2">{{ 'MEDICATION.EDIT_TITLE' | translate }}</h3>
-          <div class="grid grid-cols-1 sm:grid-cols-4 gap-3">
-            <input type="text" [(ngModel)]="editedName" class="rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2" placeholder="{{ 'MEDICATION.INPUT_NAME' | translate }}" />
-            <input type="text" [(ngModel)]="editedStandardName" class="rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2" placeholder="{{ 'MEDICATION.INPUT_STANDARD_NAME' | translate }}" />
-            <input type="text" [(ngModel)]="editedNotes" class="rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2" placeholder="{{ 'MEDICATION.INPUT_NOTES' | translate }}" />
-            <input type="number" [(ngModel)]="editedDuration" class="rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2" placeholder="{{ 'MEDICATION.INPUT_DURATION' | translate }}" min="1" max="365" />
-            <button class="rounded-xl bg-blue-600 text-white px-4 py-2" (click)="submitEdit()">{{ 'MEDICATION.SAVE_BUTTON' | translate }}</button>
-            <button class="rounded-xl border border-slate-300 px-4 py-2" (click)="cancelEdit()">{{ 'common.cancel' | translate }}</button>
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-3">
+            <div class="sm:col-span-2">
+              <app-autocomplete
+                [suggestions]="medicationSuggestions()"
+                [selectedItems]="editedNameSelection"
+                [placeholder]="'MEDICATION.INPUT_NAME' | translate"
+                [allowCustom]="true"
+                [multiple]="false"
+                (itemsChange)="onEditedNameSelectionChange($event)"
+              />
+            </div>
+            <div class="sm:col-span-2">
+              <app-autocomplete
+                [suggestions]="medicationSuggestions()"
+                [selectedItems]="editedStandardNameSelection"
+                [placeholder]="'MEDICATION.INPUT_STANDARD_NAME' | translate"
+                [allowCustom]="true"
+                [multiple]="false"
+                (itemsChange)="onEditedStandardNameSelectionChange($event)"
+              />
+            </div>
+            <input type="text" [(ngModel)]="editedNotes" class="sm:col-span-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2" placeholder="{{ 'MEDICATION.INPUT_NOTES' | translate }}" />
+            <div class="sm:col-span-2 lg:col-span-3 space-y-2">
+              <div class="flex items-center gap-2 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide">
+                <span>{{ 'MEDICATION.INPUT_DURATION' | translate }}</span>
+                <span class="relative inline-flex items-center group">
+                  <button
+                    type="button"
+                    class="w-4 h-4 rounded-full bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300 text-[10px] font-bold"
+                    [attr.aria-label]="'MEDICATION.TOOLTIP_DURATION' | translate"
+                  >
+                    ?
+                  </button>
+                  <span
+                    role="tooltip"
+                    class="pointer-events-none absolute left-0 top-full mt-2 w-56 rounded-lg bg-slate-900 text-white text-[11px] leading-relaxed px-2.5 py-2 opacity-0 translate-y-1 group-hover:opacity-100 group-hover:translate-y-0 group-focus-within:opacity-100 group-focus-within:translate-y-0 transition"
+                  >
+                    {{ 'MEDICATION.TOOLTIP_DURATION' | translate }}
+                  </span>
+                </span>
+              </div>
+              <input type="number" [(ngModel)]="editedDuration" class="rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2 w-full" placeholder="{{ 'MEDICATION.INPUT_DURATION' | translate }}" min="1" max="365" />
+              <div class="flex flex-wrap gap-2">
+                @for (days of durationQuickPicks; track days) {
+                  <button
+                    type="button"
+                    class="px-2.5 py-1 text-xs rounded-full border border-blue-200 dark:border-blue-800 bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 hover:bg-blue-100 dark:hover:bg-blue-900/50 transition"
+                    (click)="setEditedDuration(days)"
+                  >
+                    {{ days }} {{ 'MEDICATION.DAYS' | translate }}
+                  </button>
+                }
+              </div>
+            </div>
+            <button class="sm:col-span-2 lg:col-span-3 rounded-xl bg-blue-600 text-white px-4 py-2" (click)="submitEdit()">{{ 'MEDICATION.SAVE_BUTTON' | translate }}</button>
+            <button class="sm:col-span-2 lg:col-span-3 rounded-xl border border-slate-300 px-4 py-2" (click)="cancelEdit()">{{ 'common.cancel' | translate }}</button>
           </div>
         </div>
       }
@@ -193,6 +306,49 @@ import { MedicationService, Medication, MedicationReminder } from '../../core/me
         <div class="bg-green-50 dark:bg-green-900/30 rounded-2xl p-4">
           <h3 class="font-semibold mb-2">{{ 'MEDICATION.ADD_REMINDER_TITLE' | translate }}</h3>
           <div class="grid grid-cols-1 sm:grid-cols-4 gap-3">
+            <div class="sm:col-span-4 space-y-2">
+              <div class="flex items-center gap-2 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide">
+                <span>{{ 'MEDICATION.FREQUENCY_LABEL' | translate }}</span>
+                <span class="relative inline-flex items-center group">
+                  <button
+                    type="button"
+                    class="w-4 h-4 rounded-full bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300 text-[10px] font-bold"
+                    [attr.aria-label]="'MEDICATION.TOOLTIP_FREQUENCY' | translate"
+                  >
+                    ?
+                  </button>
+                  <span
+                    role="tooltip"
+                    class="pointer-events-none absolute left-0 top-full mt-2 w-64 rounded-lg bg-slate-900 text-white text-[11px] leading-relaxed px-2.5 py-2 opacity-0 translate-y-1 group-hover:opacity-100 group-hover:translate-y-0 group-focus-within:opacity-100 group-focus-within:translate-y-0 transition"
+                  >
+                    {{ 'MEDICATION.TOOLTIP_FREQUENCY' | translate }}
+                  </span>
+                </span>
+              </div>
+              <div class="flex flex-wrap gap-2">
+                @for (preset of reminderFrequencyPresets; track preset) {
+                  <button
+                    type="button"
+                    class="px-3 py-1.5 text-xs rounded-full border transition"
+                    [class.border-green-500]="reminderRecurrence === preset"
+                    [class.bg-green-100]="reminderRecurrence === preset"
+                    [class.dark:bg-green-900/40]="reminderRecurrence === preset"
+                    [class.text-green-700]="reminderRecurrence === preset"
+                    [class.dark:text-green-200]="reminderRecurrence === preset"
+                    [class.border-slate-300]="reminderRecurrence !== preset"
+                    [class.dark:border-slate-700]="reminderRecurrence !== preset"
+                    [class.text-slate-600]="reminderRecurrence !== preset"
+                    [class.dark:text-slate-300]="reminderRecurrence !== preset"
+                    (click)="onReminderRecurrenceChange(preset)"
+                  >
+                    {{ 'MEDICATION.RECURRENCE_' + preset | translate }}
+                  </button>
+                }
+              </div>
+              <p class="text-xs text-slate-500 dark:text-slate-400">
+                {{ 'MEDICATION.FREQUENCY_HELP' | translate }}
+              </p>
+            </div>
             <input type="time" [(ngModel)]="reminderTime" class="rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2" />
             <input type="text" [(ngModel)]="reminderDosage" class="rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2" placeholder="{{ 'MEDICATION.INPUT_DOSAGE' | translate }}" />
             <select [(ngModel)]="reminderRecurrence" (ngModelChange)="onReminderRecurrenceChange($event)" class="rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2">
@@ -233,6 +389,49 @@ import { MedicationService, Medication, MedicationReminder } from '../../core/me
         <div class="bg-purple-50 dark:bg-purple-900/30 rounded-2xl p-4">
           <h3 class="font-semibold mb-2">{{ 'MEDICATION.EDIT_REMINDER_TITLE' | translate }}</h3>
           <div class="grid grid-cols-1 sm:grid-cols-4 gap-3">
+            <div class="sm:col-span-4 space-y-2">
+              <div class="flex items-center gap-2 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide">
+                <span>{{ 'MEDICATION.FREQUENCY_LABEL' | translate }}</span>
+                <span class="relative inline-flex items-center group">
+                  <button
+                    type="button"
+                    class="w-4 h-4 rounded-full bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300 text-[10px] font-bold"
+                    [attr.aria-label]="'MEDICATION.TOOLTIP_FREQUENCY' | translate"
+                  >
+                    ?
+                  </button>
+                  <span
+                    role="tooltip"
+                    class="pointer-events-none absolute left-0 top-full mt-2 w-64 rounded-lg bg-slate-900 text-white text-[11px] leading-relaxed px-2.5 py-2 opacity-0 translate-y-1 group-hover:opacity-100 group-hover:translate-y-0 group-focus-within:opacity-100 group-focus-within:translate-y-0 transition"
+                  >
+                    {{ 'MEDICATION.TOOLTIP_FREQUENCY' | translate }}
+                  </span>
+                </span>
+              </div>
+              <div class="flex flex-wrap gap-2">
+                @for (preset of reminderFrequencyPresets; track preset) {
+                  <button
+                    type="button"
+                    class="px-3 py-1.5 text-xs rounded-full border transition"
+                    [class.border-purple-500]="reminderRecurrence === preset"
+                    [class.bg-purple-100]="reminderRecurrence === preset"
+                    [class.dark:bg-purple-900/40]="reminderRecurrence === preset"
+                    [class.text-purple-700]="reminderRecurrence === preset"
+                    [class.dark:text-purple-200]="reminderRecurrence === preset"
+                    [class.border-slate-300]="reminderRecurrence !== preset"
+                    [class.dark:border-slate-700]="reminderRecurrence !== preset"
+                    [class.text-slate-600]="reminderRecurrence !== preset"
+                    [class.dark:text-slate-300]="reminderRecurrence !== preset"
+                    (click)="onReminderRecurrenceChange(preset)"
+                  >
+                    {{ 'MEDICATION.RECURRENCE_' + preset | translate }}
+                  </button>
+                }
+              </div>
+              <p class="text-xs text-slate-500 dark:text-slate-400">
+                {{ 'MEDICATION.FREQUENCY_HELP' | translate }}
+              </p>
+            </div>
             <input type="time" [(ngModel)]="reminderTime" class="rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2" />
             <input type="text" [(ngModel)]="reminderDosage" class="rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2" placeholder="{{ 'MEDICATION.INPUT_DOSAGE' | translate }}" />
             <select [(ngModel)]="reminderRecurrence" (ngModelChange)="onReminderRecurrenceChange($event)" class="rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2">
@@ -272,29 +471,39 @@ import { MedicationService, Medication, MedicationReminder } from '../../core/me
 })
 export class MedicationPageComponent {
   medicationService = inject(MedicationService);
+  private readonly referenceData = inject(ReferenceDataService);
+  private readonly toast = inject(ToastService);
 
   newName = '';
   newStandardName = '';
   newNotes = '';
   newDuration = '';
+  newNameSelection: string[] = [];
+  newStandardNameSelection: string[] = [];
 
-  private editingId = signal<string | null>(null);
+  private readonly editingId = signal<string | null>(null);
   editedName = '';
   editedStandardName = '';
   editedNotes = '';
   editedDuration = '';
+  editedNameSelection: string[] = [];
+  editedStandardNameSelection: string[] = [];
 
   // Reminder form
-  private addingReminderFor = signal<string | null>(null);
-  private editingReminderId = signal<string | null>(null);
+  private readonly addingReminderFor = signal<string | null>(null);
+  private readonly editingReminderId = signal<string | null>(null);
   reminderTime = '';
   reminderDosage = '';
-  reminderRecurrence: 'DAILY' | 'WEEKLY' | 'MONTHLY' | 'ONE_TIME' = 'DAILY';
+  reminderRecurrence: MedicationRecurrence = 'DAILY';
   reminderDayOfWeek?: number;
   reminderDayOfMonth?: number;
   reminderDate?: string;
 
   readonly medications = this.medicationService.medications;
+  readonly medicationSuggestions = computed(() => this.referenceData.medications());
+  readonly quickMedicationSuggestions = computed(() => this.medicationSuggestions().slice(0, 10));
+  readonly durationQuickPicks = [7, 14, 30, 60, 90] as const;
+  readonly reminderFrequencyPresets = ['DAILY', 'WEEKLY', 'MONTHLY', 'ONE_TIME'] as const;
   readonly isEditing = computed(() => Boolean(this.editingId()));
   readonly isAddingReminder = computed(() => Boolean(this.addingReminderFor()));
   readonly isEditingReminder = computed(() => Boolean(this.editingReminderId()));
@@ -318,7 +527,8 @@ export class MedicationPageComponent {
       }
     }
 
-    return reminders.sort((a, b) => a.nextTime.localeCompare(b.nextTime)).slice(0, 5);
+    const sortedReminders = [...reminders].sort((a, b) => a.nextTime.localeCompare(b.nextTime));
+    return sortedReminders.slice(0, 5);
   });
 
   readonly refillAlerts = computed(() => {
@@ -337,11 +547,14 @@ export class MedicationPageComponent {
       }
     }
 
-    return alerts.sort((a, b) => a.daysLeft - b.daysLeft);
+    const sortedAlerts = [...alerts].sort((a, b) => a.daysLeft - b.daysLeft);
+    return sortedAlerts;
   });
 
   constructor() {
-    void this.medicationService.loadMedications();
+    afterNextRender(() => {
+      void this.medicationService.loadMedications();
+    });
   }
 
   getOrdinalSuffix(day: number): string {
@@ -357,14 +570,39 @@ export class MedicationPageComponent {
   async submit(event: Event): Promise<void> {
     event.preventDefault();
     if (!this.newName.trim()) return;
-    const duration = this.newDuration ? parseInt(this.newDuration) : undefined;
+    const duration = this.newDuration ? Number.parseInt(this.newDuration, 10) : undefined;
     const added = await this.medicationService.addMedication(this.newName, this.newStandardName, this.newNotes, duration);
     if (added) {
       this.newName = '';
       this.newStandardName = '';
       this.newNotes = '';
       this.newDuration = '';
+      this.newNameSelection = [];
+      this.newStandardNameSelection = [];
+      this.toast.success('Medication added successfully.', 'Saved');
+    } else {
+      this.toast.error(this.medicationService.error() || 'Failed to add medication.', 'Error');
     }
+  }
+
+  onNewNameSelectionChange(items: string[]): void {
+    this.newNameSelection = items.slice(0, 1);
+    this.newName = this.newNameSelection[0] ?? '';
+  }
+
+  onNewStandardNameSelectionChange(items: string[]): void {
+    this.newStandardNameSelection = items.slice(0, 1);
+    this.newStandardName = this.newStandardNameSelection[0] ?? '';
+  }
+
+  setNewDuration(days: number): void {
+    this.newDuration = String(days);
+  }
+
+  prefillMedication(name: string): void {
+    // Reuse the same update path as autocomplete selection changes.
+    this.onNewNameSelectionChange([name]);
+    this.newName = name;
   }
 
   startEdit(med: Medication): void {
@@ -373,16 +611,34 @@ export class MedicationPageComponent {
     this.editedStandardName = med.standardName ?? '';
     this.editedNotes = med.notes ?? '';
     this.editedDuration = med.duration?.toString() ?? '';
+    this.editedNameSelection = med.name ? [med.name] : [];
+    this.editedStandardNameSelection = med.standardName ? [med.standardName] : [];
   }
 
   cancelEdit(): void {
     this.editingId.set(null);
+    this.editedNameSelection = [];
+    this.editedStandardNameSelection = [];
+  }
+
+  onEditedNameSelectionChange(items: string[]): void {
+    this.editedNameSelection = items.slice(0, 1);
+    this.editedName = this.editedNameSelection[0] ?? '';
+  }
+
+  onEditedStandardNameSelectionChange(items: string[]): void {
+    this.editedStandardNameSelection = items.slice(0, 1);
+    this.editedStandardName = this.editedStandardNameSelection[0] ?? '';
+  }
+
+  setEditedDuration(days: number): void {
+    this.editedDuration = String(days);
   }
 
   async submitEdit(): Promise<void> {
     const id = this.editingId();
     if (!id) return;
-    const duration = this.editedDuration ? parseInt(this.editedDuration) : undefined;
+    const duration = this.editedDuration ? Number.parseInt(this.editedDuration, 10) : undefined;
     const updated = await this.medicationService.updateMedication(id, {
       name: this.editedName,
       standardName: this.editedStandardName,
@@ -394,7 +650,7 @@ export class MedicationPageComponent {
     }
   }
 
-  onReminderRecurrenceChange(recurrence: 'DAILY' | 'WEEKLY' | 'MONTHLY' | 'ONE_TIME'): void {
+  onReminderRecurrenceChange(recurrence: MedicationRecurrence): void {
     this.reminderRecurrence = recurrence;
     switch (recurrence) {
       case 'WEEKLY':
@@ -452,6 +708,9 @@ export class MedicationPageComponent {
     );
     if (added) {
       this.cancelAddReminder();
+      this.toast.success('Reminder added successfully.', 'Saved');
+    } else {
+      this.toast.error(this.medicationService.error() || 'Failed to add reminder.', 'Error');
     }
   }
 
@@ -483,12 +742,14 @@ export class MedicationPageComponent {
     const updated = await this.medicationService.updateReminder(
       medicationId,
       reminderId,
-      this.reminderTime,
-      this.reminderDosage,
-      this.reminderRecurrence,
-      this.reminderDayOfWeek,
-      this.reminderDayOfMonth,
-      this.reminderDate
+      {
+        timeOfDay: this.reminderTime,
+        dosage: this.reminderDosage,
+        recurrence: this.reminderRecurrence,
+        dayOfWeek: this.reminderDayOfWeek,
+        dayOfMonth: this.reminderDayOfMonth,
+        date: this.reminderDate,
+      }
     );
     if (updated) {
       this.cancelEditReminder();

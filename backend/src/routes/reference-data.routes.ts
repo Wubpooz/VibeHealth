@@ -1,6 +1,7 @@
 import { Hono } from 'hono';
 import { prisma } from '../lib/prisma';
 import type { ActivityType, MealType } from '@prisma/client';
+import { COMMON_MEDICATIONS } from '../lib/medications.reference';
 
 const app = new Hono();
 
@@ -50,59 +51,6 @@ const COMMON_ALLERGIES = [
   'Aspirin',
   'Ibuprofen',
   'Sunscreen'
-];
-
-// Top 50 most common prescribed medications (simplified list)
-const COMMON_MEDICATIONS = [
-  'Atorvastatin (Lipitor)',
-  'Levothyroxine (Synthroid)',
-  'Lisinopril (Prinivil)',
-  'Metformin (Glucophage)',
-  'Amlodipine (Norvasc)',
-  'Metoprolol (Lopressor)',
-  'Albuterol (ProAir HFA)',
-  'Omeprazole (Prilosec)',
-  'Losartan (Cozaar)',
-  'Gabapentin (Neurontin)',
-  'Hydrochlorothiazide',
-  'Sertraline (Zoloft)',
-  'Simvastatin (Zocor)',
-  'Montelukast (Singulair)',
-  'Escitalopram (Lexapro)',
-  'Acetaminophen (Tylenol)',
-  'Rosuvastatin (Crestor)',
-  'Bupropion (Wellbutrin)',
-  'Furosemide (Lasix)',
-  'Pantoprazole (Protonix)',
-  'Trazodone (Desyrel)',
-  'Dextroamphetamine/Amphetamine (Adderall)',
-  'Fluticasone (Flonase)',
-  'Tramadol (Ultram)',
-  'Insulin Glargine (Lantus)',
-  'Duloxetine (Cymbalta)',
-  'Prednisone',
-  'Tamsulosin (Flomax)',
-  'Ibuprofen (Advil)',
-  'Citalopram (Celexa)',
-  'Meloxicam (Mobic)',
-  'Pravastatin (Pravachol)',
-  'Carvedilol (Coreg)',
-  'Potassium Chloride',
-  'Tramadol',
-  'Clopidogrel (Plavix)',
-  'Aspirin',
-  'Ranitidine (Zantac)',
-  'Atenolol (Tenormin)',
-  'Cyclobenzaprine (Flexeril)',
-  'Glipizide (Glucotrol)',
-  'Methylphenidate (Ritalin)',
-  'Azithromycin (Zithromax)',
-  'Clonazepam (Klonopin)',
-  'Oxycodone',
-  'Allopurinol (Zyloprim)',
-  'Venlafaxine (Effexor)',
-  'Hydrochlorothiazide/Lisinopril',
-  'Warfarin (Coumadin)'
 ];
 
 app.get('/conditions', (c) => {

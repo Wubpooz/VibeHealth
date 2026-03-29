@@ -11,6 +11,8 @@ import {
   ChangeDetectionStrategy,
   OnDestroy,
   AfterViewInit,
+  OnChanges,
+  SimpleChanges,
   inject,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -297,12 +299,21 @@ interface HighlightPart {
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 0;
-      border: none;
-      background: transparent;
-      color: #9ca3af;
+      padding: 0.25rem;
+      border-radius: 9999px;
+      border: 1px solid transparent;
+      background: rgba(255, 255, 255, 0.85);
+      color: #6b7280;
       cursor: pointer;
-      transition: color 0.15s ease;
+      transition: all 0.15s ease;
+      box-shadow: 0 0 0 0 rgba(30, 41, 59, 0.2);
+    }
+    .clear-btn:hover,
+    .dropdown-toggle:hover {
+      color: #1f2937;
+      border-color: #d1d5db;
+      background: rgba(255, 255, 255, 1);
+      box-shadow: 0 2px 7px rgba(30, 41, 59, 0.12);
     }
 
     .clear-btn {
@@ -513,7 +524,7 @@ interface HighlightPart {
     }
   `]
 })
-export class AutocompleteComponent implements AfterViewInit, OnDestroy {
+export class AutocompleteComponent implements AfterViewInit, OnDestroy, OnChanges {
   // Inputs
   @Input() suggestions: string[] = [];
   @Input() selectedItems: string[] = [];
@@ -577,6 +588,14 @@ export class AutocompleteComponent implements AfterViewInit, OnDestroy {
 
   // Use inject() instead of constructor injection
   private readonly elementRef = inject(ElementRef);
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['selectedItems'] && !this.multiple) {
+      const selected = this.selectedItems?.[0] ?? '';
+      this.searchQuery.set(selected);
+      this.debouncedQuery.set(selected);
+    }
+  }
 
   ngAfterViewInit() {
     // Set up debounced search
@@ -725,20 +744,22 @@ export class AutocompleteComponent implements AfterViewInit, OnDestroy {
       const newItems = Array.from(new Set([...this.selectedItems, item]));
       this.itemsChange.emit(newItems);
       this.itemAdded.emit(item);
-    } else {
-      this.itemsChange.emit([item]);
-      this.itemAdded.emit(item);
-    }
 
-    // Reset input
-    this.searchQuery.set('');
-    this.debouncedQuery.set('');
-    this.highlightedIndex.set(-1);
+      // Reset input for multi-select so user can start typing another entry.
+      this.searchQuery.set('');
+      this.debouncedQuery.set('');
+      this.highlightedIndex.set(-1);
 
-    if (this.multiple) {
       // Keep focus for multi-select
       this.inputElement.nativeElement.focus();
     } else {
+      this.itemsChange.emit([item]);
+      this.itemAdded.emit(item);
+
+      // Keep selected value visible for single-select mode
+      this.searchQuery.set(item);
+      this.debouncedQuery.set(item);
+      this.highlightedIndex.set(-1);
       this.closeDropdown();
     }
   }

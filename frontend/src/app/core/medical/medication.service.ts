@@ -3,12 +3,14 @@ import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
 
+export type MedicationRecurrence = 'DAILY' | 'WEEKLY' | 'MONTHLY' | 'ONE_TIME';
+
 export interface MedicationReminder {
   id: string;
   medicationId: string;
   timeOfDay: string;
   dosage: string;
-  recurrence: 'DAILY' | 'WEEKLY' | 'MONTHLY' | 'ONE_TIME';
+  recurrence: MedicationRecurrence;
   dayOfWeek?: number;
   dayOfMonth?: number;
   date?: string;
@@ -20,10 +22,17 @@ export interface MedicationReminder {
 export interface MedicationReminderPayload {
   timeOfDay: string;
   dosage: string;
-  recurrence: 'DAILY' | 'WEEKLY' | 'MONTHLY' | 'ONE_TIME';
+  recurrence: MedicationRecurrence;
   dayOfWeek?: number;
   dayOfMonth?: number;
   date?: string;
+}
+
+export interface AddMedicationPayload {
+  name: string;
+  standardName?: string;
+  notes?: string;
+  duration?: number;
 }
 
 export interface Medication {
@@ -72,10 +81,21 @@ export class MedicationService {
     if (!name.trim()) return false;
 
     try {
+      const body: AddMedicationPayload = { name: name.trim() };
+      if (standardName?.trim()) {
+        body.standardName = standardName.trim();
+      }
+      if (notes?.trim()) {
+        body.notes = notes.trim();
+      }
+      if (typeof duration === 'number') {
+        body.duration = duration;
+      }
+
       const response = await firstValueFrom(
         this.http.post<{ success: boolean; medication: Medication }>(
           this.apiUrl,
-          { name: name.trim(), standardName: standardName?.trim() || null, notes: notes?.trim() || null, duration: duration || null },
+          body,
           { withCredentials: true }
         )
       );
@@ -91,12 +111,18 @@ export class MedicationService {
     }
   }
 
-  async updateMedication(id: string, data: Partial<Medication>): Promise<boolean> {
+  async updateMedication(id: string, data: Partial<AddMedicationPayload>): Promise<boolean> {
     try {
+      const body: Partial<AddMedicationPayload> = {};
+      if (data.name !== undefined) body.name = data.name;
+      if (data.standardName !== undefined) body.standardName = data.standardName;
+      if (data.notes !== undefined) body.notes = data.notes;
+      if (data.duration !== undefined) body.duration = data.duration;
+
       const response = await firstValueFrom(
         this.http.put<{ success: boolean; medication: Medication }>(
           `${this.apiUrl}/${id}`,
-          { name: data.name, standardName: data.standardName, notes: data.notes, duration: data.duration },
+          body,
           { withCredentials: true }
         )
       );
@@ -180,18 +206,17 @@ export class MedicationService {
   async updateReminder(
     medicationId: string,
     reminderId: string,
-    timeOfDay: string,
-    dosage: string,
-    recurrence: 'DAILY' | 'WEEKLY' | 'MONTHLY' | 'ONE_TIME',
-    dayOfWeek?: number,
-    dayOfMonth?: number,
-    date?: string
+    payload: MedicationReminderPayload
   ): Promise<boolean> {
     try {
-      const body: MedicationReminderPayload = { timeOfDay, dosage, recurrence };
-      if (recurrence === 'WEEKLY') body.dayOfWeek = dayOfWeek;
-      if (recurrence === 'MONTHLY') body.dayOfMonth = dayOfMonth;
-      if (recurrence === 'ONE_TIME') body.date = date;
+      const body: MedicationReminderPayload = {
+        timeOfDay: payload.timeOfDay,
+        dosage: payload.dosage,
+        recurrence: payload.recurrence,
+      };
+      if (payload.recurrence === 'WEEKLY') body.dayOfWeek = payload.dayOfWeek;
+      if (payload.recurrence === 'MONTHLY') body.dayOfMonth = payload.dayOfMonth;
+      if (payload.recurrence === 'ONE_TIME') body.date = payload.date;
 
       const response = await firstValueFrom(
         this.http.put<{ success: boolean; reminder: MedicationReminder }>(
