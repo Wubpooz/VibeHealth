@@ -468,6 +468,66 @@ describe('PATCH /profile/preferred-country', () => {
   });
 });
 
+describe('GET /profile/export-data', () => {
+  let transactionSpy: ReturnType<typeof spyOn>;
+
+  beforeEach(() => {
+    transactionSpy = spyOn(prisma, '$transaction');
+    transactionSpy.mockResolvedValue([
+      existingProfile,
+      null,
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+    ] as never);
+  });
+
+  afterEach(() => {
+    transactionSpy?.mockRestore();
+  });
+
+  it('returns exported user data payload', async () => {
+    const app = buildApp();
+    const res = await app.request('/profile/export-data');
+    const body: any = await res.json();
+
+    expect(res.status).toBe(200);
+    expect(body.user.id).toBe(mockUser.id);
+    expect(body.data.profile.userId).toBe(mockUser.id);
+  });
+});
+
+describe('DELETE /profile/delete-data', () => {
+  let transactionSpy: ReturnType<typeof spyOn>;
+
+  beforeEach(() => {
+    transactionSpy = spyOn(prisma, '$transaction');
+    transactionSpy.mockResolvedValue([] as never);
+  });
+
+  afterEach(() => {
+    transactionSpy?.mockRestore();
+  });
+
+  it('deletes user app data and returns success', async () => {
+    const app = buildApp();
+    const res = await app.request('/profile/delete-data', {
+      method: 'DELETE',
+    });
+    const body: any = await res.json();
+
+    expect(res.status).toBe(200);
+    expect(body.success).toBe(true);
+    expect(transactionSpy).toHaveBeenCalled();
+  });
+});
+
 // ─── Auth guard integration ───────────────────────────────────────────────────
 describe('Profile routes auth guard', () => {
   it('returns 401 when request has no session', async () => {

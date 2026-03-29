@@ -74,8 +74,8 @@
       <button
         type="button"
         class="user-profile-button"
-        (click)="navItemClicked.emit(); goToProfile()"
-        [attr.aria-label]="'SIDEBAR.VIEW_PROFILE' | translate"
+        (click)="navItemClicked.emit(); goToSettings()"
+        [attr.aria-label]="'nav.settings' | translate"
       >
         <div class="user-avatar">
           <img class="user-avatar-img" [src]="mockAvatarUrl" alt="User avatar" />

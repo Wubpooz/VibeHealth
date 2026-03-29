@@ -126,6 +126,75 @@ export class AuthService {
     }
   }
 
+  async refreshSession(): Promise<void> {
+    await this.loadSession();
+  }
+
+  async updateUserProfile(payload: { name?: string; email?: string }): Promise<boolean> {
+    const requestBody: { name?: string; email?: string } = {};
+
+    if (payload.name !== undefined) {
+      requestBody.name = payload.name.trim();
+    }
+
+    if (payload.email !== undefined) {
+      requestBody.email = payload.email.trim();
+    }
+
+    const response = await this.executeAuthRequest<{ user?: User }>(
+      this.http.post<{ user?: User }>(`${this.apiUrl}/update-user`, requestBody, { withCredentials: true }),
+      'Failed to update profile'
+    );
+
+    if (response === null) {
+      return false;
+    }
+
+    if (response.user) {
+      this.userSignal.set(response.user);
+      return true;
+    }
+
+    await this.loadSession();
+    return true;
+  }
+
+  async changePassword(currentPassword: string, newPassword: string): Promise<boolean> {
+    const response = await this.executeAuthRequest(
+      this.http.post(
+        `${this.apiUrl}/change-password`,
+        {
+          currentPassword,
+          newPassword,
+          revokeOtherSessions: true,
+        },
+        { withCredentials: true }
+      ),
+      'Failed to update password'
+    );
+
+    return response !== null;
+  }
+
+  async deleteAccount(password: string): Promise<boolean> {
+    const response = await this.executeAuthRequest(
+      this.http.post(
+        `${this.apiUrl}/delete-user`,
+        { password },
+        { withCredentials: true }
+      ),
+      'Failed to delete account'
+    );
+
+    if (response === null) {
+      return false;
+    }
+
+    this.userSignal.set(null);
+    await this.router.navigate(['/']);
+    return true;
+  }
+
   async sendMagicLink(email: string): Promise<boolean> {
     const response = await this.executeAuthRequest(
       this.http.post(

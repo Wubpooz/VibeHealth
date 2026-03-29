@@ -4,6 +4,7 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { FormsModule } from '@angular/forms';
 import { FirstAidService } from '../first-aid/first-aid.service';
 import { ProfileService } from '../../core/profile/profile.service';
+import { AuthService } from '../../core/auth/auth.service';
 import { BackButtonComponent } from '../../shared/components/back-button/back-button.component';
 import { EmergencyNumber } from '../first-aid/first-aid.types';
 
@@ -113,6 +114,162 @@ import { EmergencyNumber } from '../first-aid/first-aid.types';
           </div>
         </div>
 
+        <!-- Account Settings -->
+        <div class="mt-6 bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-100 dark:border-gray-700">
+          <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+            <span>👤</span>
+            {{ 'SETTINGS.ACCOUNT.TITLE' | translate }}
+          </h2>
+          <p class="text-sm text-gray-600 dark:text-gray-400 mb-6">
+            {{ 'SETTINGS.ACCOUNT.DESCRIPTION' | translate }}
+          </p>
+
+          <div class="space-y-4">
+            <div>
+              <label for="accountUsername" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                {{ 'SETTINGS.ACCOUNT.USERNAME' | translate }}
+              </label>
+              <input
+                id="accountUsername"
+                type="text"
+                [ngModel]="username()"
+                (ngModelChange)="username.set($event)"
+                class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors"
+              />
+            </div>
+
+            <div>
+              <label for="accountName" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                {{ 'SETTINGS.ACCOUNT.NAME' | translate }}
+              </label>
+              <input
+                id="accountName"
+                type="text"
+                [ngModel]="fullName()"
+                (ngModelChange)="fullName.set($event)"
+                class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors"
+              />
+            </div>
+
+            <div>
+              <label for="accountEmail" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                {{ 'SETTINGS.ACCOUNT.EMAIL' | translate }}
+              </label>
+              <input
+                id="accountEmail"
+                type="email"
+                [ngModel]="email()"
+                (ngModelChange)="email.set($event)"
+                class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors"
+              />
+            </div>
+
+            <button
+              type="button"
+              (click)="saveAccountDetails()"
+              [disabled]="accountStatus() === 'saving'"
+              class="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-primary-600 text-white font-semibold hover:bg-primary-700 disabled:opacity-60 disabled:cursor-not-allowed transition-colors"
+            >
+              {{ accountStatus() === 'saving' ? ('SETTINGS.ACCOUNT.SAVING' | translate) : ('SETTINGS.ACCOUNT.SAVE' | translate) }}
+            </button>
+          </div>
+        </div>
+
+        <!-- Security -->
+        <div class="mt-6 bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-100 dark:border-gray-700">
+          <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+            <span>🔐</span>
+            {{ 'SETTINGS.SECURITY.TITLE' | translate }}
+          </h2>
+
+          <div class="space-y-4">
+            <div>
+              <label for="currentPassword" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                {{ 'SETTINGS.SECURITY.CURRENT_PASSWORD' | translate }}
+              </label>
+              <input
+                id="currentPassword"
+                type="password"
+                [ngModel]="currentPassword()"
+                (ngModelChange)="currentPassword.set($event)"
+                class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors"
+              />
+            </div>
+
+            <div>
+              <label for="newPassword" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                {{ 'SETTINGS.SECURITY.NEW_PASSWORD' | translate }}
+              </label>
+              <input
+                id="newPassword"
+                type="password"
+                [ngModel]="newPassword()"
+                (ngModelChange)="newPassword.set($event)"
+                class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors"
+              />
+            </div>
+
+            <div>
+              <label for="confirmPassword" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                {{ 'SETTINGS.SECURITY.CONFIRM_PASSWORD' | translate }}
+              </label>
+              <input
+                id="confirmPassword"
+                type="password"
+                [ngModel]="confirmPassword()"
+                (ngModelChange)="confirmPassword.set($event)"
+                class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors"
+              />
+            </div>
+
+            <button
+              type="button"
+              (click)="changePassword()"
+              [disabled]="passwordStatus() === 'saving'"
+              class="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-gray-900 text-white font-semibold hover:bg-gray-800 disabled:opacity-60 disabled:cursor-not-allowed transition-colors dark:bg-gray-100 dark:text-gray-900 dark:hover:bg-white"
+            >
+              {{ passwordStatus() === 'saving' ? ('SETTINGS.SECURITY.SAVING' | translate) : ('SETTINGS.SECURITY.CHANGE_PASSWORD' | translate) }}
+            </button>
+          </div>
+        </div>
+
+        <!-- Data & Privacy -->
+        <div class="mt-6 bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-100 dark:border-gray-700">
+          <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+            <span>🛡️</span>
+            {{ 'SETTINGS.DATA.TITLE' | translate }}
+          </h2>
+
+          <div class="flex flex-wrap gap-3">
+            <button
+              type="button"
+              (click)="downloadUserData()"
+              [disabled]="dataStatus() === 'working'"
+              class="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-blue-600 text-white font-semibold hover:bg-blue-700 disabled:opacity-60 disabled:cursor-not-allowed transition-colors"
+            >
+              {{ 'SETTINGS.DATA.DOWNLOAD_DATA' | translate }}
+            </button>
+
+            <button
+              type="button"
+              (click)="deleteAllUserData()"
+              [disabled]="dataStatus() === 'working'"
+              class="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-amber-600 text-white font-semibold hover:bg-amber-700 disabled:opacity-60 disabled:cursor-not-allowed transition-colors"
+            >
+              {{ 'SETTINGS.DATA.DELETE_DATA' | translate }}
+            </button>
+
+            <button
+              type="button"
+              (click)="deleteAccount()"
+              [disabled]="dataStatus() === 'working'"
+              class="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-red-600 text-white font-semibold hover:bg-red-700 disabled:opacity-60 disabled:cursor-not-allowed transition-colors"
+            >
+              {{ 'SETTINGS.DATA.DELETE_ACCOUNT' | translate }}
+            </button>
+          </div>
+        </div>
+
         <!-- Save Status -->
         @if (saveStatus() === 'saving') {
           <div class="mt-4 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-xl border border-blue-100 dark:border-blue-800">
@@ -135,6 +292,14 @@ import { EmergencyNumber } from '../first-aid/first-aid.types';
           </div>
         }
 
+        @if (actionMessage()) {
+          <div class="mt-4 p-4 bg-gray-50 dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700">
+            <p class="text-sm text-gray-800 dark:text-gray-200">
+              {{ actionMessage() }}
+            </p>
+          </div>
+        }
+
       </main>
     </div>
   `,
@@ -149,6 +314,7 @@ import { EmergencyNumber } from '../first-aid/first-aid.types';
   `],
 })
 export class SettingsComponent {
+  private readonly authService = inject(AuthService);
   private readonly firstAidService = inject(FirstAidService);
   private readonly profileService = inject(ProfileService);
   private readonly translate = inject(TranslateService);
@@ -178,6 +344,18 @@ export class SettingsComponent {
     this.firstAidService.userEmergencyNumber()?.numbers ?? { general: '' }
   );
 
+  readonly username = signal('');
+  readonly fullName = signal('');
+  readonly email = signal('');
+  readonly currentPassword = signal('');
+  readonly newPassword = signal('');
+  readonly confirmPassword = signal('');
+
+  readonly accountStatus = signal<'idle' | 'saving' | 'saved' | 'error'>('idle');
+  readonly passwordStatus = signal<'idle' | 'saving' | 'saved' | 'error'>('idle');
+  readonly dataStatus = signal<'idle' | 'working' | 'done' | 'error'>('idle');
+  readonly actionMessage = signal<string | null>(null);
+
   constructor() {
     // Keep translation labels in sync with language changes
     this.translate.onLangChange.subscribe((event) => {
@@ -191,6 +369,18 @@ export class SettingsComponent {
         this.translate.use(language);
         this.firstAidService.setUserCountry(preferred);
       }
+    });
+
+    effect(() => {
+      const user = this.authService.user();
+      if (!user) {
+        return;
+      }
+
+      const name = user.name ?? '';
+      this.username.set(name);
+      this.fullName.set(name);
+      this.email.set(user.email ?? '');
     });
   }
 
@@ -214,6 +404,134 @@ export class SettingsComponent {
         this.saveStatus.set('idle');
       }, 2000);
     }, 500);
+  }
+
+  async saveAccountDetails(): Promise<void> {
+    this.accountStatus.set('saving');
+
+    const normalizedEmail = this.email().trim();
+    const normalizedName = this.fullName().trim() || this.username().trim();
+
+    const success = await this.authService.updateUserProfile({
+      email: normalizedEmail,
+      name: normalizedName || undefined,
+    });
+
+    if (!success) {
+      this.accountStatus.set('error');
+      this.setActionMessage('SETTINGS.ACCOUNT.UPDATE_FAILED');
+      return;
+    }
+
+    await this.authService.refreshSession();
+    this.accountStatus.set('saved');
+    this.setActionMessage('SETTINGS.ACCOUNT.SAVED');
+  }
+
+  async changePassword(): Promise<void> {
+    if (!this.currentPassword().trim()) {
+      this.passwordStatus.set('error');
+      this.setActionMessage('SETTINGS.SECURITY.CURRENT_PASSWORD_REQUIRED');
+      return;
+    }
+
+    if (this.newPassword().trim().length < 8) {
+      this.passwordStatus.set('error');
+      this.setActionMessage('SETTINGS.SECURITY.PASSWORD_TOO_SHORT');
+      return;
+    }
+
+    if (this.newPassword() !== this.confirmPassword()) {
+      this.passwordStatus.set('error');
+      this.setActionMessage('SETTINGS.SECURITY.PASSWORD_MISMATCH');
+      return;
+    }
+
+    this.passwordStatus.set('saving');
+    const success = await this.authService.changePassword(this.currentPassword(), this.newPassword());
+
+    if (!success) {
+      this.passwordStatus.set('error');
+      this.setActionMessage('SETTINGS.SECURITY.UPDATE_FAILED');
+      return;
+    }
+
+    this.currentPassword.set('');
+    this.newPassword.set('');
+    this.confirmPassword.set('');
+    this.passwordStatus.set('saved');
+    this.setActionMessage('SETTINGS.SECURITY.PASSWORD_UPDATED');
+  }
+
+  async downloadUserData(): Promise<void> {
+    this.dataStatus.set('working');
+    const data = await this.profileService.exportUserData();
+
+    if (!data) {
+      this.dataStatus.set('error');
+      this.setActionMessage('SETTINGS.DATA.DOWNLOAD_FAILED');
+      return;
+    }
+
+    const fileName = `vibehealth-data-${new Date().toISOString().slice(0, 10)}.json`;
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = fileName;
+    link.click();
+    URL.revokeObjectURL(url);
+
+    this.dataStatus.set('done');
+    this.setActionMessage('SETTINGS.DATA.DOWNLOAD_SUCCESS');
+  }
+
+  async deleteAllUserData(): Promise<void> {
+    const confirmed = globalThis.confirm(this.translate.instant('SETTINGS.DATA.DELETE_DATA_CONFIRM'));
+    if (!confirmed) {
+      return;
+    }
+
+    this.dataStatus.set('working');
+    const success = await this.profileService.deleteUserData();
+
+    if (!success) {
+      this.dataStatus.set('error');
+      this.setActionMessage('SETTINGS.DATA.DELETE_FAILED');
+      return;
+    }
+
+    this.dataStatus.set('done');
+    this.setActionMessage('SETTINGS.DATA.DELETE_SUCCESS');
+  }
+
+  async deleteAccount(): Promise<void> {
+    const confirmed = globalThis.confirm(this.translate.instant('SETTINGS.DATA.DELETE_ACCOUNT_CONFIRM'));
+    if (!confirmed) {
+      return;
+    }
+
+    const password = globalThis.prompt(this.translate.instant('SETTINGS.DATA.DELETE_ACCOUNT_PASSWORD_PROMPT')) ?? '';
+    if (!password.trim()) {
+      this.dataStatus.set('error');
+      this.setActionMessage('SETTINGS.DATA.PASSWORD_REQUIRED');
+      return;
+    }
+
+    this.dataStatus.set('working');
+    const success = await this.authService.deleteAccount(password.trim());
+
+    if (!success) {
+      this.dataStatus.set('error');
+      this.setActionMessage('SETTINGS.DATA.DELETE_ACCOUNT_FAILED');
+      return;
+    }
+
+    this.dataStatus.set('done');
+  }
+
+  private setActionMessage(key: string): void {
+    this.actionMessage.set(this.translate.instant(key));
   }
 
   private mapCountryToLanguage(countryCode: string): string {

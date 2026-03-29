@@ -883,6 +883,45 @@
   "SETTINGS": {
     "TITLE": "Settings",
     "SUBTITLE": "Customize your VibeHealth experience",
+    "ACCOUNT": {
+      "TITLE": "Account",
+      "DESCRIPTION": "Manage your identity details linked to your account.",
+      "USERNAME": "Username",
+      "NAME": "Name",
+      "EMAIL": "Email",
+      "SAVE": "Save account details",
+      "SAVING": "Saving account...",
+      "SAVED": "Account details updated successfully.",
+      "UPDATE_FAILED": "Unable to update account details right now."
+    },
+    "SECURITY": {
+      "TITLE": "Security",
+      "CURRENT_PASSWORD": "Current password",
+      "NEW_PASSWORD": "New password",
+      "CONFIRM_PASSWORD": "Confirm new password",
+      "CHANGE_PASSWORD": "Change password",
+      "SAVING": "Updating password...",
+      "CURRENT_PASSWORD_REQUIRED": "Please provide your current password.",
+      "PASSWORD_TOO_SHORT": "New password must be at least 8 characters.",
+      "PASSWORD_MISMATCH": "New password and confirmation do not match.",
+      "PASSWORD_UPDATED": "Password updated successfully.",
+      "UPDATE_FAILED": "Unable to update password right now."
+    },
+    "DATA": {
+      "TITLE": "Data & Privacy",
+      "DOWNLOAD_DATA": "Download my data",
+      "DOWNLOAD_SUCCESS": "Your data export has been downloaded.",
+      "DOWNLOAD_FAILED": "Unable to export your data right now.",
+      "DELETE_DATA": "Delete app data",
+      "DELETE_DATA_CONFIRM": "Delete all your VibeHealth app data (profile, medical, metrics, journal)? This cannot be undone.",
+      "DELETE_SUCCESS": "Your app data has been deleted.",
+      "DELETE_FAILED": "Unable to delete app data right now.",
+      "DELETE_ACCOUNT": "Delete account",
+      "DELETE_ACCOUNT_CONFIRM": "This will permanently delete your account and sign you out. Continue?",
+      "DELETE_ACCOUNT_PASSWORD_PROMPT": "Enter your current password to confirm account deletion:",
+      "PASSWORD_REQUIRED": "Password is required to delete your account.",
+      "DELETE_ACCOUNT_FAILED": "Unable to delete account right now."
+    },
     "COUNTRY": {
       "TITLE": "Country Settings",
       "DESCRIPTION": "Set your country to get accurate emergency numbers and local helplines.",

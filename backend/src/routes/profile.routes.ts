@@ -214,6 +214,101 @@ profileRoutes.patch('/preferred-country', async (c) => {
   }
 });
 
+profileRoutes.get('/export-data', async (c) => {
+  const user = c.get('user');
+
+  try {
+    const [profile, medicalId, vitalLogs, hydrationLogs, activityLogs, mealLogs, goals, workoutPlans, healthSyncConnections, moodLogs, journalEntries] = await prisma.$transaction([
+      prisma.profile.findUnique({ where: { userId: user.id } }),
+      prisma.medicalId.findUnique({ where: { userId: user.id } }),
+      prisma.vitalLog.findMany({ where: { userId: user.id }, orderBy: { loggedAt: 'desc' } }),
+      prisma.hydrationLog.findMany({ where: { userId: user.id }, orderBy: { loggedAt: 'desc' } }),
+      prisma.activityLog.findMany({ where: { userId: user.id }, orderBy: { loggedAt: 'desc' } }),
+      prisma.mealLog.findMany({ where: { userId: user.id }, orderBy: { loggedAt: 'desc' } }),
+      prisma.goal.findMany({
+        where: { userId: user.id },
+        include: {
+          progress: {
+            orderBy: { date: 'desc' },
+          },
+        },
+        orderBy: { createdAt: 'desc' },
+      }),
+      prisma.workoutPlan.findMany({
+        where: { userId: user.id },
+        include: {
+          exercises: {
+            include: {
+              exercise: true,
+            },
+            orderBy: { orderIndex: 'asc' },
+          },
+        },
+        orderBy: { createdAt: 'desc' },
+      }),
+      prisma.healthSyncConnection.findMany({ where: { userId: user.id }, orderBy: { updatedAt: 'desc' } }),
+      prisma.moodLog.findMany({ where: { userId: user.id }, orderBy: { date: 'desc' } }),
+      prisma.journalEntry.findMany({
+        where: { userId: user.id },
+        include: {
+          mediaAttachments: true,
+        },
+        orderBy: { createdAt: 'desc' },
+      }),
+    ]);
+
+    return c.json({
+      exportedAt: new Date().toISOString(),
+      user: {
+        id: user.id,
+        email: user.email,
+        name: user.name,
+      },
+      data: {
+        profile,
+        medicalId,
+        vitalLogs,
+        hydrationLogs,
+        activityLogs,
+        mealLogs,
+        goals,
+        workoutPlans,
+        healthSyncConnections,
+        moodLogs,
+        journalEntries,
+      },
+    });
+  } catch (error) {
+    console.error('Error exporting user data:', error);
+    return c.json({ error: 'Failed to export user data' }, 500);
+  }
+});
+
+profileRoutes.delete('/delete-data', async (c) => {
+  const user = c.get('user');
+
+  try {
+    await prisma.$transaction([
+      prisma.vitalLog.deleteMany({ where: { userId: user.id } }),
+      prisma.hydrationLog.deleteMany({ where: { userId: user.id } }),
+      prisma.activityLog.deleteMany({ where: { userId: user.id } }),
+      prisma.mealLog.deleteMany({ where: { userId: user.id } }),
+      prisma.goal.deleteMany({ where: { userId: user.id } }),
+      prisma.workoutPlan.deleteMany({ where: { userId: user.id } }),
+      prisma.healthSyncConnection.deleteMany({ where: { userId: user.id } }),
+      prisma.moodLog.deleteMany({ where: { userId: user.id } }),
+      prisma.journalEntry.deleteMany({ where: { userId: user.id } }),
+      prisma.medicalId.deleteMany({ where: { userId: user.id } }),
+      prisma.profile.deleteMany({ where: { userId: user.id } }),
+    ]);
+
+    return c.json({ success: true });
+  } catch (error) {
+    console.error('Error deleting user data:', error);
+    return c.json({ error: 'Failed to delete user data' }, 500);
+  }
+});
+
 // Helper functions for unit conversion
 function convertHeight(value: number | undefined, unit: 'cm' | 'ft' | undefined): number | null {
   if (value === undefined || value === null || value === 0) return null;
