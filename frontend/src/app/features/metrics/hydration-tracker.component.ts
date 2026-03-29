@@ -11,17 +11,20 @@ import { TranslateModule } from '@ngx-translate/core';
 import { MetricsService } from '../../core/metrics/metrics.service';
 import { RewardsService } from '../../core/rewards/rewards.service';
 import { HYDRATION_PRESETS, type HydrationPreset } from '../../core/metrics/metrics.types';
+import { LucideDroplets, LucideTrophy } from '@lucide/angular';
 
 @Component({
   selector: 'app-hydration-tracker',
-  imports: [CommonModule, TranslateModule],
+  imports: [CommonModule, TranslateModule, LucideDroplets, LucideTrophy],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="hydration-card">
       <!-- Header -->
       <div class="header">
         <div class="title-row">
-          <span class="icon">💧</span>
+          <span class="icon" aria-hidden="true">
+            <svg lucideDroplets [size]="24" [strokeWidth]="2"></svg>
+          </span>
           <h3>{{ 'METRICS.HYDRATION.TITLE' | translate }}</h3>
         </div>
         <span class="percentage" [class.goal-reached]="percentage() >= 100">
@@ -55,15 +58,15 @@ import { HYDRATION_PRESETS, type HydrationPreset } from '../../core/metrics/metr
             [attr.stroke-dashoffset]="dashOffset()"
             transform="rotate(-90 60 60)"
           />
-          <!-- Water drop in center -->
-          <g class="center-icon" transform="translate(60, 60)">
-            @if (percentage() >= 100) {
-              <text x="0" y="8" text-anchor="middle" class="goal-emoji">🎉</text>
-            } @else {
-              <text x="0" y="8" text-anchor="middle" class="water-emoji">💧</text>
-            }
-          </g>
         </svg>
+
+        <div class="center-glyph" [class.goal]="percentage() >= 100" aria-hidden="true">
+          @if (percentage() >= 100) {
+            <svg lucideTrophy [size]="28" [strokeWidth]="2"></svg>
+          } @else {
+            <svg lucideDroplets [size]="28" [strokeWidth]="2"></svg>
+          }
+        </div>
         
         <!-- Stats below ring -->
         <div class="stats">
@@ -95,7 +98,9 @@ import { HYDRATION_PRESETS, type HydrationPreset } from '../../core/metrics/metr
           <span class="recent-label">{{ 'METRICS.HYDRATION.TODAY' | translate }}:</span>
           <div class="glasses">
             @for (log of recentLogs(); track log.id) {
-              <span class="glass-icon" [title]="log.amount + 'ml'">🥛</span>
+              <span class="glass-icon" [title]="log.amount + 'ml'" aria-hidden="true">
+                <svg lucideDroplets [size]="15" [strokeWidth]="2"></svg>
+              </span>
             }
           </div>
         </div>
@@ -124,7 +129,10 @@ import { HYDRATION_PRESETS, type HydrationPreset } from '../../core/metrics/metr
     }
 
     .title-row .icon {
-      font-size: 1.5rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: #00796b;
     }
 
     .title-row h3 {
@@ -158,6 +166,7 @@ import { HYDRATION_PRESETS, type HydrationPreset } from '../../core/metrics/metr
       flex-direction: column;
       align-items: center;
       margin-bottom: 1.5rem;
+      position: relative;
     }
 
     .progress-ring {
@@ -174,16 +183,22 @@ import { HYDRATION_PRESETS, type HydrationPreset } from '../../core/metrics/metr
       transition: stroke-dashoffset 0.5s ease;
     }
 
-    .center-icon text {
-      font-size: 2rem;
-    }
-
-    .water-emoji {
+    .center-glyph {
+      position: absolute;
+      top: 46px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: #00acc1;
+      pointer-events: none;
       animation: float 2s ease-in-out infinite;
     }
 
-    .goal-emoji {
-      animation: bounce 0.6s ease infinite;
+    .center-glyph.goal {
+      animation: bounce 0.7s ease infinite;
+      color: #2e7d32;
     }
 
     @keyframes float {
@@ -320,7 +335,10 @@ import { HYDRATION_PRESETS, type HydrationPreset } from '../../core/metrics/metr
     }
 
     .glass-icon {
-      font-size: 1rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: #00acc1;
       opacity: 0;
       animation: fadeInGlass 0.3s ease forwards;
     }
@@ -389,7 +407,7 @@ export class HydrationTrackerComponent {
     if (result.success && result.carrots) {
       this.rewardsService.awardCarrots(
         result.carrots,
-        result.carrots > 1 ? 'Hydration goal reached! 🎉' : 'Staying hydrated! 💧',
+        result.carrots > 1 ? 'Hydration goal reached!' : 'Staying hydrated',
         'hydration'
       );
     }

@@ -20,17 +20,20 @@ import {
   type ActivityType,
   type Intensity,
 } from '../../core/metrics/metrics.types';
+import { LucideActivity } from '@lucide/angular';
 
 @Component({
   selector: 'app-activity-logger',
-  imports: [CommonModule, FormsModule, TranslateModule, AutocompleteComponent],
+  imports: [CommonModule, FormsModule, TranslateModule, AutocompleteComponent, LucideActivity],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="activity-card">
       <!-- Header -->
       <div class="header">
         <div class="title-row">
-          <span class="icon">🏃</span>
+          <span class="icon" aria-hidden="true">
+            <svg lucideActivity [size]="24" [strokeWidth]="2"></svg>
+          </span>
           <h3>{{ 'METRICS.ACTIVITY.TITLE' | translate }}</h3>
         </div>
         <button 
@@ -62,7 +65,9 @@ import {
         <div class="catalog-strip">
           @for (activity of topCatalogActivities(); track activity.key) {
             <button class="catalog-pill" type="button" (click)="selectCatalogActivity(activity.key)">
-              <span class="emoji">{{ activity.emoji }}</span>
+              <span class="emoji" aria-hidden="true">
+                <svg lucideActivity [size]="18" [strokeWidth]="2"></svg>
+              </span>
               <span class="meta">
                 <strong>{{ activity.name }}</strong>
                 <small>{{ activity.metValue }} MET</small>
@@ -167,10 +172,10 @@ import {
             </div>
             <div class="timer-row">
               <button type="button" class="timer-btn" (click)="toggleTimer()">
-                {{ timerRunning() ? '⏸ Stop timer' : '⏱ Start timer' }}
+                {{ timerRunning() ? 'Stop timer' : 'Start timer' }}
               </button>
               <button type="button" class="timer-btn secondary" (click)="resetTimer()">
-                ↺ Reset
+                Reset
               </button>
               <span class="timer-display">{{ timerDisplay() }}</span>
             </div>
@@ -216,7 +221,7 @@ import {
             [disabled]="!canSubmit() || logging()"
           >
             @if (logging()) {
-              <span class="spinner">⏳</span>
+              <span class="spinner" aria-hidden="true"></span>
             } @else {
               {{ 'METRICS.ACTIVITY.LOG_ACTIVITY' | translate }}
             }
@@ -231,7 +236,9 @@ import {
           <div class="activity-list">
             @for (activity of recentActivities(); track activity.id) {
               <div class="activity-item">
-                <span class="emoji">{{ getActivityEmoji(activity.type) }}</span>
+                <span class="emoji" aria-hidden="true">
+                  <svg lucideActivity [size]="18" [strokeWidth]="2"></svg>
+                </span>
                 <div class="details">
                   <span class="name">{{ activity.name }}</span>
                   <span class="meta">{{ activity.duration }}min · {{ activity.calories || 0 }}kcal</span>
@@ -271,7 +278,14 @@ import {
     }
 
     .title-row .icon {
-      font-size: 1.5rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: #e65100;
+    }
+
+    :host-context(.dark) .title-row .icon {
+      color: #ffd180;
     }
 
     .title-row h3 {
@@ -378,8 +392,11 @@ import {
     }
 
     .catalog-pill .emoji {
-      font-size: 1.3rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
       flex: 0 0 auto;
+      color: #e65100;
     }
 
     .catalog-pill .meta {
@@ -430,7 +447,10 @@ import {
     }
 
     .quick-btn .emoji {
-      font-size: 1.5rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: #e65100;
     }
 
     .quick-btn .name {
@@ -493,7 +513,10 @@ import {
     }
 
     .catalog-detail-header .emoji {
-      font-size: 1.6rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: #e65100;
     }
 
     .catalog-detail-header strong {
@@ -542,7 +565,10 @@ import {
     }
 
     .type-btn .emoji {
-      font-size: 1.25rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: #e65100;
     }
 
     .type-btn .name {
@@ -713,7 +739,13 @@ import {
     }
 
     .spinner {
-      animation: spin 1s linear infinite;
+      display: inline-block;
+      width: 1rem;
+      height: 1rem;
+      border: 2px solid rgba(255, 255, 255, 0.45);
+      border-top-color: #ffffff;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
     }
 
     @keyframes spin {
@@ -757,7 +789,10 @@ import {
     }
 
     .activity-item .emoji {
-      font-size: 1.25rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: #e65100;
     }
 
     .activity-item .details {
@@ -895,10 +930,6 @@ export class ActivityLoggerComponent implements OnDestroy {
 
   ngOnDestroy(): void {
     this.stopTimer();
-  }
-
-  getActivityEmoji(type: string): string {
-    return ACTIVITY_PRESETS[type as ActivityType]?.emoji ?? '🎯';
   }
 
   onActivitySearchChange(items: string[]): void {

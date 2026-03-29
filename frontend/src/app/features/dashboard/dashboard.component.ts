@@ -21,6 +21,17 @@ import { CarrotCounterComponent } from "../../shared/components/carrot-counter/c
 import { CarrotFeedComponent } from "../../shared/components/carrot-feed/carrot-feed.component";
 import { animate } from "motion/mini";
 import { StatsGridComponent } from "../../shared/components/stats-grid/stats-grid.component";
+import {
+  LucideActivity,
+  LucideDroplets,
+  LucideFlame,
+  LucideHeartPulse,
+  LucideLeaf,
+  LucideMoon,
+  LucideSparkles,
+  LucideStar,
+  LucideTriangleAlert,
+} from '@lucide/angular';
 
 @Component({
   selector: "app-dashboard",
@@ -31,7 +42,16 @@ import { StatsGridComponent } from "../../shared/components/stats-grid/stats-gri
     BunnyMascotComponent,
     CarrotCounterComponent,
     CarrotFeedComponent,
-    StatsGridComponent
+    StatsGridComponent,
+    LucideActivity,
+    LucideDroplets,
+    LucideFlame,
+    LucideHeartPulse,
+    LucideLeaf,
+    LucideMoon,
+    LucideSparkles,
+    LucideStar,
+    LucideTriangleAlert,
 ],
   styles: [
     `
@@ -141,9 +161,11 @@ import { StatsGridComponent } from "../../shared/components/stats-grid/stats-gri
             >
               <div class="flex items-center gap-3">
                 <span
-                  class="flex-shrink-0 w-8 h-8 rounded-full bg-amber-100 dark:bg-amber-900/50 flex items-center justify-center text-lg"
-                  >⚠️</span
+                  class="flex-shrink-0 w-8 h-8 rounded-full bg-amber-100 dark:bg-amber-900/50 flex items-center justify-center text-amber-600"
+                  aria-hidden="true"
                 >
+                  <svg lucideTriangleAlert [size]="18" [strokeWidth]="2"></svg>
+                </span>
                 <p
                   class="text-sm font-medium text-amber-900 dark:text-amber-100"
                 >
@@ -235,7 +257,7 @@ import { StatsGridComponent } from "../../shared/components/stats-grid/stats-gri
                 <div
                   class="w-10 h-10 bg-primary-50 dark:bg-primary-900/30 rounded-xl flex items-center justify-center text-primary-500"
                 >
-                  🏃
+                  <svg lucideActivity [size]="20" [strokeWidth]="2" aria-hidden="true"></svg>
                 </div>
               </div>
               <div class="flex items-center gap-6">
@@ -303,7 +325,9 @@ import { StatsGridComponent } from "../../shared/components/stats-grid/stats-gri
                   class="text-xs font-bold uppercase tracking-widest text-gray-500 dark:text-gray-400"
                   >{{ "METRICS.HEART_HEALTH" | translate }}</span
                 >
-                <span class="text-2xl animate-pulse">❤️</span>
+                <span class="text-red-500 inline-flex animate-pulse" aria-hidden="true">
+                  <svg lucideHeartPulse [size]="22" [strokeWidth]="2"></svg>
+                </span>
               </div>
               <div>
                 <div class="flex items-baseline gap-2 mb-4">
@@ -339,7 +363,9 @@ import { StatsGridComponent } from "../../shared/components/stats-grid/stats-gri
                   class="text-xs font-bold uppercase tracking-widest text-gray-500 dark:text-gray-400"
                   >{{ "METRICS.SLEEP_QUALITY" | translate }}</span
                 >
-                <span class="text-2xl">🌙</span>
+                <span class="text-indigo-500 inline-flex" aria-hidden="true">
+                  <svg lucideMoon [size]="22" [strokeWidth]="2"></svg>
+                </span>
               </div>
               <div>
                 <p
@@ -466,10 +492,20 @@ import { StatsGridComponent } from "../../shared/components/stats-grid/stats-gri
                     class="schedule-item flex gap-4 p-4 bg-gray-50 dark:bg-gray-800/50 rounded-2xl"
                   >
                     <div
-                      class="w-10 h-10 rounded-xl flex items-center justify-center text-xl"
+                      class="w-10 h-10 rounded-xl flex items-center justify-center text-primary-500"
                       [style.background]="item.iconBg"
                     >
-                      {{ item.icon }}
+                      @switch (item.icon) {
+                        @case ('flame') {
+                          <svg lucideFlame [size]="18" [strokeWidth]="2" aria-hidden="true"></svg>
+                        }
+                        @case ('sparkles') {
+                          <svg lucideSparkles [size]="18" [strokeWidth]="2" aria-hidden="true"></svg>
+                        }
+                        @default {
+                          <svg lucideStar [size]="18" [strokeWidth]="2" aria-hidden="true"></svg>
+                        }
+                      }
                     </div>
                     <div class="flex-1 min-w-0">
                       <p
@@ -522,10 +558,23 @@ import { StatsGridComponent } from "../../shared/components/stats-grid/stats-gri
                   class="flex-shrink-0 flex items-center gap-4 p-4 bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 min-w-[260px]"
                 >
                   <div
-                    class="w-12 h-12 rounded-xl flex items-center justify-center text-2xl"
+                    class="w-12 h-12 rounded-xl flex items-center justify-center text-primary-500"
                     [style.background]="log.iconBg"
                   >
-                    {{ log.icon }}
+                    @switch (log.icon) {
+                      @case ('activity') {
+                        <svg lucideActivity [size]="22" [strokeWidth]="2" aria-hidden="true"></svg>
+                      }
+                      @case ('leaf') {
+                        <svg lucideLeaf [size]="22" [strokeWidth]="2" aria-hidden="true"></svg>
+                      }
+                      @case ('moon') {
+                        <svg lucideMoon [size]="22" [strokeWidth]="2" aria-hidden="true"></svg>
+                      }
+                      @default {
+                        <svg lucideDroplets [size]="22" [strokeWidth]="2" aria-hidden="true"></svg>
+                      }
+                    }
                   </div>
                   <div>
                     <p class="font-bold text-gray-900 dark:text-white text-sm">
@@ -623,11 +672,11 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
 
   // Navigation items
   navItems = [
-    { route: "/dashboard", icon: "🏠", label: "nav.home" },
-    { route: "/vitals", icon: "💓", label: "nav.vitals" },
-    { route: "/activity", icon: "🏃", label: "nav.wellness" },
-    { route: "/goals", icon: "🎯", label: "nav.medical" },
-    { route: "/onboarding", icon: "👤", label: "nav.profile" },
+    { route: "/dashboard", icon: "home", label: "nav.home" },
+    { route: "/vitals", icon: "heart", label: "nav.vitals" },
+    { route: "/activity", icon: "activity", label: "nav.wellness" },
+    { route: "/goals", icon: "goals", label: "nav.medical" },
+    { route: "/onboarding", icon: "profile", label: "nav.profile" },
   ];
 
   // Weekly trend data
@@ -644,7 +693,7 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
   // Schedule items
   scheduleItems = [
     {
-      icon: "💊",
+      icon: "flame",
       iconBg: "rgba(255, 107, 107, 0.15)",
       title: "DASHBOARD.SCHEDULE_MORNING_MEDS",
       subtitle: "DASHBOARD.SCHEDULE_MORNING_MEDS_SUBTITLE",
@@ -652,7 +701,7 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
       status: "done",
     },
     {
-      icon: "🦷",
+      icon: "sparkles",
       iconBg: "rgba(197, 180, 227, 0.15)",
       title: "DASHBOARD.SCHEDULE_DENTAL_CLEANING",
       subtitle: "DASHBOARD.SCHEDULE_DENTAL_CLEANING_SUBTITLE",
@@ -660,7 +709,7 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
       status: "pending",
     },
     {
-      icon: "💊",
+      icon: "star",
       iconBg: "rgba(184, 230, 212, 0.15)",
       title: "DASHBOARD.SCHEDULE_EVENING_SUPPLEMENT",
       subtitle: "DASHBOARD.SCHEDULE_EVENING_SUPPLEMENT_SUBTITLE",
@@ -672,25 +721,25 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
   // Activity log
   activityLogs = [
     {
-      icon: "🧘",
+      icon: "activity",
       iconBg: "rgba(255, 107, 107, 0.15)",
       title: "DASHBOARD.ACTIVITY_LOG_MORNING_YOGA",
       subtitle: "DASHBOARD.ACTIVITY_LOG_MORNING_YOGA_SUBTITLE",
     },
     {
-      icon: "🍽️",
+      icon: "leaf",
       iconBg: "rgba(255, 107, 107, 0.15)",
       title: "DASHBOARD.ACTIVITY_LOG_BREAKFAST_LOGGED",
       subtitle: "DASHBOARD.ACTIVITY_LOG_BREAKFAST_LOGGED_SUBTITLE",
     },
     {
-      icon: "🌙",
+      icon: "moon",
       iconBg: "rgba(96, 165, 250, 0.15)",
       title: "DASHBOARD.ACTIVITY_LOG_SLEEP_SYNC",
       subtitle: "DASHBOARD.ACTIVITY_LOG_SLEEP_SYNC_SUBTITLE",
     },
     {
-      icon: "💧",
+      icon: "droplets",
       iconBg: "rgba(96, 165, 250, 0.15)",
       title: "DASHBOARD.ACTIVITY_LOG_HYDRATION_GOAL",
       subtitle: "DASHBOARD.ACTIVITY_LOG_HYDRATION_GOAL_SUBTITLE",
@@ -775,7 +824,7 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
   handleQuickAction(action: { route?: string; action?: string }) {
     if (action.action === "logWater") {
       // Quick water log action - will integrate with hydration service
-      this.rewards.awardCarrots(1, "Logged water! 💧", "hydration");
+      this.rewards.awardCarrots(1, "Logged water", "hydration");
     }
   }
 

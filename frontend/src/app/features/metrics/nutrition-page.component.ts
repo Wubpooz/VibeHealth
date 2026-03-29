@@ -13,6 +13,7 @@ import { NutritionLoggerComponent } from './nutrition-logger.component';
 import { TrendChartComponent, type TrendDataPoint } from '../../shared/components/trend-chart/trend-chart.component';
 import { DAILY_GOALS, MEAL_TYPE_INFO } from '../../core/metrics/metrics.types';
 import { BackButtonComponent } from '../../shared/components/back-button/back-button.component';
+import { LucideLeaf, LucideTriangleAlert } from '@lucide/angular';
 
 @Component({
   selector: 'app-nutrition-page',
@@ -22,6 +23,8 @@ import { BackButtonComponent } from '../../shared/components/back-button/back-bu
     NutritionLoggerComponent,
     TrendChartComponent,
     BackButtonComponent,
+    LucideLeaf,
+    LucideTriangleAlert,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
@@ -31,7 +34,9 @@ import { BackButtonComponent } from '../../shared/components/back-button/back-bu
       <div class="flex items-center justify-between flex-wrap gap-4">
         <app-back-button [label]="'common.back_to_dashboard' | translate" [showLabel]="true" />
         <div class="flex items-center gap-3">
-          <span class="text-3xl">🥗</span>
+          <span class="text-green-500 inline-flex" aria-hidden="true">
+            <svg lucideLeaf [size]="30" [strokeWidth]="2"></svg>
+          </span>
           <div>
             <h1 class="text-2xl font-bold text-gray-900 dark:text-white font-heading">
               {{ 'NUTRITION.TITLE' | translate }}
@@ -96,7 +101,11 @@ import { BackButtonComponent } from '../../shared/components/back-button/back-bu
           </span>
           <span class="font-bold" [class]="caloriesOverGoal() ? 'text-red-500' : 'text-green-500'">
             {{ caloriesToday() }} / {{ caloriesGoal }} kcal
-            @if (caloriesOverGoal()) { <span class="ml-1">⚠️</span> }
+            @if (caloriesOverGoal()) {
+              <span class="ml-1 inline-flex align-middle" aria-hidden="true">
+                <svg lucideTriangleAlert [size]="14" [strokeWidth]="2"></svg>
+              </span>
+            }
           </span>
         </div>
         <div class="h-3 bg-gray-100 dark:bg-gray-700 rounded-full overflow-hidden">
@@ -279,7 +288,7 @@ export class NutritionPageComponent {
       .map(([type, stats]) => ({
         type,
         label: MEAL_TYPE_INFO[type as keyof typeof MEAL_TYPE_INFO]?.label ?? type,
-        emoji: MEAL_TYPE_INFO[type as keyof typeof MEAL_TYPE_INFO]?.emoji ?? '🍽️',
+        emoji: MEAL_TYPE_INFO[type as keyof typeof MEAL_TYPE_INFO]?.emoji ?? '•',
         count: stats.count,
         calories: stats.calories,
         pct: Math.min(Math.round((stats.calories / totalCal) * 100), 100),

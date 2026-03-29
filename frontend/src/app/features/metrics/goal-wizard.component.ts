@@ -19,6 +19,8 @@ import {
   type CreateGoalDto,
 } from '../../core/metrics/goals.service';
 import { RewardsService } from '../../core/rewards/rewards.service';
+import { LucideCarrot, LucideTriangleAlert, LucideTrophy } from '@lucide/angular';
+import { BunnyMascotComponent } from '../../shared/components/bunny-mascot/bunny-mascot.component';
 
 // ─── Step definitions ─────────────────────────────────────────────────────────
 
@@ -26,7 +28,7 @@ type WizardStep = 1 | 2 | 3;
 
 @Component({
   selector: 'app-goal-wizard',
-  imports: [CommonModule, FormsModule, TranslateModule],
+  imports: [CommonModule, FormsModule, TranslateModule, LucideCarrot, LucideTriangleAlert, LucideTrophy, BunnyMascotComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div
@@ -216,29 +218,41 @@ type WizardStep = 1 | 2 | 3;
                     · {{ freqInfo[frequency()].emoji }} {{ freqInfo[frequency()].label }}
                   </p>
                   @if (endDate()) {
-                    <p class="summary-date">🗓️ Until {{ endDate() }}</p>
+                    <p class="summary-date">Until {{ endDate() }}</p>
                   }
                 </div>
                 <div class="summary-badge">
-                  <span class="badge-text">+5 🥕</span>
+                  <span class="badge-text">
+                    +5
+                    <span class="badge-icon" aria-hidden="true">
+                      <svg lucideCarrot [size]="14" [strokeWidth]="2"></svg>
+                    </span>
+                  </span>
                 </div>
               </div>
 
               @if (goalsService.error()) {
-                <p class="error-msg">⚠️ {{ goalsService.error() }}</p>
+                <p class="error-msg">
+                  <span class="error-icon" aria-hidden="true">
+                    <svg lucideTriangleAlert [size]="14" [strokeWidth]="2"></svg>
+                  </span>
+                  {{ goalsService.error() }}
+                </p>
               }
             } @else {
               <!-- Post-save celebration -->
               <div class="celebrate-section">
                 <div class="mascot-wrapper">
-                  <span class="mascot-emoji">🐰</span>
+                  <app-bunny-mascot [mood]="'celebrate'" [size]="76" />
                   <div class="confetti-ring"></div>
                 </div>
                 <h2 class="celebrate-title">{{ 'GOALS.WIZARD.CELEBRATE_TITLE' | translate }}</h2>
                 <p class="celebrate-subtitle">{{ 'GOALS.WIZARD.CELEBRATE_SUBTITLE' | translate }}</p>
 
                 <div class="carrot-earned">
-                  <span class="carrot-emoji">🥕</span>
+                  <span class="carrot-emoji" aria-hidden="true">
+                    <svg lucideCarrot [size]="22" [strokeWidth]="2"></svg>
+                  </span>
                   <span class="carrot-text">+5 {{ 'GOALS.WIZARD.CARROTS_EARNED' | translate }}</span>
                 </div>
 
@@ -265,12 +279,13 @@ type WizardStep = 1 | 2 | 3;
                 @if (goalsService.saving()) {
                   <span class="spinner"></span>
                 } @else {
-                  🎯 {{ 'GOALS.WIZARD.CREATE_GOAL' | translate }}
+                  <span class="btn-icon" aria-hidden="true"><svg lucideTrophy [size]="16" [strokeWidth]="2"></svg></span>
+                  {{ 'GOALS.WIZARD.CREATE_GOAL' | translate }}
                 }
               </button>
             } @else {
               <button class="btn-primary full-width" (click)="done()">
-                {{ 'GOALS.WIZARD.DONE' | translate }} ✓
+                {{ 'GOALS.WIZARD.DONE' | translate }}
               </button>
             }
           </div>
@@ -680,10 +695,22 @@ type WizardStep = 1 | 2 | 3;
       font-weight: 700;
       font-size: 0.875rem;
       color: #ff9f43;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.2rem;
+    }
+
+    .badge-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
     }
 
     /* ── Error ───────────────────────────────────────────────────────── */
     .error-msg {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
       font-family: 'Satoshi', sans-serif;
       font-size: 0.875rem;
       color: #dc2626;
@@ -691,6 +718,13 @@ type WizardStep = 1 | 2 | 3;
       border-radius: 0.75rem;
       padding: 0.75rem 1rem;
       margin-top: 0.5rem;
+    }
+
+    .error-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
     }
 
     /* ── Celebration ─────────────────────────────────────────────────── */
@@ -712,15 +746,8 @@ type WizardStep = 1 | 2 | 3;
       justify-content: center;
     }
 
-    .mascot-emoji {
-      font-size: 4rem;
-      animation: bounce 0.8s cubic-bezier(0.36, 0.07, 0.19, 0.97) infinite alternate;
+    .mascot-wrapper app-bunny-mascot {
       display: block;
-    }
-
-    @keyframes bounce {
-      from { transform: translateY(0) scale(1); }
-      to   { transform: translateY(-12px) scale(1.05); }
     }
 
     .confetti-ring {
@@ -771,7 +798,11 @@ type WizardStep = 1 | 2 | 3;
       to   { opacity: 1; transform: scale(1); }
     }
 
-    .carrot-emoji { font-size: 1.5rem; }
+    .carrot-emoji {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
 
     .carrot-text {
       font-family: 'Satoshi', sans-serif;
@@ -892,6 +923,12 @@ type WizardStep = 1 | 2 | 3;
       width: 100%;
     }
 
+    .btn-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
     /* ── Spinner ─────────────────────────────────────────────────────── */
     .spinner {
       display: inline-block;
@@ -911,7 +948,6 @@ type WizardStep = 1 | 2 | 3;
     @media (prefers-reduced-motion: reduce) {
       .wizard-overlay,
       .wizard-panel,
-      .mascot-emoji,
       .confetti-ring,
       .carrot-earned,
       .spinner,
@@ -1049,8 +1085,8 @@ export class GoalWizardComponent {
     const goal = await this.goalsService.createGoal(dto);
 
     if (goal) {
-      // Award 5 carrots for creating a SMART goal 🎯
-      this.rewardsService.awardCarrots(5, `New goal: ${this.effectiveTitle()} 🎯`, 'milestone');
+      // Award 5 carrots for creating a SMART goal
+      this.rewardsService.awardCarrots(5, `New goal: ${this.effectiveTitle()}`, 'milestone');
       this.saved.set(true);
       this.goalCreated.emit(goal);
     }
