@@ -16,6 +16,10 @@ import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { AuthService } from "../../core/auth/auth.service";
 import { ProfileService } from "../../core/profile/profile.service";
 import { RewardsService } from "../../core/rewards/rewards.service";
+import { MetricsService } from "../../core/metrics/metrics.service";
+import { GoalsService } from "../../core/metrics/goals.service";
+import { MedicationService, type MedicationReminder } from "../../core/medical/medication.service";
+import { MedicalIdService } from "../../core/medical-id/medical-id.service";
 import { BunnyMascotComponent } from "../../shared/components/bunny-mascot/bunny-mascot.component";
 import { CarrotCounterComponent } from "../../shared/components/carrot-counter/carrot-counter.component";
 import { CarrotFeedComponent } from "../../shared/components/carrot-feed/carrot-feed.component";
@@ -32,6 +36,22 @@ import {
   LucideStar,
   LucideTriangleAlert,
 } from '@lucide/angular';
+
+interface DashboardScheduleItem {
+  icon: 'flame' | 'sparkles' | 'star';
+  iconBg: string;
+  title: string;
+  subtitle: string;
+  time: string;
+  status: 'done' | 'pending';
+}
+
+interface DashboardActivityLogItem {
+  icon: 'activity' | 'leaf' | 'moon' | 'droplets';
+  iconBg: string;
+  title: string;
+  subtitle: string;
+}
 
 @Component({
   selector: "app-dashboard",
@@ -239,6 +259,27 @@ import {
               </div>
             </div>
           </section>
+
+          <!-- Quick Actions (link all key features) -->
+          <!-- <section class="mt-6">
+            <div class="flex items-center justify-between mb-3">
+              <h3 class="text-xl font-bold text-gray-900 dark:text-white font-heading">
+                {{ 'DASHBOARD.QUICK_ACTIONS' | translate }}
+              </h3>
+            </div>
+            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+              @for (item of navItems; track item.route) {
+                <a
+                  [routerLink]="item.route"
+                  class="rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-3 text-center hover:shadow-lg transition-shadow"
+                >
+                  <p class="text-sm font-semibold text-gray-900 dark:text-white">
+                    {{ item.label | translate }}
+                  </p>
+                </a>
+              }
+            </div>
+          </section> -->
 
           <app-stats-grid />
 
@@ -602,6 +643,10 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
   readonly auth = inject(AuthService);
   readonly profileService = inject(ProfileService);
   readonly rewards = inject(RewardsService);
+  readonly metricsService = inject(MetricsService);
+  readonly goalsService = inject(GoalsService);
+  readonly medicationService = inject(MedicationService);
+  readonly medicalIdService = inject(MedicalIdService);
   readonly translate = inject(TranslateService);
   readonly router = inject(Router);
 
@@ -616,13 +661,31 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
   dismissedOnboarding = signal(false);
   dismissedEmailBanner = signal(false);
 
-  // Mock metrics data (will be replaced with real data from MetricsService)
-  activityProgress = signal(80);
-  stepsToday = signal(8432);
-  heartRate = signal(72);
-  sleepHours = signal(7);
-  sleepMinutes = signal(42);
-  sleepQuality = signal(75);
+  readonly dailyStepsGoal = 10_000;
+
+  // Linked metrics data from shared MetricsService
+  readonly stepsToday = computed(() =>
+    Math.max(0, Math.round(this.metricsService.vitalsToday()?.summary.STEPS?.value ?? 0)),
+  );
+  readonly heartRate = computed(() =>
+    Math.max(0, Math.round(this.metricsService.vitalsToday()?.summary.HEART_RATE?.value ?? 0)),
+  );
+  private readonly sleepDurationHours = computed(
+    () => this.metricsService.vitalsToday()?.summary.SLEEP_HOURS?.value ?? 0,
+  );
+  readonly sleepHours = computed(() => Math.floor(this.sleepDurationHours()));
+  readonly sleepMinutes = computed(() => {
+    const fractionalHours = this.sleepDurationHours() - Math.floor(this.sleepDurationHours());
+    return Math.max(0, Math.round(fractionalHours * 60));
+  });
+  readonly sleepQuality = computed(() => {
+    const ratio = this.sleepDurationHours() / 8;
+    return Math.max(0, Math.min(100, Math.round(ratio * 100)));
+  });
+  readonly activityProgress = computed(() => {
+    if (this.dailyStepsGoal <= 0) return 0;
+    return Math.max(0, Math.min(100, Math.round((this.stepsToday() / this.dailyStepsGoal) * 100)));
+  });
 
   // Heart rate visualization bars
   heartBars = [50, 65, 75, 50, 100, 60, 40];
@@ -670,28 +733,20 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
     this.currentTime.set(new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }));
   }, 60000);
 
-  // Navigation items
+  // Navigation items for quick actions on dashboard
   navItems = [
-    { route: "/dashboard", icon: "home", label: "nav.home" },
     { route: "/vitals", icon: "heart", label: "nav.vitals" },
-    { route: "/activity", icon: "activity", label: "nav.wellness" },
-    { route: "/goals", icon: "goals", label: "nav.medical" },
-    { route: "/onboarding", icon: "profile", label: "nav.profile" },
+    { route: "/activity", icon: "activity", label: "nav.activity" },
+    { route: "/workouts", icon: "fitness_center", label: "nav.workouts" },
+    { route: "/nutrition", icon: "restaurant", label: "nav.nutrition" },
+    { route: "/medication", icon: "local_pharmacy", label: "nav.medical" },
+    { route: "/medical-id", icon: "badge", label: "nav.medical_id" },
+    { route: "/goals", icon: "track_changes", label: "nav.goals" },
+    { route: "/first-aid", icon: "medical_services", label: "nav.first_aid" },
+    { route: "/journal", icon: "menu_book", label: "nav.journal" },
   ];
 
-  // Weekly trend data
-  weeklyData = [
-    { day: "Mon", height: 50, fillPercent: 75, isToday: false },
-    { day: "Tue", height: 65, fillPercent: 85, isToday: false },
-    { day: "Wed", height: 80, fillPercent: 100, isToday: false },
-    { day: "Thu", height: 60, fillPercent: 80, isToday: false },
-    { day: "Fri", height: 75, fillPercent: 92, isToday: true },
-    { day: "Sat", height: 45, fillPercent: 60, isToday: false },
-    { day: "Sun", height: 55, fillPercent: 70, isToday: false },
-  ];
-
-  // Schedule items
-  scheduleItems = [
+  private readonly defaultScheduleItems: DashboardScheduleItem[] = [
     {
       icon: "flame",
       iconBg: "rgba(255, 107, 107, 0.15)",
@@ -718,8 +773,7 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
     },
   ];
 
-  // Activity log
-  activityLogs = [
+  private readonly defaultActivityLogs: DashboardActivityLogItem[] = [
     {
       icon: "activity",
       iconBg: "rgba(255, 107, 107, 0.15)",
@@ -746,6 +800,133 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
     },
   ];
 
+  get weeklyData(): { day: string; height: number; fillPercent: number; isToday: boolean }[] {
+    const week = this.metricsService.activityWeek()?.dailySummary;
+    if (!week) {
+      return [
+        { day: "Mon", height: 50, fillPercent: 75, isToday: false },
+        { day: "Tue", height: 65, fillPercent: 85, isToday: false },
+        { day: "Wed", height: 80, fillPercent: 100, isToday: false },
+        { day: "Thu", height: 60, fillPercent: 80, isToday: false },
+        { day: "Fri", height: 75, fillPercent: 92, isToday: true },
+        { day: "Sat", height: 45, fillPercent: 60, isToday: false },
+        { day: "Sun", height: 55, fillPercent: 70, isToday: false },
+      ];
+    }
+
+    const points = this.last7Days();
+    const minutesValues = points.map((point) => week[point.key]?.minutes ?? 0);
+    const maxMinutes = Math.max(30, ...minutesValues);
+
+    return points.map((point) => {
+      const minutes = week[point.key]?.minutes ?? 0;
+      const ratio = minutes / maxMinutes;
+      const scaled = Math.max(0, Math.min(100, Math.round(ratio * 100)));
+      return {
+        day: point.day,
+        height: Math.max(18, scaled),
+        fillPercent: scaled,
+        isToday: point.isToday,
+      };
+    });
+  }
+
+  get scheduleItems(): DashboardScheduleItem[] {
+    const now = Date.now();
+    const reminders = this.medicationService.medications()
+      .flatMap((medication) =>
+        medication.reminders
+          .filter((reminder) => reminder.nextDueAt)
+          .map((reminder) => ({ medicationName: medication.name, reminder })),
+      )
+      .sort((a, b) => {
+        const left = a.reminder.nextDueAt ? new Date(a.reminder.nextDueAt).getTime() : 0;
+        const right = b.reminder.nextDueAt ? new Date(b.reminder.nextDueAt).getTime() : 0;
+        return left - right;
+      })
+      .slice(0, 3);
+
+    if (reminders.length === 0) {
+      return this.defaultScheduleItems;
+    }
+
+    const icons: DashboardScheduleItem['icon'][] = ['flame', 'sparkles', 'star'];
+    const backgrounds = [
+      'rgba(255, 107, 107, 0.15)',
+      'rgba(197, 180, 227, 0.15)',
+      'rgba(184, 230, 212, 0.15)',
+    ];
+
+    return reminders.map((entry, index) => {
+      const dueAt = entry.reminder.nextDueAt ? new Date(entry.reminder.nextDueAt).getTime() : now;
+      return {
+        icon: icons[index] ?? 'star',
+        iconBg: backgrounds[index] ?? backgrounds[2],
+        title: entry.medicationName,
+        subtitle: `${entry.reminder.dosage} • ${this.recurrenceLabel(entry.reminder.recurrence)}`,
+        time: this.reminderTimeLabel(entry.reminder),
+        status: dueAt < now ? 'done' : 'pending',
+      };
+    });
+  }
+
+  get activityLogs(): DashboardActivityLogItem[] {
+    const events: { icon: DashboardActivityLogItem['icon']; iconBg: string; title: string; subtitle: string; timestamp: number }[] = [];
+
+    for (const log of this.metricsService.activityToday()?.logs ?? []) {
+      events.push({
+        icon: 'activity',
+        iconBg: 'rgba(255, 107, 107, 0.15)',
+        title: log.name,
+        subtitle: `${log.duration} min • ${this.timeLabel(log.loggedAt)}`,
+        timestamp: new Date(log.loggedAt).getTime(),
+      });
+    }
+
+    for (const log of this.metricsService.nutritionToday()?.logs ?? []) {
+      events.push({
+        icon: 'leaf',
+        iconBg: 'rgba(255, 107, 107, 0.15)',
+        title: log.name,
+        subtitle: `${log.mealType} • ${this.timeLabel(log.loggedAt)}`,
+        timestamp: new Date(log.loggedAt).getTime(),
+      });
+    }
+
+    for (const log of this.metricsService.hydrationToday()?.logs ?? []) {
+      events.push({
+        icon: 'droplets',
+        iconBg: 'rgba(96, 165, 250, 0.15)',
+        title: `${log.amount} ${log.unit}`,
+        subtitle: this.timeLabel(log.loggedAt),
+        timestamp: new Date(log.loggedAt).getTime(),
+      });
+    }
+
+    for (const log of this.metricsService.vitalsToday()?.logs ?? []) {
+      if (log.type !== 'SLEEP_HOURS') continue;
+      events.push({
+        icon: 'moon',
+        iconBg: 'rgba(96, 165, 250, 0.15)',
+        title: `${log.value} ${log.unit}`,
+        subtitle: `${log.type} • ${this.timeLabel(log.loggedAt)}`,
+        timestamp: new Date(log.loggedAt).getTime(),
+      });
+    }
+
+    const logs = [...events]
+      .sort((left, right) => right.timestamp - left.timestamp)
+      .slice(0, 4)
+      .map((event) => ({
+        icon: event.icon,
+        iconBg: event.iconBg,
+        title: event.title,
+        subtitle: event.subtitle,
+      }));
+
+    return logs.length > 0 ? logs : this.defaultActivityLogs;
+  }
+
   constructor() {
     // Load dismissed banner states from localStorage
     this.dismissedOnboarding.set(
@@ -763,7 +944,7 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.checkProfileStatus();
+    void this.initializeDashboardData();
     this.rewards.logDailyActivity();
   }
 
@@ -819,6 +1000,51 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
     await this.profileService.loadProfile();
     const hasProfile = this.profileService.hasProfile();
     this.showOnboardingPrompt.set(hasProfile === false);
+  }
+
+  private async initializeDashboardData(): Promise<void> {
+    await Promise.allSettled([
+      this.checkProfileStatus(),
+      this.metricsService.loadAllTodayData(),
+      this.metricsService.loadActivityWeek(),
+      this.metricsService.loadWorkoutPlans(),
+      this.goalsService.loadGoals(),
+      this.medicationService.loadMedications(),
+      this.medicalIdService.loadMedicalId(),
+    ]);
+  }
+
+  private last7Days(): { key: string; day: string; isToday: boolean }[] {
+    const days: { key: string; day: string; isToday: boolean }[] = [];
+    for (let offset = 6; offset >= 0; offset--) {
+      const date = new Date();
+      date.setDate(date.getDate() - offset);
+      days.push({
+        key: date.toISOString().split('T')[0],
+        day: date.toLocaleDateString('en-US', { weekday: 'short' }),
+        isToday: offset === 0,
+      });
+    }
+    return days;
+  }
+
+  private reminderTimeLabel(reminder: MedicationReminder): string {
+    if (!reminder.nextDueAt) {
+      return reminder.timeOfDay;
+    }
+    return this.timeLabel(reminder.nextDueAt);
+  }
+
+  private recurrenceLabel(recurrence: string): string {
+    return recurrence.toLowerCase().replaceAll('_', ' ');
+  }
+
+  private timeLabel(rawDate: string): string {
+    const date = new Date(rawDate);
+    if (Number.isNaN(date.getTime())) {
+      return rawDate;
+    }
+    return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
   }
 
   handleQuickAction(action: { route?: string; action?: string }) {

@@ -20,10 +20,11 @@ import { TranslateService } from '@ngx-translate/core';
 import { MedicalIdQrDialogComponent } from './medical-id-qr-dialog.component';
 import { MedicalIdService } from '../../core/medical-id/medical-id.service';
 import { ReferenceDataService } from '../../core/reference-data/reference-data.service';
-import { BackButtonComponent } from '../../shared/components/back-button/back-button.component';
+import { PageHeaderComponent } from '../../shared/components/page-header/page-header.component';
 import { AutocompleteComponent } from '../../shared/components/autocomplete/autocomplete.component';
 import { ProfileService } from '../../core/profile/profile.service';
 import { AuthService } from '../../core/auth/auth.service';
+import { MedicationService } from '../../core/medical/medication.service';
 import { BLOOD_TYPES, RELATIONSHIPS, BloodType, EmergencyContact } from './medical-id.types';
 
 type ViewMode = 'card' | 'edit';
@@ -36,7 +37,7 @@ type ViewMode = 'card' | 'edit';
     FormsModule,
     TranslateModule,
     AutocompleteComponent,
-    BackButtonComponent,
+    PageHeaderComponent,
     MatDialogModule,
     MatButtonModule,
     MatIconModule,
@@ -54,16 +55,17 @@ type ViewMode = 'card' | 'edit';
   template: `
     <div class="medical-id-page">
       <!-- Dramatic Emergency Header -->
-      <header class="emergency-header">
-        <div class="header-content">
-          <app-back-button [showLabel]="false" />
-          <div class="header-title">
-            <div class="medical-cross">
-              <span class="cross-h"></span>
-              <span class="cross-v"></span>
-            </div>
-            <h1>{{ 'MEDICAL_ID.TITLE' | translate }}</h1>
-          </div>
+      <app-page-header
+        [title]="'MEDICAL_ID.TITLE' | translate"
+        [subtitle]="'MEDICAL_ID.SUBTITLE' | translate"
+        [showBackLabel]="false"
+      >
+        <div pageHeaderIcon class="medical-cross">
+          <span class="cross-h"></span>
+          <span class="cross-v"></span>
+        </div>
+
+        <div pageHeaderRight>
           <button
             class="mode-toggle"
             (click)="toggleMode()"
@@ -80,7 +82,7 @@ type ViewMode = 'card' | 'edit';
             }
           </button>
         </div>
-      </header>
+      </app-page-header>
 
       <main class="main-content">
         @if (viewMode() === 'card') {
@@ -145,8 +147,8 @@ type ViewMode = 'card' | 'edit';
                   <span>Medications</span>
                 </div>
                 <div class="info-content">
-                  @if ((medicalIdData()?.medications?.length || 0) > 0) {
-                    @for (med of medicalIdData()?.medications; track med) {
+                  @if (displayMedications().length > 0) {
+                    @for (med of displayMedications(); track med) {
                       <span class="tag med-tag">{{ med }}</span>
                     }
                   } @else {
@@ -279,7 +281,7 @@ type ViewMode = 'card' | 'edit';
               <h3 class="section-label">Medications</h3>
               <div class="chip-input-container">
                 <app-autocomplete
-                  [suggestions]="commonMedications()"
+                  [suggestions]="medicationSuggestions()"
                   [selectedItems]="editData.medications"
                   [placeholder]="'Add medication...'"
                   [allowCustom]="true"
@@ -1455,6 +1457,7 @@ export class MedicalIdComponent implements OnInit {
   readonly medicalIdService = inject(MedicalIdService);
   readonly profileService = inject(ProfileService);
   readonly auth = inject(AuthService);
+  readonly medicationService = inject(MedicationService);
   private readonly referenceDataService = inject(ReferenceDataService);
   private readonly dialog = inject(MatDialog);
   private readonly snackBar = inject(MatSnackBar);
@@ -1472,6 +1475,20 @@ export class MedicalIdComponent implements OnInit {
   readonly commonAllergies = this.referenceDataService.allergies;
   readonly commonMedications = this.referenceDataService.medications;
   readonly commonConditions = this.referenceDataService.conditions;
+  readonly medicationSuggestions = computed(() => {
+    const reference = this.commonMedications();
+    const tracked = this.medicationService.medications().flatMap((medication) => [
+      medication.name,
+      medication.standardName ?? '',
+    ]);
+    return Array.from(
+      new Set(
+        [...reference, ...tracked]
+          .map((value) => value.trim())
+          .filter((value) => value.length > 0),
+      ),
+    ).sort((left, right) => left.localeCompare(right));
+  });
 
   readonly qrCodeUrl = signal('');
 
@@ -1580,6 +1597,17 @@ export class MedicalIdComponent implements OnInit {
 
   // Computed
   readonly medicalIdData = computed(() => this.medicalIdService.medicalId());
+  readonly displayMedications = computed(() => {
+    const fromMedicalId = this.medicalIdData()?.medications ?? [];
+    const fromTracker = this.medicationService.medications().map((medication) => medication.name);
+    return Array.from(
+      new Set(
+        [...fromMedicalId, ...fromTracker]
+          .map((value) => value.trim())
+          .filter((value) => value.length > 0),
+      ),
+    );
+  });
 
   readonly displayName = computed(() => {
     const data = this.medicalIdData();
@@ -1687,6 +1715,7 @@ export class MedicalIdComponent implements OnInit {
   ngOnInit(): void {
     void (async () => {
       await this.profileService.loadProfile();
+      await this.medicationService.loadMedications();
       await this.medicalIdService.loadMedicalId();
       this.syncEditData();
     })();
@@ -1703,11 +1732,19 @@ export class MedicalIdComponent implements OnInit {
 
   syncEditData() {
     const data = this.medicalIdData();
+    const trackedMedicationNames = this.medicationService.medications().map((medication) => medication.name);
+    const mergedMedications = Array.from(
+      new Set(
+        [...(data?.medications ?? []), ...trackedMedicationNames]
+          .map((value) => value.trim())
+          .filter((value) => value.length > 0),
+      ),
+    );
     if (data) {
       this.editData = {
         bloodType: data.bloodType,
         allergies: [...data.allergies],
-        medications: [...data.medications],
+        medications: mergedMedications,
         medicalConditions: [...(data.medicalConditions || [])],
         emergencyContacts: [...data.emergencyContacts]
       };
