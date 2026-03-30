@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { BackButtonComponent } from '../../shared/components/back-button/back-button.component';
+import { PageHeaderComponent } from '../../shared/components/page-header/page-header.component';
 import { FirstAidService } from './first-aid.service';
 import { FirstAidCategory, SeverityLevel } from './first-aid.types';
 import { FIRST_AID_CATEGORIES } from './first-aid.data';
@@ -11,32 +11,29 @@ import { fadeInOut, slideInUp, scaleIn } from '../../shared/animations';
 
 @Component({
   selector: 'app-first-aid',
-  imports: [CommonModule, RouterLink, FormsModule, TranslateModule, BackButtonComponent],
+  imports: [CommonModule, RouterLink, FormsModule, TranslateModule, PageHeaderComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   animations: [fadeInOut, slideInUp, scaleIn],
   template: `
     <div class="min-h-screen bg-gradient-to-br from-rose-50 via-white to-sage-50 dark:from-gray-950 dark:via-gray-900 dark:to-gray-950">
 
       <!-- Header -->
-      <header class="sticky top-0 z-40 bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl border-b border-gray-100 dark:border-gray-800">
-        <div class="max-w-6xl mx-auto px-4 sm:px-6 py-4">
-          <div class="flex items-center justify-between">
-            <div class="flex items-center gap-3">
-              <app-back-button [showLabel]="false" />
-              <div>
-                <h1 class="text-xl font-bold text-gray-900 dark:text-white font-heading">{{ 'FIRST_AID.TITLE' | translate }}</h1>
-                <p class="text-sm text-gray-500 dark:text-gray-400">{{ 'FIRST_AID.SUBTITLE' | translate }}</p>
-              </div>
-            </div>
+      <app-page-header
+        [title]="'FIRST_AID.TITLE' | translate"
+        [subtitle]="'FIRST_AID.SUBTITLE' | translate"
+        [showBackLabel]="false"
+      >
+        <span pageHeaderIcon class="w-10 h-10 rounded-2xl bg-rose-200 dark:bg-rose-800 text-rose-600 dark:text-rose-100 flex items-center justify-center">
+          🩹
+        </span>
 
-            <!-- Offline badge -->
-            <div class="flex items-center gap-2 px-3 py-1.5 bg-green-50 dark:bg-green-900/20 rounded-full">
-              <div class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
-              <span class="text-xs font-medium text-green-700 dark:text-green-400">{{ 'FIRST_AID.AVAILABLE_OFFLINE' | translate }}</span>
-            </div>
+        <div pageHeaderRight>
+          <div class="flex items-center gap-2 px-3 py-1.5 bg-green-50 dark:bg-green-900/20 rounded-full">
+            <div class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
+            <span class="text-xs font-medium text-green-700 dark:text-green-400">{{ 'FIRST_AID.AVAILABLE_OFFLINE' | translate }}</span>
           </div>
         </div>
-      </header>
+      </app-page-header>
 
       <main class="max-w-6xl mx-auto px-4 sm:px-6 py-6 pb-24">
 

@@ -12,7 +12,7 @@ import { RewardsService } from '../../core/rewards/rewards.service';
 import { NutritionLoggerComponent } from './nutrition-logger.component';
 import { TrendChartComponent, type TrendDataPoint } from '../../shared/components/trend-chart/trend-chart.component';
 import { DAILY_GOALS, MEAL_TYPE_INFO } from '../../core/metrics/metrics.types';
-import { BackButtonComponent } from '../../shared/components/back-button/back-button.component';
+import { PageHeaderComponent } from '../../shared/components/page-header/page-header.component';
 import { LucideLeaf, LucideTriangleAlert } from '@lucide/angular';
 import { HydrationTrackerComponent } from './hydration-tracker.component';
 
@@ -23,34 +23,27 @@ import { HydrationTrackerComponent } from './hydration-tracker.component';
     TranslateModule,
     NutritionLoggerComponent,
     TrendChartComponent,
-    BackButtonComponent,
+    PageHeaderComponent,
     LucideLeaf,
     LucideTriangleAlert,
     HydrationTrackerComponent
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="min-h-screen bg-[#fdf8f8] dark:bg-gray-950 px-4 sm:px-6 lg:px-8 py-8 pb-24 space-y-6 no-select">
+    <div class="min-h-screen bg-[#fdf8f8] dark:bg-gray-950 no-select">
 
       <!-- Page Header -->
-      <div class="flex items-center justify-between flex-wrap gap-4">
-        <app-back-button [label]="'common.back_to_dashboard' | translate" [showLabel]="true" />
-        <div class="flex items-center gap-3">
-          <span class="text-green-500 inline-flex" aria-hidden="true">
-            <svg lucideLeaf [size]="30" [strokeWidth]="2"></svg>
-          </span>
-          <div>
-            <h1 class="text-2xl font-bold text-gray-900 dark:text-white font-heading">
-              {{ 'NUTRITION.TITLE' | translate }}
-            </h1>
-            <p class="text-sm text-gray-500 dark:text-gray-400 mt-0.5">
-              {{ 'NUTRITION.SUBTITLE' | translate }}
-            </p>
-          </div>
-        </div>
+      <app-page-header
+        [title]="'NUTRITION.TITLE' | translate"
+        [subtitle]="'NUTRITION.SUBTITLE' | translate"
+        [backLabel]="'common.back_to_dashboard' | translate"
+        [showBackLabel]="true"
+      >
+        <span pageHeaderIcon class="text-green-500 inline-flex" aria-hidden="true">
+          <svg lucideLeaf [size]="30" [strokeWidth]="2"></svg>
+        </span>
 
-        <!-- Desktop summary pill -->
-        <div class="hidden sm:flex items-center gap-3 px-4 py-2 bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700">
+        <div pageHeaderRight class="hidden sm:flex items-center gap-3 px-4 py-2 bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700">
           <div class="text-center">
             <p class="text-lg font-bold text-gray-900 dark:text-white font-heading">
               {{ caloriesToday() }}
@@ -73,7 +66,9 @@ import { HydrationTrackerComponent } from './hydration-tracker.component';
             <p class="text-xs text-gray-400 font-medium">fat</p>
           </div>
         </div>
-      </div>
+      </app-page-header>
+
+      <div class="px-4 sm:px-6 lg:px-8 py-8 pb-24 space-y-6">
 
       <!-- Mobile summary strip -->
       <div class="sm:hidden grid grid-cols-4 gap-2">
@@ -216,6 +211,7 @@ import { HydrationTrackerComponent } from './hydration-tracker.component';
           [data]="weeklyProteinData()"
           unit="g"
         />
+      </div>
       </div>
 
     </div>

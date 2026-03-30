@@ -5,24 +5,25 @@ import { TranslateModule } from '@ngx-translate/core';
 import { MedicationService, Medication, MedicationReminder, MedicationRecurrence, OpenFdaDrugIntel } from '../../core/medical/medication.service';
 import { ToastService } from '../../core/toast/toast.service';
 import { AutocompleteComponent } from '../../shared/components/autocomplete/autocomplete.component';
+import { PageHeaderComponent } from '../../shared/components/page-header/page-header.component';
 import { ReferenceDataService } from '../../core/reference-data/reference-data.service';
 
 @Component({
   selector: 'app-medication-page',
-  imports: [CommonModule, FormsModule, TranslateModule, AutocompleteComponent],
+  imports: [CommonModule, FormsModule, TranslateModule, AutocompleteComponent, PageHeaderComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="min-h-screen bg-[#f8fafc] dark:bg-[#0f172a] px-4 sm:px-6 lg:px-10 py-8 pb-24 space-y-5">
-      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-        <div>
-          <h1 class="text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white">
-            {{ 'MEDICATION.TITLE' | translate }}
-          </h1>
-          <p class="text-sm text-slate-500 dark:text-slate-300 mt-1">
-            {{ 'MEDICATION.SUBTITLE' | translate }}
-          </p>
-        </div>
-      </div>
+    <div class="min-h-screen bg-[#f8fafc] dark:bg-[#0f172a]">
+      <app-page-header
+        [title]="'MEDICATION.TITLE' | translate"
+        [subtitle]="'MEDICATION.SUBTITLE' | translate"
+        [backLabel]="'common.back_to_dashboard' | translate"
+        [showBackLabel]="true"
+      >
+        <span pageHeaderIcon class="text-3xl" aria-hidden="true">💊</span>
+      </app-page-header>
+
+      <div class="px-4 sm:px-6 lg:px-10 py-8 pb-24 space-y-5">
 
       <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-4 space-y-4 shadow-sm">
         <form class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-3" (submit)="submit($event)">
@@ -545,6 +546,7 @@ import { ReferenceDataService } from '../../core/reference-data/reference-data.s
           </div>
         </div>
       }
+      </div>
     </div>
   `,
 })

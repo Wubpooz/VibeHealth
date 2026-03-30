@@ -12,35 +12,28 @@ import { MetricsService } from '../../core/metrics/metrics.service';
 import { RewardsService } from '../../core/rewards/rewards.service';
 import { ActivityLoggerComponent } from './activity-logger.component';
 import { TrendChartComponent, type TrendDataPoint } from '../../shared/components/trend-chart/trend-chart.component';
-import { BackButtonComponent } from '../../shared/components/back-button/back-button.component';
+import { PageHeaderComponent } from '../../shared/components/page-header/page-header.component';
 import { LucideActivity } from '@lucide/angular';
 
 @Component({
   selector: 'app-activity-page',
-  imports: [CommonModule, RouterModule, TranslateModule, ActivityLoggerComponent, TrendChartComponent, BackButtonComponent, LucideActivity],
+  imports: [CommonModule, RouterModule, TranslateModule, ActivityLoggerComponent, TrendChartComponent, PageHeaderComponent, LucideActivity],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="min-h-screen bg-[#fdf8f8] dark:bg-gray-950 px-4 sm:px-6 lg:px-8 py-8 pb-24 space-y-6 no-select">
+    <div class="min-h-screen bg-[#fdf8f8] dark:bg-gray-950 no-select">
 
       <!-- Page Header -->
-      <div class="flex items-center justify-between">
-        <app-back-button [label]="'common.back_to_dashboard' | translate" [showLabel]="true" />
-        <div class="flex items-center gap-3">
-          <span class="text-primary-500 inline-flex" aria-hidden="true">
-            <svg lucideActivity [size]="30" [strokeWidth]="2"></svg>
-          </span>
-          <div>
-            <h1 class="text-2xl font-bold text-gray-900 dark:text-white font-heading">
-              {{ 'ACTIVITY.TITLE' | translate }}
-            </h1>
-            <p class="text-sm text-gray-500 dark:text-gray-400 mt-0.5">
-              {{ 'ACTIVITY.SUBTITLE' | translate }}
-            </p>
-          </div>
-        </div>
+      <app-page-header
+        [title]="'ACTIVITY.TITLE' | translate"
+        [subtitle]="'ACTIVITY.SUBTITLE' | translate"
+        [backLabel]="'common.back_to_dashboard' | translate"
+        [showBackLabel]="true"
+      >
+        <span pageHeaderIcon class="text-primary-500 inline-flex" aria-hidden="true">
+          <svg lucideActivity [size]="30" [strokeWidth]="2"></svg>
+        </span>
 
-        <!-- Today summary pill -->
-        <div class="hidden sm:flex items-center gap-3 px-4 py-2 bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700">
+        <div pageHeaderRight class="hidden sm:flex items-center gap-3 px-4 py-2 bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700">
           <div class="text-center">
             <p class="text-lg font-bold text-gray-900 dark:text-white font-heading">{{ minutesToday() }}</p>
             <p class="text-xs text-gray-400 font-medium">{{ 'ACTIVITY.MIN' | translate }}</p>
@@ -56,7 +49,9 @@ import { LucideActivity } from '@lucide/angular';
             <p class="text-xs text-gray-400 font-medium">{{ 'ACTIVITY.ACTIVE_DAYS' | translate }}</p>
           </div>
         </div>
-      </div>
+      </app-page-header>
+
+      <div class="px-4 sm:px-6 lg:px-8 py-8 pb-24 space-y-6">
 
       <!-- Mobile summary strip -->
       <div class="sm:hidden grid grid-cols-3 gap-3">
@@ -125,6 +120,7 @@ import { LucideActivity } from '@lucide/angular';
           [data]="weeklyCaloriesData()"
           unit="kcal"
         />
+      </div>
       </div>
 
     </div>

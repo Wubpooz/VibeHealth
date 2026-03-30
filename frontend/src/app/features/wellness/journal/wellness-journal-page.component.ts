@@ -4,6 +4,7 @@ import { FormsModule, FormBuilder, FormGroup, Validators, ReactiveFormsModule } 
 import { TranslateModule } from '@ngx-translate/core';
 import { ThemeService } from '../../../core/theme/theme.service';
 import { WellnessJournalService } from '../../../core/wellness/wellness-journal.service';
+import { PageHeaderComponent } from '../../../shared/components/page-header/page-header.component';
 import { ToastService } from '../../../core/toast/toast.service';
 import {
   type MoodEmoji,
@@ -16,17 +17,19 @@ import {
 @Component({
   selector: 'app-wellness-journal-page',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, TranslateModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, TranslateModule, PageHeaderComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="wellness-journal-page">
       <!-- Header -->
-      <header class="wellness-header">
-        <div class="header-container">
-          <h1 class="text-3xl font-bold">{{ 'WELLNESS.JOURNAL.TITLE' | translate }}</h1>
-          <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">{{ 'WELLNESS.JOURNAL.SUBTITLE' | translate }}</p>
-        </div>
-        <div class="header-stats">
+      <app-page-header
+        [title]="'WELLNESS.JOURNAL.TITLE' | translate"
+        [subtitle]="'WELLNESS.JOURNAL.SUBTITLE' | translate"
+        [showBackLabel]="false"
+      >
+        <span pageHeaderIcon class="text-3xl">📝</span>
+
+        <div pageHeaderRight class="flex items-center gap-3">
           <div class="stat-chip">
             <span class="stat-value">{{ journalService.journalCount() }}</span>
             <span class="stat-label">{{ 'WELLNESS.JOURNAL.ENTRIES' | translate }}</span>
@@ -36,7 +39,7 @@ import {
             <span class="stat-value">+3</span>
           </div>
         </div>
-      </header>
+      </app-page-header>
 
       <main class="journal-main">
         <!-- Left Panel: Timeline -->

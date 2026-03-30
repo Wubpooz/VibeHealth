@@ -2,37 +2,35 @@ import { Component, inject, signal, computed, OnInit, ChangeDetectionStrategy } 
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { PageHeaderComponent } from '../../shared/components/page-header/page-header.component';
 import { FirstAidService } from './first-aid.service';
 import { FirstAidCard, SeverityLevel } from './first-aid.types';
 
 @Component({
   selector: 'app-first-aid-detail',
-  imports: [CommonModule, RouterLink, TranslateModule],
+  imports: [CommonModule, RouterLink, TranslateModule, PageHeaderComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     @if (card(); as c) {
       <div class="min-h-screen bg-gradient-to-br from-rose-50 via-white to-sage-50 dark:from-gray-950 dark:via-gray-900 dark:to-gray-950">
 
         <!-- Header -->
-        <header class="sticky top-0 z-40 bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl border-b border-gray-100 dark:border-gray-800">
-          <div class="max-w-3xl mx-auto px-4 sm:px-6 py-4">
-            <div class="flex items-center gap-3">
-              <a routerLink="/first-aid" class="p-2 -ml-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
-                <svg class="w-5 h-5 text-gray-600 dark:text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-                </svg>
-              </a>
-              <div class="flex-1 min-w-0">
-                <h1 class="text-lg font-bold text-gray-900 dark:text-white font-heading truncate">
-                  {{ c.titleKey | translate }}
-                </h1>
-              </div>
-              <div class="severity-badge" [attr.data-severity]="c.severity">
-                {{ getSeverityLabel(c.severity) | translate }}
-              </div>
+        <app-page-header
+          [title]="c.titleKey | translate"
+          [subtitle]="c.descriptionKey | translate"
+          [backLabel]="'FIRST_AID.BACK' | translate"
+          [showBackLabel]="false"
+        >
+          <span pageHeaderIcon class="text-3xl leading-none">
+            {{ c.icon }}
+          </span>
+
+          <div pageHeaderRight>
+            <div class="severity-badge" [attr.data-severity]="c.severity">
+              {{ getSeverityLabel(c.severity) | translate }}
             </div>
           </div>
-        </header>
+        </app-page-header>
 
         <main class="max-w-3xl mx-auto px-4 sm:px-6 py-6 pb-24">
 

@@ -16,7 +16,7 @@ import {
 } from "../../core/metrics/goals.service";
 import { RewardsService } from "../../core/rewards/rewards.service";
 import { GoalWizardComponent } from "./goal-wizard.component";
-import { BackButtonComponent } from '../../shared/components/back-button/back-button.component';
+import { PageHeaderComponent } from '../../shared/components/page-header/page-header.component';
 import { BunnyMascotComponent } from '../../shared/components/bunny-mascot/bunny-mascot.component';
 import { LucideFlame, LucideStar, LucideTrophy } from '@lucide/angular';
 
@@ -26,7 +26,7 @@ import { LucideFlame, LucideStar, LucideTrophy } from '@lucide/angular';
     CommonModule,
     TranslateModule,
     GoalWizardComponent,
-    BackButtonComponent,
+    PageHeaderComponent,
     BunnyMascotComponent,
     LucideFlame,
     LucideStar,
@@ -36,36 +36,30 @@ import { LucideFlame, LucideStar, LucideTrophy } from '@lucide/angular';
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div
-      class="min-h-screen bg-[#fdf8f8] dark:bg-gray-950 px-4 sm:px-6 lg:px-8 py-8 pb-24 space-y-6 no-select"
+      class="min-h-screen bg-[#fdf8f8] dark:bg-gray-950 no-select"
     >
       <!-- Page Header -->
-      <div class="flex items-center justify-between flex-wrap gap-4">
-        <app-back-button [label]="'common.back_to_dashboard' | translate" [showLabel]="true" />
-        <div class="flex items-center gap-3">
-          <div
-            class="w-12 h-12 rounded-2xl bg-gradient-to-br from-violet-500 to-purple-700 flex items-center justify-center shadow-lg shadow-violet-500/20"
-          >
-            <span class="inline-flex text-white" aria-hidden="true">
-              <svg lucideTrophy [size]="24" [strokeWidth]="2"></svg>
-            </span>
-          </div>
-          <div>
-            <h1
-              class="text-2xl font-bold text-gray-900 dark:text-white font-heading"
-            >
-              {{ "GOALS.TITLE" | translate }}
-            </h1>
-            <p class="text-sm text-gray-500 dark:text-gray-400 mt-0.5">
-              {{ "GOALS.SUBTITLE" | translate }}
-            </p>
-          </div>
+      <app-page-header
+        [title]="'GOALS.TITLE' | translate"
+        [subtitle]="'GOALS.SUBTITLE' | translate"
+        [backLabel]="'common.back_to_dashboard' | translate"
+        [showBackLabel]="true"
+      >
+        <div pageHeaderIcon class="w-12 h-12 rounded-2xl bg-gradient-to-br from-violet-500 to-purple-700 flex items-center justify-center shadow-lg shadow-violet-500/20">
+          <span class="inline-flex text-white" aria-hidden="true">
+            <svg lucideTrophy [size]="24" [strokeWidth]="2"></svg>
+          </span>
         </div>
 
-        <button class="new-goal-btn" (click)="showWizard.set(true)">
-          <span class="text-lg">+</span>
-          {{ "GOALS.NEW_GOAL" | translate }}
-        </button>
-      </div>
+        <div pageHeaderRight>
+          <button class="new-goal-btn" (click)="showWizard.set(true)">
+            <span class="text-lg">+</span>
+            {{ "GOALS.NEW_GOAL" | translate }}
+          </button>
+        </div>
+      </app-page-header>
+
+      <div class="px-4 sm:px-6 lg:px-8 py-8 pb-24 space-y-6">
 
       <!-- Bunny coach -->
       <div class="mascot-coach-card">
@@ -79,6 +73,7 @@ import { LucideFlame, LucideStar, LucideTrophy } from '@lucide/angular';
         </div>
       </div>
 
+      </div>
       <!-- Summary strip -->
       @if (goalsService.hasGoals()) {
         <div class="grid grid-cols-3 gap-4">

@@ -13,3 +13,4 @@ export * from './spiral-loader/spiral-loader.component';
 export * from './animated-icons/animated-icon.component';
 export * from './sidebar/sidebar.component';
 export * from './back-button/back-button.component';
+export * from './page-header/page-header.component';

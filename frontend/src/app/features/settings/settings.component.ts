@@ -5,28 +5,24 @@ import { FormsModule } from '@angular/forms';
 import { FirstAidService } from '../first-aid/first-aid.service';
 import { ProfileService } from '../../core/profile/profile.service';
 import { AuthService } from '../../core/auth/auth.service';
-import { BackButtonComponent } from '../../shared/components/back-button/back-button.component';
+import { PageHeaderComponent } from '../../shared/components/page-header/page-header.component';
 import { EmergencyNumber } from '../first-aid/first-aid.types';
 
 @Component({
   selector: 'app-settings',
-  imports: [CommonModule, TranslateModule, FormsModule, BackButtonComponent],
+  imports: [CommonModule, TranslateModule, FormsModule, PageHeaderComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="min-h-screen bg-gradient-to-br from-rose-50 via-white to-sage-50 dark:from-gray-950 dark:via-gray-900 dark:to-gray-950">
 
       <!-- Header -->
-      <header class="sticky top-0 z-40 bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl border-b border-gray-100 dark:border-gray-800">
-        <div class="max-w-4xl mx-auto px-4 sm:px-6 py-4">
-          <div class="flex items-center gap-3">
-            <app-back-button [showLabel]="false" />
-            <div>
-              <h1 class="text-xl font-bold text-gray-900 dark:text-white font-heading">{{ 'SETTINGS.TITLE' | translate }}</h1>
-              <p class="text-sm text-gray-500 dark:text-gray-400">{{ 'SETTINGS.SUBTITLE' | translate }}</p>
-            </div>
-          </div>
-        </div>
-      </header>
+      <app-page-header
+        [title]="'SETTINGS.TITLE' | translate"
+        [subtitle]="'SETTINGS.SUBTITLE' | translate"
+        [showBackLabel]="false"
+      >
+        <span pageHeaderIcon class="text-xl">⚙️</span>
+      </app-page-header>
 
       <main class="max-w-4xl mx-auto px-4 sm:px-6 py-6 pb-24">
 

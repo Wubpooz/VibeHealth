@@ -118,6 +118,35 @@ export class MyComponent {
 } @else {
   <content />
 }
+```
+
+### Page Header Standard (New)
+
+For consistency across all feature pages, use `app-page-header`:
+
+- left: back button (via `BackButtonComponent` inside `PageHeaderComponent`)
+- center: icon + title + subtitle
+- right: optional actions or status badges
+
+Example:
+
+```html
+<app-page-header
+  [title]="'ACTIVITY.TITLE' | translate"
+  [subtitle]="'ACTIVITY.SUBTITLE' | translate"
+  [backLabel]="'common.back_to_dashboard' | translate"
+  [showBackLabel]="true"
+>
+  <span pageHeaderIcon class="text-3xl text-primary-500">🏃‍♂️</span>
+
+  <div pageHeaderRight>
+    <button class="btn">More</button>
+  </div>
+</app-page-header>
+```
+
+- Icon should be aligned vertically with title+subtitle via `flex items-center` inside `PageHeaderComponent`.
+- For pages with no right action, do not provide `pageHeaderRight`.
 
 @for (item of items(); track item.id) {
   <item-card [item]="item" />

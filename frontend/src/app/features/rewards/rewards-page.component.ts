@@ -7,7 +7,7 @@ import {
 import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 import { RewardsService } from '../../core/rewards/rewards.service';
-import { BackButtonComponent } from '../../shared/components/back-button/back-button.component';
+import { PageHeaderComponent } from '../../shared/components/page-header/page-header.component';
 import { BunnyMascotComponent } from '../../shared/components/bunny-mascot/bunny-mascot.component';
 import { CarrotCounterComponent } from '../../shared/components/carrot-counter/carrot-counter.component';
 import { CarrotFeedComponent } from '../../shared/components/carrot-feed/carrot-feed.component';
@@ -41,7 +41,7 @@ interface WeeklyBar {
   imports: [
     CommonModule,
     TranslateModule,
-    BackButtonComponent,
+    PageHeaderComponent,
     BunnyMascotComponent,
     CarrotCounterComponent,
     CarrotFeedComponent,
@@ -54,22 +54,20 @@ interface WeeklyBar {
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div
-      class="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-rose-50 dark:from-gray-950 dark:via-gray-900 dark:to-gray-950 px-4 sm:px-6 lg:px-8 py-8 pb-24"
+      class="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-rose-50 dark:from-gray-950 dark:via-gray-900 dark:to-gray-950"
       data-testid="rewards-page"
     >
-      <div class="max-w-6xl mx-auto space-y-6">
-        <header class="flex flex-wrap items-center justify-between gap-4">
-          <app-back-button [label]="'common.back_to_dashboard' | translate" [showLabel]="true" />
+      <app-page-header
+        [title]="'REWARDS.TITLE' | translate"
+        [subtitle]="'REWARDS.SUBTITLE' | translate"
+        [showBackLabel]="true"
+        [backLabel]="'common.back_to_dashboard' | translate"
+      >
+        <span pageHeaderIcon class="text-2xl">🏆</span>
+      </app-page-header>
 
-          <div class="text-right">
-            <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white font-heading">
-              {{ 'REWARDS.TITLE' | translate }}
-            </h1>
-            <p class="text-sm text-gray-600 dark:text-gray-300 mt-1">
-              {{ 'REWARDS.SUBTITLE' | translate }}
-            </p>
-          </div>
-        </header>
+      <div class="px-4 sm:px-6 lg:px-8 py-8 pb-24">
+        <div class="max-w-6xl mx-auto space-y-6">
 
         <section class="hero-card">
           <div class="hero-copy">
@@ -216,6 +214,7 @@ interface WeeklyBar {
 
           <app-carrot-feed />
         </section>
+        </div>
       </div>
     </div>
   `,
