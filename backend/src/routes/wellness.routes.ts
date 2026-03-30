@@ -5,6 +5,7 @@ import type { Session as AuthSession, User as AuthUser } from 'better-auth';
 import type { MoodLog, JournalEntry } from '@prisma/client';
 import { z } from 'zod';
 import type { MoodEmoji } from '@prisma/client';
+import { periodRoutes } from './wellness-period.routes';
 
 // =============================================================================
 // Types
@@ -686,5 +687,11 @@ wellnessRoutes.delete('/journal/:journalId/media/:mediaId', async (c) => {
     return c.json({ success: false, error: 'Failed to delete media attachment' }, { status: 500 });
   }
 });
+
+// =============================================================================
+// PERIOD ROUTES: /api/v1/wellness/period
+// =============================================================================
+
+wellnessRoutes.route('/period', periodRoutes);
 
 export default wellnessRoutes;
