@@ -9,17 +9,22 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/theme/solarized.min.css" referrerpolicy="no-referrer" />
 
     <style>
-        body { font-family: 'Satoshi', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif; }
-        .big { font-size: 2rem; }
-        .small { font-size: 1.05rem; max-width: 900px; }
-        .emoji { font-size: 3rem; margin-bottom: 0.5rem; }
-        .feature-list { text-align: left; display: inline-block; margin-top: .5rem; }
-        .highlight-box { border-left: 6px solid #ff6b4a; padding: 18px 20px; background: rgba(255, 107, 74, .08); border-radius: 1rem; }
-        .table-competitor { width: 100%; border-collapse: collapse; margin-top: 1rem; }
-        .table-competitor th, .table-competitor td { border: 1px solid #ddd; padding: .7rem; font-size: .9rem; }
+        body { font-family: 'Satoshi', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif; background: #fffaf6; }
+        .reveal .slides section { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 2rem; line-height: 1.45; }
+        .big { font-size: 2.4rem; margin: 0.6rem 0; }
+        .small { font-size: 1.1rem; max-width: 860px; margin: 0.3rem auto; }
+        .emoji { font-size: 4.2rem; margin-bottom: 1rem; }
+        .feature-list { text-align: left; display: inline-flex; flex-direction: column; gap: 0.6rem; margin-top: 1rem; max-width: 34rem; }
+        .feature-list li, .feature-list p { font-size: 1.05rem; }
+        .highlight-box { border-left: 6px solid #ff6b4a; padding: 1rem 1.1rem; background: rgba(255, 107, 74, .08); border-radius: 15px; margin: 0.9rem 0; }
+        .table-competitor { width: 100%; max-width: 760px; border-collapse: collapse; margin-top: 1rem; }
+        .table-competitor th, .table-competitor td { border: 1px solid #ddd; padding: .8rem; font-size: .9rem; }
         .table-competitor th { background: rgba(255,107,74,.15); }
         .check { color: #22c55e; font-weight: 700; }
         .xmark { color: #ef4444; font-weight: 700; }
+        .screenshot { width: min(68vw, 520px); margin: 1rem auto 0.8rem; border-radius: 18px; box-shadow: 0 8px 20px rgba(0,0,0,0.16); }
+        .mascotte-strip { display: flex; flex-wrap: wrap; justify-content: center; gap: 1rem; margin-top: 1rem; }
+        .mascotte-strip img { width: 96px; height: 96px; border-radius: 24px; filter: drop-shadow(0 4px 20px rgba(0,0,0,.12)); }
     </style>
 </head>
 <body>
@@ -28,6 +33,12 @@
             <section>
                 <div class="emoji">🐰</div>
                 <h1>VibeHealth</h1>
+                <div class="mascotte-strip">
+                    <img src="../frontend/src/assets/mascotte/rabbit_standing.svg" alt="Mascotte standing" />
+                    <img src="../frontend/src/assets/mascotte/rabbit_thinking.svg" alt="Mascotte thinking" />
+                    <img src="../frontend/src/assets/mascotte/rabbit_congrat.svg" alt="Mascotte congratulating" />
+                    <img src="../frontend/src/assets/mascotte/rabbit_sad.svg" alt="Mascotte sad" />
+                </div>
                 <p class="big">Your Personal Health Companion</p>
                 <p class="small">Unify vitals tracking, medical intelligence, wellness tools, and lifestyle features into one delightful PWA experience.</p>
                 <p class="small"><strong>Offline-first • Bilingual (EN/FR) • Soft Pop design</strong></p>
@@ -46,6 +57,8 @@
                 <div class="highlight-box">
                     <p>🎯 <strong>VibeHealth</strong> is an offline-first, bilingual personal health companion that centralizes vitals tracking, medical intelligence, wellness tools, and lifestyle features—all delivered with a premium "Soft Pop" aesthetic, a bunny mascot, and a carrot-based reward system.</p>
                 </div>
+                <img class="screenshot" src="../frontend/src/assets/logo.png" alt="App screenshot placeholder" />
+                <p class="small">Real app visuals and onboarding flows reinforce the product story. (Replace with production screenshots once exported from the UI.)</p>
                 <ul class="feature-list">
                     <li>Clinically strong tracking + wellness coaching.</li>
                     <li>Data ownership and privacy first design.</li>
@@ -67,6 +80,7 @@
             </section>
             <section>
                 <h2>Complete Feature Set</h2>
+                <img class="screenshot" src="../frontend/src/assets/mascotte/rabbit_thinking.svg" alt="Features UI screenshot placeholder" />
                 <div class="feature-list">
                     <p>• Offline-first architecture for critical flows</p>
                     <p>• Bilingual i18n (EN/FR) with translation completeness</p>
