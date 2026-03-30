@@ -11,6 +11,7 @@ import {
   type MoodEmoji,
   type MoodUpsertPayload,
   type JournalEntryCreatePayload,
+  type JournalEntry,
   MOOD_EMOJI_MAP,
   MOOD_LABELS,
 } from '../../../core/wellness/wellness-journal.types';
@@ -72,7 +73,7 @@ import {
           } @else {
             <div class="entries-list">
               @for (entry of journalService.journalEntries(); track entry.id) {
-                <article class="entry-card" [class.has-mood]="entry.mood">
+                <article class="entry-card" [class.has-mood]="entry.mood" (click)="openEntryDetails(entry)" role="button" tabindex="0" (keydown.enter)="openEntryDetails(entry)" (keydown.space)="openEntryDetails(entry)">
                   <div class="entry-header">
                     <div class="entry-date-mood">
                       @if (entry.mood) {
@@ -84,7 +85,7 @@ import {
                     </div>
                     <button
                       class="btn-delete-entry"
-                      (click)="deleteEntry(entry.id)"
+                      (click)="$event.stopPropagation(); deleteEntry(entry.id)"
                       [attr.aria-label]="'WELLNESS.JOURNAL.DELETE' | translate"
                       [disabled]="journalService.journalLoading()"
                     >
@@ -311,6 +312,76 @@ import {
           </div>
         </div>
       }
+
+      <!-- View Entry Modal -->
+      @if (selectedEntry()) {
+        <div class="modal-overlay" (click)="closeEntryDetails()" (keydown.escape)="closeEntryDetails()" role="presentation">
+          <div class="modal-content view-modal" (click)="$event.stopPropagation()" role="dialog" aria-modal="true">
+            <div class="modal-header">
+              <div class="entry-view-header-content">
+                @if (selectedEntry()?.mood) {
+                  <span class="mood-emoji-view">{{ getMoodEmoji(selectedEntry()!.mood!.mood) }}</span>
+                }
+                <div class="entry-view-meta">
+                  <time class="entry-view-date dark:text-gray-400">{{ selectedEntry()?.createdAt | date : 'MMMM d, yyyy · h:mm a' }}</time>
+                  @if (selectedEntry()?.title) {
+                    <h2 class="entry-view-title">{{ selectedEntry()?.title }}</h2>
+                  }
+                </div>
+              </div>
+              <button 
+                type="button"
+                class="modal-close" 
+                (click)="closeEntryDetails()" 
+                (keydown.enter)="closeEntryDetails()" 
+                (keydown.space)="closeEntryDetails()" 
+                aria-label="Close"
+              >
+                &times;
+              </button>
+            </div>
+
+            <div class="modal-body">
+              <!-- Entry Text -->
+              <div class="entry-view-text">
+                <p class="entry-full-text dark:text-gray-300">{{ selectedEntry()?.richText }}</p>
+              </div>
+
+              <!-- Media Gallery -->
+              @if (selectedEntry()?.media && selectedEntry()!.media!.length > 0) {
+                <div class="media-gallery">
+                  <h3 class="media-gallery-title">{{ 'WELLNESS.JOURNAL.MEDIA' | translate }}</h3>
+                  <div class="media-grid">
+                    @for (attachment of selectedEntry()!.media; track attachment.id) {
+                      <div class="media-item">
+                        @if (attachment.type === 'IMAGE') {
+                          <img 
+                            [src]="attachment.url" 
+                            [alt]="'WELLNESS.JOURNAL.MEDIA_IMAGE' | translate"
+                            class="media-image"
+                            loading="lazy"
+                          />
+                        } @else if (attachment.type === 'AUDIO') {
+                          <div class="media-audio-container">
+                            <audio 
+                              controls 
+                              class="media-audio"
+                              [src]="attachment.url"
+                            ></audio>
+                            @if (attachment.durationSeconds) {
+                              <span class="media-duration">{{ attachment.durationSeconds }}s</span>
+                            }
+                          </div>
+                        }
+                      </div>
+                    }
+                  </div>
+                </div>
+              }
+            </div>
+          </div>
+        </div>
+      }
     </div>
   `,
   styles: `
@@ -325,6 +396,39 @@ import {
 
     :host-context(.dark) .wellness-journal-page {
       background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+    }
+
+    .page-header {
+      padding: 1.5rem 1.5rem;
+      background: transparent;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    }
+
+    :host-context(.dark) .page-header {
+      border-bottom-color: rgba(255, 255, 255, 0.1);
+    }
+
+    .header-content {
+      max-width: 1400px;
+      margin: 0 auto;
+      width: 100%;
+      padding: 0 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .header-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 16px;
+      background: linear-gradient(135deg, #ff9d87 0%, #ffa89e 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      flex-shrink: 0;
+      box-shadow: 0 4px 12px rgba(255, 157, 135, 0.2);
     }
 
     .wellness-header {
@@ -399,6 +503,7 @@ import {
       max-width: 1400px;
       margin: 0 auto;
       width: 100%;
+      padding-top: 1.5rem;
     }
 
     @media (max-width: 1024px) {
@@ -1328,6 +1433,168 @@ import {
       opacity: 0.6;
       cursor: not-allowed;
     }
+
+    /* Entry View Modal Styles */
+    .view-modal {
+      max-width: 600px;
+    }
+
+    .entry-card {
+      cursor: pointer;
+    }
+
+    .entry-view-header-content {
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+      flex: 1;
+    }
+
+    .mood-emoji-view {
+      font-size: 2rem;
+      line-height: 1;
+      flex-shrink: 0;
+    }
+
+    .entry-view-meta {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      flex: 1;
+      min-width: 0;
+    }
+
+    .entry-view-date {
+      font-size: 0.875rem;
+      color: #999;
+      font-weight: 500;
+    }
+
+    :host-context(.dark) .entry-view-date {
+      color: #666;
+    }
+
+    .entry-view-title {
+      margin: 0;
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #333;
+      word-break: break-word;
+    }
+
+    :host-context(.dark) .entry-view-title {
+      color: #fff;
+    }
+
+    .modal-body {
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+      max-height: calc(90vh - 200px);
+      overflow-y: auto;
+    }
+
+    .entry-view-text {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .entry-full-text {
+      margin: 0;
+      font-size: 0.95rem;
+      color: #666;
+      line-height: 1.8;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    :host-context(.dark) .entry-full-text {
+      color: #bbb;
+    }
+
+    /* Media Gallery Styles */
+    .media-gallery {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .media-gallery-title {
+      margin: 0;
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: #333;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      opacity: 0.8;
+    }
+
+    :host-context(.dark) .media-gallery-title {
+      color: #ddd;
+    }
+
+    .media-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 1rem;
+    }
+
+    @media (max-width: 500px) {
+      .media-grid {
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+      }
+    }
+
+    .media-item {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255, 157, 135, 0.05);
+      border: 1px solid rgba(255, 157, 135, 0.2);
+      border-radius: 0.75rem;
+      overflow: hidden;
+      min-height: 150px;
+    }
+
+    :host-context(.dark) .media-item {
+      background: rgba(255, 157, 135, 0.1);
+      border-color: rgba(255, 157, 135, 0.3);
+    }
+
+    .media-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .media-audio-container {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      width: 100%;
+      height: 100%;
+      padding: 1rem;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .media-audio {
+      width: 100%;
+      max-width: 100%;
+    }
+
+    .media-duration {
+      font-size: 0.75rem;
+      color: #999;
+      font-weight: 500;
+    }
+
+    :host-context(.dark) .media-duration {
+      color: #bbb;
+    }
   `,
 })
 export class WellnessJournalPageComponent implements OnInit {
@@ -1343,6 +1610,7 @@ export class WellnessJournalPageComponent implements OnInit {
   readonly showNewEntryDialog = signal(false);
   readonly isCreatingEntry = signal(false);
   readonly selectedFiles = signal<File[]>([]);
+  readonly selectedEntry = signal<JournalEntry | null>(null);
 
   entryForm!: FormGroup;
 
@@ -1492,5 +1760,13 @@ export class WellnessJournalPageComponent implements OnInit {
   async loadMoreEntries(): Promise<void> {
     const pagination = this.journalService.journalPagination();
     await this.journalService.fetchJournalEntries(pagination.limit, pagination.offset + pagination.limit);
+  }
+
+  openEntryDetails(entry: JournalEntry): void {
+    this.selectedEntry.set(entry);
+  }
+
+  closeEntryDetails(): void {
+    this.selectedEntry.set(null);
   }
 }
