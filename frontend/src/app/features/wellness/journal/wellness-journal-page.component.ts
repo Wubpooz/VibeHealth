@@ -22,19 +22,16 @@ import {
   template: `
     <div class="wellness-journal-page">
       <!-- Header -->
-      <header class="wellness-header">
-        <div class="header-container">
-          <h1 class="text-3xl font-bold">{{ 'WELLNESS.JOURNAL.TITLE' | translate }}</h1>
-          <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">{{ 'WELLNESS.JOURNAL.SUBTITLE' | translate }}</p>
-        </div>
-        <div class="header-stats">
-          <div class="stat-chip">
-            <span class="stat-value">{{ journalService.journalCount() }}</span>
-            <span class="stat-label">{{ 'WELLNESS.JOURNAL.ENTRIES' | translate }}</span>
-          </div>
-          <div class="stat-chip carrot-chip">
-            <span class="carrot-icon">🥕</span>
-            <span class="stat-value">+3</span>
+      <header class="page-header">
+        <div class="header-content">
+          <div class="flex items-center gap-3">
+            <div class="header-icon">
+              <span class="text-white">📔</span>
+            </div>
+            <div>
+              <h1 class="text-2xl font-bold text-gray-900 dark:text-white font-heading">{{ 'WELLNESS.JOURNAL.TITLE' | translate }}</h1>
+              <p class="text-sm text-gray-500 dark:text-gray-400">{{ 'WELLNESS.JOURNAL.SUBTITLE' | translate }}</p>
+            </div>
           </div>
         </div>
       </header>
@@ -388,6 +385,39 @@ import {
       background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
     }
 
+    .page-header {
+      padding: 1.5rem 1.5rem;
+      background: transparent;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    }
+
+    :host-context(.dark) .page-header {
+      border-bottom-color: rgba(255, 255, 255, 0.1);
+    }
+
+    .header-content {
+      max-width: 1400px;
+      margin: 0 auto;
+      width: 100%;
+      padding: 0 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .header-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 16px;
+      background: linear-gradient(135deg, #ff9d87 0%, #ffa89e 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      flex-shrink: 0;
+      box-shadow: 0 4px 12px rgba(255, 157, 135, 0.2);
+    }
+
     .wellness-header {
       padding: 2rem 1.5rem;
       background: linear-gradient(135deg, #ff9d87 0%, #ffa89e 100%);
@@ -460,6 +490,7 @@ import {
       max-width: 1400px;
       margin: 0 auto;
       width: 100%;
+      padding-top: 1.5rem;
     }
 
     @media (max-width: 1024px) {
