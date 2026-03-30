@@ -754,4 +754,25 @@ model OnboardingMedication {
   @@unique([key, locale])
   @@index([locale, isActive])
   @@map("onboarding_medications")
+// Period & Cycle Tracking (Phase 3 — Wellness)
+model PeriodLog {
+  id             String    @id @default(cuid())
+  userId         String
+  startDate      DateTime  // Start date of menstrual period
+  endDate        DateTime? // End date of menstrual period (optional — ongoing)
+  flowIntensity  FlowIntensity @default(MEDIUM)
+  symptoms       String[] // e.g., ["cramps", "bloating", "headache"]
+  notes          String?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  @@unique([userId, startDate])
+  @@index([userId, startDate])
+  @@map("period_logs")
+}
+
+enum FlowIntensity {
+  LIGHT
+  MEDIUM
+  HEAVY
 }
