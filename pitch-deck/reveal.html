@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>VibeHealth Pitch Deck (reveal.js)</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.min.css" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/theme/solarized.min.css" referrerpolicy="no-referrer" />
+
+    <style>
+        body { font-family: 'Satoshi', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif; }
+        .big { font-size: 2rem; }
+        .small { font-size: 1.05rem; max-width: 900px; }
+        .emoji { font-size: 3rem; margin-bottom: 0.5rem; }
+        .feature-list { text-align: left; display: inline-block; margin-top: .5rem; }
+        .highlight-box { border-left: 6px solid #ff6b4a; padding: 18px 20px; background: rgba(255, 107, 74, .08); border-radius: 1rem; }
+        .table-competitor { width: 100%; border-collapse: collapse; margin-top: 1rem; }
+        .table-competitor th, .table-competitor td { border: 1px solid #ddd; padding: .7rem; font-size: .9rem; }
+        .table-competitor th { background: rgba(255,107,74,.15); }
+        .check { color: #22c55e; font-weight: 700; }
+        .xmark { color: #ef4444; font-weight: 700; }
+    </style>
+</head>
+<body>
+    <div class="reveal">
+        <div class="slides">
+            <section>
+                <div class="emoji">🐰</div>
+                <h1>VibeHealth</h1>
+                <p class="big">Your Personal Health Companion</p>
+                <p class="small">Unify vitals tracking, medical intelligence, wellness tools, and lifestyle features into one delightful PWA experience.</p>
+                <p class="small"><strong>Offline-first • Bilingual (EN/FR) • Soft Pop design</strong></p>
+            </section>
+            <section>
+                <h2>The Problem</h2>
+                <ul class="feature-list">
+                    <li>Fragmented health apps create data silos.</li>
+                    <li>Medical info & first-aid context is hard to access quickly.</li>
+                    <li>Personalization + persistence are inconsistent across existing tools.</li>
+                    <li>Mobile health tracking is often inaccessible offline.</li>
+                </ul>
+            </section>
+            <section>
+                <h2>Our Solution</h2>
+                <div class="highlight-box">
+                    <p>🎯 <strong>VibeHealth</strong> is an offline-first, bilingual personal health companion that centralizes vitals tracking, medical intelligence, wellness tools, and lifestyle features—all delivered with a premium "Soft Pop" aesthetic, a bunny mascot, and a carrot-based reward system.</p>
+                </div>
+                <ul class="feature-list">
+                    <li>Clinically strong tracking + wellness coaching.</li>
+                    <li>Data ownership and privacy first design.</li>
+                </ul>
+            </section>
+            <section>
+                <h2>Core Features</h2>
+                <div class="feature-list">
+                    <p>1. Medical ID + QR export</p>
+                    <p>2. First-aid guide, steps, and protection in offline mode</p>
+                    <p>3. Vitals logging: blood pressure, heart rate, weight, glucose</p>
+                    <p>4. Activity and nutrition tracking with reference catalog</p>
+                    <p>5. Goals and progress + carrot rewards</p>
+                    <p>6. Journal, sleep, mood, wellness reminders</p>
+                    <p>7. Personalized insights and trend graphs</p>
+                    <p>8. Secure auth + account sync</p>
+                    <p>9. Multi-device PWA install, dark mode, animations</p>
+                </div>
+            </section>
+            <section>
+                <h2>Complete Feature Set</h2>
+                <div class="feature-list">
+                    <p>• Offline-first architecture for critical flows</p>
+                    <p>• Bilingual i18n (EN/FR) with translation completeness</p>
+                    <p>• Session-based and token-based auth (BetterAuth)</p>
+                    <p>• Prisma + PostgreSQL backend with Hono/Bun</p>
+                    <p>• E2E-ready PWA service worker</p>
+                    <p>• Personal health timeline</p>
+                    <p>• Medication tracker + reminder engine</p>
+                    <p>• Period & reproductive wellness planning</p>
+                    <p>• Challenges, badges, and carrot economy</p>
+                    <p>• Accessibility and responsive design</p>
+                    <p>• Integrations roadmap: sensors, calendars, devices</p>
+                    <p>• Analytics and smart notifications</p>
+                </div>
+            </section>
+            <section>
+                <h2>Competition</h2>
+                <table class="table-competitor">
+                    <thead>
+                        <tr><th>Feature</th><th>VibeHealth</th><th>Apple Health</th><th>Google Fit</th><th>Fitbit</th><th>MyFitnessPal</th><th>Clue</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Unified Health Hub</td><td class="check">✓</td><td class="xmark">✗</td><td class="xmark">✗</td><td class="xmark">✗</td><td class="xmark">✗</td><td class="xmark">✗</td></tr>
+                        <tr><td>Offline-First</td><td class="check">✓</td><td class="check">✓</td><td class="xmark">✗</td><td class="check">✓</td><td class="xmark">✗</td><td class="xmark">✗</td></tr>
+                        <tr><td>Medical ID + First Aid</td><td class="check">✓</td><td class="check">✓</td><td class="xmark">✗</td><td class="xmark">✗</td><td class="xmark">✗</td><td class="xmark">✗</td></tr>
+                        <tr><td>Gamified Rewards</td><td class="check">✓</td><td class="xmark">✗</td><td class="xmark">✗</td><td class="check">✓</td><td class="xmark">✗</td><td class="xmark">✗</td></tr>
+                    </tbody>
+                </table>
+            </section>
+            <section>
+                <h2>Team</h2>
+                <div class="feature-list">
+                    <p>• Product: Visionary health + UX leader</p>
+                    <p>• Engineering: Full-stack Bun/Hono/Angular experts</p>
+                    <p>• Design: Soft Pop brand + accessibility-first</p>
+                    <p>• Growth: Early adopters, retention loops, community</p>
+                </div>
+            </section>
+            <section>
+                <h2>Design</h2>
+                <div class="feature-list">
+                    <p>• Warm coral gradients, soft shadows, organic shapes</p>
+                    <p>• Animated micro-interactions (bunny mascot, carrot XP)</p>
+                    <p>• Readable typography and pill-style controls</p>
+                    <p>• WCAG AA focus states and high contrast theme option</p>
+                </div>
+            </section>
+            <section>
+                <h2>Roadmap (5 Phases)</h2>
+                <div class="feature-list">
+                    <p>Phase 0: Foundation (completed)</p>
+                    <p>Phase 1: Health Tracking (in progress)</p>
+                    <p>Phase 2: Medication + Checks + Vaccines</p>
+                    <p>Phase 3: Mood, Journals, Workouts, Relaxation</p>
+                    <p>Phase 4: Sharing, Export, Calendar Sync</p>
+                    <p>Phase 5: Practitioner Map, Platform Sync</p>
+                </div>
+            </section>
+            <section>
+                <h2>Tech Stack</h2>
+                <div class="feature-list">
+                    <p>Frontend: Angular 21, Tailwind CSS, ngx-translate</p>
+                    <p>Backend: Bun, Hono, Prisma, PostgreSQL</p>
+                    <p>Auth: BetterAuth, JWT/session</p>
+                    <p>Testing: Cypress/Karma + Bun test</p>
+                    <p>Deploy: Docker Compose, CI/CD pipelines</p>
+                </div>
+            </section>
+            <section>
+                <h2>Market Opportunity</h2>
+                <ul class="feature-list">
+                    <li>$500B digital health market</li>
+                    <li>78% YoY mobile health growth</li>
+                    <li>65M+ users looking for unified health solution</li>
+                    <li>First-mover advantage in compassionate bilingual PWA</li>
+                </ul>
+            </section>
+            <section>
+                <h2>Call to Action</h2>
+                <p class="big">Let's build the future of health—one carrot at a time.</p>
+                <p class="small">Website: <a href="https://vibehealth.app">vibehealth.app</a><br>Email: <a href="mailto:investors@vibehealth.app">investors@vibehealth.app</a><br>GitHub: <a href="https://github.com/vibehealth">github.com/vibehealth</a></p>
+            </section>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.min.js" referrerpolicy="no-referrer"></script>
+    <script>
+        Reveal.initialize({
+            hash: true,
+            width: '100%',
+            height: '100%',
+            slideNumber: true,
+            history: true,
+            transition: 'fade',
+            dependencies: [
+                { src: 'https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/plugin/markdown/markdown.min.js' },
+                { src: 'https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/plugin/notes/notes.min.js' },
+                { src: 'https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/plugin/highlight/highlight.min.js', async: true, callback: function() { hljs.highlightAll(); } }
+            ]
+        });
+    </script>
+</body>
+</html>
