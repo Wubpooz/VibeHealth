@@ -121,8 +121,9 @@
   "WIKI": {
     "TITLE": "Health Wiki",
     "SUBTITLE": "Browse 220 validated conditions from Vidal plus evidence-based summaries.",
-    "SEARCH_PLACEHOLDER": "Search conditions",
-    "SOURCE_LABEL": "Source:",
+    "SEARCH_PLACEHOLDER": "Search conditions...",
+    "NO_RESULTS": "No conditions found. Try a different search.",
+    "SOURCE_LABEL": "Visit Vidal",
     "NO_CONDITION_SELECTED": "Select a condition to view its article",
     "FILTER_BY_TAGS": "Filter by tags",
     "CLEAR_FILTERS": "Clear all filters",
@@ -131,7 +132,11 @@
     "RISK_FACTORS": "Risk factors",
     "DIAGNOSTICS": "Diagnostic approach",
     "TREATMENTS": "Treatment impact",
-    "VIDAL_URL": "Vidal reference"
+    "VIDAL_URL": "Vidal reference",
+    "RESOURCES": "Resources",
+    "VIEW_ON_VIDAL": "View on Vidal",
+    "WELCOME_TITLE": "Welcome to the Health Wiki",
+    "WELCOME_DESC": "Search for a health condition or use the A-Z index to learn more"
   },
   "DASHBOARD": {
     "WELCOME": "Welcome to VibeHealth!",    "SETUP_COMPLETE": "You're all set up. Authentication is working!",

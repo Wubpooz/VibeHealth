@@ -46,8 +46,9 @@
   "WIKI": {
     "TITLE": "Wiki santé",
     "SUBTITLE": "Parcourez 220 conditions validées à partir de Vidal plus des résumés basés sur les données.",
-    "SEARCH_PLACEHOLDER": "Rechercher une pathologie",
-    "SOURCE_LABEL": "Source :",
+    "SEARCH_PLACEHOLDER": "Rechercher une pathologie...",
+    "NO_RESULTS": "Aucune pathologie trouvée. Essayez une autre recherche.",
+    "SOURCE_LABEL": "Visiter Vidal",
     "NO_CONDITION_SELECTED": "Sélectionnez une pathologie pour afficher l'article",
     "FILTER_BY_TAGS": "Filtrer par tags",
     "CLEAR_FILTERS": "Effacer tous les filtres",
@@ -56,7 +57,11 @@
     "RISK_FACTORS": "Facteurs de risque",
     "DIAGNOSTICS": "Approche diagnostique",
     "TREATMENTS": "Traitements",
-    "VIDAL_URL": "Référence Vidal"
+    "VIDAL_URL": "Référence Vidal",
+    "RESOURCES": "Ressources",
+    "VIEW_ON_VIDAL": "Voir sur Vidal",
+    "WELCOME_TITLE": "Bienvenue sur le Wiki santé",
+    "WELCOME_DESC": "Recherchez une pathologie ou utilisez l'index A-Z pour en savoir plus"
   },
   "AUTH": {
     "LOGIN": "Se connecter",    "LOGOUT": "Se déconnecter",
