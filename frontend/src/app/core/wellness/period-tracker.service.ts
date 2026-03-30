@@ -71,11 +71,11 @@ export class PeriodTrackerService {
         this._periodLogs.set(response.data);
         this._periodLogsPagination.set(response.pagination);
       } else {
-        this._periodLogsError.set('Failed to fetch period logs');
+        this._periodLogsError.set('WELLNESS.period.error.fetchLogs');
       }
     } catch (error) {
       console.error('[PeriodTracker] Fetch period logs failed:', error);
-      this._periodLogsError.set('Error loading period logs');
+      this._periodLogsError.set('WELLNESS.period.error.loadLogs');
     } finally {
       this._periodLogsLoading.set(false);
     }
@@ -113,12 +113,12 @@ export class PeriodTrackerService {
 
         return response.data;
       } else {
-        this._periodLogsError.set('Failed to save period log');
+        this._periodLogsError.set('WELLNESS.period.error.saveLog');
         return null;
       }
     } catch (error) {
       console.error('[PeriodTracker] Save period log failed:', error);
-      this._periodLogsError.set('Error saving period log');
+      this._periodLogsError.set('WELLNESS.period.error.saveLog');
       return null;
     } finally {
       this._periodLogsLoading.set(false);
@@ -170,12 +170,12 @@ export class PeriodTrackerService {
 
         return response.data;
       } else {
-        this._periodLogsError.set('Failed to update period log');
+        this._periodLogsError.set('WELLNESS.period.error.updateLog');
         return null;
       }
     } catch (error) {
       console.error('[PeriodTracker] Update period log failed:', error);
-      this._periodLogsError.set('Error updating period log');
+      this._periodLogsError.set('WELLNESS.period.error.updateLog');
       return null;
     } finally {
       this._periodLogsLoading.set(false);
@@ -200,12 +200,12 @@ export class PeriodTrackerService {
         await this.fetchCycleInsights();
         return true;
       } else {
-        this._periodLogsError.set('Failed to delete period log');
+        this._periodLogsError.set('WELLNESS.period.error.deleteLog');
         return false;
       }
     } catch (error) {
       console.error('[PeriodTracker] Delete period log failed:', error);
-      this._periodLogsError.set('Error deleting period log');
+      this._periodLogsError.set('WELLNESS.period.error.deleteLog');
       return false;
     } finally {
       this._periodLogsLoading.set(false);

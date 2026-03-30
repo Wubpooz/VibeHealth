@@ -804,13 +804,13 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
     const week = this.metricsService.activityWeek()?.dailySummary;
     if (!week) {
       return [
-        { day: "Mon", height: 50, fillPercent: 75, isToday: false },
-        { day: "Tue", height: 65, fillPercent: 85, isToday: false },
-        { day: "Wed", height: 80, fillPercent: 100, isToday: false },
-        { day: "Thu", height: 60, fillPercent: 80, isToday: false },
-        { day: "Fri", height: 75, fillPercent: 92, isToday: true },
-        { day: "Sat", height: 45, fillPercent: 60, isToday: false },
-        { day: "Sun", height: 55, fillPercent: 70, isToday: false },
+        { day: "DASHBOARD.DAY.MON", height: 50, fillPercent: 75, isToday: false },
+        { day: "DASHBOARD.DAY.TUE", height: 65, fillPercent: 85, isToday: false },
+        { day: "DASHBOARD.DAY.WED", height: 80, fillPercent: 100, isToday: false },
+        { day: "DASHBOARD.DAY.THU", height: 60, fillPercent: 80, isToday: false },
+        { day: "DASHBOARD.DAY.FRI", height: 75, fillPercent: 92, isToday: true },
+        { day: "DASHBOARD.DAY.SAT", height: 45, fillPercent: 60, isToday: false },
+        { day: "DASHBOARD.DAY.SUN", height: 55, fillPercent: 70, isToday: false },
       ];
     }
 
@@ -1019,9 +1019,10 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
     for (let offset = 6; offset >= 0; offset--) {
       const date = new Date();
       date.setDate(date.getDate() - offset);
+      const dayAbbrev = date.toLocaleDateString('en-US', { weekday: 'short' }).toUpperCase();
       days.push({
         key: date.toISOString().split('T')[0],
-        day: date.toLocaleDateString('en-US', { weekday: 'short' }),
+        day: `DASHBOARD.DAY.${dayAbbrev}`,
         isToday: offset === 0,
       });
     }

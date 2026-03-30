@@ -86,20 +86,20 @@ export const SYMPTOMS_OPTIONS = [
 ] as const;
 
 export const SYMPTOMS_LABELS: Record<string, string> = {
-  CRAMPS: 'Cramps',
-  BLOATING: 'Bloating',
-  HEADACHE: 'Headache',
-  FATIGUE: 'Fatigue',
-  MOOD_SWINGS: 'Mood Swings',
-  BACK_PAIN: 'Back Pain',
-  BREAST_TENDERNESS: 'Breast Tenderness',
-  NAUSEA: 'Nausea',
-  ACNE: 'Acne',
-  APPETITE_CHANGES: 'Appetite Changes',
+  CRAMPS: 'WELLNESS.period.symptoms.cramps',
+  BLOATING: 'WELLNESS.period.symptoms.bloating',
+  HEADACHE: 'WELLNESS.period.symptoms.headache',
+  FATIGUE: 'WELLNESS.period.symptoms.fatigue',
+  MOOD_SWINGS: 'WELLNESS.period.symptoms.moodSwings',
+  BACK_PAIN: 'WELLNESS.period.symptoms.backPain',
+  BREAST_TENDERNESS: 'WELLNESS.period.symptoms.breastTenderness',
+  NAUSEA: 'WELLNESS.period.symptoms.nausea',
+  ACNE: 'WELLNESS.period.symptoms.acne',
+  APPETITE_CHANGES: 'WELLNESS.period.symptoms.appetiteChanges',
 };
 
 export const FLOW_INTENSITY_LABELS: Record<string, string> = {
-  LIGHT: 'Light',
-  MEDIUM: 'Medium',
-  HEAVY: 'Heavy',
+  LIGHT: 'WELLNESS.period.flowIntensity.light',
+  MEDIUM: 'WELLNESS.period.flowIntensity.medium',
+  HEAVY: 'WELLNESS.period.flowIntensity.heavy',
 };

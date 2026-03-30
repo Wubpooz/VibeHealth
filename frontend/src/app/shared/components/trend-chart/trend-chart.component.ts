@@ -72,7 +72,7 @@ export interface TrendDataPoint {
               
               <!-- X-axis label -->
               <span class="x-label" [class.suppressed]="!shouldShowXLabel(i, data().length)">
-                {{ shouldShowXLabel(i, data().length) ? point.label : '' }}
+                {{ shouldShowXLabel(i, data().length) ? (point.label | translate) : '' }}
               </span>
             </div>
           }

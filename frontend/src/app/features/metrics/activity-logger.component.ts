@@ -92,7 +92,7 @@ type NumericInput = number | string | null;
                   [disabled]="logging()"
                 >
                   <span class="emoji">{{ activity.emoji }}</span>
-                  <span class="name">{{ activity.label }}</span>
+                  <span class="name">{{ formatActivityTypeLabel(activity.type, activity.label)}}</span>
                 </button>
               }
             </div>
@@ -172,7 +172,7 @@ type NumericInput = number | string | null;
                     <span class="emoji">{{ selectedCatalogActivity()!.emoji }}</span>
                     <div>
                       <strong>{{ selectedCatalogActivity()!.name }}</strong>
-                      <p>{{ selectedCatalogActivity()!.category }} · {{ selectedCatalogActivity()!.metValue }} MET</p>
+                      <p>{{ formatActivityTypeLabel(selectedCatalogActivity()!.category) }} · {{ selectedCatalogActivity()!.metValue }} MET</p>
                     </div>
                   </div>
                   @if (selectedCatalogActivity()!.description) {
@@ -242,7 +242,7 @@ type NumericInput = number | string | null;
                       [class.selected]="intensity() === int.key"
                       (click)="intensity.set(int.key)"
                     >
-                      {{ int.label }}
+                      {{ ('METRICS.ACTIVITY.INTENSITY_' + int.key) | translate }}
                     </button>
                   }
                 </div>
@@ -1297,6 +1297,13 @@ export class ActivityLoggerComponent implements OnDestroy {
   }
 
   formatActivityTypeLabel(type: ActivityType, fallback?: string): string {
+    const translationKey = `METRICS.ACTIVITY.TYPE_${type}`;
+    const translated = this.translate.instant(translationKey);
+
+    if (translated && translated !== translationKey) {
+      return translated;
+    }
+
     if (fallback && fallback.trim().length > 0) {
       return fallback;
     }
@@ -1406,9 +1413,10 @@ export class ActivityLoggerComponent implements OnDestroy {
     const preferredKey = catalogActivity?.key ?? null;
 
     try {
+      const activityLabel = this.formatActivityTypeLabel(type, preset.label);
       const result = await this.metricsService.logActivity({
         type,
-        name: `Quick ${preset.label}`,
+        name: this.translate.instant('METRICS.ACTIVITY.QUICK_LOG', { activity: activityLabel }),
         duration: 30,
         intensity: 'MODERATE',
         activityCatalogKey: preferredKey ?? undefined,
@@ -1439,7 +1447,9 @@ export class ActivityLoggerComponent implements OnDestroy {
     try {
       const result = await this.metricsService.logActivity({
         type: this.selectedType(),
-        name: this.activityName() || `${ACTIVITY_PRESETS[this.selectedType()].label} Session`,
+        name: this.activityName() || this.translate.instant('METRICS.ACTIVITY.QUICK_LOG', {
+          activity: this.formatActivityTypeLabel(this.selectedType(), ACTIVITY_PRESETS[this.selectedType()].label),
+        }),
         duration: this.duration(),
         intensity: this.intensity(),
         calories: this.estimatedCalories(),
@@ -1498,7 +1508,7 @@ export class ActivityLoggerComponent implements OnDestroy {
     const segments: string[] = [];
 
     if (location) {
-      segments.push(`Location: ${location}`);
+      segments.push(`${this.translate.instant('METRICS.ACTIVITY.LOCATION')}: ${location}`);
     }
 
     if (notes) {

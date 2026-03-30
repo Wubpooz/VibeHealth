@@ -1,7 +1,7 @@
 <aside class="sidebar">
   <!-- Brand Header -->
   <div class="sidebar-header">
-    <h1 class="brand-title">VibeHealth</h1>
+    <h1 class="brand-title">{{ 'SIDEBAR.BRAND_NAME' | translate }}</h1>
     <p class="brand-tagline">{{ 'SIDEBAR.BRAND_TAGLINE' | translate }}</p>
   </div>
 
@@ -78,7 +78,7 @@
         [attr.aria-label]="'nav.settings' | translate"
       >
         <div class="user-avatar">
-          <img class="user-avatar-img" [src]="mockAvatarUrl" alt="User avatar" />
+          <img class="user-avatar-img" [src]="mockAvatarUrl" [alt]="'SIDEBAR.USER_AVATAR_ALT' | translate" />
         </div>
         <span class="user-name">{{ userName() }}</span>
       </button>

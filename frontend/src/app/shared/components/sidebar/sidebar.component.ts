@@ -1,7 +1,7 @@
 import { Component, inject, computed, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
@@ -35,6 +35,7 @@ export class SidebarComponent {
   private readonly themeService = inject(ThemeService);
   private readonly authService = inject(AuthService);
   private readonly profileService = inject(ProfileService);
+  private readonly translate = inject(TranslateService);
 
   readonly currentTheme = this.themeService.theme;
   readonly user = this.authService.user;
@@ -46,7 +47,7 @@ export class SidebarComponent {
 
   readonly userName = computed(() => {
     const userData = this.user();
-    return userData?.name || 'User';
+    return userData?.name || this.translate.instant('SIDEBAR.USER');
   });
 
   readonly navItems: NavItem[] = [

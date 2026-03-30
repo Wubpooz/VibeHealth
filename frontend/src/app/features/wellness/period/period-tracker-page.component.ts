@@ -39,7 +39,7 @@ import {
     <div class="min-h-screen flex flex-col bg-[#fdf8f8] dark:bg-gray-950 transition-colors duration-300">
       <!-- Page Header -->
       <app-page-header
-        [title]="'Cycle tracker' | translate"
+        [title]="'WELLNESS.period.title' | translate"
         [backLabel]="'common.back_to_dashboard' | translate"
         [showBackLabel]="true"
       >
@@ -58,35 +58,35 @@ import {
           <!-- Cycle Insights Card -->
           @if (cycleInsights(); as insights) {
             <div class="rounded-3xl bg-white dark:bg-gray-900 p-6 shadow-sm border border-gray-200 dark:border-gray-800 hover:border-red-300 dark:hover:border-red-800 transition-colors">
-              <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">{{ 'Cycle Insights' | translate }}</h2>
+              <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">{{ 'WELLNESS.period.cycleInsights' | translate }}</h2>
 
               <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <!-- Data Points -->
                 <div class="bg-gradient-to-br from-[#fff5f2] to-[#fffaf8] rounded-2xl p-4 text-center">
-                  <p class="text-sm text-gray-600 dark:text-gray-400 mb-1">{{ 'Data Points' | translate }}</p>
+                  <p class="text-sm text-gray-600 dark:text-gray-400 mb-1">{{ 'WELLNESS.period.dataPoints' | translate }}</p>
                   <p class="text-2xl font-bold text-red-600 dark:text-red-400">{{ insights.dataPoints }}</p>
                 </div>
 
                 <!-- Avg Cycle Length -->
                 @if (insights.averageCycleLength !== null) {
                   <div class="bg-gradient-to-br from-[#fff5f2] to-[#fffaf8] rounded-2xl p-4 text-center">
-                    <p class="text-sm text-gray-600 dark:text-gray-400 mb-1">{{ 'Average Cycle Length' | translate }}</p>
-                    <p class="text-2xl font-bold text-red-500 dark:text-red-400">{{ insights.averageCycleLength }} {{ 'Period days' | translate }}</p>
+                    <p class="text-sm text-gray-600 dark:text-gray-400 mb-1">{{ 'WELLNESS.period.avgCycleLength' | translate }}</p>
+                    <p class="text-2xl font-bold text-red-500 dark:text-red-400">{{ insights.averageCycleLength }} {{ 'WELLNESS.period.days' | translate }}</p>
                   </div>
                 }
 
                 <!-- Avg Period Duration -->
                 @if (insights.averagePeriodDuration !== null) {
                   <div class="bg-gradient-to-br from-[#fff5f2] to-[#fffaf8] rounded-2xl p-4 text-center">
-                    <p class="text-sm text-gray-600 dark:text-gray-400 mb-1">{{ 'Average Period Duration' | translate }}</p>
-                    <p class="text-2xl font-bold text-red-500 dark:text-red-400">{{ insights.averagePeriodDuration }} {{ 'Period days' | translate }}</p>
+                    <p class="text-sm text-gray-600 dark:text-gray-400 mb-1">{{ 'WELLNESS.period.avgDuration' | translate }}</p>
+                    <p class="text-2xl font-bold text-red-500 dark:text-red-400">{{ insights.averagePeriodDuration }} {{ 'WELLNESS.period.days' | translate }}</p>
                   </div>
                 }
 
                 <!-- Predicted Next Period -->
                 @if (insights.predictedNextPeriodStart !== null) {
                   <div class="bg-gradient-to-br from-[#fff5f2] to-[#fffaf8] rounded-2xl p-4 text-center">
-                    <p class="text-sm text-gray-600 dark:text-gray-400 mb-1">{{ 'Predicted Next Period' | translate }}</p>
+                    <p class="text-sm text-gray-600 dark:text-gray-400 mb-1">{{ 'WELLNESS.period.nextPeriodPredicted' | translate }}</p>
                     <p class="text-sm font-semibold text-red-600 dark:text-red-400">{{ formatDate(insights.predictedNextPeriodStart) }}</p>
                   </div>
                 }
@@ -95,13 +95,17 @@ import {
               <!-- Fertile Window -->
               @if (insights.fertilityWindow !== null) {
                 <div class="mt-4 p-4 bg-gradient-to-r from-green-50 dark:from-green-950/30 to-emerald-50 dark:to-emerald-950/30 border border-green-200 dark:border-green-800 rounded-2xl">
-                  <p class="text-sm font-semibold text-gray-700 dark:text-gray-200 mb-1">{{ 'Fertile Window' | translate }}</p>
+                  <p class="text-sm font-semibold text-gray-700 dark:text-gray-200 mb-1">{{ 'WELLNESS.period.fertileWindow' | translate }}</p>
                   <p class="text-sm text-gray-700 dark:text-gray-300">
                     {{ formatDate(insights.fertilityWindow.start) }} - {{ formatDate(insights.fertilityWindow.end) }}
                   </p>
                 </div>
               }
             </div>
+          }
+
+          @if (periodLogsError()) {
+            <div class="text-sm text-red-500 mb-4">{{ periodLogsError() | translate }}</div>
           }
 
           <!-- Calendar -->
@@ -113,13 +117,13 @@ import {
                   (click)="previousMonth()"
                   class="flex-1 sm:flex-none px-3 py-2 rounded-xl text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
                 >
-                  ← {{ 'previous' | translate }}
+                  ← {{ 'WELLNESS.period.previous' | translate }}
                 </button>
                 <button
                   (click)="nextMonth()"
                   class="flex-1 sm:flex-none px-3 py-2 rounded-xl text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
                 >
-                  {{ 'next' | translate }} →
+                  {{ 'WELLNESS.period.next' | translate }} →
                 </button>
               </div>
             </div>
@@ -127,7 +131,7 @@ import {
             <!-- Weekday Headers -->
             <div class="grid grid-cols-7 gap-2 mb-4">
               @for (day of weekDays; track day) {
-                <div class="text-center text-sm font-semibold text-gray-600 dark:text-gray-400 py-2">{{ day }}</div>
+                <div class="text-center text-sm font-semibold text-gray-600 dark:text-gray-400 py-2">{{ day | translate }}</div>
               }
             </div>
 
@@ -160,15 +164,15 @@ import {
             <div class="mt-6 flex flex-wrap gap-4 text-sm">
               <div class="flex items-center gap-2">
                 <div class="w-3 h-3 rounded-full bg-red-600 dark:bg-red-400"></div>
-                <span class="text-gray-700 dark:text-gray-300">{{ 'Period day' | translate }}</span>
+                <span class="text-gray-700 dark:text-gray-300">{{ 'WELLNESS.period.periodDay' | translate }}</span>
               </div>
               <div class="flex items-center gap-2">
                 <div class="w-3 h-3 rounded-full bg-green-300 dark:bg-green-600"></div>
-                <span class="text-gray-700 dark:text-gray-300">{{ 'Fertile day' | translate }}</span>
+                <span class="text-gray-700 dark:text-gray-300">{{ 'WELLNESS.period.fertileDay' | translate }}</span>
               </div>
               <div class="flex items-center gap-2">
                 <div class="w-3 h-3 rounded-full bg-yellow-400 dark:bg-yellow-700"></div>
-                <span class="text-gray-700 dark:text-gray-300">{{ 'Predicted Next Period' | translate }}</span>
+                <span class="text-gray-700 dark:text-gray-300">{{ 'WELLNESS.period.nextPeriodPredicted' | translate }}</span>
               </div>
             </div>
           </div>
@@ -177,16 +181,16 @@ import {
         <!-- Sidebar: Log Period (Right - 1 col on desktop) -->
         <div class="lg:col-span-1">
           <div class="rounded-3xl bg-white dark:bg-gray-900 p-6 shadow-sm border border-gray-200 dark:border-gray-800 sticky top-4 space-y-4">
-            <h3 class="text-lg font-semibold text-gray-900 dark:text-white">{{ 'Log period' | translate }}</h3>
+            <h3 class="text-lg font-semibold text-gray-900 dark:text-white">{{ 'WELLNESS.period.logPeriod' | translate }}</h3>
 
             <!-- Selected Date Display -->
             <div class="text-sm text-gray-600 dark:text-gray-400 p-3 bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-800 rounded-xl">
-              {{ 'Selected date' | translate }}: <span class="font-semibold text-red-600 dark:text-red-400">{{ formatDate(selectedDateFormatted()) }}</span>
+              {{ 'WELLNESS.period.selectedDate' | translate }}: <span class="font-semibold text-red-600 dark:text-red-400">{{ formatDate(selectedDateFormatted()) }}</span>
             </div>
 
             <!-- Start Date Input -->
             <div>
-                <label for="startDate" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{{ 'Start date' | translate }}</label>
+                <label for="startDate" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{{ 'WELLNESS.period.startDate' | translate }}</label>
               <input
                 id="startDate"
                 type="date"
@@ -198,7 +202,7 @@ import {
 
             <!-- End Date Input -->
             <div>
-                <label for="endDate" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{{ 'End date' | translate }} ({{ 'common.optional' | translate }})</label>
+                <label for="endDate" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{{ 'WELLNESS.period.endDate' | translate }} ({{ 'common.optional' | translate }})</label>
               <input
                 id="endDate"
                 type="date"
@@ -210,7 +214,7 @@ import {
 
             <!-- Flow Intensity -->
             <fieldset>
-                <legend class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{{ 'Flow intensity' | translate }}</legend>
+                <legend class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{{ 'WELLNESS.period.flowIntensityLabel' | translate }}</legend>
               <div class="flex gap-2">
                 @for (intensity of FLOW_INTENSITY_OPTIONS; track intensity) {
                   <button
@@ -224,7 +228,7 @@ import {
                       'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700': logForm().flowIntensity !== intensity
                     }"
                   >
-                    {{ FLOW_INTENSITY_LABELS[intensity] }}
+                    {{ FLOW_INTENSITY_LABELS[intensity] | translate }}
                   </button>
                 }
               </div>
@@ -232,7 +236,7 @@ import {
 
             <!-- Symptoms Chips -->
             <fieldset>
-                <legend class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{{ 'Symptoms' | translate }}</legend>
+                <legend class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{{ 'WELLNESS.period.symptomsLabel' | translate }}</legend>
               <div class="flex flex-wrap gap-2">
                 @for (symptom of SYMPTOMS_OPTIONS; track symptom) {
                   <button
@@ -246,7 +250,7 @@ import {
                       'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700': !logForm().symptoms.includes(symptom)
                     }"
                   >
-                    {{ SYMPTOMS_LABELS[symptom] }}
+                    {{ SYMPTOMS_LABELS[symptom] | translate }}
                   </button>
                 }
               </div>
@@ -254,14 +258,14 @@ import {
 
             <!-- Notes -->
             <div>
-                <label for="notes" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{{ 'Notes' | translate }} ({{ 'common.optional' | translate }})</label>
+                <label for="notes" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{{ 'WELLNESS.period.notes' | translate }} ({{ 'common.optional' | translate }})</label>
               <textarea
                 id="notes"
                 [value]="logForm().notes"
                 (input)="updateFormField('notes', $event)"
                 maxlength="500"
                 rows="3"
-                placeholder="Any additional notes..."
+                placeholder="{{ 'WELLNESS.period.notesPlaceholder' | translate }}"
                 class="w-full px-4 py-2 rounded-xl border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:border-red-500 dark:focus:border-red-400 focus:ring-2 focus:ring-red-500 dark:focus:ring-red-400 focus:ring-opacity-20 outline-none transition-all resize-none"
               ></textarea>
             </div>
@@ -277,9 +281,9 @@ import {
               }"
             >
               @if (isSaving()) {
-                {{ 'Saving' | translate }}...
+                {{ 'WELLNESS.period.saving' | translate }}...
               } @else {
-                {{ 'Save' | translate }}
+                {{ 'WELLNESS.period.saveLog' | translate }}
               }
             </button>
 
@@ -290,7 +294,7 @@ import {
                 [disabled]="isSaving()"
                 class="w-full py-2 rounded-xl font-medium text-red-600 bg-red-50 hover:bg-red-100 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                  {{ 'Delete' | translate }}
+                  {{ 'WELLNESS.period.deleteEntry' | translate }}
               </button>
             }
           </div>
@@ -299,7 +303,7 @@ import {
 
         <!-- Recent Logs -->
         <div class="rounded-3xl bg-white dark:bg-gray-900 p-6 shadow-sm border border-gray-200 dark:border-gray-800 max-w-7xl mx-auto w-full">
-          <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">{{ 'Recent Logs' | translate }}</h2>
+          <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">{{ 'WELLNESS.period.recentLogs' | translate }}</h2>
 
         @if (periodLogs().length > 0) {
           <div class="space-y-3">
@@ -315,18 +319,18 @@ import {
               >
                 <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 mb-2">
                   <div>
-                    <p class="font-semibold text-gray-900 dark:text-white">{{ formatDate(log.startDate) }} - {{ log.endDate ? formatDate(log.endDate) : 'Ongoing' }}</p>
-                    <p class="text-sm text-gray-600 dark:text-gray-400">{{ 'Flow intensity' | translate }}: {{ FLOW_INTENSITY_LABELS[log.flowIntensity] }}</p>
+                    <p class="font-semibold text-gray-900 dark:text-white">{{ formatDate(log.startDate) }} - {{ log.endDate ? formatDate(log.endDate) : ('WELLNESS.period.ongoing' | translate) }}</p>
+                    <p class="text-sm text-gray-600 dark:text-gray-400">{{ 'WELLNESS.period.flowIntensityLabel' | translate }}: {{ FLOW_INTENSITY_LABELS[log.flowIntensity] | translate }}</p>
                   </div>
                   <div class="px-3 py-1 rounded-full text-xs font-medium bg-red-100 dark:bg-red-950/50 text-red-700 dark:text-red-300 whitespace-nowrap">
-                      {{ log.symptoms.length }} {{ 'Symptoms' | translate }}
+                      {{ log.symptoms.length }} {{ 'WELLNESS.period.symptomsLabel' | translate }}
                   </div>
                 </div>
                 @if (log.symptoms.length > 0) {
                   <div class="flex flex-wrap gap-1">
                     @for (symptom of log.symptoms; track symptom) {
                       <span class="inline-block px-2 py-1 rounded-lg text-xs bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300">
-                        {{ SYMPTOMS_LABELS[symptom] }}
+                        {{ SYMPTOMS_LABELS[symptom] | translate }}
                       </span>
                     }
                   </div>
@@ -336,8 +340,8 @@ import {
           </div>
         } @else {
           <div class="text-center py-8">
-            <p class="text-gray-600 dark:text-gray-400 mb-4">{{ 'No logs found' | translate }}</p>
-            <p class="text-sm text-gray-500 dark:text-gray-500">{{ 'Start logging' | translate }}</p>
+            <p class="text-gray-600 dark:text-gray-400 mb-4">{{ 'WELLNESS.period.noLogs' | translate }}</p>
+            <p class="text-sm text-gray-500 dark:text-gray-500">{{ 'WELLNESS.period.startLogging' | translate }}</p>
           </div>
         }
         </div>
@@ -358,7 +362,15 @@ export class PeriodTrackerPageComponent {
   // Calendar state
   private readonly currentDate = signal(new Date());
   readonly selectedDate = signal<Date | null>(null);
-  readonly weekDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  readonly weekDays = [
+    'WELLNESS.period.weekday.sun',
+    'WELLNESS.period.weekday.mon',
+    'WELLNESS.period.weekday.tue',
+    'WELLNESS.period.weekday.wed',
+    'WELLNESS.period.weekday.thu',
+    'WELLNESS.period.weekday.fri',
+    'WELLNESS.period.weekday.sat',
+  ];
 
   // Form state
   readonly logForm = signal({
@@ -376,6 +388,7 @@ export class PeriodTrackerPageComponent {
   readonly periodLogs = this.periodTrackerService.periodLogs;
   readonly cycleInsights = this.periodTrackerService.cycleInsights;
   readonly periodLogsLoading = this.periodTrackerService.periodLogsLoading;
+  readonly periodLogsError = this.periodTrackerService.periodLogsError;
 
   // Computed values
   readonly currentMonthYear = computed(() => {
