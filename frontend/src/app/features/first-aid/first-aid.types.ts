@@ -22,6 +22,15 @@ export type FirstAidCategory =
 
 export type SeverityLevel = 'critical' | 'serious' | 'moderate' | 'minor';
 
+export interface FirstAidCategoryMetadata {
+  id: FirstAidCategory;
+  key: string;
+  label: string;
+  labelKey: string;
+  icon: string;
+  color?: string;
+}
+
 export interface FirstAidStep {
   order: number;
   instruction: string;
@@ -35,6 +44,8 @@ export interface FirstAidCard {
   category: FirstAidCategory;
   titleKey: string;
   descriptionKey: string;
+  title?: string;
+  description?: string;
   icon: string;
   severity: SeverityLevel;
   steps: FirstAidStep[];

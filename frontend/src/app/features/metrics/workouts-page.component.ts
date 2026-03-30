@@ -485,7 +485,6 @@ import { ToastService } from '../../core/toast/toast.service';
     }
 
     .workout-action-button {
-      // color: #0d0a05;
       color: white;
       background: #ff9d87;
     }

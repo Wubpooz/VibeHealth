@@ -1,8 +1,9 @@
-import { Component, inject, signal, ChangeDetectionStrategy } from '@angular/core';
+import { Component, DestroyRef, inject, signal, ChangeDetectionStrategy } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { HttpClient } from '@angular/common/http';
 import { firstValueFrom, catchError, of } from 'rxjs';
 import { BunnyMascotComponent } from '../../shared/components/bunny-mascot/bunny-mascot.component';
@@ -11,13 +12,25 @@ import { AutocompleteComponent } from '../../shared/components/autocomplete/auto
 import {
   OnboardingProfile,
   ONBOARDING_STEPS,
-  HEALTH_GOALS,
-  FITNESS_LEVELS,
   HealthGoal,
 } from './onboarding.types';
 import { environment } from '../../../environments/environment';
 import { AuthService } from '../../core/auth/auth.service';
 import { ReferenceDataService } from '../../core/reference-data/reference-data.service';
+import { LocalizedDataService } from '../../core/localized-data/localized-data.service';
+
+interface OnboardingGoalViewModel {
+  id: HealthGoal;
+  label: string;
+  emoji: string;
+  description: string;
+}
+type OnboardingFitnessLevelValue = OnboardingProfile['fitnessLevel'];
+interface OnboardingFitnessLevelViewModel {
+  id: OnboardingFitnessLevelValue;
+  label: string;
+  description: string;
+}
 
 @Component({
   selector: 'app-onboarding',
@@ -193,7 +206,7 @@ import { ReferenceDataService } from '../../core/reference-data/reference-data.s
                             class="option-chip"
                             [class.selected]="profile.biologicalSex === option.id"
                           >
-                            {{ option.label }}
+                            {{ option.labelKey | translate }}
                           </button>
                         }
                       </div>
@@ -402,7 +415,7 @@ import { ReferenceDataService } from '../../core/reference-data/reference-data.s
                     <div class="form-group" role="group" aria-labelledby="fitness-label">
                       <span id="fitness-label" class="form-label">Current activity level</span>
                       <div class="space-y-2">
-                        @for (level of fitnessLevels; track level.id) {
+                        @for (level of fitnessLevels(); track level.id) {
                           <button
                             type="button"
                             (click)="profile.fitnessLevel = level.id"
@@ -422,7 +435,7 @@ import { ReferenceDataService } from '../../core/reference-data/reference-data.s
                     <div class="form-group" role="group" aria-labelledby="goals-label">
                       <span id="goals-label" class="form-label">Select your goals <span class="text-gray-400 font-normal">(pick any)</span></span>
                       <div class="grid grid-cols-2 gap-3">
-                        @for (goal of healthGoals; track goal.id) {
+                        @for (goal of healthGoals(); track goal.id) {
                           <button
                             type="button"
                             (click)="toggleGoal(goal.id)"
@@ -776,11 +789,14 @@ export class OnboardingComponent {
   private readonly router = inject(Router);
   private readonly authService = inject(AuthService);
   private readonly referenceDataService = inject(ReferenceDataService);
+  private readonly localizedDataService = inject(LocalizedDataService);
+  private readonly translate = inject(TranslateService);
+  private readonly destroyRef = inject(DestroyRef);
 
   // Step data
   steps = ONBOARDING_STEPS;
-  healthGoals = HEALTH_GOALS;
-  fitnessLevels = FITNESS_LEVELS;
+  healthGoals = signal<OnboardingGoalViewModel[]>([]);
+  fitnessLevels = signal<OnboardingFitnessLevelViewModel[]>([]);
   
   // Expose signals from service
   commonConditions = this.referenceDataService.conditions;
@@ -820,10 +836,10 @@ export class OnboardingComponent {
 
   // Sex options
   sexOptions = [
-    { id: 'male', label: 'Male' },
-    { id: 'female', label: 'Female' },
-    { id: 'other', label: 'Other' },
-    { id: 'prefer_not_to_say', label: 'Prefer not to say' },
+    { id: 'male', labelKey: 'ONBOARDING.SEX.MALE' },
+    { id: 'female', labelKey: 'ONBOARDING.SEX.FEMALE' },
+    { id: 'other', labelKey: 'ONBOARDING.SEX.OTHER' },
+    { id: 'prefer_not_to_say', labelKey: 'ONBOARDING.SEX.PREFER_NOT_TO_SAY' },
   ] as const;
 
   // Confetti celebration - reduced count for performance
@@ -842,6 +858,14 @@ export class OnboardingComponent {
     this.maxDate = today.toISOString().split('T')[0];
     const minYear = today.getFullYear() - 120;
     this.minDate = `${minYear}-01-01`;
+
+    this.loadLocalizedGoalOptions();
+
+    this.translate.onLangChange
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => {
+        this.loadLocalizedGoalOptions();
+      });
   }
 
   nextStep() {
@@ -874,6 +898,100 @@ export class OnboardingComponent {
     } else {
       goals.push(goalId);
     }
+  }
+
+  private loadLocalizedGoalOptions(): void {
+    const locale = this.getCurrentLocale();
+
+    this.localizedDataService
+      .getOnboardingGoals(locale)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (goals) => {
+          const mapped = goals
+            .map((goal) => this.mapGoal(goal.key, goal.label, goal.emoji, goal.description))
+            .filter((goal): goal is OnboardingGoalViewModel => goal !== null);
+
+          this.healthGoals.set(mapped);
+          this.profile.goals = this.profile.goals.filter((goalId) => this.healthGoals().some((goal) => goal.id === goalId));
+        },
+        error: (error) => {
+          console.warn('Failed to load localized onboarding goals', error);
+          this.healthGoals.set([]);
+          this.profile.goals = [];
+        },
+      });
+
+    this.localizedDataService
+      .getOnboardingFitnessLevels(locale)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (levels) => {
+          const mapped = levels
+            .map((level) => this.mapFitnessLevel(level.key, level.label, level.description))
+            .filter((level): level is OnboardingFitnessLevelViewModel => level !== null);
+
+          this.fitnessLevels.set(mapped);
+
+          if (!mapped.some((level) => level.id === this.profile.fitnessLevel)) {
+            this.profile.fitnessLevel = mapped[0]?.id ?? 'moderate';
+          }
+        },
+        error: (error) => {
+          console.warn('Failed to load localized onboarding fitness levels', error);
+          this.fitnessLevels.set([]);
+          this.profile.fitnessLevel = 'moderate';
+        },
+      });
+  }
+
+  private getCurrentLocale(): 'en' | 'fr' {
+    const current = this.translate.getCurrentLang() || this.translate.getFallbackLang() || 'en';
+    return current.toLowerCase().startsWith('fr') ? 'fr' : 'en';
+  }
+
+  private mapGoal(key: string, label: string, emoji: string, description: string): OnboardingGoalViewModel | null {
+    const normalized = key.toLowerCase();
+    const supported = [
+      'weight_loss',
+      'muscle_gain',
+      'maintenance',
+      'better_sleep',
+      'stress_reduction',
+      'nutrition',
+      'hydration',
+      'general_wellness',
+    ] as const;
+
+    if (!supported.includes(normalized as (typeof supported)[number])) {
+      return null;
+    }
+
+    return {
+      id: normalized as HealthGoal,
+      label,
+      emoji,
+      description,
+    };
+  }
+
+  private mapFitnessLevel(
+    key: string,
+    label: string,
+    description: string,
+  ): OnboardingFitnessLevelViewModel | null {
+    const normalized = key.toLowerCase();
+    const supported = ['sedentary', 'light', 'moderate', 'active', 'very_active'] as const;
+
+    if (!supported.includes(normalized as (typeof supported)[number])) {
+      return null;
+    }
+
+    return {
+      id: normalized as OnboardingFitnessLevelValue,
+      label,
+      description,
+    };
   }
 
   async completeOnboarding() {

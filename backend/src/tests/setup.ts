@@ -35,6 +35,11 @@ const prismaMock = {
       findFirst:  () => Promise.resolve(null),
       findUnique: () => Promise.resolve(null),
     },
+    onboardingMedication: {
+      findMany:   () => Promise.resolve([]),
+      create:     () => Promise.resolve(null),
+      deleteMany: () => Promise.resolve({ count: 0 }),
+    },
     user: {
       findUnique: () => Promise.resolve(null),
       update:     () => Promise.resolve(null),

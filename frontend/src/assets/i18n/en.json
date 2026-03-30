@@ -15,7 +15,8 @@
     "loading": "Loading...",
     "error": "An error occurred",
     "success": "Success",
-    "understood": "Understood"
+    "understood": "Understood",
+    "optional": "Optional"
   },
   "nav": {
     "home": "Home",
@@ -211,6 +212,12 @@
     "BIRTHDAY": "When's your birthday?",
     "BIOLOGICAL_SEX": "Biological sex",
     "SEX_HELP": "Helps with accurate health calculations",
+    "SEX": {
+      "MALE": "Male",
+      "FEMALE": "Female",
+      "OTHER": "Other",
+      "PREFER_NOT_TO_SAY": "Prefer not to say"
+    },
     "YOUR_BODY": "Your Body",
     "YOUR_BODY_DESC": "Help us tailor recommendations",
     "HEIGHT": "Height",
@@ -370,6 +377,8 @@
     "AVAILABLE_OFFLINE": "Available offline",
     "SELECT_COUNTRY": "Select your country",
     "NO_RESULTS": "No results found",
+    "GUIDE_NOT_FOUND": "Guide not found",
+    "BACK_TO_GUIDE": "Back to First Aid",
     "DISCLAIMER": "This guide is for informational purposes only. Always call emergency services in life-threatening situations.",
     "CATEGORY": {
       "CPR": "CPR",
@@ -814,18 +823,30 @@
     },
     "NUTRITION": {
       "TITLE": "Nutrition",
+      "SUBTITLE": "Track your daily intake",
       "SCAN_BARCODE": "Scan Barcode",
       "ALIGN_BARCODE": "Align barcode within the frame",
       "SCANNER_COMING_SOON": "Barcode Scanner Coming Soon!",
       "SCANNER_DESCRIPTION": "We're working on integrating barcode scanning to make logging nutrition even faster. For now, please enter food details manually.",
       "MEAL_TYPE": "Meal Type",
+      "FIND_MEAL": "Find your meal",
+      "QUICK_SEARCH": "Catalog Search",
+      "MANUAL_ENTRY": "Manual Entry",
+      "SEARCH_MEALS": "Search our meal database...",
       "MEAL_NAME": "Meal Name",
       "MEAL_NAME_PLACEHOLDER": "e.g., Chicken Salad",
       "CALORIES": "Calories",
-      "ADD_MACROS": "Add Macros (optional)",
+      "NUTRITIONAL_INFO": "Nutritional Info",
+      "ADD_MACROS": "Add Macros",
       "PROTEIN": "Protein",
       "CARBS": "Carbs",
-      "FAT": "Fat"
+      "FAT": "Fat",
+      "LOG_MEAL": "Log Meal",
+      "LOGGING": "Logging...",
+      "OPEN_FORM": "Open add meal form",
+      "CLOSE_FORM": "Close add meal form",
+      "TODAY_MEALS": "Today's Meals",
+      "REWARD_MSG": "Meal logged! +3 carrots earned!"
     },
     "ACTIVITY": {
       "TITLE": "Activity",
@@ -920,6 +941,66 @@
     "MASCOT_EMPTY": "Let's create your first goal together!",
     "MASCOT_CELEBRATE": "Amazing work! You're hitting your goals today!",
     "MASCOT_FOCUS": "You're doing great — log one step at a time.",
+    "DONE": "Done",
+    "REMOVE_GOAL": "Remove goal",
+    "TO_GO": "to go",
+    "GOAL_ACHIEVED": "Goal achieved!",
+    "HIDE": "Hide",
+    "LOG_PROGRESS": "Log Progress",
+    "VALUE_IN": "Value in {{unit}}",
+    "ARCHIVED": "Archived",
+    "UNTIL": "until",
+    "FREQUENCY": {
+      "DAILY": "Daily",
+      "WEEKLY": "Weekly",
+      "MONTHLY": "Monthly"
+    },
+    "TYPE": {
+      "STEPS": {
+        "LABEL": "Daily Steps",
+        "HINT": "e.g. 10 000 steps per day"
+      },
+      "HYDRATION": {
+        "LABEL": "Water Intake",
+        "HINT": "e.g. 2 500 ml per day"
+      },
+      "CALORIES_IN": {
+        "LABEL": "Calorie Intake",
+        "HINT": "e.g. 2 000 kcal per day"
+      },
+      "CALORIES_OUT": {
+        "LABEL": "Calories Burned",
+        "HINT": "e.g. 500 kcal burned per day"
+      },
+      "SLEEP": {
+        "LABEL": "Sleep Duration",
+        "HINT": "e.g. 8 hours per night"
+      },
+      "ACTIVITY_MINUTES": {
+        "LABEL": "Active Minutes",
+        "HINT": "e.g. 30 minutes per day"
+      },
+      "WEIGHT": {
+        "LABEL": "Target Weight",
+        "HINT": "e.g. 70 kg"
+      },
+      "CUSTOM": {
+        "LABEL": "Custom Goal",
+        "HINT": "Define your own goal"
+      }
+    },
+    "REWARDS": {
+      "CREATED": "New goal: {{title}}",
+      "ACHIEVED": "Goal achieved: {{title}}",
+      "PROGRESS_LOGGED": "Progress logged: {{title}}"
+    },
+    "ERRORS": {
+      "LOAD": "Failed to load goals",
+      "CREATE": "Failed to create goal",
+      "UPDATE": "Failed to update goal",
+      "DELETE": "Failed to delete goal",
+      "LOG_PROGRESS": "Failed to log progress"
+    },
     "WIZARD": {
       "STEP1_TITLE": "What do you want to achieve?",
       "STEP1_SUBTITLE": "Pick a category to get started",
@@ -938,7 +1019,8 @@
       "DONE": "All done",
       "CELEBRATE_TITLE": "Goal created! 🎉",
       "CELEBRATE_SUBTITLE": "Your bunny believes in you. Keep showing up every day!",
-      "CARROTS_EARNED": "carrots earned for setting a goal!"
+      "CARROTS_EARNED": "carrots earned for setting a goal!",
+      "UNTIL": "Until"
     }
   },
   "WORKOUTS": {
@@ -1032,6 +1114,13 @@
   "SETTINGS": {
     "TITLE": "Settings",
     "SUBTITLE": "Customize your VibeHealth experience",
+    "LANGUAGE": {
+      "TITLE": "Language",
+      "DESCRIPTION": "Choose your app language independently from your country settings.",
+      "SELECT_LABEL": "App language",
+      "OPTION_EN": "English",
+      "OPTION_FR": "Français"
+    },
     "ACCOUNT": {
       "TITLE": "Account",
       "DESCRIPTION": "Manage your identity details linked to your account.",

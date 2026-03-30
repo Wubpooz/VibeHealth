@@ -1,107 +1,18 @@
-import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, computed, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { catchError, of } from 'rxjs';
+import { LocalizedDataService, WikiCondition as LocalizedWikiCondition } from '../../core/localized-data/localized-data.service';
 import { WikiCondition } from './wiki.model';
 import { PageHeaderComponent } from '../../shared/components/page-header/page-header.component';
-import { LucideBookOpen } from '@lucide/angular';
-
-const CONDITION_TITLES: string[] = [
-  'Hypertension', 'Type 2 Diabetes', 'Asthma', 'Chronic Kidney Disease', 'COPD',
-  'Depression', 'Anxiety Disorders', 'Anemia', 'Osteoarthritis', 'Rheumatoid Arthritis',
-  'Migraine', 'Hypothyroidism', 'Hyperthyroidism', 'Sleep Apnea', 'GERD',
-  'Eczema', 'Psoriasis', 'Stroke', 'Heart Failure', 'Alzheimer Disease',
-  'Atrial Fibrillation', 'Coronary Artery Disease', 'Peripheral Artery Disease', 'Deep Vein Thrombosis', 'Pulmonary Embolism',
-  'Hyperlipidemia', 'Metabolic Syndrome', 'Obesity', 'Nonalcoholic Fatty Liver Disease', 'Acute Myocardial Infarction',
-  'Varicose Veins', 'Parkinson Disease', 'Epilepsy', 'Multiple Sclerosis', 'Systemic Lupus Erythematosus',
-  'Sjogren Syndrome', 'Psoriatic Arthritis', 'Ulcerative Colitis', 'Crohn Disease', 'Irritable Bowel Syndrome',
-  'Celiac Disease', 'Chronic Pancreatitis', 'Gallstones', 'Peptic Ulcer Disease', 'Hepatitis B',
-  'Hepatitis C', 'Cirrhosis', 'Gout', 'Osteoporosis', 'Sarcopenia',
-  'Fibromyalgia', 'Chronic Fatigue Syndrome', 'Lupus Nephritis', 'Polycystic Ovary Syndrome', 'Endometriosis',
-  'Uterine Fibroids', 'HPV Infection', 'Pelvic Inflammatory Disease', 'Benign Prostatic Hyperplasia', 'Prostate Cancer',
-  'Breast Cancer', 'Lung Cancer', 'Colorectal Cancer', 'Pancreatic Cancer', 'Melanoma',
-  'Non-Hodgkin Lymphoma', 'Hodgkin Lymphoma', 'Leukemia', 'Bone Metastasis', 'Sepsis',
-  'Meningitis', 'Encephalitis', 'Guillain-Barre Syndrome', 'Amyotrophic Lateral Sclerosis', 'Huntington Disease',
-  'Autism Spectrum Disorder', 'Attention Deficit Hyperactivity Disorder', 'Schizophrenia', 'Bipolar Disorder', 'Obsessive Compulsive Disorder',
-  'Posttraumatic Stress Disorder', 'Panic Disorder', 'Social Anxiety Disorder', 'Dyslipidemia', 'Hypokalemia',
-  'Hyperkalemia', 'Hyponatremia', 'Hypernatremia', 'Hypercalcemia', 'Hypocalcemia',
-  'Addison Disease', 'Cushing Syndrome', 'Diabetes Insipidus', 'Gestational Diabetes', 'Polymyalgia Rheumatica',
-  'Giant Cell Arteritis', 'Takayasu Arteritis', 'Systemic Sclerosis', 'Dermatomyositis', 'Polymyositis',
-  'Myasthenia Gravis', 'Carpal Tunnel Syndrome', 'Restless Leg Syndrome', 'Peripheral Neuropathy', 'Tinnitus',
-  'Vertigo', 'Erectile Dysfunction', 'Chronic Pelvic Pain', 'Interstitial Cystitis', 'Kidney Stones',
-  'Urinary Tract Infection', 'Pyelonephritis', 'Acute Renal Failure', 'Nephrotic Syndrome', 'Nephritic Syndrome',
-  'Polycystic Kidney Disease', 'Renal Cell Carcinoma', 'Testicular Cancer', 'Ovarian Cancer', 'Cervical Cancer',
-  'Endometrial Cancer', 'Cholecystitis', 'Appendicitis', 'Diverticulitis', 'Hemorrhoids',
-  'Anal Fissure', 'Cystic Fibrosis', 'Scurvy', 'Rickets', 'Beriberi',
-  'Pellagra', 'Night Blindness', 'Macular Degeneration', 'Glaucoma', 'Cataracts',
-  'Conjunctivitis', 'Otitis Media', 'Sinusitis', 'Pharyngitis', 'Tonsillitis',
-  'Laryngitis', 'Influenza', 'COVID-19', 'Viral Pneumonia', 'Bacterial Pneumonia',
-  'Tuberculosis', 'HIV/AIDS', 'Herpes Simplex', 'Varicella Zoster', 'Epstein-Barr Virus',
-  'Cytomegalovirus', 'Dengue Fever', 'Malaria', 'Lyme Disease', 'Rocky Mountain Spotted Fever',
-  'Zika Virus', 'Yellow Fever', 'Chikungunya', 'Syphilis', 'Gonorrhea',
-  'Chlamydia', 'Genital Herpes', 'Toxic Shock Syndrome', 'Vitamin D Deficiency', 'Hyperparathyroidism',
-  'Hypoparathyroidism', 'Bipolar II Disorder', 'Cyclothymic Disorder', 'Agoraphobia', 'Preeclampsia',
-  'Eclampsia', 'Placenta Previa', 'Placental Abruption', 'Gestational Hypertension', 'Hyperemesis Gravidarum',
-  'Premature Labor', 'Reactive Arthritis', 'Ankylosing Spondylitis', 'Juvenile Idiopathic Arthritis', 'Trigeminal Neuralgia',
-  'Cluster Headache', 'Tension Headache', 'Temporomandibular Disorder', 'Primary Biliary Cholangitis', 'Autoimmune Hepatitis',
-  'Acute Lymphoblastic Leukemia', 'Chronic Lymphocytic Leukemia', 'Multiple Myeloma', 'Myelodysplastic Syndrome', 'Hemophilia',
-  'Sickle Cell Disease', 'Thalassemia', 'Aplastic Anemia', 'Pulmonary Hypertension', 'Bronchiectasis',
-  'Interstitial Lung Disease', 'Amyloidosis', 'Polyarteritis Nodosa', 'Henoch-Schonlein Purpura', 'Superior Vena Cava Syndrome',
-  'Aortic Aneurysm', 'Transient Ischemic Attack', 'Dementia with Lewy Bodies', 'Normal Pressure Hydrocephalus', 'Carcinoid Syndrome',
-  'Pheochromocytoma', 'Pituitary Adenoma', 'Macrophage Activation Syndrome', 'Bisphosphonate-related Osteonecrosis', 'Hemophagocytic Lymphohistiocytosis',
-  'Ehlers-Danlos Syndrome', 'Marfan Syndrome', 'Neuromyelitis Optica', 'Adenosine Deaminase Deficiency', 'Epidermolysis Bullosa',
-  'Sleep Wake Circadian Disorder', 'Metastatic Melanoma', 'Chronic Eosinophilic Leukemia', 'Severe Atopic Dermatitis',
-];
-
-function buildWikiConditions(): WikiCondition[] {
-  return CONDITION_TITLES.map((title) => {
-    const slug = title.toLowerCase().replaceAll(/[^a-z0-9]+/g, '-').replaceAll(/(^-|-$)/g, '');
-    const lower = title.toLowerCase();
-    const tags: string[] = [];
-
-    if (/heart|cardio|hypertension|stroke|cholesterol|myocardial|arrhythmia|aortic/.test(lower)) tags.push('cardiovascular');
-    if (/diabetes|thyroid|adrenal|cortisol|hormone|obesity|metabolic|parathyroid|pituitary/.test(lower)) tags.push('endocrine');
-    if (/asthma|copd|pneumonia|tuberculosis|sleep|pulmonary|lung|bronchiectasis|interstitial/.test(lower)) tags.push('respiratory');
-    if (/cancer|lymphoma|leukemia|myeloma|melanoma|metastatic|oncology/.test(lower)) tags.push('oncology');
-    if (/arthritis|rheumatoid|scleroderma|vasculitis|fibromyalgia|polymyalgia/.test(lower)) tags.push('rheumatological');
-    if (/kidney|renal|nephro|pyelonephritis|nephrotic|nephritic/.test(lower)) tags.push('nephrology');
-    if (/depression|anxiety|schizophrenia|bipolar|ptsd|agoraphobia|obsessive|psychosis/.test(lower)) tags.push('mental-health');
-    if (/hepatitis|liver|cirrhosis|gallstones|pancreatitis|colitis|diverticulitis|appendicitis/.test(lower)) tags.push('gastrointestinal');
-    if (/infection|viral|bacterial|tuberculosis|hiv|aids|syphilis|gonorrhea|chlamydia|dengue|malaria|zika|yellow|chikungunya|covid/.test(lower)) tags.push('infectious');
-    if (/eczema|psoriasis|dermatitis|atopic|melanoma|bullosa/.test(lower)) tags.push('dermatological');
-    if (/vision|macular|glaucoma|cataracts|conjunctivitis|otitis|sinusitis/.test(lower)) tags.push('otolaryngology');
-    if (/pregnancy|preeclampsia|eclampsia|gestational|placenta|labor/.test(lower)) tags.push('obstetric');
-    if (/sepsis|shock|syndrome|acute|chronic|pain|anemia|fracture|metastatic|sickle/.test(lower)) tags.push('general');
-    if (tags.length === 0) tags.push('general');
-
-    const clinicalArea = tags.join(', ');
-    const riskFactors = /cardiovascular|endocrine|nephrology/.test(tags.join(' '))
-      ? 'Age, family history, diet, inactivity, smoking, obesity, hypertension'
-      : 'Genetics, environment, immune status, infection, lifestyle';
-
-    return {
-      id: slug,
-      title,
-      subtitle: title,
-      summary: `${title} is a condition that often requires specialized diagnosis, evidence-based management, and regular patient follow-up.`,
-      sourceUrl: 'https://www.vidal.fr/maladies/a-z.html',
-      sourceName: 'Vidal',
-      vidalUrl: `https://www.vidal.fr/maladies/a-z.html#${slug}`,
-      details: {
-        clinicalArea,
-        riskFactors,
-        diagnostics: 'Clinical exam, lab tests, imaging, specialist consultation when appropriate',
-        treatments: 'Lifestyle measures, pharmacologic therapy as indicated, monitoring, and specialist referral when needed',
-      },
-      tags,
-    };
-  });
-}
+import { LucideBookOpen, LucideSearch } from '@lucide/angular';
 
 @Component({
   selector: 'app-wiki',
   standalone: true,
-  imports: [CommonModule, FormsModule, TranslateModule, PageHeaderComponent, LucideBookOpen],
+  imports: [CommonModule, FormsModule, TranslateModule, PageHeaderComponent, LucideBookOpen, LucideSearch],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="min-h-screen bg-gradient-to-br from-slate-50 via-white to-sky-50 dark:from-gray-950 dark:via-gray-900 dark:to-gray-950">
@@ -129,7 +40,9 @@ function buildWikiConditions(): WikiCondition[] {
               class="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500"
               autocomplete="off"
             />
-            <span class="absolute right-3 top-3 text-gray-400 text-sm">🔍</span>
+            <span class="absolute right-3 top-3 text-gray-400 text-sm">
+              <svg lucideSearch [size]="16" [strokeWidth]="2"></svg>
+            </span>
             
             <!-- Search Suggestions Dropdown -->
             @if (searchQuery().length > 0 && searchSuggestions().length > 0) {
@@ -397,18 +310,22 @@ function buildWikiConditions(): WikiCondition[] {
   `],
 })
 export class WikiComponent {
+  private readonly localizedDataService = inject(LocalizedDataService);
+  private readonly translate = inject(TranslateService);
+  private readonly destroyRef = inject(DestroyRef);
+
   searchQuery = signal('');
   selectedTags = signal<string[]>([]);
   currentLetter = signal<string | null>(null);
 
-  conditions = buildWikiConditions();
-  selectedConditionSignal = signal<WikiCondition | null>(this.conditions[0] ?? null);
+  readonly conditions = signal<WikiCondition[]>([]);
+  readonly selectedConditionSignal = signal<WikiCondition | null>(null);
 
   alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
 
   availableTags = computed<string[]>(() => {
     const allTags = new Set<string>();
-    this.conditions.forEach((condition: WikiCondition) => {
+    this.conditions().forEach((condition: WikiCondition) => {
       condition.tags.forEach((tag: string) => allTags.add(tag));
     });
 
@@ -416,7 +333,7 @@ export class WikiComponent {
   });
 
   filteredConditions = computed<WikiCondition[]>(() => {
-    let filtered: WikiCondition[] = this.conditions;
+    let filtered: WikiCondition[] = this.conditions();
 
     // Filter by search query
     const query = this.searchQuery().trim().toLowerCase();
@@ -457,10 +374,100 @@ export class WikiComponent {
   });
 
   selectCondition(conditionId: string): void {
-    const found = this.conditions.find((condition) => condition.id === conditionId);
+    const found = this.conditions().find((condition) => condition.id === conditionId);
     if (found) {
       this.selectedConditionSignal.set(found);
     }
+  }
+
+  constructor() {
+    this.loadLocalizedConditions();
+
+    this.translate.onLangChange
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => {
+        this.loadLocalizedConditions();
+      });
+  }
+
+  private loadLocalizedConditions(): void {
+    const locale = this.getCurrentLocale();
+
+    this.localizedDataService
+      .getWikiConditions(undefined, undefined, locale)
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        catchError((error) => {
+          console.warn('Failed to fetch localized wiki conditions.', error);
+          return of([] as LocalizedWikiCondition[]);
+        }),
+      )
+      .subscribe((apiConditions) => {
+        const localized = apiConditions.map((condition) => this.mapLocalizedCondition(condition, locale));
+        this.conditions.set(localized);
+        this.ensureSelectedConditionExists();
+      });
+  }
+
+  private ensureSelectedConditionExists(): void {
+    const selected = this.selectedConditionSignal();
+    const all = this.conditions();
+
+    if (!selected || !all.some((condition) => condition.id === selected.id)) {
+      this.selectedConditionSignal.set(all[0] ?? null);
+    }
+  }
+
+  private getCurrentLocale(): 'en' | 'fr' {
+    const current = this.translate.getCurrentLang() || this.translate.getFallbackLang() || 'en';
+    return current.toLowerCase().startsWith('fr') ? 'fr' : 'en';
+  }
+
+  private mapLocalizedCondition(condition: LocalizedWikiCondition, locale: 'en' | 'fr'): WikiCondition {
+    const tags = Array.isArray(condition.tags) ? condition.tags : [];
+    let clinicalArea = tags.join(', ');
+    if (!clinicalArea) {
+      clinicalArea = locale === 'fr' ? 'général' : 'general';
+    }
+    const riskFactors = this.buildRiskFactorSummary(tags, locale);
+
+    return {
+      id: condition.key,
+      title: condition.title,
+      subtitle: condition.subtitle,
+      summary: condition.summary,
+      sourceUrl: condition.sourceUrl,
+      sourceName: condition.sourceName,
+      vidalUrl: condition.sourceUrl,
+      details: {
+        clinicalArea,
+        riskFactors,
+        diagnostics:
+          locale === 'fr'
+            ? 'Examen clinique, analyses biologiques, imagerie et avis spécialisé si nécessaire'
+            : 'Clinical exam, lab tests, imaging, and specialist review when needed',
+        treatments:
+          locale === 'fr'
+            ? 'Mesures de mode de vie, traitements ciblés et suivi régulier selon le profil'
+            : 'Lifestyle measures, targeted treatment plans, and regular follow-up',
+      },
+      tags,
+    };
+  }
+
+  private buildRiskFactorSummary(tags: string[], locale: 'en' | 'fr'): string {
+    const joinedTags = tags.join(' ');
+    const hasMetabolicProfile = /cardiovascular|endocrine|nephrology/.test(joinedTags);
+
+    if (locale === 'fr') {
+      return hasMetabolicProfile
+        ? 'Âge, antécédents familiaux, alimentation, sédentarité, tabac, obésité, hypertension'
+        : 'Génétique, environnement, immunité, infections et habitudes de vie';
+    }
+
+    return hasMetabolicProfile
+      ? 'Age, family history, diet, inactivity, smoking, obesity, hypertension'
+      : 'Genetics, environment, immune status, infection, lifestyle';
   }
 
   selectFromSuggestion(suggestion: WikiCondition): void {

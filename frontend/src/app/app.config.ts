@@ -20,7 +20,9 @@ export const appConfig: ApplicationConfig = {
       withInterceptors([authInterceptor])
     ),
     provideAnimations(),
-    provideTranslateService({ fallbackLang: 'en' }),
+    provideTranslateService({
+      fallbackLang: 'en',
+    }),
     provideTranslateHttpLoader(),
     provideAnimatedIcons({ color: 'currentColor', size: 24, strokeWidth: 2 }),
     provideServiceWorker('ngsw-worker.js', {

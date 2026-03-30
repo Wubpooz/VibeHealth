@@ -65,70 +65,76 @@ export interface CreateGoalDto {
 
 export const GOAL_TYPE_INFO: Record<
   GoalType,
-  { label: string; emoji: string; defaultUnit: string; defaultTarget: number; hint: string }
+  {
+    labelKey: string;
+    emoji: string;
+    defaultUnit: string;
+    defaultTarget: number;
+    hintKey: string;
+  }
 > = {
   STEPS: {
-    label: 'Daily Steps',
+    labelKey: 'GOALS.TYPE.STEPS.LABEL',
     emoji: '👟',
     defaultUnit: 'steps',
     defaultTarget: 10000,
-    hint: 'e.g. 10 000 steps per day',
+    hintKey: 'GOALS.TYPE.STEPS.HINT',
   },
   HYDRATION: {
-    label: 'Water Intake',
+    labelKey: 'GOALS.TYPE.HYDRATION.LABEL',
     emoji: '💧',
     defaultUnit: 'ml',
     defaultTarget: 2500,
-    hint: 'e.g. 2 500 ml per day',
+    hintKey: 'GOALS.TYPE.HYDRATION.HINT',
   },
   CALORIES_IN: {
-    label: 'Calorie Intake',
+    labelKey: 'GOALS.TYPE.CALORIES_IN.LABEL',
     emoji: '🍽️',
     defaultUnit: 'kcal',
     defaultTarget: 2000,
-    hint: 'e.g. 2 000 kcal per day',
+    hintKey: 'GOALS.TYPE.CALORIES_IN.HINT',
   },
   CALORIES_OUT: {
-    label: 'Calories Burned',
+    labelKey: 'GOALS.TYPE.CALORIES_OUT.LABEL',
     emoji: '🔥',
     defaultUnit: 'kcal',
     defaultTarget: 500,
-    hint: 'e.g. 500 kcal burned per day',
+    hintKey: 'GOALS.TYPE.CALORIES_OUT.HINT',
   },
   SLEEP: {
-    label: 'Sleep Duration',
+    labelKey: 'GOALS.TYPE.SLEEP.LABEL',
     emoji: '😴',
     defaultUnit: 'hours',
     defaultTarget: 8,
-    hint: 'e.g. 8 hours per night',
+    hintKey: 'GOALS.TYPE.SLEEP.HINT',
   },
   ACTIVITY_MINUTES: {
-    label: 'Active Minutes',
+    labelKey: 'GOALS.TYPE.ACTIVITY_MINUTES.LABEL',
     emoji: '⚡',
     defaultUnit: 'minutes',
     defaultTarget: 30,
-    hint: 'e.g. 30 minutes per day',
+    hintKey: 'GOALS.TYPE.ACTIVITY_MINUTES.HINT',
   },
   WEIGHT: {
-    label: 'Target Weight',
+    labelKey: 'GOALS.TYPE.WEIGHT.LABEL',
     emoji: '⚖️',
     defaultUnit: 'kg',
     defaultTarget: 70,
-    hint: 'e.g. 70 kg',
+    hintKey: 'GOALS.TYPE.WEIGHT.HINT',
   },
   CUSTOM: {
-    label: 'Custom Goal',
+    labelKey: 'GOALS.TYPE.CUSTOM.LABEL',
     emoji: '🎯',
     defaultUnit: 'times',
     defaultTarget: 1,
-    hint: 'Define your own goal',
+    hintKey: 'GOALS.TYPE.CUSTOM.HINT',
   },
 };
 
-export const GOAL_FREQ_INFO: Record<GoalFreq, { label: string; emoji: string }> = {
-  DAILY: { label: 'Daily', emoji: '📅' },
-  WEEKLY: { label: 'Weekly', emoji: '📆' },
-  MONTHLY: { label: 'Monthly', emoji: '🗓️' },
+export const GOAL_FREQ_INFO: Record<GoalFreq, { labelKey: string; emoji: string }> = {
+  DAILY: { labelKey: 'GOALS.FREQUENCY.DAILY', emoji: '📅' },
+  WEEKLY: { labelKey: 'GOALS.FREQUENCY.WEEKLY', emoji: '📆' },
+  MONTHLY: { labelKey: 'GOALS.FREQUENCY.MONTHLY', emoji: '🗓️' },
 };
 
 // ─── Service ─────────────────────────────────────────────────────────────────
@@ -179,7 +185,7 @@ export class GoalsService {
       this._goals.set(response.goals ?? []);
     } catch (err) {
       console.error('[GoalsService] loadGoals failed:', err);
-      this._error.set('Failed to load goals');
+      this._error.set('GOALS.ERRORS.LOAD');
     } finally {
       this._loading.set(false);
     }
@@ -201,7 +207,7 @@ export class GoalsService {
       return null;
     } catch (err) {
       console.error('[GoalsService] createGoal failed:', err);
-      this._error.set('Failed to create goal');
+      this._error.set('GOALS.ERRORS.CREATE');
       return null;
     } finally {
       this._saving.set(false);
@@ -226,7 +232,7 @@ export class GoalsService {
       return null;
     } catch (err) {
       console.error('[GoalsService] updateGoal failed:', err);
-      this._error.set('Failed to update goal');
+      this._error.set('GOALS.ERRORS.UPDATE');
       return null;
     } finally {
       this._saving.set(false);
@@ -244,7 +250,7 @@ export class GoalsService {
       return true;
     } catch (err) {
       console.error('[GoalsService] deleteGoal failed:', err);
-      this._error.set('Failed to delete goal');
+      this._error.set('GOALS.ERRORS.DELETE');
       return false;
     } finally {
       this._saving.set(false);
@@ -265,7 +271,7 @@ export class GoalsService {
       return response.success ? response.progress : null;
     } catch (err) {
       console.error('[GoalsService] logProgress failed:', err);
-      this._error.set('Failed to log progress');
+      this._error.set('GOALS.ERRORS.LOG_PROGRESS');
       return null;
     } finally {
       this._saving.set(false);

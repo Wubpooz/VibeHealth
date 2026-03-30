@@ -29,6 +29,33 @@ import { EmergencyNumber } from '../first-aid/first-aid.types';
 
       <main class="max-w-4xl mx-auto px-4 sm:px-6 py-6 pb-24">
 
+        <!-- Language Settings -->
+        <div class="mb-6 bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-100 dark:border-gray-700">
+          <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+            <span>🗣️</span>
+            {{ 'SETTINGS.LANGUAGE.TITLE' | translate }}
+          </h2>
+          <p class="text-sm text-gray-600 dark:text-gray-400 mb-6">
+            {{ 'SETTINGS.LANGUAGE.DESCRIPTION' | translate }}
+          </p>
+
+          <div>
+            <label for="languageSelect" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              {{ 'SETTINGS.LANGUAGE.SELECT_LABEL' | translate }}
+            </label>
+            <select
+              id="languageSelect"
+              [ngModel]="currentLanguage()"
+              (ngModelChange)="onLanguageChange($event)"
+              class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors"
+            >
+              @for (language of availableLanguages; track language.code) {
+                <option [value]="language.code">{{ language.labelKey | translate }}</option>
+              }
+            </select>
+          </div>
+        </div>
+
         <!-- Country Settings -->
         <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-100 dark:border-gray-700">
           <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
@@ -319,24 +346,32 @@ export class SettingsComponent {
   private readonly translate = inject(TranslateService);
 
   // Track current language to re-render translated labels when switching locale
-  readonly languageSignal = signal('en');
+  readonly languageSignal = signal<'en' | 'fr'>('en');
+
+  readonly availableLanguages = [
+    { code: 'en', labelKey: 'SETTINGS.LANGUAGE.OPTION_EN' },
+    { code: 'fr', labelKey: 'SETTINGS.LANGUAGE.OPTION_FR' },
+  ] as const;
+
+  readonly currentLanguage = computed<'en' | 'fr'>(() => {
+    const current = this.languageSignal() || this.translate.getCurrentLang() || this.translate.getFallbackLang() || 'en';
+    return this.normalizeLanguage(current);
+  });
 
   readonly selectedCountry = computed(() => this.firstAidService.userCountryCode() ?? '');
   readonly saveStatus = signal<'idle' | 'saving' | 'saved'>('idle');
 
-  static readonly SUPPORTED_COUNTRIES = ['GB', 'FR'];
+  static readonly SUPPORTED_COUNTRIES = ['GB', 'FR', 'US'];
 
   readonly availableCountries = computed(() => {
     // Touch language signal to recompute on language change
     this.languageSignal();
 
-    return this.firstAidService.emergencyNumbers()
-      .filter(country => SettingsComponent.SUPPORTED_COUNTRIES.includes(country.countryCode))
-      .map(country => ({
-        code: country.countryCode,
-        flag: country.flag,
-        name: this.getCountryLabel(country.countryCode, country.country),
-      }));
+    return SettingsComponent.SUPPORTED_COUNTRIES.map((code) => ({
+      code,
+      flag: this.countryFlag(code),
+      name: this.getCountryLabel(code, code),
+    }));
   });
 
   readonly emergencyNumbers = computed<EmergencyNumber['numbers']>(() =>
@@ -356,16 +391,17 @@ export class SettingsComponent {
   readonly actionMessage = signal<string | null>(null);
 
   constructor() {
+    const initial = this.translate.getCurrentLang() || this.translate.getFallbackLang() || 'en';
+    this.languageSignal.set(this.normalizeLanguage(initial));
+
     // Keep translation labels in sync with language changes
     this.translate.onLangChange.subscribe((event) => {
-      this.languageSignal.set(event.lang);
+      this.languageSignal.set(this.normalizeLanguage(event.lang));
     });
 
     effect(() => {
       const preferred = this.profileService.profile()?.preferredCountryCode;
       if (preferred) {
-        const language = this.mapCountryToLanguage(preferred);
-        this.translate.use(language);
         this.firstAidService.setUserCountry(preferred);
       }
     });
@@ -383,18 +419,41 @@ export class SettingsComponent {
     });
   }
 
+  onLanguageChange(language: string): void {
+    const normalized = this.normalizeLanguage(language);
+
+    if (normalized === this.currentLanguage()) {
+      return;
+    }
+
+    this.saveStatus.set('saving');
+    this.translate.use(normalized);
+
+    setTimeout(() => {
+      this.saveStatus.set('saved');
+      setTimeout(() => {
+        this.saveStatus.set('idle');
+      }, 2000);
+    }, 250);
+  }
+
   onCountryChange(countryCode: string): void {
+    const normalized = countryCode?.trim().toUpperCase();
+    if (!normalized || !SettingsComponent.SUPPORTED_COUNTRIES.includes(normalized)) {
+      return;
+    }
+
+    if (normalized === this.selectedCountry()) {
+      return;
+    }
+
     this.saveStatus.set('saving');
 
-    // Set app language based on country
-    const language = this.mapCountryToLanguage(countryCode);
-    this.translate.use(language);
-
     // Update the service (updated country + emergency numbers)
-    this.firstAidService.setUserCountry(countryCode);
+    this.firstAidService.setUserCountry(normalized);
 
     // Persist to profile DB and persist preferred language if needed
-    void this.profileService.updatePreferredCountry(countryCode);
+    void this.profileService.updatePreferredCountry(normalized);
 
     // Show saved status briefly
     setTimeout(() => {
@@ -533,16 +592,22 @@ export class SettingsComponent {
     this.actionMessage.set(this.translate.instant(key));
   }
 
-  private mapCountryToLanguage(countryCode: string): string {
-    if (countryCode === 'FR') return 'fr';
-    if (countryCode === 'GB') return 'en';
-    // fallback to default locale
-    return 'en';
+  private normalizeLanguage(language: string | undefined): 'en' | 'fr' {
+    return language?.toLowerCase().startsWith('fr') ? 'fr' : 'en';
   }
 
   private getCountryLabel(code: string, fallback: string): string {
     const key = `SETTINGS.COUNTRY.NAMES.${code}`;
     const translation = this.translate.instant(key);
     return translation === key ? fallback : translation;
+  }
+
+  private countryFlag(code: string): string {
+    if (!/^[A-Z]{2}$/.test(code)) {
+      return '🌍';
+    }
+    return String.fromCodePoint(
+      ...code.split('').map((char) => 127397 + (char.codePointAt(0) ?? 0)),
+    );
   }
 }

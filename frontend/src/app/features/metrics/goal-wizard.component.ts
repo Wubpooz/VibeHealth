@@ -8,7 +8,7 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import {
   GoalsService,
   GOAL_TYPE_INFO,
@@ -78,8 +78,8 @@ type WizardStep = 1 | 2 | 3;
                   (click)="selectType(gt)"
                 >
                   <span class="type-emoji">{{ typeInfo[gt].emoji }}</span>
-                  <span class="type-name">{{ typeInfo[gt].label }}</span>
-                  <span class="type-hint">{{ typeInfo[gt].hint }}</span>
+                  <span class="type-name">{{ typeInfo[gt].labelKey | translate }}</span>
+                  <span class="type-hint">{{ typeInfo[gt].hintKey | translate }}</span>
                 </button>
               }
             </div>
@@ -108,7 +108,7 @@ type WizardStep = 1 | 2 | 3;
               {{ 'GOALS.WIZARD.STEP2_TITLE' | translate }}
             </h2>
             <p class="wizard-subtitle">
-              {{ typeInfo[selectedType()!].emoji }} {{ typeInfo[selectedType()!].label }}
+              {{ typeInfo[selectedType()!].emoji }} {{ typeInfo[selectedType()!].labelKey | translate }}
             </p>
 
             <!-- Title -->
@@ -120,7 +120,7 @@ type WizardStep = 1 | 2 | 3;
                 id="goalTitle"
                 type="text"
                 class="form-input"
-                [placeholder]="typeInfo[selectedType()!].label"
+                [placeholder]="typeInfo[selectedType()!].labelKey | translate"
                 [ngModel]="title()"
                 (ngModelChange)="title.set($event)"
                 maxlength="80"
@@ -143,7 +143,7 @@ type WizardStep = 1 | 2 | 3;
                 />
                 <span class="unit-tag">{{ currentUnit() }}</span>
               </div>
-              <p class="form-hint">{{ typeInfo[selectedType()!].hint }}</p>
+              <p class="form-hint">{{ typeInfo[selectedType()!].hintKey | translate }}</p>
             </div>
 
             <!-- Frequency -->
@@ -158,7 +158,7 @@ type WizardStep = 1 | 2 | 3;
                     (click)="frequency.set(f)"
                   >
                     <span>{{ freqInfo[f].emoji }}</span>
-                    <span>{{ freqInfo[f].label }}</span>
+                    <span>{{ freqInfo[f].labelKey | translate }}</span>
                   </button>
                 }
               </div>
@@ -215,10 +215,10 @@ type WizardStep = 1 | 2 | 3;
                   <h3 class="summary-name">{{ effectiveTitle() }}</h3>
                   <p class="summary-detail">
                     <strong>{{ targetValue() }} {{ currentUnit() }}</strong>
-                    · {{ freqInfo[frequency()].emoji }} {{ freqInfo[frequency()].label }}
+                    · {{ freqInfo[frequency()].emoji }} {{ freqInfo[frequency()].labelKey | translate }}
                   </p>
                   @if (endDate()) {
-                    <p class="summary-date">Until {{ endDate() }}</p>
+                    <p class="summary-date">{{ 'GOALS.WIZARD.UNTIL' | translate }} {{ endDate() | date: 'mediumDate' }}</p>
                   }
                 </div>
                 <div class="summary-badge">
@@ -236,7 +236,7 @@ type WizardStep = 1 | 2 | 3;
                   <span class="error-icon" aria-hidden="true">
                     <svg lucideTriangleAlert [size]="14" [strokeWidth]="2"></svg>
                   </span>
-                  {{ goalsService.error() }}
+                  {{ goalsService.error()! | translate }}
                 </p>
               }
             } @else {
@@ -984,6 +984,7 @@ type WizardStep = 1 | 2 | 3;
 export class GoalWizardComponent {
   readonly goalsService = inject(GoalsService);
   private readonly rewardsService = inject(RewardsService);
+  private readonly translate = inject(TranslateService);
 
   // ── Outputs ───────────────────────────────────────────────────────────────
   /** Emits the newly created goal on success */
@@ -1033,7 +1034,7 @@ export class GoalWizardComponent {
   readonly effectiveTitle = computed(() => {
     const t = this.title().trim();
     const type = this.selectedType();
-    return t || (type ? GOAL_TYPE_INFO[type].label : '');
+    return t || (type ? this.translate.instant(GOAL_TYPE_INFO[type].labelKey) : '');
   });
 
   readonly canProceedStep2 = computed(
@@ -1086,7 +1087,11 @@ export class GoalWizardComponent {
 
     if (goal) {
       // Award 5 carrots for creating a SMART goal
-      this.rewardsService.awardCarrots(5, `New goal: ${this.effectiveTitle()}`, 'milestone');
+      this.rewardsService.awardCarrots(
+        5,
+        this.translate.instant('GOALS.REWARDS.CREATED', { title: this.effectiveTitle() }),
+        'milestone'
+      );
       this.saved.set(true);
       this.goalCreated.emit(goal);
     }

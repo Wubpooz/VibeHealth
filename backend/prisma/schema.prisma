@@ -570,3 +570,188 @@ enum MediaType {
   IMAGE
   AUDIO
 }
+
+// ======== REFERENCE DATA MODELS (Phase 1+) ========
+
+// First Aid Categories (with locale translations)
+model FirstAidCategory {
+  id        String   @id @default(cuid())
+  key       String // e.g., "CPR", "BURNS"
+  locale    String   @default("en") // en, fr, etc.
+  name      String
+  icon      String
+  order     Int      @default(0)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  cards FirstAidCard[]
+
+  @@unique([key, locale])
+  @@index([locale, isActive])
+  @@map("first_aid_categories")
+}
+
+// First Aid Cards (with locale-specific content)
+model FirstAidCard {
+  id                    String   @id @default(cuid())
+  key                   String // e.g., "cpr-adult"
+  locale                String   @default("en")
+  categoryId            String
+  titleKey              String // i18n key for title
+  descriptionKey        String // i18n key for description
+  icon                  String
+  severity              String // critical, serious, moderate, minor
+  stepsJson             String // JSON array of step objects with i18n keys
+  warningsJson          String // JSON array of warning i18n keys
+  doNotJson             String // JSON array of do-not i18n keys
+  whenToCallEmergencyJson String // JSON array of emergency call i18n keys
+  relatedCardsJson      String? // JSON array of related card keys
+  isActive              Boolean  @default(true)
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+
+  category FirstAidCategory @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  @@unique([key, locale])
+  @@index([locale, severity, isActive])
+  @@index([categoryId])
+  @@map("first_aid_cards")
+}
+
+// Emergency Numbers (with locale)
+model EmergencyNumber {
+  id          String   @id @default(cuid())
+  countryCode String // e.g., "US", "FR", "GB"
+  locale      String   @default("en")
+  category    String // AMBULANCE, POLICE, POISON, MENTAL_HEALTH, etc.
+  number      String
+  description String?
+  notes       String?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@unique([countryCode, category, locale])
+  @@index([countryCode, locale])
+  @@map("emergency_numbers")
+}
+
+// Helplines (mental health, crisis, etc. with locale)
+model Helpline {
+  id          String   @id @default(cuid())
+  countryCode String // e.g., "US", "FR", "GB", "INT" for international
+  locale      String   @default("en")
+  name        String
+  category    String // SUICIDE, DOMESTIC_VIOLENCE, ADDICTION, MENTAL_HEALTH, etc.
+  number      String?
+  email       String?
+  url         String?
+  description String?
+  hoursOperating String? // e.g., "24/7" or "Mon-Fri 9-5"
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@unique([countryCode, category, locale])
+  @@index([countryCode, locale])
+  @@map("helplines")
+}
+
+// Wiki Conditions (medical encyclopedia entries with locale)
+model WikiCondition {
+  id        String   @id @default(cuid())
+  key       String // e.g., "hypertension"
+  locale    String   @default("en")
+  title     String
+  subtitle  String
+  summary   String
+  sourceUrl String
+  sourceName String
+  tagsJson  String // JSON array of tags
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([key, locale])
+  @@index([locale, isActive])
+  @@map("wiki_conditions")
+}
+
+// Onboarding Reference Data (goals, fitness levels, conditions, allergies)
+model OnboardingGoal {
+  id          String   @id @default(cuid())
+  key         String // e.g., "weight_loss", "stress_reduction"
+  locale      String   @default("en")
+  label       String
+  emoji       String
+  description String
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@unique([key, locale])
+  @@index([locale, isActive])
+  @@map("onboarding_goals")
+}
+
+model OnboardingFitnessLevel {
+  id          String   @id @default(cuid())
+  key         String // e.g., "sedentary", "very_active"
+  locale      String   @default("en")
+  label       String
+  description String
+  order       Int      @default(0)
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@unique([key, locale])
+  @@index([locale, isActive])
+  @@map("onboarding_fitness_levels")
+}
+
+model OnboardingCondition {
+  id        String   @id @default(cuid())
+  key       String // e.g., "diabetes", "hypertension"
+  locale    String   @default("en")
+  name      String
+  category  String? // Optional category
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([key, locale])
+  @@index([locale, isActive])
+  @@map("onboarding_conditions")
+}
+
+model OnboardingAllergy {
+  id        String   @id @default(cuid())
+  key       String // e.g., "peanuts", "latex"
+  locale    String   @default("en")
+  name      String
+  category  String? // Optional category: FOOD, DRUG, ENVIRONMENTAL
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([key, locale])
+  @@index([locale, isActive])
+  @@map("onboarding_allergies")
+}
+
+model OnboardingMedication {
+  id        String   @id @default(cuid())
+  key       String // e.g., "metformin", "acetaminophen"
+  locale    String   @default("en")
+  name      String
+  category  String? // Optional category: ANALGESIC, ANTIBIOTIC, etc.
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([key, locale])
+  @@index([locale, isActive])
+  @@map("onboarding_medications")
+}

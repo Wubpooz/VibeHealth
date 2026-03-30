@@ -7,7 +7,7 @@ import {
   afterNextRender,
 } from "@angular/core";
 import { CommonModule } from "@angular/common";
-import { TranslateModule } from "@ngx-translate/core";
+import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import {
   GoalsService,
   GOAL_TYPE_INFO,
@@ -148,22 +148,22 @@ import { LucideFlame, LucideStar, LucideTrophy } from '@lucide/angular';
                     <h3 class="goal-title">{{ goal.title }}</h3>
                     <p class="goal-freq">
                       {{ freqInfo[goal.frequency].emoji }}
-                      {{ freqInfo[goal.frequency].label }}
+                      {{ freqInfo[goal.frequency].labelKey | translate }}
                       @if (goal.endDate) {
-                        · until {{ goal.endDate | date: "mediumDate" }}
+                        · {{ 'GOALS.UNTIL' | translate }} {{ goal.endDate | date: "mediumDate" }}
                       }
                     </p>
                   </div>
                   <!-- Complete badge -->
                   @if (isGoalComplete(goal)) {
-                    <span class="complete-badge">✓ Done</span>
+                    <span class="complete-badge">✓ {{ 'GOALS.DONE' | translate }}</span>
                   }
                   <!-- Delete button -->
                   <button
                     class="delete-btn"
                     (click)="deleteGoal(goal.id)"
                     [disabled]="goalsService.saving()"
-                    aria-label="Remove goal"
+                    [attr.aria-label]="'GOALS.REMOVE_GOAL' | translate"
                   >
                     ✕
                   </button>
@@ -194,10 +194,10 @@ import { LucideFlame, LucideStar, LucideTrophy } from '@lucide/angular';
                     @if (!isGoalComplete(goal)) {
                       <span class="remaining-label">
                         {{ goal.targetValue - currentValue(goal) }}
-                        {{ goal.targetUnit }} to go
+                        {{ goal.targetUnit }} {{ 'GOALS.TO_GO' | translate }}
                       </span>
                     } @else {
-                      <span class="achieved-label">Goal achieved!</span>
+                      <span class="achieved-label">{{ 'GOALS.GOAL_ACHIEVED' | translate }}</span>
                     }
                   </div>
                 </div>
@@ -210,7 +210,9 @@ import { LucideFlame, LucideStar, LucideTrophy } from '@lucide/angular';
                     [style.border-color]="typeColor(goal.type) + '66'"
                   >
                     {{
-                      showLogForm() === goal.id ? "Hide" : "Log Progress"
+                      showLogForm() === goal.id
+                        ? ('GOALS.HIDE' | translate)
+                        : ('GOALS.LOG_PROGRESS' | translate)
                     }}
                   </button>
 
@@ -220,7 +222,7 @@ import { LucideFlame, LucideStar, LucideTrophy } from '@lucide/angular';
                       <input
                         type="number"
                         class="log-input"
-                        [placeholder]="'Value in ' + goal.targetUnit"
+                        [placeholder]="'GOALS.VALUE_IN' | translate:{ unit: goal.targetUnit }"
                         [value]="logValue()"
                         (input)="logValue.set(+$any($event.target).value)"
                         min="0"
@@ -234,7 +236,7 @@ import { LucideFlame, LucideStar, LucideTrophy } from '@lucide/angular';
                         @if (goalsService.saving()) {
                           <span class="mini-spinner"></span>
                         } @else {
-                          Save
+                          {{ 'common.save' | translate }}
                         }
                       </button>
                     </div>
@@ -267,10 +269,10 @@ import { LucideFlame, LucideStar, LucideTrophy } from '@lucide/angular';
                     <h3 class="goal-title">{{ goal.title }}</h3>
                     <p class="goal-freq muted">
                       {{ goal.targetValue }} {{ goal.targetUnit }} ·
-                      {{ freqInfo[goal.frequency].label }}
+                      {{ freqInfo[goal.frequency].labelKey | translate }}
                     </p>
                   </div>
-                  <span class="inactive-badge">Archived</span>
+                  <span class="inactive-badge">{{ 'GOALS.ARCHIVED' | translate }}</span>
                 </div>
               </div>
             }
@@ -907,6 +909,7 @@ import { LucideFlame, LucideStar, LucideTrophy } from '@lucide/angular';
 export class GoalsPageComponent {
   readonly goalsService = inject(GoalsService);
   readonly rewardsService = inject(RewardsService);
+  private readonly translate = inject(TranslateService);
 
   readonly showWizard = signal(false);
   readonly showLogForm = signal<string | null>(null);
@@ -1018,13 +1021,13 @@ export class GoalsPageComponent {
       if (pct >= 100) {
         this.rewardsService.awardCarrots(
           10,
-          `Goal achieved: ${goal.title}`,
+          this.translate.instant('GOALS.REWARDS.ACHIEVED', { title: goal.title }),
           "milestone",
         );
       } else {
         this.rewardsService.awardCarrots(
           2,
-          `Progress logged: ${goal.title}`,
+          this.translate.instant('GOALS.REWARDS.PROGRESS_LOGGED', { title: goal.title }),
           "logging",
         );
       }

@@ -7,7 +7,6 @@ import { PageHeaderComponent } from '../../shared/components/page-header/page-he
 import { LucideBandage } from '@lucide/angular';
 import { FirstAidService } from './first-aid.service';
 import { FirstAidCategory, SeverityLevel } from './first-aid.types';
-import { FIRST_AID_CATEGORIES } from './first-aid.data';
 import { fadeInOut, slideInUp, scaleIn } from '../../shared/animations';
 
 @Component({
@@ -90,14 +89,14 @@ import { fadeInOut, slideInUp, scaleIn } from '../../shared/animations';
             >
               {{ 'FIRST_AID.ALL_CATEGORIES' | translate }}
             </button>
-            @for (cat of categories; track cat.id) {
+            @for (cat of categories(); track cat.id) {
               <button
                 (click)="selectCategory(cat.id)"
                 class="category-pill"
                 [class.active]="selectedCategory() === cat.id"
               >
                 <span>{{ cat.icon }}</span>
-                {{ cat.labelKey | translate }}
+                {{ cat.label }}
               </button>
             }
           </div>
@@ -124,12 +123,12 @@ import { fadeInOut, slideInUp, scaleIn } from '../../shared/animations';
 
                 <!-- Title -->
                 <h3 class="font-bold text-gray-900 dark:text-white text-lg mb-1 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
-                  {{ card.titleKey | translate }}
+                  {{ card.title || service.translateFallback(card.titleKey) }}
                 </h3>
 
                 <!-- Description -->
                 <p class="text-sm text-gray-500 dark:text-gray-400 line-clamp-2">
-                  {{ card.descriptionKey | translate }}
+                  {{ card.description || service.translateFallback(card.descriptionKey) }}
                 </p>
 
                 <!-- Arrow -->
@@ -161,7 +160,7 @@ import { fadeInOut, slideInUp, scaleIn } from '../../shared/animations';
                   <span class="text-2xl">{{ helpline.icon }}</span>
                   <div class="flex-1">
                     <h3 class="font-semibold text-gray-900 dark:text-white">{{ helpline.nameKey | translate }}</h3>
-                    <p class="text-sm text-gray-500 dark:text-gray-400 mb-3">{{ helpline.descriptionKey | translate }}</p>
+                    <p class="text-sm text-gray-500 dark:text-gray-400 mb-3">{{ (helpline.descriptionKey ? helpline.descriptionKey : '') | translate }}</p>
                     @if (helpline.phone) {
                       <a
                         [href]="helpline.phone.startsWith('Text') ? null : 'tel:' + helpline.phone"
@@ -356,7 +355,7 @@ export class FirstAidComponent {
   readonly service = inject(FirstAidService);
   readonly translate = inject(TranslateService);
 
-  readonly categories = FIRST_AID_CATEGORIES;
+  readonly categories = this.service.categories;
 
   readonly searchQuery = this.service.searchQuery;
   readonly selectedCategory = this.service.selectedCategory;

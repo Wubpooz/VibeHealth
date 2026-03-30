@@ -6,6 +6,7 @@ import { prisma } from '../lib/prisma';
 import { seedActivityCatalog } from './activity-catalog.seed';
 import { seedExerciseCatalog } from './exercise-catalog.seed';
 import { seedMealCatalog } from './meal-catalog.seed';
+import { seedLocalizedContent } from './localized-content.seed';
 
 async function seed(): Promise<void> {
   console.log('🌱 Seeding database...');
@@ -13,6 +14,7 @@ async function seed(): Promise<void> {
   await seedActivityCatalog();
   await seedExerciseCatalog();
   await seedMealCatalog();
+  await seedLocalizedContent();
 
   // Check if test user already exists
   const existingUser = await prisma.user.findUnique({

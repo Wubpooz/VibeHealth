@@ -17,8 +17,8 @@ import { FirstAidCard, SeverityLevel } from './first-aid.types';
 
         <!-- Header -->
         <app-page-header
-          [title]="c.titleKey | translate"
-          [subtitle]="c.descriptionKey | translate"
+          [title]="c.title || service.translateFallback(c.titleKey)"
+          [subtitle]="c.description || service.translateFallback(c.descriptionKey)"
           [backLabel]="'FIRST_AID.BACK' | translate"
           [showBackLabel]="false"
         >
@@ -39,7 +39,7 @@ import { FirstAidCard, SeverityLevel } from './first-aid.types';
           <div class="text-center mb-8">
             <div class="text-6xl mb-4">{{ c.icon }}</div>
             <p class="text-gray-600 dark:text-gray-400 max-w-md mx-auto">
-              {{ c.descriptionKey | translate }}
+              {{ c.description || service.translateFallback(c.descriptionKey) }}
             </p>
           </div>
 
@@ -67,7 +67,7 @@ import { FirstAidCard, SeverityLevel } from './first-aid.types';
                 @for (item of c.whenToCallEmergency; track item) {
                   <li class="text-sm text-red-700 dark:text-red-300 flex items-start gap-2">
                     <span class="mt-1">•</span>
-                    {{ item | translate }}
+                    {{ item }}
                   </li>
                 }
               </ul>
@@ -92,7 +92,7 @@ import { FirstAidCard, SeverityLevel } from './first-aid.types';
                   <!-- Content -->
                   <div class="flex-1 min-w-0">
                     <p class="font-medium text-gray-900 dark:text-white">
-                      {{ step.instruction | translate }}
+                      {{ step.instruction }}
                     </p>
 
                     @if (step.duration) {
@@ -111,7 +111,7 @@ import { FirstAidCard, SeverityLevel } from './first-aid.types';
                           <div class="p-3 bg-amber-50 dark:bg-amber-900/20 rounded-xl">
                             <p class="text-sm text-amber-800 dark:text-amber-200 flex items-start gap-2">
                               <span>⚠️</span>
-                              {{ step.warning | translate }}
+                              {{ step.warning }}
                             </p>
                           </div>
                         }
@@ -119,7 +119,7 @@ import { FirstAidCard, SeverityLevel } from './first-aid.types';
                           <div class="p-3 bg-blue-50 dark:bg-blue-900/20 rounded-xl">
                             <p class="text-sm text-blue-800 dark:text-blue-200 flex items-start gap-2">
                               <span>💡</span>
-                              {{ step.tip | translate }}
+                              {{ step.tip }}
                             </p>
                           </div>
                         }
@@ -153,7 +153,7 @@ import { FirstAidCard, SeverityLevel } from './first-aid.types';
                 @for (item of c.warnings; track item) {
                   <li class="text-sm text-amber-700 dark:text-amber-300 flex items-start gap-2">
                     <span class="mt-1">•</span>
-                    {{ item | translate }}
+                    {{ item }}
                   </li>
                 }
               </ul>
@@ -171,7 +171,7 @@ import { FirstAidCard, SeverityLevel } from './first-aid.types';
                 @for (item of c.doNot; track item) {
                   <li class="text-sm text-gray-600 dark:text-gray-400 flex items-start gap-2">
                     <span class="text-red-500 mt-1">✕</span>
-                    {{ item | translate }}
+                    {{ item }}
                   </li>
                 }
               </ul>
@@ -193,7 +193,7 @@ import { FirstAidCard, SeverityLevel } from './first-aid.types';
                   >
                     <span class="text-2xl">{{ related.icon }}</span>
                     <div class="flex-1 min-w-0">
-                      <p class="font-medium text-gray-900 dark:text-white truncate">{{ related.titleKey | translate }}</p>
+                      <p class="font-medium text-gray-900 dark:text-white truncate">{{ related.title || service.translateFallback(related.titleKey) }}</p>
                     </div>
                     <svg class="w-4 h-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
@@ -210,8 +210,8 @@ import { FirstAidCard, SeverityLevel } from './first-aid.types';
       <div class="min-h-screen flex items-center justify-center">
         <div class="text-center">
           <div class="text-6xl mb-4">🔍</div>
-          <p class="text-gray-500 dark:text-gray-400 mb-4">Guide not found</p>
-          <a routerLink="/first-aid" class="text-primary-600 hover:underline">Back to First Aid</a>
+          <p class="text-gray-500 dark:text-gray-400 mb-4">{{ 'FIRST_AID.GUIDE_NOT_FOUND' | translate }}</p>
+          <a routerLink="/first-aid" class="text-primary-600 hover:underline">{{ 'FIRST_AID.BACK_TO_GUIDE' | translate }}</a>
         </div>
       </div>
     }

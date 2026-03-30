@@ -15,7 +15,8 @@
     "loading": "Chargement...",
     "error": "Une erreur s'est produite",
     "success": "Succès",
-    "understood": "Compris"
+    "understood": "Compris",
+    "optional": "Facultatif"
   },
   "nav": {
     "home": "Accueil",
@@ -211,6 +212,12 @@
     "BIRTHDAY": "Quelle est votre date de naissance ?",
     "BIOLOGICAL_SEX": "Sexe biologique",
     "SEX_HELP": "Aide pour des calculs de santé précis",
+    "SEX": {
+      "MALE": "Homme",
+      "FEMALE": "Femme",
+      "OTHER": "Autre",
+      "PREFER_NOT_TO_SAY": "Préfère ne pas répondre"
+    },
     "YOUR_BODY": "Votre corps",
     "YOUR_BODY_DESC": "Aide à adapter les recommandations",
     "HEIGHT": "Taille",
@@ -370,6 +377,8 @@
     "AVAILABLE_OFFLINE": "Disponible hors ligne",
     "SELECT_COUNTRY": "Sélectionnez votre pays",
     "NO_RESULTS": "Aucun résultat trouvé",
+    "GUIDE_NOT_FOUND": "Guide introuvable",
+    "BACK_TO_GUIDE": "Retour aux premiers secours",
     "DISCLAIMER": "Ce guide est fourni à titre informatif uniquement. Appelez toujours les services d'urgence dans les situations mettant la vie en danger.",
     "CATEGORY": {
       "CPR": "RCP",
@@ -814,18 +823,30 @@
     },
     "NUTRITION": {
       "TITLE": "Nutrition",
+      "SUBTITLE": "Suivez votre consommation quotidienne",
       "SCAN_BARCODE": "Scanner le code-barres",
       "ALIGN_BARCODE": "Alignez le code-barres dans le cadre",
       "SCANNER_COMING_SOON": "Lecteur de code-barres bientôt disponible !",
       "SCANNER_DESCRIPTION": "Nous travaillons sur l'intégration du scan de code-barres pour rendre l'enregistrement nutritionnel encore plus rapide. Pour l'instant, veuillez saisir les détails manuellement.",
       "MEAL_TYPE": "Type de repas",
+      "FIND_MEAL": "Trouvez votre repas",
+      "QUICK_SEARCH": "Recherche dans Catalog",
+      "MANUAL_ENTRY": "Saisie manuelle",
+      "SEARCH_MEALS": "Parcourez notre catalogue...",
       "MEAL_NAME": "Nom du repas",
       "MEAL_NAME_PLACEHOLDER": "ex: Salade de poulet",
       "CALORIES": "Calories",
-      "ADD_MACROS": "Ajouter les macros (optionnel)",
+      "NUTRITIONAL_INFO": "Informations nutritionnelles",
+      "ADD_MACROS": "Ajouter les macros",
       "PROTEIN": "Protéines",
       "CARBS": "Glucides",
-      "FAT": "Lipides"
+      "FAT": "Lipides",
+      "LOG_MEAL": "Enregistrer le repas",
+      "LOGGING": "Enregistrement...",
+      "OPEN_FORM": "Ouvrir le formulaire de saisie",
+      "CLOSE_FORM": "Fermer le formulaire de saisie",
+      "TODAY_MEALS": "Repas d'aujourd'hui",
+      "REWARD_MSG": "Repas enregistré ! +3 carottes gagnées !"
     },
     "ACTIVITY": {
       "TITLE": "Activité",
@@ -920,6 +941,66 @@
     "MASCOT_EMPTY": "Créons votre premier objectif ensemble !",
     "MASCOT_CELEBRATE": "Excellent travail ! Vous atteignez vos objectifs aujourd'hui !",
     "MASCOT_FOCUS": "Vous progressez bien — notez une étape à la fois.",
+    "DONE": "Fait",
+    "REMOVE_GOAL": "Supprimer l'objectif",
+    "TO_GO": "restants",
+    "GOAL_ACHIEVED": "Objectif atteint !",
+    "HIDE": "Masquer",
+    "LOG_PROGRESS": "Enregistrer la progression",
+    "VALUE_IN": "Valeur en {{unit}}",
+    "ARCHIVED": "Archivé",
+    "UNTIL": "jusqu'au",
+    "FREQUENCY": {
+      "DAILY": "Quotidien",
+      "WEEKLY": "Hebdomadaire",
+      "MONTHLY": "Mensuel"
+    },
+    "TYPE": {
+      "STEPS": {
+        "LABEL": "Pas quotidiens",
+        "HINT": "ex. 10 000 pas par jour"
+      },
+      "HYDRATION": {
+        "LABEL": "Hydratation",
+        "HINT": "ex. 2 500 ml par jour"
+      },
+      "CALORIES_IN": {
+        "LABEL": "Apport calorique",
+        "HINT": "ex. 2 000 kcal par jour"
+      },
+      "CALORIES_OUT": {
+        "LABEL": "Calories brûlées",
+        "HINT": "ex. 500 kcal brûlées par jour"
+      },
+      "SLEEP": {
+        "LABEL": "Durée du sommeil",
+        "HINT": "ex. 8 heures par nuit"
+      },
+      "ACTIVITY_MINUTES": {
+        "LABEL": "Minutes actives",
+        "HINT": "ex. 30 minutes par jour"
+      },
+      "WEIGHT": {
+        "LABEL": "Poids cible",
+        "HINT": "ex. 70 kg"
+      },
+      "CUSTOM": {
+        "LABEL": "Objectif personnalisé",
+        "HINT": "Définissez votre propre objectif"
+      }
+    },
+    "REWARDS": {
+      "CREATED": "Nouvel objectif : {{title}}",
+      "ACHIEVED": "Objectif atteint : {{title}}",
+      "PROGRESS_LOGGED": "Progression enregistrée : {{title}}"
+    },
+    "ERRORS": {
+      "LOAD": "Impossible de charger les objectifs",
+      "CREATE": "Impossible de créer l'objectif",
+      "UPDATE": "Impossible de mettre à jour l'objectif",
+      "DELETE": "Impossible de supprimer l'objectif",
+      "LOG_PROGRESS": "Impossible d'enregistrer la progression"
+    },
     "WIZARD": {
       "STEP1_TITLE": "Que voulez-vous accomplir ?",
       "STEP1_SUBTITLE": "Choisissez une catégorie pour commencer",
@@ -938,7 +1019,8 @@
       "DONE": "Terminé",
       "CELEBRATE_TITLE": "Objectif créé ! 🎉",
       "CELEBRATE_SUBTITLE": "Votre lapin croit en vous. Continuez à vous montrer chaque jour !",
-      "CARROTS_EARNED": "carottes gagnées pour avoir fixé un objectif !"
+      "CARROTS_EARNED": "carottes gagnées pour avoir fixé un objectif !",
+      "UNTIL": "Jusqu'au"
     }
   },
   "WORKOUTS": {
@@ -1032,6 +1114,13 @@
   "SETTINGS": {
     "TITLE": "Paramètres",
     "SUBTITLE": "Personnalisez votre expérience VibeHealth",
+    "LANGUAGE": {
+      "TITLE": "Langue",
+      "DESCRIPTION": "Choisissez la langue de l'application indépendamment des paramètres de pays.",
+      "SELECT_LABEL": "Langue de l'application",
+      "OPTION_EN": "English",
+      "OPTION_FR": "Français"
+    },
     "ACCOUNT": {
       "TITLE": "Compte",
       "DESCRIPTION": "Gérez les informations d'identité liées à votre compte.",
