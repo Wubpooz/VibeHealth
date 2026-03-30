@@ -947,6 +947,8 @@
       "REWARD_MOOD": "Log your mood",
       "REWARD_ENTRY": "Write an entry",
       "MEDIA_FILES": "media files",
+      "MEDIA": "Media",
+      "MEDIA_IMAGE": "Journal entry image",
       "SAVE_MOOD": "Save Mood",
       "RETRY": "Retry",
       "LOADING": "Loading...",
