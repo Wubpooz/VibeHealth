@@ -27,221 +27,290 @@ import { LucideLeaf } from '@lucide/angular';
   template: `
     <div class="nutrition-card">
       <!-- Header -->
-      <div class="header">
-        <div class="title-row">
-          <span class="icon" aria-hidden="true">
-            <svg lucideLeaf [size]="24" [strokeWidth]="2"></svg>
-          </span>
-          <h3>{{ 'METRICS.NUTRITION.TITLE' | translate }}</h3>
+      <div class="card-header">
+        <div class="header-content">
+          <div class="title-row">
+            <span class="icon" aria-hidden="true">
+              <svg lucideLeaf [size]="24" [strokeWidth]="2"></svg>
+            </span>
+            <div>
+              <h3>{{ 'METRICS.NUTRITION.TITLE' | translate }}</h3>
+              <p class="subtitle">{{ caloriesToday() }} / {{ caloriesGoal }} kcal</p>
+            </div>
+          </div>
+          <button 
+            class="toggle-btn"
+            [class.active]="showForm()"
+            (click)="toggleForm()"
+            aria-label="Toggle add meal form"
+          >
+            <span class="icon-add">{{ showForm() ? '✕' : '+' }}</span>
+          </button>
         </div>
-        <button 
-          class="add-btn"
-          (click)="showForm.set(!showForm())"
-          [class.active]="showForm()"
-        >
-          {{ showForm() ? '✕' : '+' }}
-        </button>
+        
+        <!-- Mini Macros -->
+        <div class="mini-macros">
+          <div class="mini-macro">
+            <span class="label">P</span>
+            <span class="value">{{ proteinToday() }}g</span>
+          </div>
+          <div class="mini-macro">
+            <span class="label">C</span>
+            <span class="value">{{ carbsToday() }}g</span>
+          </div>
+          <div class="mini-macro">
+            <span class="label">F</span>
+            <span class="value">{{ fatToday() }}g</span>
+          </div>
+        </div>
       </div>
 
-      <!-- Calories Progress -->
-      <div class="calories-progress">
-        <div class="progress-header">
-          <span class="current">{{ caloriesToday() }}</span>
-          <span class="separator">/</span>
-          <span class="goal">{{ caloriesGoal }} kcal</span>
-        </div>
+      <!-- Calories Progress Bar -->
+      <div class="progress-section">
         <div class="progress-bar">
           <div 
             class="progress-fill"
             [style.width.%]="caloriesPercentage()"
             [class.over]="caloriesPercentage() > 100"
+            role="progressbar"
+            [attr.aria-valuenow]="caloriesToday()"
+            [attr.aria-valuemin]="0"
+            [attr.aria-valuemax]="caloriesGoal"
           ></div>
         </div>
-      </div>
-
-      <!-- Macro Summary -->
-      <div class="macros">
-        <div class="macro protein">
-          <span class="emoji">🥩</span>
-          <span class="value">{{ proteinToday() }}g</span>
-          <span class="label">{{ 'METRICS.NUTRITION.PROTEIN' | translate }}</span>
-        </div>
-        <div class="macro carbs">
-          <span class="emoji">🍞</span>
-          <span class="value">{{ carbsToday() }}g</span>
-          <span class="label">{{ 'METRICS.NUTRITION.CARBS' | translate }}</span>
-        </div>
-        <div class="macro fat">
-          <span class="emoji">🥑</span>
-          <span class="value">{{ fatToday() }}g</span>
-          <span class="label">{{ 'METRICS.NUTRITION.FAT' | translate }}</span>
+        <div class="progress-info">
+          <span class="remaining" [class.over]="caloriesOverGoal()">
+            @if (caloriesRemaining() > 0) {
+              {{ caloriesRemaining() }} kcal left
+            } @else {
+              {{ caloriesOverBy() }} kcal over
+            }
+          </span>
+          <span class="percentage">{{ caloriesPct() }}%</span>
         </div>
       </div>
 
-      <!-- Quick Meal Buttons -->
-      @if (!showForm()) {
+      <!-- Quick Meal Buttons (always visible) -->
+      <div class="quick-meals-section persistent">
+        <div class="section-label">{{ 'METRICS.NUTRITION.QUICK_SEARCH' | translate }}</div>
         <div class="quick-meals">
           @for (meal of mealTypes; track meal.type) {
             <button
-              class="meal-btn"
-              (click)="selectMealType(meal.type)"
+              class="quick-meal-btn"
               [class.logged]="isMealLogged(meal.type)"
+              [class.active]="selectedMealType() === meal.type"
+              (click)="selectMealType(meal.type)"
+              [title]="'Add ' + meal.label"
+              aria-label="Select {{ meal.label }}"
             >
               <span class="emoji">{{ meal.emoji }}</span>
               <span class="name">{{ meal.label }}</span>
               @if (isMealLogged(meal.type)) {
-                <span class="check">✓</span>
+                <span class="logged-badge">✓</span>
               }
             </button>
           }
         </div>
-      }
+
+        <button type="button" class="form-toggle-link" (click)="toggleForm()">
+          @if (showForm()) {
+            {{ 'METRICS.NUTRITION.CLOSE_FORM' | translate }}
+          } @else {
+            {{ 'METRICS.NUTRITION.OPEN_FORM' | translate }}
+          }
+        </button>
+      </div>
 
       <!-- Log Form -->
       @if (showForm()) {
         <form class="log-form" (ngSubmit)="submitForm()">
-          <!-- Meal Type -->
-          <div class="form-group">
-            <div class="form-label" id="mealTypeLabel">{{ 'METRICS.NUTRITION.MEAL_TYPE' | translate }}</div>
-            <div class="meal-type-selector" role="group" aria-labelledby="mealTypeLabel">
+          <!-- Step 1: Meal Type Selection -->
+          <div class="form-section">
+            <div class="section-label">{{ 'METRICS.NUTRITION.MEAL_TYPE' | translate }}</div>
+            <div class="meal-type-grid" role="group">
               @for (meal of mealTypes; track meal.type) {
                 <button
                   type="button"
-                  class="type-btn"
+                  class="meal-type-btn"
                   [class.selected]="selectedMealType() === meal.type"
-                  (click)="selectedMealType.set(meal.type)"
+                  (click)="selectMealType(meal.type)"
+                  [attr.aria-pressed]="selectedMealType() === meal.type"
                 >
                   <span class="emoji">{{ meal.emoji }}</span>
-                  <span class="name">{{ meal.label }}</span>
+                  <span class="label">{{ meal.label }}</span>
                 </button>
               }
             </div>
           </div>
 
-          <!-- Meal Catalog Search -->
-          <div class="form-group">
-            <div class="form-label">Search the meal catalog</div>
-            <app-autocomplete
-              [suggestions]="mealSuggestions()"
-              [selectedItems]="selectedMealSearch()"
-              [placeholder]="'Search common meals or snacks'"
-              [allowCustom]="false"
-              [multiple]="false"
-              (itemsChange)="onMealSearchChange($event)"
-            />
-          </div>
+          <!-- Step 2: Find Meal (Catalog or Manual) -->
+          <div class="form-section">
+            <div class="section-label">{{ 'METRICS.NUTRITION.FIND_MEAL' | translate }}</div>
 
-          @if (selectedCatalogMeal()) {
-            <div class="catalog-detail">
-              <div class="catalog-detail-header">
-                <span class="emoji">{{ selectedCatalogMeal()!.emoji }}</span>
-                <div>
-                  <strong>{{ selectedCatalogMeal()!.name }}</strong>
-                  <p>{{ selectedCatalogMeal()!.mealType }} · {{ selectedCatalogMeal()!.calories }} kcal</p>
-                </div>
-              </div>
-              <p class="catalog-detail-description">{{ selectedCatalogMeal()!.servingSize }}</p>
+            <!-- Tabs for Quick vs Catalog -->
+            <div class="input-tabs">
+              <button
+                type="button"
+                class="tab-btn"
+                [class.active]="!useQuickEntry()"
+                (click)="useQuickEntry.set(false)"
+              >
+                {{ 'METRICS.NUTRITION.QUICK_SEARCH' | translate }}
+              </button>
+              <button
+                type="button"
+                class="tab-btn"
+                [class.active]="useQuickEntry()"
+                (click)="useQuickEntry.set(true)"
+              >
+                {{ 'METRICS.NUTRITION.MANUAL_ENTRY' | translate }}
+              </button>
             </div>
-          }
 
-          <!-- Barcode Scanner -->
-          <div class="form-group">
-            <app-barcode-scanner 
-              (foodScanned)="onFoodScanned($event)"
-            />
-          </div>
+            <!-- Catalog Search -->
+            @if (!useQuickEntry()) {
+              <div class="input-wrapper">
+                <app-autocomplete
+                  [suggestions]="mealSuggestions()"
+                  [selectedItems]="selectedMealSearch()"
+                  [placeholder]="'METRICS.NUTRITION.SEARCH_MEALS' | translate"
+                  [allowCustom]="false"
+                  [multiple]="false"
+                  (itemsChange)="onMealSearchChange($event)"
+                />
+              </div>
 
-          <!-- Meal Name -->
-          <div class="form-group">
-            <label for="mealName">{{ 'METRICS.NUTRITION.MEAL_NAME' | translate }}</label>
-            <input
-              type="text"
-              id="mealName"
-              [ngModel]="mealName()"
-              (ngModelChange)="mealName.set($event)"
-              [placeholder]="'METRICS.NUTRITION.MEAL_NAME_PLACEHOLDER' | translate"
-              required
-            />
-          </div>
+              @if (selectedCatalogMeal()) {
+                <div class="meal-preview">
+                  <div class="preview-header">
+                    <span class="emoji">{{ selectedCatalogMeal()!.emoji }}</span>
+                    <div class="preview-info">
+                      <strong>{{ selectedCatalogMeal()!.name }}</strong>
+                      <p>{{ selectedCatalogMeal()!.calories }} kcal</p>
+                    </div>
+                  </div>
+                  @if (selectedCatalogMeal()!.servingSize) {
+                    <p class="preview-serving">{{ selectedCatalogMeal()!.servingSize }}</p>
+                  }
+                </div>
+              }
+            }
 
-          <!-- Calories -->
-          <div class="form-group">
-            <label for="calories">{{ 'METRICS.NUTRITION.CALORIES' | translate }}</label>
-            <div class="input-with-unit">
-              <input
-                type="number"
-                id="calories"
-                [ngModel]="calories()"
-                (ngModelChange)="calories.set($event)"
-                min="0"
-                max="5000"
-                placeholder="0"
+            <!-- Barcode Scanner (Always available) -->
+            <div class="barcode-section">
+              <app-barcode-scanner 
+                (foodScanned)="onFoodScanned($event)"
               />
-              <span class="unit">kcal</span>
             </div>
+
+            <!-- Manual Entry -->
+            @if (useQuickEntry()) {
+              <div class="input-wrapper">
+                <label for="mealName" class="floating-label">{{ 'METRICS.NUTRITION.MEAL_NAME' | translate }}</label>
+                <input
+                  type="text"
+                  id="mealName"
+                  class="form-input"
+                  [ngModel]="mealName()"
+                  (ngModelChange)="mealName.set($event)"
+                  placeholder="e.g. Grilled Chicken Salad"
+                  required
+                  [value]="mealName()"
+                />
+              </div>
+            }
           </div>
 
-          <!-- Macros Toggle -->
-          <button 
-            type="button" 
-            class="toggle-macros"
-            (click)="showMacros.set(!showMacros())"
-          >
-            {{ showMacros() ? '▼' : '▶' }} {{ 'METRICS.NUTRITION.ADD_MACROS' | translate }}
-          </button>
+          <!-- Step 3: Calories & Macros -->
+          <div class="form-section">
+            <div class="section-label">{{ 'METRICS.NUTRITION.NUTRITIONAL_INFO' | translate }}</div>
 
-          <!-- Macro Inputs -->
-          @if (showMacros()) {
-            <div class="macro-inputs">
-              <div class="macro-input">
-                <label for="proteinInput">{{ 'METRICS.NUTRITION.PROTEIN' | translate }}</label>
-                <div class="input-with-unit">
-                  <input
-                    type="number"
-                    id="proteinInput"
-                    [ngModel]="protein()"
-                    (ngModelChange)="protein.set($event)"
-                    min="0"
-                    max="200"
-                    placeholder="0"
-                  />
-                  <span class="unit">g</span>
-                </div>
-              </div>
-              <div class="macro-input">
-                <label for="carbsInput">{{ 'METRICS.NUTRITION.CARBS' | translate }}</label>
-                <div class="input-with-unit">
-                  <input
-                    type="number"
-                    id="carbsInput"
-                    [ngModel]="carbs()"
-                    (ngModelChange)="carbs.set($event)"
-                    min="0"
-                    max="500"
-                    placeholder="0"
-                  />
-                  <span class="unit">g</span>
-                </div>
-              </div>
-              <div class="macro-input">
-                <label for="fatInput">{{ 'METRICS.NUTRITION.FAT' | translate }}</label>
-                <div class="input-with-unit">
-                  <input
-                    type="number"
-                    id="fatInput"
-                    [ngModel]="fat()"
-                    (ngModelChange)="fat.set($event)"
-                    min="0"
-                    max="200"
-                    placeholder="0"
-                  />
-                  <span class="unit">g</span>
-                </div>
+            <!-- Calories (Always Required) -->
+            <div class="input-wrapper">
+              <label for="calories" class="floating-label">{{ 'METRICS.NUTRITION.CALORIES' | translate }}</label>
+              <div class="input-with-unit">
+                <input
+                  type="number"
+                  id="calories"
+                  class="form-input"
+                  [ngModel]="calories()"
+                  (ngModelChange)="calories.set($event)"
+                  min="0"
+                  max="5000"
+                  placeholder="0"
+                  required
+                />
+                <span class="unit">kcal</span>
               </div>
             </div>
-          }
 
-          <!-- Submit -->
+            <!-- Macros Toggle Button -->
+            <button 
+              type="button" 
+              class="expand-macros-btn"
+              (click)="showMacros.set(!showMacros())"
+              [attr.aria-expanded]="showMacros()"
+            >
+              <span class="icon" [class.open]="showMacros()">▼</span>
+              {{ 'METRICS.NUTRITION.ADD_MACROS' | translate }} ({{ 'OPTIONAL' | translate }})
+            </button>
+
+            <!-- Macro Inputs (Collapsible) -->
+            @if (showMacros()) {
+              <div class="macros-grid">
+                <div class="macro-input-wrapper">
+                  <label for="proteinInput" class="floating-label">{{ 'METRICS.NUTRITION.PROTEIN' | translate }}</label>
+                  <div class="input-with-unit">
+                    <input
+                      type="number"
+                      id="proteinInput"
+                      class="form-input"
+                      [ngModel]="protein()"
+                      (ngModelChange)="protein.set($event)"
+                      min="0"
+                      max="200"
+                      placeholder="0"
+                    />
+                    <span class="unit">g</span>
+                  </div>
+                </div>
+                <div class="macro-input-wrapper">
+                  <label for="carbsInput" class="floating-label">{{ 'METRICS.NUTRITION.CARBS' | translate }}</label>
+                  <div class="input-with-unit">
+                    <input
+                      type="number"
+                      id="carbsInput"
+                      class="form-input"
+                      [ngModel]="carbs()"
+                      (ngModelChange)="carbs.set($event)"
+                      min="0"
+                      max="500"
+                      placeholder="0"
+                    />
+                    <span class="unit">g</span>
+                  </div>
+                </div>
+                <div class="macro-input-wrapper">
+                  <label for="fatInput" class="floating-label">{{ 'METRICS.NUTRITION.FAT' | translate }}</label>
+                  <div class="input-with-unit">
+                    <input
+                      type="number"
+                      id="fatInput"
+                      class="form-input"
+                      [ngModel]="fat()"
+                      (ngModelChange)="fat.set($event)"
+                      min="0"
+                      max="200"
+                      placeholder="0"
+                    />
+                    <span class="unit">g</span>
+                  </div>
+                </div>
+              </div>
+            }
+          </div>
+
+          <!-- Submit Button -->
           <button
             type="submit"
             class="submit-btn"
@@ -249,6 +318,7 @@ import { LucideLeaf } from '@lucide/angular';
           >
             @if (logging()) {
               <span class="spinner" aria-hidden="true"></span>
+              {{ 'METRICS.NUTRITION.LOGGING' | translate }}
             } @else {
               {{ 'METRICS.NUTRITION.LOG_MEAL' | translate }}
             }
@@ -256,18 +326,24 @@ import { LucideLeaf } from '@lucide/angular';
         </form>
       }
 
-      <!-- Recent Meals -->
-      @if (recentMeals().length > 0 && !showForm()) {
-        <div class="recent">
-          <h4>{{ 'METRICS.NUTRITION.TODAY_MEALS' | translate }}</h4>
+      <!-- Recent Meals Section -->
+      @if (recentMeals().length > 0) {
+        <div class="recent-meals">
+          <div class="recent-header">
+            <h4>{{ 'METRICS.NUTRITION.TODAY_MEALS' | translate }}</h4>
+            <span class="count">{{ recentMeals().length }}</span>
+          </div>
           <div class="meal-list">
             @for (meal of recentMeals(); track meal.id) {
-              <div class="meal-item">
-                <span class="emoji">{{ getMealEmoji(meal.mealType) }}</span>
-                <div class="details">
-                  <span class="name">{{ meal.name }}</span>
-                  <span class="meta">{{ meal.calories || 0 }} kcal</span>
+              <div class="meal-row">
+                <div class="meal-left">
+                  <span class="emoji">{{ getMealEmoji(meal.mealType) }}</span>
+                  <div class="meal-text">
+                    <span class="meal-name">{{ meal.name }}</span>
+                    <span class="meal-type">{{ getMealTypeLabel(meal.mealType) }}</span>
+                  </div>
                 </div>
+                <span class="meal-calories">{{ meal.calories || 0 }}<span class="unit-small">kcal</span></span>
               </div>
             }
           </div>
@@ -276,426 +352,662 @@ import { LucideLeaf } from '@lucide/angular';
     </div>
   `,
   styles: [`
+    /* Card Styling */
     .nutrition-card {
-      background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+      background: linear-gradient(135deg, #fff5f2 0%, #ffe8e0 100%);
+      border: 1px solid rgba(255, 134, 120, 0.1);
       border-radius: 1.5rem;
       padding: 1.5rem;
-      box-shadow: 0 4px 20px rgba(76, 175, 80, 0.15);
+      box-shadow: 0 4px 20px rgba(255, 107, 107, 0.08);
     }
 
     :host-context(.dark) .nutrition-card {
-      background: linear-gradient(135deg, #0b3b1a 0%, #164d24 100%);
-      box-shadow: 0 4px 20px rgba(76, 175, 80, 0.35);
-      border: 1px solid rgba(102, 187, 106, 0.3);
+      background: linear-gradient(135deg, #2a1f1d 0%, #3d2620 100%);
+      border-color: rgba(255, 107, 107, 0.15);
+      box-shadow: 0 4px 20px rgba(255, 107, 107, 0.12);
     }
 
-    .header {
+    /* Card Header */
+    .card-header {
+      margin-bottom: 1.25rem;
+    }
+
+    .header-content {
       display: flex;
       justify-content: space-between;
-      align-items: center;
-      margin-bottom: 1rem;
+      align-items: start;
+      gap: 1rem;
+      margin-bottom: 0.75rem;
     }
 
     .title-row {
       display: flex;
       align-items: center;
-      gap: 0.5rem;
+      gap: 0.75rem;
+      flex: 1;
     }
 
     .title-row .icon {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      color: #2e7d32;
+      color: #ff6b6b;
+      font-size: 1.5rem;
     }
 
     :host-context(.dark) .title-row .icon {
-      color: #d0f7d0;
+      color: #ff9999;
     }
 
     .title-row h3 {
       font-family: 'Satoshi', sans-serif;
       font-weight: 700;
-      font-size: 1.125rem;
-      color: #2e7d32;
+      font-size: 1.25rem;
+      color: #2d3436;
       margin: 0;
+      line-height: 1.2;
     }
 
     :host-context(.dark) .title-row h3 {
-      color: #d0f7d0;
+      color: #fff5f2;
     }
 
-    .add-btn {
-      width: 2rem;
-      height: 2rem;
+    .title-row .subtitle {
+      font-family: 'Satoshi', sans-serif;
+      font-size: 0.875rem;
+      color: #636e72;
+      margin: 0.25rem 0 0;
+    }
+
+    :host-context(.dark) .title-row .subtitle {
+      color: #b7a9a9;
+    }
+
+    .toggle-btn {
+      width: 2.5rem;
+      height: 2.5rem;
       border-radius: 50%;
       border: none;
-      background: #4caf50;
+      background: linear-gradient(135deg, #ff6b6b 0%, #ffa07a 100%);
       color: white;
       font-size: 1.25rem;
       cursor: pointer;
-      transition: all 0.2s ease;
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3);
     }
 
-    .add-btn:hover {
-      transform: scale(1.1);
+    .toggle-btn:hover {
+      transform: scale(1.08) translateY(-2px);
+      box-shadow: 0 6px 16px rgba(255, 107, 107, 0.4);
     }
 
-    .add-btn.active {
-      background: #f44336;
+    .toggle-btn:active {
+      transform: scale(0.96);
     }
 
-    .calories-progress {
+    .toggle-btn .icon-add {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Mini Macros */
+    .mini-macros {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.75rem;
+    }
+
+    .mini-macro {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 0.5rem;
+      background: rgba(255, 255, 255, 0.4);
+      border-radius: 0.75rem;
+      border: 1px solid rgba(255, 107, 107, 0.1);
+    }
+
+    :host-context(.dark) .mini-macro {
+      background: rgba(255, 107, 107, 0.05);
+      border-color: rgba(255, 107, 107, 0.15);
+    }
+
+    .mini-macro .label {
+      font-family: 'Satoshi', sans-serif;
+      font-size: 0.625rem;
+      font-weight: 600;
+      color: #ff6b6b;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .mini-macro .value {
+      font-family: 'Satoshi', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #2d3436;
+    }
+
+    :host-context(.dark) .mini-macro .value {
+      color: #fff5f2;
+    }
+
+    /* Progress Section */
+    .progress-section {
       margin-bottom: 1rem;
     }
 
-    .progress-header {
-      display: flex;
-      align-items: baseline;
-      gap: 0.25rem;
-      margin-bottom: 0.5rem;
-    }
-
-    .progress-header .current {
-      font-family: 'Satoshi', sans-serif;
-      font-weight: 700;
-      font-size: 1.75rem;
-      color: #2e7d32;
-    }
-
-    :host-context(.dark) .progress-header .current {
-      color: #d0f7d0;
-    }
-
-    .progress-header .separator {
-      color: #66bb6a;
-    }
-
-    .progress-header .goal {
-      font-size: 1rem;
-      color: #66bb6a;
-    }
-
     .progress-bar {
-      height: 0.75rem;
+      height: 0.625rem;
       background: rgba(255, 255, 255, 0.5);
       border-radius: 1rem;
       overflow: hidden;
+      margin-bottom: 0.5rem;
     }
 
     :host-context(.dark) .progress-bar {
-      background: rgba(0, 0, 0, 0.3);
+      background: rgba(0, 0, 0, 0.2);
     }
 
     .progress-fill {
       height: 100%;
-      background: linear-gradient(90deg, #66bb6a, #4caf50);
+      background: linear-gradient(90deg, #ff6b6b, #ffa07a);
       border-radius: 1rem;
-      transition: width 0.5s ease;
+      transition: width 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+      box-shadow: 0 0 8px rgba(255, 107, 107, 0.3);
     }
 
     .progress-fill.over {
-      background: linear-gradient(90deg, #ff9800, #f44336);
+      background: linear-gradient(90deg, #f87171, #fb7185);
     }
 
-    .macros {
+    .progress-info {
       display: flex;
-      justify-content: space-around;
-      padding: 1rem;
-      background: rgba(255, 255, 255, 0.5);
-      border-radius: 1rem;
-      margin-bottom: 1rem;
-    }
-
-    :host-context(.dark) .macros {
-      background: rgba(0, 0, 0, 0.2);
-    }
-
-    .macro {
-      display: flex;
-      flex-direction: column;
+      justify-content: space-between;
       align-items: center;
-      gap: 0.25rem;
+      font-size: 0.75rem;
+      color: #636e72;
     }
 
-    .macro .emoji {
-      font-size: 1.25rem;
+    :host-context(.dark) .progress-info {
+      color: #a9959a;
     }
 
-    .macro .value {
+    .progress-info .remaining {
+      font-weight: 600;
+    }
+
+    .progress-info .remaining.over {
+      color: #f87171;
+    }
+
+    .progress-info .percentage {
+      font-weight: 700;
+      color: #ff6b6b;
+    }
+
+    :host-context(.dark) .progress-info .percentage {
+      color: #ff9999;
+    }
+
+    /* Quick Meals Section */
+    .quick-meals-section {
+      margin-bottom: 0.75rem;
+      border: 1px solid rgba(255, 107, 107, 0.12);
+      border-radius: 1rem;
+      padding: 0.65rem;
+      background: rgba(255, 255, 255, 0.45);
+      box-shadow: inset 0 0 0 1px rgba(255, 107, 107, 0.05);
+    }
+
+    .quick-meals-section.persistent {
+      margin-bottom: 1rem;
+      border-color: rgba(255, 107, 107, 0.18);
+      background: rgba(255, 255, 255, 0.65);
+    }
+
+    .form-toggle-link {
+      margin-top: 0.65rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
       font-family: 'Satoshi', sans-serif;
       font-weight: 700;
-      font-size: 1.125rem;
-      color: #2e7d32;
+      color: #ff6b6b;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0.35rem 0;
+      text-decoration: underline;
     }
 
-    :host-context(.dark) .macro .value {
-      color: #a5d6a7;
-    }
-
-    .macro .label {
-      font-size: 0.625rem;
-      color: #558b2f;
-      text-transform: uppercase;
-    }
-
-    :host-context(.dark) .macro .label {
-      color: #c5e1a5;
+    .form-toggle-link:hover {
+      color: #e55454;
     }
 
     .quick-meals {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
       gap: 0.5rem;
-      margin-bottom: 1rem;
     }
 
-    .meal-btn {
+    .quick-meal-btn {
       display: flex;
       flex-direction: column;
       align-items: center;
       gap: 0.25rem;
       padding: 0.75rem 0.5rem;
-      background: white;
+      background: rgba(255, 255, 255, 0.6);
       border: 2px solid transparent;
       border-radius: 1rem;
       cursor: pointer;
       transition: all 0.2s ease;
       position: relative;
+      font-family: 'Satoshi', sans-serif;
     }
 
-    :host-context(.dark) .meal-btn {
-      background: #2e7d32;
+    :host-context(.dark) .quick-meal-btn {
+      background: rgba(255, 107, 107, 0.08);
     }
 
-    .meal-btn:hover {
+    .quick-meal-btn:hover {
       transform: translateY(-2px);
-      border-color: #4caf50;
+      border-color: #ff6b6b;
+      background: rgba(255, 107, 107, 0.1);
     }
 
-    .meal-btn.logged {
-      border-color: #4caf50;
-      background: #e8f5e9;
+    .quick-meal-btn.logged {
+      border-color: #ff6b6b;
+      background: linear-gradient(135deg, rgba(255, 107, 107, 0.15), rgba(255, 160, 122, 0.1));
     }
 
-    :host-context(.dark) .meal-btn.logged {
-      background: #4caf50;
+    :host-context(.dark) .quick-meal-btn.logged {
+      border-color: #ff9999;
+      background: linear-gradient(135deg, rgba(255, 107, 107, 0.25), rgba(255, 160, 122, 0.15));
     }
 
-    .meal-btn .emoji {
+    .quick-meal-btn .emoji {
       font-size: 1.5rem;
     }
 
-    .meal-btn .name {
-      font-size: 0.625rem;
+    .quick-meal-btn .name {
+      font-size: 0.65rem;
       font-weight: 600;
-      color: #37474f;
+      color: #2d3436;
+      text-align: center;
     }
 
-    :host-context(.dark) .meal-btn .name {
-      color: #c8e6c9;
+    :host-context(.dark) .quick-meal-btn .name {
+      color: #fff5f2;
     }
 
-    .meal-btn .check {
+    .quick-meal-btn .logged-badge {
       position: absolute;
       top: 0.25rem;
       right: 0.25rem;
       font-size: 0.75rem;
-      color: #4caf50;
+      color: #ff6b6b;
+      font-weight: 700;
     }
 
+    /* Form Styles */
     .log-form {
       display: flex;
       flex-direction: column;
-      gap: 1rem;
+      gap: 1.25rem;
+      animation: slideDown 0.3s ease;
     }
 
-    .form-group {
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .form-section {
       display: flex;
       flex-direction: column;
-      gap: 0.5rem;
+      gap: 0.75rem;
     }
 
-    .form-group label,
-    .form-group .form-label {
+    .section-label {
       font-family: 'Satoshi', sans-serif;
-      font-weight: 600;
+      font-weight: 700;
       font-size: 0.875rem;
-      color: #2e7d32;
+      color: #2d3436;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
     }
 
-    :host-context(.dark) .form-group label,
-    :host-context(.dark) .form-group .form-label {
-      color: #a5d6a7;
+    :host-context(.dark) .section-label {
+      color: #fff5f2;
     }
 
-    .meal-type-selector {
+    /* Meal Type Grid */
+    .meal-type-grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       gap: 0.5rem;
     }
 
-    .catalog-detail {
-      padding: 0.85rem;
-      border-radius: 1rem;
-      background: rgba(255, 255, 255, 0.55);
-      border: 1px solid rgba(76, 175, 80, 0.15);
+    @media (max-width: 480px) {
+      .meal-type-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
     }
 
-    :host-context(.dark) .catalog-detail {
-      background: rgba(30, 41, 31, 0.75);
-      border-color: rgba(165, 214, 167, 0.18);
-    }
-
-    .catalog-detail-header {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-    }
-
-    .catalog-detail-header .emoji {
-      font-size: 1.6rem;
-    }
-
-    .catalog-detail-header strong {
-      display: block;
-      color: #37474f;
-    }
-
-    :host-context(.dark) .catalog-detail-header strong {
-      color: #eceff1;
-    }
-
-    .catalog-detail-header p,
-    .catalog-detail-description {
-      margin: 0;
-      font-size: 0.85rem;
-      color: #78909c;
-    }
-
-    .catalog-detail-description {
-      margin-top: 0.5rem;
-    }
-
-    .type-btn {
+    .meal-type-btn {
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 0.5rem;
-      background: white;
+      gap: 0.35rem;
+      padding: 0.65rem 0.5rem;
+      background: rgba(255, 255, 255, 0.5);
       border: 2px solid transparent;
+      border-radius: 1rem;
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+      font-family: 'Satoshi', sans-serif;
+    }
+
+    :host-context(.dark) .meal-type-btn {
+      background: rgba(255, 107, 107, 0.08);
+    }
+
+    .meal-type-btn:hover {
+      background: rgba(255, 107, 107, 0.08);
+      border-color: #ffa07a;
+    }
+
+    .meal-type-btn.selected {
+      border-color: #ff6b6b;
+      background: linear-gradient(135deg, rgba(255, 107, 107, 0.15), rgba(255, 160, 122, 0.1));
+      box-shadow: 0 4px 12px rgba(255, 107, 107, 0.2);
+    }
+
+    .meal-type-btn .emoji {
+      font-size: 1.35rem;
+    }
+
+    .meal-type-btn .label {
+      font-size: 0.625rem;
+      font-weight: 600;
+      color: #2d3436;
+    }
+
+    :host-context(.dark) .meal-type-btn .label {
+      color: #fff5f2;
+    }
+
+    /* Input Tabs */
+    .input-tabs {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .tab-btn {
+      padding: 0.65rem;
+      background: rgba(255, 255, 255, 0.4);
+      border: none;
       border-radius: 0.75rem;
+      font-family: 'Satoshi', sans-serif;
+      font-weight: 600;
+      font-size: 0.8rem;
+      color: #636e72;
       cursor: pointer;
       transition: all 0.2s ease;
     }
 
-    :host-context(.dark) .type-btn {
-      background: #388e3c;
+    :host-context(.dark) .tab-btn {
+      background: rgba(255, 107, 107, 0.06);
+      color: #a9959a;
     }
 
-    .type-btn.selected {
-      border-color: #4caf50;
-      background: #e8f5e9;
+    .tab-btn.active {
+      background: linear-gradient(135deg, #ff6b6b 0%, #ffa07a 100%);
+      color: white;
+      box-shadow: 0 4px 12px rgba(255, 107, 107, 0.25);
     }
 
-    :host-context(.dark) .type-btn.selected {
-      background: #4caf50;
+    /* Input Wrapper */
+    .input-wrapper {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
     }
 
-    .type-btn .emoji {
-      font-size: 1.25rem;
+    .floating-label {
+      font-family: 'Satoshi', sans-serif;
+      font-weight: 600;
+      font-size: 0.8rem;
+      color: #2d3436;
     }
 
-    .type-btn .name {
-      font-size: 0.625rem;
-      color: #37474f;
+    :host-context(.dark) .floating-label {
+      color: #fff5f2;
     }
 
-    :host-context(.dark) .type-btn .name {
-      color: #c8e6c9;
-    }
-
-    .form-group input[type="text"],
-    .form-group input[type="number"],
-    .input-with-unit input {
-      padding: 0.75rem;
-      border: 2px solid rgba(0, 0, 0, 0.1);
-      border-radius: 0.75rem;
+    .form-input {
+      padding: 0.85rem;
+      border: 1.5px solid rgba(255, 107, 107, 0.2);
+      border-radius: 0.85rem;
       font-family: 'Satoshi', sans-serif;
       font-size: 1rem;
-      background: white;
+      background: rgba(255, 255, 255, 0.7);
+      color: #2d3436;
+      transition: all 0.2s ease;
       width: 100%;
       box-sizing: border-box;
     }
 
-    :host-context(.dark) .form-group input,
-    :host-context(.dark) .input-with-unit input {
-      background: #388e3c;
-      border-color: rgba(255, 255, 255, 0.1);
-      color: #e8f5e9;
+    :host-context(.dark) .form-input {
+      background: rgba(255, 107, 107, 0.06);
+      border-color: rgba(255, 107, 107, 0.12);
+      color: #fff5f2;
     }
 
+    .form-input:focus {
+      outline: none;
+      border-color: #ff6b6b;
+      background: rgba(255, 255, 255, 0.85);
+      box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.1);
+    }
+
+    :host-context(.dark) .form-input:focus {
+      background: rgba(255, 107, 107, 0.08);
+      border-color: #ff9999;
+      box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.15);
+    }
+
+    .form-input::placeholder {
+      color: #b2bec3;
+    }
+
+    :host-context(.dark) .form-input::placeholder {
+      color: #7a6a6a;
+    }
+
+    /* Meal Preview */
+    .meal-preview {
+      padding: 1rem;
+      background: linear-gradient(135deg, rgba(255, 107, 107, 0.08), rgba(255, 160, 122, 0.05));
+      border: 1.5px solid rgba(255, 107, 107, 0.15);
+      border-radius: 1rem;
+      margin-top: 0.25rem;
+    }
+
+    :host-context(.dark) .meal-preview {
+      background: linear-gradient(135deg, rgba(255, 107, 107, 0.1), rgba(255, 160, 122, 0.06));
+      border-color: rgba(255, 107, 107, 0.2);
+    }
+
+    .preview-header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .preview-header .emoji {
+      font-size: 1.75rem;
+    }
+
+    .preview-info {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .preview-info strong {
+      font-size: 0.95rem;
+      color: #2d3436;
+    }
+
+    :host-context(.dark) .preview-info strong {
+      color: #fff5f2;
+    }
+
+    .preview-info p {
+      margin: 0.25rem 0 0;
+      font-size: 0.8rem;
+      color: #636e72;
+    }
+
+    :host-context(.dark) .preview-info p {
+      color: #a9959a;
+    }
+
+    .preview-serving {
+      margin: 0;
+      font-size: 0.8rem;
+      color: #636e72;
+      padding-top: 0.5rem;
+      border-top: 1px solid rgba(255, 107, 107, 0.1);
+    }
+
+    :host-context(.dark) .preview-serving {
+      color: #a9959a;
+      border-top-color: rgba(255, 107, 107, 0.15);
+    }
+
+    /* Barcode Section */
+    .barcode-section {
+      padding: 1rem;
+      background: rgba(255, 255, 255, 0.3);
+      border-radius: 1rem;
+      border: 1.5px dashed rgba(255, 107, 107, 0.2);
+      margin: 0.5rem 0;
+    }
+
+    :host-context(.dark) .barcode-section {
+      background: rgba(255, 107, 107, 0.04);
+      border-color: rgba(255, 107, 107, 0.15);
+    }
+
+    /* Input with Unit */
     .input-with-unit {
       display: flex;
       align-items: center;
       gap: 0.5rem;
+      position: relative;
     }
 
-    .input-with-unit .unit {
-      font-size: 0.875rem;
-      color: #558b2f;
-      white-space: nowrap;
+    .input-with-unit input {
+      flex: 1;
+      padding-right: 2.5rem;
     }
 
-    :host-context(.dark) .input-with-unit .unit {
-      color: #c5e1a5;
+    .unit {
+      position: absolute;
+      right: 0.85rem;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #ff6b6b;
+      pointer-events: none;
     }
 
-    .toggle-macros {
+    :host-context(.dark) .unit {
+      color: #ff9999;
+    }
+
+    .unit-small {
+      font-size: 0.7rem;
+    }
+
+    /* Expand Macros Button */
+    .expand-macros-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
       background: none;
       border: none;
-      color: #4caf50;
+      color: #ff6b6b;
       font-family: 'Satoshi', sans-serif;
       font-weight: 600;
       font-size: 0.875rem;
       cursor: pointer;
       text-align: left;
       padding: 0.5rem 0;
+      transition: all 0.2s ease;
     }
 
-    .toggle-macros:hover {
-      color: #2e7d32;
+    :host-context(.dark) .expand-macros-btn {
+      color: #ff9999;
     }
 
-    .macro-inputs {
+    .expand-macros-btn:hover {
+      color: #f87171;
+    }
+
+    .expand-macros-btn .icon {
+      display: inline-flex;
+      transition: transform 0.3s ease;
+      font-size: 0.7rem;
+    }
+
+    .expand-macros-btn .icon.open {
+      transform: rotate(180deg);
+    }
+
+    /* Macros Grid */
+    .macros-grid {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
       gap: 0.75rem;
+      animation: slideDown 0.3s ease;
     }
 
-    .macro-input {
+    @media (max-width: 480px) {
+      .macros-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .macro-input-wrapper {
       display: flex;
       flex-direction: column;
-      gap: 0.25rem;
+      gap: 0.35rem;
     }
 
-    .macro-input label {
+    .macro-input-wrapper .floating-label {
       font-size: 0.75rem;
-      color: #558b2f;
     }
 
-    :host-context(.dark) .macro-input label {
-      color: #c5e1a5;
-    }
-
-    .macro-input input {
-      padding: 0.5rem !important;
-      font-size: 0.875rem !important;
-    }
-
+    /* Submit Button */
     .submit-btn {
-      padding: 1rem;
-      background: linear-gradient(135deg, #4caf50, #388e3c);
+      padding: 1rem 1.5rem;
+      background: linear-gradient(135deg, #ff6b6b 0%, #ffa07a 100%);
       color: white;
       border: none;
       border-radius: 1rem;
@@ -703,12 +1015,22 @@ import { LucideLeaf } from '@lucide/angular';
       font-weight: 700;
       font-size: 1rem;
       cursor: pointer;
-      transition: all 0.2s ease;
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      box-shadow: 0 4px 16px rgba(255, 107, 107, 0.3);
+      margin-top: 0.5rem;
     }
 
     .submit-btn:hover:not(:disabled) {
       transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(76, 175, 80, 0.4);
+      box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
+    }
+
+    .submit-btn:active:not(:disabled) {
+      transform: translateY(0);
     }
 
     .submit-btn:disabled {
@@ -718,33 +1040,63 @@ import { LucideLeaf } from '@lucide/angular';
 
     .spinner {
       display: inline-block;
-      width: 1rem;
-      height: 1rem;
-      border: 2px solid rgba(255, 255, 255, 0.45);
+      width: 0.9rem;
+      height: 0.9rem;
+      border: 2px solid rgba(255, 255, 255, 0.3);
       border-top-color: #ffffff;
       border-radius: 50%;
       animation: spin 0.8s linear infinite;
     }
 
     @keyframes spin {
-      to { transform: rotate(360deg); }
+      to {
+        transform: rotate(360deg);
+      }
     }
 
-    .recent {
+    /* Recent Meals */
+    .recent-meals {
       margin-top: 1rem;
       padding-top: 1rem;
-      border-top: 1px solid rgba(255, 255, 255, 0.5);
+      border-top: 1.5px solid rgba(255, 107, 107, 0.1);
     }
 
-    .recent h4 {
+    :host-context(.dark) .recent-meals {
+      border-top-color: rgba(255, 107, 107, 0.15);
+    }
+
+    .recent-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.75rem;
+    }
+
+    .recent-header h4 {
       font-family: 'Satoshi', sans-serif;
-      font-size: 0.875rem;
-      color: #2e7d32;
-      margin: 0 0 0.75rem;
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #2d3436;
+      margin: 0;
     }
 
-    :host-context(.dark) .recent h4 {
-      color: #a5d6a7;
+    :host-context(.dark) .recent-header h4 {
+      color: #fff5f2;
+    }
+
+    .count {
+      font-family: 'Satoshi', sans-serif;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: #ff6b6b;
+      background: rgba(255, 107, 107, 0.1);
+      padding: 0.25rem 0.5rem;
+      border-radius: 0.5rem;
+    }
+
+    :host-context(.dark) .count {
+      background: rgba(255, 107, 107, 0.15);
+      color: #ff9999;
     }
 
     .meal-list {
@@ -753,52 +1105,143 @@ import { LucideLeaf } from '@lucide/angular';
       gap: 0.5rem;
     }
 
-    .meal-item {
+    .meal-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.75rem;
+      background: rgba(255, 255, 255, 0.4);
+      border-radius: 0.85rem;
+      border: 1px solid rgba(255, 107, 107, 0.08);
+      transition: all 0.2s ease;
+    }
+
+    :host-context(.dark) .meal-row {
+      background: rgba(255, 107, 107, 0.05);
+      border-color: rgba(255, 107, 107, 0.12);
+    }
+
+    .meal-row:hover {
+      background: rgba(255, 107, 107, 0.06);
+      border-color: rgba(255, 107, 107, 0.12);
+    }
+
+    :host-context(.dark) .meal-row:hover {
+      background: rgba(255, 107, 107, 0.08);
+      border-color: rgba(255, 107, 107, 0.15);
+    }
+
+    .meal-left {
       display: flex;
       align-items: center;
       gap: 0.75rem;
-      padding: 0.5rem;
-      background: rgba(255, 255, 255, 0.5);
-      border-radius: 0.75rem;
+      flex: 1;
     }
 
-    :host-context(.dark) .meal-item {
-      background: rgba(0, 0, 0, 0.2);
+    .meal-left .emoji {
+      font-size: 1.35rem;
+      flex-shrink: 0;
     }
 
-    .meal-item .emoji {
-      font-size: 1.25rem;
-    }
-
-    .meal-item .details {
+    .meal-text {
       display: flex;
       flex-direction: column;
+      gap: 0.15rem;
+      min-width: 0;
     }
 
-    .meal-item .name {
+    .meal-name {
+      font-family: 'Satoshi', sans-serif;
       font-weight: 600;
-      font-size: 0.875rem;
-      color: #37474f;
+      font-size: 0.9rem;
+      color: #2d3436;
+      word-break: break-word;
     }
 
-    :host-context(.dark) .meal-item .name {
-      color: #c8e6c9;
+    :host-context(.dark) .meal-name {
+      color: #fff5f2;
     }
 
-    .meal-item .meta {
-      font-size: 0.75rem;
-      color: #78909c;
+    .meal-type {
+      font-size: 0.7rem;
+      color: #636e72;
+    }
+
+    :host-context(.dark) .meal-type {
+      color: #a9959a;
+    }
+
+    .meal-calories {
+      font-family: 'Satoshi', sans-serif;
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: #ff6b6b;
+      flex-shrink: 0;
+    }
+
+    :host-context(.dark) .meal-calories {
+      color: #ff9999;
+    }
+
+    /* Responsive */
+    @media (max-width: 640px) {
+      .nutrition-card {
+        padding: 1.25rem;
+      }
+
+      .header-content {
+        flex-direction: column;
+        gap: 0.75rem;
+      }
+
+      .title-row h3 {
+        font-size: 1.1rem;
+      }
+
+      .toggle-btn {
+        width: 2.25rem;
+        height: 2.25rem;
+      }
+
+      .mini-macros {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 0.6rem;
+      }
+
+      .quick-meals {
+        grid-template-columns: repeat(auto-fit, minmax(65px, 1fr));
+      }
+
+      .meal-type-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .input-tabs {
+        grid-template-columns: 1fr;
+      }
+
+      .tab-btn {
+        padding: 0.7rem;
+        font-size: 0.75rem;
+      }
+
+      .macros-grid {
+        grid-template-columns: 1fr;
+      }
     }
 
     @media (prefers-reduced-motion: reduce) {
-      .add-btn,
-      .meal-btn,
-      .type-btn,
+      .toggle-btn,
+      .quick-meal-btn,
+      .meal-type-btn,
+      .tab-btn,
+      .form-input,
       .submit-btn,
-      .progress-fill {
+      .progress-fill,
+      .spinner,
+      .expand-macros-btn .icon,
+      .log-form {
         transition: none;
-      }
-      .spinner {
         animation: none;
       }
     }
@@ -813,6 +1256,7 @@ export class NutritionLoggerComponent {
   readonly showForm = signal(false);
   readonly showMacros = signal(false);
   readonly logging = signal(false);
+  readonly useQuickEntry = signal(false);
   readonly selectedMealType = signal<MealType>('LUNCH');
   readonly mealName = signal('');
   readonly calories = signal<number | null>(null);
@@ -832,6 +1276,20 @@ export class NutritionLoggerComponent {
   readonly caloriesPercentage = computed(() => {
     return Math.min(120, Math.round((this.caloriesToday() / this.caloriesGoal) * 100));
   });
+
+  readonly caloriesPct = computed(() => {
+    return Math.round((this.caloriesToday() / this.caloriesGoal) * 100);
+  });
+
+  readonly caloriesRemaining = computed(() => {
+    return Math.max(0, this.caloriesGoal - this.caloriesToday());
+  });
+
+  readonly caloriesOverBy = computed(() => {
+    return Math.max(0, this.caloriesToday() - this.caloriesGoal);
+  });
+
+  readonly caloriesOverGoal = computed(() => this.caloriesToday() > this.caloriesGoal);
 
   readonly recentMeals = computed(() => {
     const today = this.metricsService.nutritionToday();
@@ -861,7 +1319,9 @@ export class NutritionLoggerComponent {
   }));
 
   readonly canSubmit = computed(() => {
-    return this.selectedMealType() && this.mealName().trim().length > 0;
+    const hasMealName = !this.useQuickEntry() || this.mealName().trim().length > 0;
+    const hasCalories = this.calories() !== null && this.calories()! > 0;
+    return this.selectedMealType() && (this.selectedCatalogMeal() || hasMealName) && hasCalories;
   });
 
   constructor() {
@@ -875,13 +1335,35 @@ export class NutritionLoggerComponent {
     return MEAL_TYPE_INFO[type as MealType]?.emoji ?? '•';
   }
 
+  getMealTypeLabel(type: string): string {
+    return MEAL_TYPE_INFO[type as MealType]?.label ?? type;
+  }
+
   isMealLogged(type: MealType): boolean {
     return this.loggedMealTypes().includes(type);
+  }
+
+  toggleForm(): void {
+    this.showForm.set(!this.showForm());
+    if (!this.showForm()) {
+      this.resetForm();
+    }
   }
 
   selectMealType(type: MealType): void {
     this.selectedMealType.set(type);
     this.showForm.set(true);
+    this.useQuickEntry.set(false);
+
+    // Avoid empty form fields after tapping a meal type quick action by seeding values
+    const catalogMatch = this.mealCatalog().find((meal) => meal.mealType === type);
+    if (catalogMatch) {
+      this.mealName.set(catalogMatch.name);
+      this.calories.set(catalogMatch.calories ?? this.calories() ?? 0);
+      this.protein.set(catalogMatch.protein ?? this.protein() ?? null);
+      this.carbs.set(catalogMatch.carbs ?? this.carbs() ?? null);
+      this.fat.set(catalogMatch.fat ?? this.fat() ?? null);
+    }
   }
 
   onFoodScanned(food: ScannedFood): void {
@@ -892,6 +1374,7 @@ export class NutritionLoggerComponent {
     this.carbs.set(food.carbs);
     this.fat.set(food.fat);
     this.showMacros.set(true); // Expand macros section
+    this.useQuickEntry.set(false);
   }
 
   onMealSearchChange(items: string[]): void {
@@ -908,7 +1391,7 @@ export class NutritionLoggerComponent {
     this.protein.set(catalogItem.protein ?? null);
     this.carbs.set(catalogItem.carbs ?? null);
     this.fat.set(catalogItem.fat ?? null);
-    this.showForm.set(true);
+    this.useQuickEntry.set(false);
   }
 
   async submitForm(): Promise<void> {
@@ -935,14 +1418,18 @@ export class NutritionLoggerComponent {
     }
 
     // Reset form
+    this.resetForm();
+    this.logging.set(false);
+  }
+
+  private resetForm(): void {
     this.mealName.set('');
     this.calories.set(null);
     this.protein.set(null);
     this.carbs.set(null);
     this.fat.set(null);
     this.selectedMealSearch.set([]);
-    this.showForm.set(false);
     this.showMacros.set(false);
-    this.logging.set(false);
+    this.useQuickEntry.set(false);
   }
 }

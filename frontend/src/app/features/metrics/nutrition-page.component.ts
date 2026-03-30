@@ -166,34 +166,37 @@ import { HydrationTrackerComponent } from './hydration-tracker.component';
         <div class="space-y-6">
 
           <!-- Meal type breakdown -->
-          @if (mealTypeBreakdown().length > 0) {
-            <div class="bg-white dark:bg-gray-800 rounded-2xl p-4 border border-gray-100 dark:border-gray-700 space-y-3">
-              <h3 class="text-sm font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest">
-                Today's Meals
-              </h3>
-              @for (meal of mealTypeBreakdown(); track meal.type) {
-                <div class="flex items-center gap-3">
-                  <span class="text-xl">{{ meal.emoji }}</span>
-                  <div class="flex-1">
-                    <div class="flex justify-between text-xs mb-1">
-                      <span class="font-semibold text-gray-700 dark:text-gray-200">{{ meal.label }}</span>
-                      <span class="text-gray-400">{{ meal.calories }} kcal</span>
-                    </div>
-                    <div class="h-1.5 bg-gray-100 dark:bg-gray-700 rounded-full overflow-hidden">
-                      <div
-                        class="h-full rounded-full transition-all duration-300"
-                        [style.width.%]="meal.pct"
-                        [style.background]="meal.color"
-                      ></div>
-                    </div>
-                  </div>
-                  @if (meal.count > 0) {
-                    <span class="text-xs font-bold text-gray-400">×{{ meal.count }}</span>
-                  }
+        <div class="bg-white dark:bg-gray-800 rounded-2xl p-4 border border-gray-100 dark:border-gray-700 space-y-3">
+          <h3 class="text-sm font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest">
+            Today's Meals
+          </h3>
+
+          @if (mealTypeBreakdown().length === 0) {
+            <p class="text-xs text-gray-500 dark:text-gray-400">No meals logged yet. Start with a quick meal button or add a new item.</p>
+          }
+
+          @for (meal of mealTypeBreakdown(); track meal.type) {
+            <div class="flex items-center gap-3">
+              <span class="text-xl">{{ meal.emoji }}</span>
+              <div class="flex-1">
+                <div class="flex justify-between text-xs mb-1">
+                  <span class="font-semibold text-gray-700 dark:text-gray-200">{{ meal.label }}</span>
+                  <span class="text-gray-400">{{ meal.calories }} kcal</span>
                 </div>
+                <div class="h-1.5 bg-gray-100 dark:bg-gray-700 rounded-full overflow-hidden">
+                  <div
+                    class="h-full rounded-full transition-all duration-300"
+                    [style.width.%]="meal.pct"
+                    [style.background]="meal.color"
+                  ></div>
+                </div>
+              </div>
+              @if (meal.count > 0) {
+                <span class="text-xs font-bold text-gray-400">×{{ meal.count }}</span>
               }
             </div>
           }
+        </div>
         </div>
       </div>
 
