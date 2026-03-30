@@ -25,11 +25,12 @@ import type {
   HealthSyncProvider,
 } from '../../core/metrics/metrics.types';
 import { PageHeaderComponent } from '../../shared/components/page-header/page-header.component';
+import { LucideDumbbell } from '@lucide/angular';
 import { ToastService } from '../../core/toast/toast.service';
 
 @Component({
   selector: 'app-workouts-page',
-  imports: [CommonModule, TranslateModule, FormsModule, PageHeaderComponent],
+  imports: [CommonModule, TranslateModule, FormsModule, PageHeaderComponent, LucideDumbbell],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="workouts-shell min-h-screen">
@@ -39,8 +40,10 @@ import { ToastService } from '../../core/toast/toast.service';
         [backLabel]="'common.back_to_dashboard' | translate"
         [showBackLabel]="true"
       >
-        <div pageHeaderIcon class="w-12 h-12 rounded-2xl bg-gradient-to-br from-primary-500 to-cyan-600 flex items-center justify-center shadow-lg shadow-primary-500/20">
-          <span class="dark:text-white text-xl">🏋️‍♀️</span>
+        <div pageHeaderIcon class="w-12 h-12 rounded-2xl bg-gray-100 dark:bg-gray-800 flex items-center justify-center">
+          <span class="text-primary-500" aria-hidden="true">
+            <svg lucideDumbbell [size]="24" [strokeWidth]="2"></svg>
+          </span>
         </div>
 
         <div pageHeaderRight class="workout-chip-wrap">

@@ -3,12 +3,13 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { PageHeaderComponent } from '../../shared/components/page-header/page-header.component';
+import { LucideBandage } from '@lucide/angular';
 import { FirstAidService } from './first-aid.service';
 import { FirstAidCard, SeverityLevel } from './first-aid.types';
 
 @Component({
   selector: 'app-first-aid-detail',
-  imports: [CommonModule, RouterLink, TranslateModule, PageHeaderComponent],
+  imports: [CommonModule, RouterLink, TranslateModule, PageHeaderComponent, LucideBandage],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     @if (card(); as c) {
@@ -21,8 +22,8 @@ import { FirstAidCard, SeverityLevel } from './first-aid.types';
           [backLabel]="'FIRST_AID.BACK' | translate"
           [showBackLabel]="false"
         >
-          <span pageHeaderIcon class="text-3xl leading-none">
-            {{ c.icon }}
+          <span pageHeaderIcon class="w-10 h-10 rounded-2xl bg-gray-100 dark:bg-gray-800 flex items-center justify-center">
+            <svg lucideBandage [size]="20" [strokeWidth]="2" aria-hidden="true"></svg>
           </span>
 
           <div pageHeaderRight>

@@ -45,8 +45,8 @@ import { LucideFlame, LucideStar, LucideTrophy } from '@lucide/angular';
         [backLabel]="'common.back_to_dashboard' | translate"
         [showBackLabel]="true"
       >
-        <div pageHeaderIcon class="w-12 h-12 rounded-2xl bg-gradient-to-br from-violet-500 to-purple-700 flex items-center justify-center shadow-lg shadow-violet-500/20">
-          <span class="inline-flex text-white" aria-hidden="true">
+        <div pageHeaderIcon class="w-12 h-12 rounded-2xl bg-gray-100 dark:bg-gray-800 flex items-center justify-center">
+          <span class="inline-flex text-primary-500" aria-hidden="true">
             <svg lucideTrophy [size]="24" [strokeWidth]="2"></svg>
           </span>
         </div>

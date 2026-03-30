@@ -63,7 +63,9 @@ interface WeeklyBar {
         [showBackLabel]="true"
         [backLabel]="'common.back_to_dashboard' | translate"
       >
-        <span pageHeaderIcon class="text-2xl">🏆</span>
+        <span pageHeaderIcon class="w-10 h-10 rounded-2xl bg-gray-100 dark:bg-gray-800 text-primary-500 flex items-center justify-center" aria-hidden="true">
+          <svg lucideTrophy [size]="20" [strokeWidth]="2"></svg>
+        </span>
       </app-page-header>
 
       <div class="px-4 sm:px-6 lg:px-8 py-8 pb-24">

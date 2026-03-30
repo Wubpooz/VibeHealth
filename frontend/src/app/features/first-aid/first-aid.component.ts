@@ -4,6 +4,7 @@ import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { PageHeaderComponent } from '../../shared/components/page-header/page-header.component';
+import { LucideBandage } from '@lucide/angular';
 import { FirstAidService } from './first-aid.service';
 import { FirstAidCategory, SeverityLevel } from './first-aid.types';
 import { FIRST_AID_CATEGORIES } from './first-aid.data';
@@ -11,7 +12,7 @@ import { fadeInOut, slideInUp, scaleIn } from '../../shared/animations';
 
 @Component({
   selector: 'app-first-aid',
-  imports: [CommonModule, RouterLink, FormsModule, TranslateModule, PageHeaderComponent],
+  imports: [CommonModule, RouterLink, FormsModule, TranslateModule, PageHeaderComponent, LucideBandage],
   changeDetection: ChangeDetectionStrategy.OnPush,
   animations: [fadeInOut, slideInUp, scaleIn],
   template: `
@@ -23,8 +24,8 @@ import { fadeInOut, slideInUp, scaleIn } from '../../shared/animations';
         [subtitle]="'FIRST_AID.SUBTITLE' | translate"
         [showBackLabel]="false"
       >
-        <span pageHeaderIcon class="w-10 h-10 rounded-2xl bg-rose-200 dark:bg-rose-800 text-rose-600 dark:text-rose-100 flex items-center justify-center">
-          🩹
+        <span pageHeaderIcon class="w-10 h-10 rounded-2xl bg-gray-100 dark:bg-gray-800 text-rose-600 dark:text-rose-100 flex items-center justify-center">
+          <svg lucideBandage [size]="20" [strokeWidth]="2" aria-hidden="true"></svg>
         </span>
 
         <div pageHeaderRight>

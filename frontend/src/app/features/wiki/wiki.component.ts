@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { WikiCondition } from './wiki.model';
 import { PageHeaderComponent } from '../../shared/components/page-header/page-header.component';
+import { LucideBookOpen } from '@lucide/angular';
 
 const CONDITION_TITLES: string[] = [
   'Hypertension', 'Type 2 Diabetes', 'Asthma', 'Chronic Kidney Disease', 'COPD',
@@ -100,7 +101,7 @@ function buildWikiConditions(): WikiCondition[] {
 @Component({
   selector: 'app-wiki',
   standalone: true,
-  imports: [CommonModule, FormsModule, TranslateModule, PageHeaderComponent],
+  imports: [CommonModule, FormsModule, TranslateModule, PageHeaderComponent, LucideBookOpen],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="min-h-screen bg-gradient-to-br from-slate-50 via-white to-sky-50 dark:from-gray-950 dark:via-gray-900 dark:to-gray-950">
@@ -109,7 +110,9 @@ function buildWikiConditions(): WikiCondition[] {
         [subtitle]="'WIKI.SUBTITLE' | translate"
         [showBackLabel]="false"
       >
-        <span pageHeaderIcon class="text-2xl">📚</span>
+        <span pageHeaderIcon class="w-10 h-10 rounded-2xl bg-gray-100 dark:bg-gray-800 text-sky-500 flex items-center justify-center" aria-hidden="true">
+          <svg lucideBookOpen [size]="20" [strokeWidth]="2"></svg>
+        </span>
       </app-page-header>
 
       <div class="max-w-7xl mx-auto px-4 sm:px-6 py-6">

@@ -6,11 +6,12 @@ import { MedicationService, Medication, MedicationReminder, MedicationRecurrence
 import { ToastService } from '../../core/toast/toast.service';
 import { AutocompleteComponent } from '../../shared/components/autocomplete/autocomplete.component';
 import { PageHeaderComponent } from '../../shared/components/page-header/page-header.component';
+import { LucidePill } from '@lucide/angular';
 import { ReferenceDataService } from '../../core/reference-data/reference-data.service';
 
 @Component({
   selector: 'app-medication-page',
-  imports: [CommonModule, FormsModule, TranslateModule, AutocompleteComponent, PageHeaderComponent],
+  imports: [CommonModule, FormsModule, TranslateModule, AutocompleteComponent, PageHeaderComponent, LucidePill],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="min-h-screen bg-[#f8fafc] dark:bg-[#0f172a]">
@@ -20,7 +21,9 @@ import { ReferenceDataService } from '../../core/reference-data/reference-data.s
         [backLabel]="'common.back_to_dashboard' | translate"
         [showBackLabel]="true"
       >
-        <span pageHeaderIcon class="text-3xl" aria-hidden="true">💊</span>
+        <span pageHeaderIcon class="w-10 h-10 rounded-2xl bg-gray-100 dark:bg-gray-800 text-primary-500 flex items-center justify-center" aria-hidden="true">
+          <svg lucidePill [size]="20" [strokeWidth]="2"></svg>
+        </span>
       </app-page-header>
 
       <div class="px-4 sm:px-6 lg:px-10 py-8 pb-24 space-y-5">

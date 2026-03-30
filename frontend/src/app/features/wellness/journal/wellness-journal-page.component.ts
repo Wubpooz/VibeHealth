@@ -5,6 +5,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { ThemeService } from '../../../core/theme/theme.service';
 import { WellnessJournalService } from '../../../core/wellness/wellness-journal.service';
 import { PageHeaderComponent } from '../../../shared/components/page-header/page-header.component';
+import { LucideNotebook } from '@lucide/angular';
 import { ToastService } from '../../../core/toast/toast.service';
 import {
   type MoodEmoji,
@@ -17,7 +18,7 @@ import {
 @Component({
   selector: 'app-wellness-journal-page',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, TranslateModule, PageHeaderComponent],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, TranslateModule, PageHeaderComponent, LucideNotebook],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="wellness-journal-page">
@@ -27,7 +28,9 @@ import {
         [subtitle]="'WELLNESS.JOURNAL.SUBTITLE' | translate"
         [showBackLabel]="false"
       >
-        <span pageHeaderIcon class="text-3xl">📝</span>
+        <span pageHeaderIcon class="w-10 h-10 rounded-2xl bg-gray-100 dark:bg-gray-800 text-pink-500 flex items-center justify-center" aria-hidden="true">
+          <svg lucideNotebook [size]="20" [strokeWidth]="2"></svg>
+        </span>
 
         <div pageHeaderRight class="flex items-center gap-3">
           <div class="stat-chip">

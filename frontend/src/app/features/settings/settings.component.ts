@@ -6,11 +6,12 @@ import { FirstAidService } from '../first-aid/first-aid.service';
 import { ProfileService } from '../../core/profile/profile.service';
 import { AuthService } from '../../core/auth/auth.service';
 import { PageHeaderComponent } from '../../shared/components/page-header/page-header.component';
+import { LucideSettings } from '@lucide/angular';
 import { EmergencyNumber } from '../first-aid/first-aid.types';
 
 @Component({
   selector: 'app-settings',
-  imports: [CommonModule, TranslateModule, FormsModule, PageHeaderComponent],
+  imports: [CommonModule, TranslateModule, FormsModule, PageHeaderComponent, LucideSettings],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="min-h-screen bg-gradient-to-br from-rose-50 via-white to-sage-50 dark:from-gray-950 dark:via-gray-900 dark:to-gray-950">
@@ -21,7 +22,9 @@ import { EmergencyNumber } from '../first-aid/first-aid.types';
         [subtitle]="'SETTINGS.SUBTITLE' | translate"
         [showBackLabel]="false"
       >
-        <span pageHeaderIcon class="text-xl">⚙️</span>
+        <span pageHeaderIcon class="w-10 h-10 rounded-2xl bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-200 flex items-center justify-center" aria-hidden="true">
+          <svg lucideSettings [size]="20" [strokeWidth]="2"></svg>
+        </span>
       </app-page-header>
 
       <main class="max-w-4xl mx-auto px-4 sm:px-6 py-6 pb-24">

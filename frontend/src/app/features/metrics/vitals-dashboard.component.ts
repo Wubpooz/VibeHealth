@@ -27,8 +27,8 @@ import { LucideHeartPulse } from '@lucide/angular';
         [backLabel]="'common.back_to_dashboard' | translate"
         [showBackLabel]="true"
       >
-        <span pageHeaderIcon class="w-12 h-12 rounded-2xl bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center shadow-lg shadow-purple-500/20">
-          <span class="text-white inline-flex" aria-hidden="true">
+        <span pageHeaderIcon class="w-12 h-12 rounded-2xl bg-gray-100 dark:bg-gray-800 flex items-center justify-center">
+          <span class="text-primary-500 inline-flex" aria-hidden="true">
             <svg lucideHeartPulse [size]="24" [strokeWidth]="2"></svg>
           </span>
         </span>
