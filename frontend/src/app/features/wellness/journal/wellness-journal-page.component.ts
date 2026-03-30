@@ -315,8 +315,8 @@ import {
 
       <!-- View Entry Modal -->
       @if (selectedEntry()) {
-        <div class="modal-overlay" (click)="closeEntryDetails()" (keydown.escape)="closeEntryDetails()" role="presentation">
-          <div class="modal-content view-modal" (click)="$event.stopPropagation()" role="dialog" aria-modal="true">
+        <div class="modal-overlay" (click)="closeEntryDetails()" (keydown.escape)="closeEntryDetails()" role="presentation" tabindex="0">
+          <div class="modal-content view-modal" (click)="$event.stopPropagation()" (keydown.enter)="$event.stopPropagation()" (keydown.space)="$event.stopPropagation()" role="dialog" aria-modal="true">
             <div class="modal-header">
               <div class="entry-view-header-content">
                 @if (selectedEntry()?.mood) {

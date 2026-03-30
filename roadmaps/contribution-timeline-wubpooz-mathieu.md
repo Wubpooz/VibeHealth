@@ -4,8 +4,8 @@
 
 ## Overall Stats (from git log)
 - Author `Wubpooz`
-  - Total lines added: **106,187**
-  - Total lines deleted: **7,059**
+  - Total lines added: **119,576**
+  - Total lines deleted: **10,836**
 - Author `mathieu`
   - Total lines added: **212,374**
   - Total lines deleted: **14,118**
@@ -27,15 +27,28 @@
 - Export, calendar sync, sharing, caregiver feature.
 
 ## Selected Timeline for Wubpooz (March 2026)
-- `2026-03-27` - `68923cc`: implementation and slides docs (roadmap implementation material/technical docs).
-- `2026-03-29` - `ff16098`: mascot SVG asset updates (`rabbit_standing.svg`, `rabbit_thinking.svg`, etc.).
-- `2026-03-29` - `85c76a2`: folder refactor (design/mascotte path cleanup and file movement).
-- `2026-03-29` - `56dfd16`: translations and `preferredCountryCode` in `Profile` model.
-- `2026-03-29` - `f78330f`: user settings fields, auth wiring and profile update integration.
-- `2026-03-29` - `a8dbd95`: roadmap refresh.
-- `2026-03-29` - `e97aa02`: de-ai emoji upgrade for UI reward/metric components.
-- `2026-03-29` - `d51a6c5`: rewards page feature addition.
-- `2026-03-29` - `ad1e4fc`: hydration UI rework placement.
+- `2026-03-30` - `a5a0eee`: code review of my changes. (13 files changed, +77, -52)
+- `2026-03-30` - `9214cb3`: enhance meal type breakdown display with no meals logged message. (2 files changed, +917, -427)
+- `2026-03-30` - `22fca19`: migrate all data to database; removed hardcoded onboarding types; language selection in settings; country selection UX improvements; wiki localization enhancements. (30 files changed, +7029, -1834)
+- `2026-03-30` - `760ef88`: autocomplete in the side effect lookup. (2 files changed, +46, -6)
+- `2026-03-30` - `0978a71`: fix medical ID not visible. (1 file changed, +10, -2)
+- `2026-03-30` - `f63c8c9`: update skills. (8 files changed, +41, -1)
+- `2026-03-30` - `5afbc49`: page headers gradients removed, now Lucide icon components. (10 files changed, +41, -22)
+- `2026-03-30` - `6fd0781`: fix header scrolling with page. (1 file changed, +1, -1)
+- `2026-03-30` - `50db710`: improved workout page colors, UI, examples. (3 files changed, +840, -209)
+- `2026-03-30` - `58cdd65`: improved vitals UI/UX (tooltips, customization, custom date range, easier input). (4 files changed, +1376, -235)
+- `2026-03-30` - `f19de79`: use a consistent header style across all pages. (12 files changed, +211, -158)
+- `2026-03-30` - `81e1b61`: improved wiki view new entries and better UI/UX. (3 files changed, +290, -71)
+- `2026-03-30` - `48ee4e8`: linked user data across the app. (3 files changed, +309, -45)
+- `2026-03-30` - `10d65f6`: added wiki entries. (5 files changed, +289, -238)
+- `2026-03-30` - `418bcee`: UI examples - TO USE. (9 files changed, +0, -0)
+- `2026-03-30` - `95bad06`: improve vital dashboard UI/UX. (2 files changed, +595, -291)
+- `2026-03-30` - `56395ca`: merge main branch updates. (merge commit, no file stats)
+- `2026-03-30` - `4c568aa`: merge wellness branch into main (ola-hn). (merge commit, no file stats)
+- `2026-03-29` - `ad1e4fc`: hydration UI rework placement. (1 file changed, +11, -4)
+- `2026-03-29` - `d51a6c5`: rewards page feature addition. (5 files changed, +794, -2)
+- `2026-03-29` - `e97aa02`: de-ai emoji upgrade for UI reward/metric components. (12 files changed, +496, -163)
+- `2026-03-29` - `a8dbd95`: roadmap refresh. (2 files changed, +16, -16)
 
 ## Selected Timeline for Mathieu (by commit message context)
 - `2026-03-?` - `2e0ede2`: email OTP/magic link + forgot password + i18n and auth flows.
