@@ -1,5 +1,6 @@
 import { Hono } from 'hono';
 import { prisma } from '../lib/prisma';
+import { Prisma } from '@prisma/client';
 import { requireAuth } from '../middleware/auth.middleware';
 import type { Session as AuthSession, User as AuthUser } from 'better-auth';
 import { z } from 'zod';
@@ -510,13 +511,16 @@ periodRoutes.post('/reminder/pill', async (c) => {
     }
 
     // Update profile with pill reminder settings
+    const existingPreferences = (profile.notificationPreferences as Prisma.JsonObject | null) ?? {};
+    const updatedPreferences: Prisma.JsonObject = {
+      ...existingPreferences,
+      contraceptivePillReminder: validated,
+    };
+
     await prisma.profile.update({
       where: { userId: user.id },
       data: {
-        notificationPreferences: {
-          ...(profile.notificationPreferences as Record<string, unknown>),
-          contraceptivePillReminder: validated,
-        },
+        notificationPreferences: updatedPreferences,
       },
     });
 
@@ -604,13 +608,13 @@ periodRoutes.delete('/reminder/pill', async (c) => {
       );
     }
 
-    const preferences = profile.notificationPreferences as Record<string, unknown>;
-    delete preferences?.contraceptivePillReminder;
+    const preferences = { ...(profile.notificationPreferences as Prisma.JsonObject | null) ?? {} } as Prisma.JsonObject;
+    delete preferences.contraceptivePillReminder;
 
     await prisma.profile.update({
       where: { userId: user.id },
       data: {
-        notificationPreferences: preferences,
+        notificationPreferences: Object.keys(preferences).length ? preferences : Prisma.DbNull,
       },
     });
 
