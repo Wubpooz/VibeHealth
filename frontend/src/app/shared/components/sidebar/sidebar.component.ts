@@ -61,6 +61,7 @@ export class SidebarComponent {
     { route: '/first-aid', labelKey: 'nav.first_aid', icon: 'medical_services' },
     { route: '/wiki', labelKey: 'nav.wiki', icon: 'local_library' },
     { route: '/journal', labelKey: 'nav.journal', icon: 'menu_book' },
+    { route: '/period', labelKey: 'nav.period', icon: 'calendar_today' },
     { route: '/rewards', labelKey: 'nav.rewards', icon: 'emoji_events' }
   ];
 

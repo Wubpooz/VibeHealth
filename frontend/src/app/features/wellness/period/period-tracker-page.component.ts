@@ -5,20 +5,21 @@ import {
   computed,
   ChangeDetectionStrategy,
   afterNextRender,
-  DestroyRef,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
-import { PeriodTrackerService } from '../../core/wellness/period-tracker.service';
+import { ThemeService } from '../../../core/theme/theme.service';
+import { PageHeaderComponent } from '../../../shared/components/page-header/page-header.component';
+import { LucideCalendarDays } from '@lucide/angular';
+import { PeriodTrackerService } from '../../../core/wellness/period-tracker.service';
 import {
   SYMPTOMS_OPTIONS,
   SYMPTOMS_LABELS,
   FLOW_INTENSITY_OPTIONS,
   FLOW_INTENSITY_LABELS,
   type PeriodLog,
-  type CycleInsights,
-} from '../../core/wellness/period-tracker.types';
+} from '../../../core/wellness/period-tracker.types';
 
 /**
  * PeriodTrackerPageComponent
@@ -32,64 +33,70 @@ import {
 @Component({
   selector: 'app-period-tracker-page',
   standalone: true,
-  imports: [CommonModule, FormsModule, TranslateModule],
+  imports: [CommonModule, FormsModule, TranslateModule, PageHeaderComponent, LucideCalendarDays],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="min-h-screen bg-gradient-to-br from-[#fffaf8] to-white p-4 md:p-8">
-      <!-- Header -->
-      <div class="mb-8">
-        <h1 class="text-4xl font-bold bg-gradient-to-r from-[#ff6b6b] to-[#ffa07a] bg-clip-text text-transparent mb-2">
-          {{ 'wellness.period.title' | translate }}
-        </h1>
-        <p class="text-gray-600">{{ 'wellness.period.subtitle' | translate }}</p>
-      </div>
+    <div class="min-h-screen flex flex-col bg-[#fdf8f8] dark:bg-gray-950 transition-colors duration-300">
+      <!-- Page Header -->
+      <app-page-header
+        [title]="'Cycle tracker' | translate"
+        [backLabel]="'common.back_to_dashboard' | translate"
+        [showBackLabel]="true"
+      >
+        <span pageHeaderIcon class="w-12 h-12 rounded-2xl bg-gray-100 dark:bg-gray-800 flex items-center justify-center">
+          <span class="text-red-500 inline-flex" aria-hidden="true">
+            <svg lucideCalendarDays [size]="24" [strokeWidth]="2"></svg>
+          </span>
+        </span>
+      </app-page-header>
 
-      <!-- Main Grid: Calendar + Sidebar -->
-      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+      <main class="flex-1 px-4 sm:px-6 lg:px-8 py-8 pb-10">
+        <!-- Main Grid: Calendar + Sidebar -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8 max-w-7xl mx-auto w-full">
         <!-- Calendar Section (Left - 2 cols on desktop) -->
         <div class="lg:col-span-2 space-y-6">
           <!-- Cycle Insights Card -->
           @if (cycleInsights(); as insights) {
-            <div class="rounded-3xl bg-white p-6 shadow-sm border border-[rgba(255,107,107,0.1)] hover:border-[rgba(255,107,107,0.2)] transition-colors">
-              <h2 class="text-lg font-semibold text-gray-900 mb-4">{{ 'wellness.period.cycleInsights' | translate }}</h2>
+            <div class="rounded-3xl bg-white dark:bg-gray-900 p-6 shadow-sm border border-gray-200 dark:border-gray-800 hover:border-red-300 dark:hover:border-red-800 transition-colors">
+              <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">{{ 'Cycle Insights' | translate }}</h2>
 
               <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <!-- Data Points -->
                 <div class="bg-gradient-to-br from-[#fff5f2] to-[#fffaf8] rounded-2xl p-4 text-center">
-                  <p class="text-sm text-gray-600 mb-1">{{ 'wellness.period.dataPoints' | translate }}</p>
-                  <p class="text-2xl font-bold text-[#ff6b6b]">{{ insights.dataPoints }}</p>
+                  <p class="text-sm text-gray-600 dark:text-gray-400 mb-1">{{ 'Data Points' | translate }}</p>
+                  <p class="text-2xl font-bold text-red-600 dark:text-red-400">{{ insights.dataPoints }}</p>
                 </div>
 
                 <!-- Avg Cycle Length -->
                 @if (insights.averageCycleLength !== null) {
                   <div class="bg-gradient-to-br from-[#fff5f2] to-[#fffaf8] rounded-2xl p-4 text-center">
-                    <p class="text-sm text-gray-600 mb-1">{{ 'wellness.period.avgCycleLength' | translate }}</p>
-                    <p class="text-2xl font-bold text-[#ff8787]">{{ insights.averageCycleLength }} {{ 'wellness.period.days' | translate }}</p>
+                    <p class="text-sm text-gray-600 dark:text-gray-400 mb-1">{{ 'Average Cycle Length' | translate }}</p>
+                    <p class="text-2xl font-bold text-red-500 dark:text-red-400">{{ insights.averageCycleLength }} {{ 'Period days' | translate }}</p>
                   </div>
                 }
 
                 <!-- Avg Period Duration -->
                 @if (insights.averagePeriodDuration !== null) {
                   <div class="bg-gradient-to-br from-[#fff5f2] to-[#fffaf8] rounded-2xl p-4 text-center">
-                    <p class="text-sm text-gray-600 mb-1">{{ 'wellness.period.avgDuration' | translate }}</p>
-                    <p class="text-2xl font-bold text-[#ff8787]">{{ insights.averagePeriodDuration }} {{ 'wellness.period.days' | translate }}</p>
+                    <p class="text-sm text-gray-600 dark:text-gray-400 mb-1">{{ 'Average Period Duration' | translate }}</p>
+                    <p class="text-2xl font-bold text-red-500 dark:text-red-400">{{ insights.averagePeriodDuration }} {{ 'Period days' | translate }}</p>
                   </div>
                 }
 
                 <!-- Predicted Next Period -->
                 @if (insights.predictedNextPeriodStart !== null) {
                   <div class="bg-gradient-to-br from-[#fff5f2] to-[#fffaf8] rounded-2xl p-4 text-center">
-                    <p class="text-sm text-gray-600 mb-1">{{ 'wellness.period.nextPeriod' | translate }}</p>
-                    <p class="text-sm font-semibold text-[#ff6b6b]">{{ formatDate(insights.predictedNextPeriodStart) }}</p>
+                    <p class="text-sm text-gray-600 dark:text-gray-400 mb-1">{{ 'Predicted Next Period' | translate }}</p>
+                    <p class="text-sm font-semibold text-red-600 dark:text-red-400">{{ formatDate(insights.predictedNextPeriodStart) }}</p>
                   </div>
                 }
               </div>
 
               <!-- Fertile Window -->
               @if (insights.fertilityWindow !== null) {
-                <div class="mt-4 p-4 bg-gradient-to-r from-[#d4f5e9] to-[#c5b4e3] bg-opacity-30 rounded-2xl">
-                  <p class="text-sm font-semibold text-gray-700 mb-1">{{ 'wellness.period.fertileWindow' | translate }}</p>
-                  <p class="text-sm text-gray-700">
+                <div class="mt-4 p-4 bg-gradient-to-r from-green-50 dark:from-green-950/30 to-emerald-50 dark:to-emerald-950/30 border border-green-200 dark:border-green-800 rounded-2xl">
+                  <p class="text-sm font-semibold text-gray-700 dark:text-gray-200 mb-1">{{ 'Fertile Window' | translate }}</p>
+                  <p class="text-sm text-gray-700 dark:text-gray-300">
                     {{ formatDate(insights.fertilityWindow.start) }} - {{ formatDate(insights.fertilityWindow.end) }}
                   </p>
                 </div>
@@ -98,21 +105,21 @@ import {
           }
 
           <!-- Calendar -->
-          <div class="rounded-3xl bg-white p-6 shadow-sm border border-[rgba(255,107,107,0.1)]">
-            <div class="flex items-center justify-between mb-6">
-              <h2 class="text-lg font-semibold text-gray-900">{{ currentMonthYear() }}</h2>
-              <div class="flex gap-2">
+          <div class="rounded-3xl bg-white dark:bg-gray-900 p-6 shadow-sm border border-gray-200 dark:border-gray-800">
+            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
+              <h2 class="text-lg font-semibold text-gray-900 dark:text-white">{{ currentMonthYear() }}</h2>
+              <div class="flex gap-2 w-full sm:w-auto">
                 <button
                   (click)="previousMonth()"
-                  class="px-3 py-2 rounded-xl text-gray-600 hover:bg-[#fff5f2] transition-colors"
+                  class="flex-1 sm:flex-none px-3 py-2 rounded-xl text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
                 >
-                  ← {{ 'wellness.period.prev' | translate }}
+                  ← {{ 'previous' | translate }}
                 </button>
                 <button
                   (click)="nextMonth()"
-                  class="px-3 py-2 rounded-xl text-gray-600 hover:bg-[#fff5f2] transition-colors"
+                  class="flex-1 sm:flex-none px-3 py-2 rounded-xl text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
                 >
-                  {{ 'wellness.period.next' | translate }} →
+                  {{ 'next' | translate }} →
                 </button>
               </div>
             </div>
@@ -120,7 +127,7 @@ import {
             <!-- Weekday Headers -->
             <div class="grid grid-cols-7 gap-2 mb-4">
               @for (day of weekDays; track day) {
-                <div class="text-center text-sm font-semibold text-gray-600 py-2">{{ day }}</div>
+                <div class="text-center text-sm font-semibold text-gray-600 dark:text-gray-400 py-2">{{ day }}</div>
               }
             </div>
 
@@ -136,12 +143,12 @@ import {
                   [attr.aria-label]="'Period tracker date: ' + date.dateString"
                   class="aspect-square p-1 rounded-xl text-sm font-medium transition-all duration-200"
                   [ngClass]="{
-                    'bg-gradient-to-br from-[#ff6b6b] to-[#ff8787] text-white': date.isPeriodDay,
-                    'bg-gradient-to-br from-[#d4f5e9] to-[#b8e6d4] text-gray-900': date.isFertileDay,
-                    'bg-gradient-to-br from-[#ffcc80] to-[#ffa07a] text-white': date.isNextPeriodDay,
-                    'bg-[#fff5f2] text-gray-900 hover:bg-[#ffcccc] hover:bg-opacity-30': date.isCurrentMonth && !date.isPeriodDay && !date.isFertileDay && !date.isNextPeriodDay,
-                    'text-gray-400': !date.isCurrentMonth,
-                    'ring-2 ring-[#ff6b6b] ring-offset-2 ring-offset-white': date.isSelected
+                    'bg-gradient-to-br from-red-600 to-red-500 dark:from-red-700 dark:to-red-600 text-white': date.isPeriodDay,
+                    'bg-gradient-to-br from-green-200 dark:from-green-900/50 to-emerald-200 dark:to-emerald-900/50 text-gray-900 dark:text-white': date.isFertileDay,
+                    'bg-gradient-to-br from-yellow-400 dark:from-yellow-900/50 to-orange-300 dark:to-orange-900/50 text-white': date.isNextPeriodDay,
+                    'bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 hover:bg-gray-200 dark:hover:bg-gray-700': date.isCurrentMonth && !date.isPeriodDay && !date.isFertileDay && !date.isNextPeriodDay,
+                    'text-gray-400 dark:text-gray-600': !date.isCurrentMonth,
+                    'ring-2 ring-red-500 dark:ring-red-400 ring-offset-2 dark:ring-offset-gray-900': date.isSelected
                   }"
                 >
                   {{ date.day }}
@@ -152,16 +159,16 @@ import {
             <!-- Legend -->
             <div class="mt-6 flex flex-wrap gap-4 text-sm">
               <div class="flex items-center gap-2">
-                <div class="w-3 h-3 rounded-full bg-[#ff6b6b]"></div>
-                <span class="text-gray-700">{{ 'wellness.period.periodDay' | translate }}</span>
+                <div class="w-3 h-3 rounded-full bg-red-600 dark:bg-red-400"></div>
+                <span class="text-gray-700 dark:text-gray-300">{{ 'Period day' | translate }}</span>
               </div>
               <div class="flex items-center gap-2">
-                <div class="w-3 h-3 rounded-full bg-[#d4f5e9]"></div>
-                <span class="text-gray-700">{{ 'wellness.period.fertileDay' | translate }}</span>
+                <div class="w-3 h-3 rounded-full bg-green-300 dark:bg-green-600"></div>
+                <span class="text-gray-700 dark:text-gray-300">{{ 'Fertile day' | translate }}</span>
               </div>
               <div class="flex items-center gap-2">
-                <div class="w-3 h-3 rounded-full bg-[#ffcc80]"></div>
-                <span class="text-gray-700">{{ 'wellness.period.nextPeriodPredicted' | translate }}</span>
+                <div class="w-3 h-3 rounded-full bg-yellow-400 dark:bg-yellow-700"></div>
+                <span class="text-gray-700 dark:text-gray-300">{{ 'Predicted Next Period' | translate }}</span>
               </div>
             </div>
           </div>
@@ -169,85 +176,93 @@ import {
 
         <!-- Sidebar: Log Period (Right - 1 col on desktop) -->
         <div class="lg:col-span-1">
-          <div class="rounded-3xl bg-white p-6 shadow-sm border border-[rgba(255,107,107,0.1)] sticky top-4 space-y-4">
-            <h3 class="text-lg font-semibold text-gray-900">{{ 'wellness.period.logPeriod' | translate }}</h3>
+          <div class="rounded-3xl bg-white dark:bg-gray-900 p-6 shadow-sm border border-gray-200 dark:border-gray-800 sticky top-4 space-y-4">
+            <h3 class="text-lg font-semibold text-gray-900 dark:text-white">{{ 'Log period' | translate }}</h3>
 
             <!-- Selected Date Display -->
-            <div class="text-sm text-gray-600 p-3 bg-[#fff5f2] rounded-xl">
-              {{ 'wellness.period.selected' | translate }}: <span class="font-semibold text-[#ff6b6b]">{{ formatDate(selectedDateFormatted()) }}</span>
+            <div class="text-sm text-gray-600 dark:text-gray-400 p-3 bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-800 rounded-xl">
+              {{ 'Selected date' | translate }}: <span class="font-semibold text-red-600 dark:text-red-400">{{ formatDate(selectedDateFormatted()) }}</span>
             </div>
 
             <!-- Start Date Input -->
             <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">{{ 'wellness.period.startDate' | translate }}</label>
+                <label for="startDate" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{{ 'Start date' | translate }}</label>
               <input
+                id="startDate"
                 type="date"
-                [(ngModel)]="logForm.startDate"
-                class="w-full px-4 py-2 rounded-xl border border-[rgba(255,107,107,0.2)] focus:border-[#ff6b6b] focus:ring-2 focus:ring-[#ff6b6b] focus:ring-opacity-20 outline-none transition-all"
+                [value]="logForm().startDate"
+                (input)="updateFormField('startDate', $event)"
+                class="w-full px-4 py-2 rounded-xl border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:border-red-500 dark:focus:border-red-400 focus:ring-2 focus:ring-red-500 dark:focus:ring-red-400 focus:ring-opacity-20 outline-none transition-all"
               />
             </div>
 
             <!-- End Date Input -->
             <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">{{ 'wellness.period.endDate' | translate }} ({{ 'wellness.period.optional' | translate }})</label>
+                <label for="endDate" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{{ 'End date' | translate }} ({{ 'common.optional' | translate }})</label>
               <input
+                id="endDate"
                 type="date"
-                [(ngModel)]="logForm.endDate"
-                class="w-full px-4 py-2 rounded-xl border border-[rgba(255,107,107,0.2)] focus:border-[#ff6b6b] focus:ring-2 focus:ring-[#ff6b6b] focus:ring-opacity-20 outline-none transition-all"
+                [value]="logForm().endDate"
+                (input)="updateFormField('endDate', $event)"
+                class="w-full px-4 py-2 rounded-xl border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:border-red-500 dark:focus:border-red-400 focus:ring-2 focus:ring-red-500 dark:focus:ring-red-400 focus:ring-opacity-20 outline-none transition-all"
               />
             </div>
 
             <!-- Flow Intensity -->
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">{{ 'wellness.period.flowIntensity' | translate }}</label>
+            <fieldset>
+                <legend class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{{ 'Flow intensity' | translate }}</legend>
               <div class="flex gap-2">
                 @for (intensity of FLOW_INTENSITY_OPTIONS; track intensity) {
                   <button
-                    (click)="logForm.flowIntensity = intensity"
-                    [class.ring-2]="logForm.flowIntensity === intensity"
-                    [class.ring-[#ff6b6b]]="logForm.flowIntensity === intensity"
+                    (click)="setFlowIntensity(intensity)"
+                    [class.ring-2]="logForm().flowIntensity === intensity"
+                    [class.ring-red-500]="logForm().flowIntensity === intensity"
+                    [class.dark:ring-red-400]="logForm().flowIntensity === intensity"
                     class="flex-1 px-3 py-2 rounded-lg text-sm font-medium transition-all"
                     [ngClass]="{
-                      'bg-gradient-to-r from-[#ff6b6b] to-[#ff8787] text-white': logForm.flowIntensity === intensity,
-                      'bg-[#fff5f2] text-gray-700 hover:bg-[#ffcccc] hover:bg-opacity-20': logForm.flowIntensity !== intensity
+                      'bg-gradient-to-r from-red-600 to-red-500 dark:from-red-700 dark:to-red-600 text-white': logForm().flowIntensity === intensity,
+                      'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700': logForm().flowIntensity !== intensity
                     }"
                   >
                     {{ FLOW_INTENSITY_LABELS[intensity] }}
                   </button>
                 }
               </div>
-            </div>
+            </fieldset>
 
             <!-- Symptoms Chips -->
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">{{ 'wellness.period.symptoms' | translate }}</label>
+            <fieldset>
+                <legend class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{{ 'Symptoms' | translate }}</legend>
               <div class="flex flex-wrap gap-2">
                 @for (symptom of SYMPTOMS_OPTIONS; track symptom) {
                   <button
                     (click)="toggleSymptom(symptom)"
-                    [class.ring-2]="logForm.symptoms.includes(symptom)"
-                    [class.ring-[#ff6b6b]]="logForm.symptoms.includes(symptom)"
+                    [class.ring-2]="logForm().symptoms.includes(symptom)"
+                    [class.ring-red-500]="logForm().symptoms.includes(symptom)"
+                    [class.dark:ring-red-400]="logForm().symptoms.includes(symptom)"
                     class="px-3 py-1 rounded-full text-xs font-medium transition-all"
                     [ngClass]="{
-                      'bg-gradient-to-r from-[#ff6b6b] to-[#ff8787] text-white': logForm.symptoms.includes(symptom),
-                      'bg-[#fff5f2] text-gray-700 hover:bg-[#ffcccc] hover:bg-opacity-30': !logForm.symptoms.includes(symptom)
+                      'bg-gradient-to-r from-red-600 to-red-500 dark:from-red-700 dark:to-red-600 text-white': logForm().symptoms.includes(symptom),
+                      'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700': !logForm().symptoms.includes(symptom)
                     }"
                   >
                     {{ SYMPTOMS_LABELS[symptom] }}
                   </button>
                 }
               </div>
-            </div>
+            </fieldset>
 
             <!-- Notes -->
             <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">{{ 'wellness.period.notes' | translate }} ({{ 'wellness.period.optional' | translate }})</label>
+                <label for="notes" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{{ 'Notes' | translate }} ({{ 'common.optional' | translate }})</label>
               <textarea
-                [(ngModel)]="logForm.notes"
+                id="notes"
+                [value]="logForm().notes"
+                (input)="updateFormField('notes', $event)"
                 maxlength="500"
                 rows="3"
                 placeholder="Any additional notes..."
-                class="w-full px-4 py-2 rounded-xl border border-[rgba(255,107,107,0.2)] focus:border-[#ff6b6b] focus:ring-2 focus:ring-[#ff6b6b] focus:ring-opacity-20 outline-none transition-all resize-none"
+                class="w-full px-4 py-2 rounded-xl border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:border-red-500 dark:focus:border-red-400 focus:ring-2 focus:ring-red-500 dark:focus:ring-red-400 focus:ring-opacity-20 outline-none transition-all resize-none"
               ></textarea>
             </div>
 
@@ -257,14 +272,14 @@ import {
               [disabled]="isSaving() || !isLogFormValid()"
               class="w-full py-3 rounded-xl font-semibold text-white transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
               [ngClass]="{
-                'bg-gradient-to-r from-[#ff6b6b] to-[#ffa07a] hover:shadow-lg hover:shadow-[rgba(255,107,107,0.3)]': isLogFormValid() && !isSaving(),
-                'bg-gray-300': !isLogFormValid() || isSaving()
+                'bg-gradient-to-r from-red-600 to-red-500 dark:from-red-700 dark:to-red-600 hover:shadow-lg hover:shadow-red-500/30': isLogFormValid() && !isSaving(),
+                'bg-gray-300 dark:bg-gray-700': !isLogFormValid() || isSaving()
               }"
             >
               @if (isSaving()) {
-                {{ 'wellness.period.saving' | translate }}...
+                {{ 'Saving' | translate }}...
               } @else {
-                {{ 'wellness.period.savePeriod' | translate }}
+                {{ 'Save' | translate }}
               }
             </button>
 
@@ -275,60 +290,64 @@ import {
                 [disabled]="isSaving()"
                 class="w-full py-2 rounded-xl font-medium text-red-600 bg-red-50 hover:bg-red-100 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {{ 'wellness.period.deleteEntry' | translate }}
+                  {{ 'Delete' | translate }}
               </button>
             }
           </div>
         </div>
       </div>
 
-      <!-- Recent Logs -->
-      <div class="rounded-3xl bg-white p-6 shadow-sm border border-[rgba(255,107,107,0.1)]">
-        <h2 class="text-lg font-semibold text-gray-900 mb-4">{{ 'wellness.period.recentLogs' | translate }}</h2>
+        <!-- Recent Logs -->
+        <div class="rounded-3xl bg-white dark:bg-gray-900 p-6 shadow-sm border border-gray-200 dark:border-gray-800 max-w-7xl mx-auto w-full">
+          <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">{{ 'Recent Logs' | translate }}</h2>
 
         @if (periodLogs().length > 0) {
           <div class="space-y-3">
             @for (log of periodLogs(); track log.id) {
-              <div
+              <button
                 (click)="selectLog(log)"
-                class="p-4 rounded-2xl border border-[rgba(255,107,107,0.1)] hover:border-[#ff6b6b] hover:bg-[#fff5f2] transition-all cursor-pointer"
-                [class.border-[#ff6b6b]]="selectedLog()?.id === log.id"
-                [class.bg-[#fff5f2]]="selectedLog()?.id === log.id"
+                type="button"
+                class="w-full text-left p-4 rounded-2xl border border-gray-200 dark:border-gray-800 hover:border-red-300 dark:hover:border-red-700 hover:bg-red-50 dark:hover:bg-red-950/20 transition-all cursor-pointer bg-transparent"
+                [class.border-red-500]="selectedLog()?.id === log.id"
+                [class.dark:border-red-400]="selectedLog()?.id === log.id"
+                [class.bg-red-50]="selectedLog()?.id === log.id"
+                [class.dark:bg-red-950/30]="selectedLog()?.id === log.id"
               >
-                <div class="flex items-start justify-between mb-2">
+                <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 mb-2">
                   <div>
-                    <p class="font-semibold text-gray-900">{{ formatDate(log.startDate) }} - {{ log.endDate ? formatDate(log.endDate) : 'Ongoing' }}</p>
-                    <p class="text-sm text-gray-600">{{ 'wellness.period.intensity' | translate }}: {{ FLOW_INTENSITY_LABELS[log.flowIntensity] }}</p>
+                    <p class="font-semibold text-gray-900 dark:text-white">{{ formatDate(log.startDate) }} - {{ log.endDate ? formatDate(log.endDate) : 'Ongoing' }}</p>
+                    <p class="text-sm text-gray-600 dark:text-gray-400">{{ 'Flow intensity' | translate }}: {{ FLOW_INTENSITY_LABELS[log.flowIntensity] }}</p>
                   </div>
-                  <div class="px-3 py-1 rounded-full text-xs font-medium bg-[#fff5f2] text-[#ff6b6b]">
-                    {{ log.symptoms.length }} {{ 'wellness.period.symptoms' | translate }}
+                  <div class="px-3 py-1 rounded-full text-xs font-medium bg-red-100 dark:bg-red-950/50 text-red-700 dark:text-red-300 whitespace-nowrap">
+                      {{ log.symptoms.length }} {{ 'Symptoms' | translate }}
                   </div>
                 </div>
                 @if (log.symptoms.length > 0) {
                   <div class="flex flex-wrap gap-1">
                     @for (symptom of log.symptoms; track symptom) {
-                      <span class="inline-block px-2 py-1 rounded-lg text-xs bg-[#fff5f2] text-gray-700">
+                      <span class="inline-block px-2 py-1 rounded-lg text-xs bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300">
                         {{ SYMPTOMS_LABELS[symptom] }}
                       </span>
                     }
                   </div>
                 }
-              </div>
+              </button>
             }
           </div>
         } @else {
           <div class="text-center py-8">
-            <p class="text-gray-600 mb-4">{{ 'wellness.period.noLogs' | translate }}</p>
-            <p class="text-sm text-gray-500">{{ 'wellness.period.startLogging' | translate }}</p>
+            <p class="text-gray-600 dark:text-gray-400 mb-4">{{ 'No logs found' | translate }}</p>
+            <p class="text-sm text-gray-500 dark:text-gray-500">{{ 'Start logging' | translate }}</p>
           </div>
         }
-      </div>
+        </div>
+      </main>
     </div>
   `,
 })
 export class PeriodTrackerPageComponent {
+  private readonly themeService = inject(ThemeService);
   private readonly periodTrackerService = inject(PeriodTrackerService);
-  private readonly destroyRef = inject(DestroyRef);
 
   // Exported constants
   readonly FLOW_INTENSITY_OPTIONS = FLOW_INTENSITY_OPTIONS;
@@ -345,7 +364,7 @@ export class PeriodTrackerPageComponent {
   readonly logForm = signal({
     startDate: '',
     endDate: '',
-    flowIntensity: 'MEDIUM' as const,
+    flowIntensity: 'MEDIUM' as 'LIGHT' | 'MEDIUM' | 'HEAVY',
     symptoms: [] as string[],
     notes: '',
   });
@@ -462,6 +481,27 @@ export class PeriodTrackerPageComponent {
   readonly isLogFormValid = computed(() => {
     return this.logForm().startDate.length > 0;
   });
+
+  /**
+   * Update a form field value
+   */
+  updateFormField(field: 'startDate' | 'endDate' | 'notes', event: Event): void {
+    const target = event.target as HTMLInputElement | HTMLTextAreaElement;
+    this.logForm.update((form) => ({
+      ...form,
+      [field]: target.value,
+    }));
+  }
+
+  /**
+   * Set flow intensity
+   */
+  setFlowIntensity(intensity: 'LIGHT' | 'MEDIUM' | 'HEAVY'): void {
+    this.logForm.update((form) => ({
+      ...form,
+      flowIntensity: intensity,
+    }));
+  }
 
   constructor() {
     afterNextRender(() => {
