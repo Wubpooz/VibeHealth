@@ -5,7 +5,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { ThemeService } from '../../../core/theme/theme.service';
 import { WellnessJournalService } from '../../../core/wellness/wellness-journal.service';
 import { PageHeaderComponent } from '../../../shared/components/page-header/page-header.component';
-import { LucideNotebook } from '@lucide/angular';
+import { LucideNotebook, LucidePlus, LucideTrash } from '@lucide/angular';
 import { ToastService } from '../../../core/toast/toast.service';
 import {
   type MoodEmoji,
@@ -18,7 +18,7 @@ import {
 @Component({
   selector: 'app-wellness-journal-page',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, TranslateModule, PageHeaderComponent, LucideNotebook],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, TranslateModule, PageHeaderComponent, LucideNotebook, LucidePlus, LucideTrash],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="wellness-journal-page">
@@ -50,7 +50,7 @@ import {
           <div class="timeline-header">
             <h2 class="text-lg font-semibold dark:text-white">{{ 'WELLNESS.JOURNAL.RECENT_ENTRIES' | translate }}</h2>
             <button class="btn-new-entry" (click)="openNewEntryDialog()" [attr.aria-label]="'WELLNESS.JOURNAL.NEW_ENTRY' | translate">
-              ➕
+              <svg lucidePlus [size]="18" [strokeWidth]="2" aria-hidden="true"></svg>
             </button>
           </div>
 
@@ -88,14 +88,17 @@ import {
                       [attr.aria-label]="'WELLNESS.JOURNAL.DELETE' | translate"
                       [disabled]="journalService.journalLoading()"
                     >
-                      🗑️
+                      <svg lucideTrash [size]="18" [strokeWidth]="2" aria-hidden="true"></svg>
                     </button>
                   </div>
 
                   @if (entry.title) {
                     <h3 class="entry-title dark:text-white">{{ entry.title }}</h3>
                   }
-                  <p class="entry-preview dark:text-gray-400">{{ entry.richText | slice : 0 : 150 }}{{ entry.richText.length > 150 ? '...' : '' }}</p>
+                  <p class="entry-preview dark:text-gray-400">
+                    {{ (entry.richText || '') | slice : 0 : 150 }}
+                    {{ (entry.richText || '').length > 150 ? '...' : '' }}
+                  </p>
 
                   @if (entry.media && entry.media.length > 0) {
                     <div class="entry-media-count">
@@ -184,7 +187,8 @@ import {
           <div class="rewards-section card">
             <div class="rewards-header">
               <h3 class="section-title">{{ 'WELLNESS.JOURNAL.EARN_CARROTS' | translate }}</h3>
-              <span class="carrot-big">🥕</span>
+              <span class="carrot-big" aria-hidden="true">🥕</span>
+              <span class="sr-only">Carrot</span>
             </div>
             <ul class="rewards-list">
               <li class="reward-item">
@@ -1342,14 +1346,15 @@ export class WellnessJournalPageComponent implements OnInit {
 
   entryForm!: FormGroup;
 
-  async ngOnInit(): Promise<void> {
+  ngOnInit(): void {
     this.entryForm = this.formBuilder.group({
       title: [''],
       richText: ['', Validators.required],
     });
 
-    await this.journalService.fetchJournalEntries();
-    await this.journalService.fetchMoodLogs();
+    // Load data asynchronously; don't block change detection with a Promise return.
+    void this.journalService.fetchJournalEntries();
+    void this.journalService.fetchMoodLogs();
   }
 
   getMoodEmoji(mood: MoodEmoji): string {

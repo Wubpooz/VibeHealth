@@ -101,7 +101,7 @@ profileRoutes.post('/', async (c) => {
       currentMedications: payload.currentMedications || [],
       notificationPreferences: payload.notificationPreferences || {},
       preferredCountryCode: payload.preferredCountryCode || null,
-    } as any;
+    };
     
     // Upsert profile (create if not exists, update if exists)
     const profile = await prisma.profile.upsert({

@@ -63,7 +63,7 @@ const reminderSchema = z.object({
       break;
     case 'ONE_TIME':
       if (!hasDate) ctx.addIssue({ path: ['date'], code: z.ZodIssueCode.custom, message: 'date is required for ONE_TIME recurrence' });
-      else if (isNaN(Date.parse(data.date!))) ctx.addIssue({ path: ['date'], code: z.ZodIssueCode.custom, message: 'date must be a valid ISO date string' });
+      else if (Number.isNaN(Date.parse(data.date!))) ctx.addIssue({ path: ['date'], code: z.ZodIssueCode.custom, message: 'date must be a valid ISO date string' });
       if (hasDayOfWeek) ctx.addIssue({ path: ['dayOfWeek'], code: z.ZodIssueCode.custom, message: 'dayOfWeek must not be set for ONE_TIME recurrence' });
       if (hasDayOfMonth) ctx.addIssue({ path: ['dayOfMonth'], code: z.ZodIssueCode.custom, message: 'dayOfMonth must not be set for ONE_TIME recurrence' });
       break;
@@ -98,13 +98,17 @@ medicalRoutes.get('/openfda', async (c) => {
     };
 
     const data = (await res.json()) as OpenFdaResponse | null;
-    const drug = data?.results?.[0] as Record<string, any> | undefined;
+    const drug = data?.results?.[0];
 
-    if (!drug) {
+    if (!drug?.openfda) {
       return c.json({ error: 'Drug not found in OpenFDA', name }, 404);
     }
 
-    const openfda = drug.openfda ?? {};
+    type OpenFdaDrug = {
+      generic_name?: string[];
+      brand_name?: string[];
+    };
+    const openfda = drug.openfda as OpenFdaDrug;
     const sideEffects = Array.isArray(drug.adverse_reactions) ? drug.adverse_reactions : [];
     const interactions = Array.isArray(drug.drug_interactions) ? drug.drug_interactions : [];
     const warnings = Array.isArray(drug.warnings) ? drug.warnings : [];

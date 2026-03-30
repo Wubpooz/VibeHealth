@@ -23,7 +23,7 @@ export interface NotificationPayload {
   icon?: string;
   badge?: string;
   tag?: string;
-  data?: any;
+  data?: Record<string, unknown> | null;
 }
 
 export interface PushSubscription {
@@ -55,12 +55,21 @@ export async function sendWebPushNotification(
       return;
     }
 
-    const prefs = profile.notificationPreferences as any;
-    if (!prefs.pushSubscriptions || !Array.isArray(prefs.pushSubscriptions)) {
+    const prefs = profile.notificationPreferences as unknown;
+    if (typeof prefs !== 'object' || prefs === null) {
       return;
     }
 
-    const subscriptions: PushSubscription[] = prefs.pushSubscriptions;
+    const prefsRecord = prefs as Record<string, unknown>;
+    const pushSubscriptions = prefsRecord.pushSubscriptions;
+    if (!Array.isArray(pushSubscriptions)) {
+      return;
+    }
+
+    const subscriptions: PushSubscription[] = pushSubscriptions
+      .filter((item): item is PushSubscription =>
+        typeof item === 'object' && item !== null && 'endpoint' in item && 'keys' in item,
+      );
 
     // Send to all subscriptions
     const promises = subscriptions.map(async (subscription) => {

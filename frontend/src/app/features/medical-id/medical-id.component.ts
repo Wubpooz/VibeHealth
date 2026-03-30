@@ -1,8 +1,7 @@
 import { Component, inject, OnInit, signal, computed, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { TranslateModule } from '@ngx-translate/core';
-import { toDataURL } from 'qrcode';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -16,7 +15,6 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatGridListModule } from '@angular/material/grid-list';
-import { TranslateService } from '@ngx-translate/core';
 import { MedicalIdQrDialogComponent } from './medical-id-qr-dialog.component';
 import { MedicalIdService } from '../../core/medical-id/medical-id.service';
 import { ReferenceDataService } from '../../core/reference-data/reference-data.service';
@@ -1516,6 +1514,7 @@ export class MedicalIdComponent implements OnInit {
     }
 
     try {
+      const { toDataURL } = await import('qrcode');
       const dataUrl = await toDataURL(payload, {
         width: 280,
         margin: 1, // Remove default margin for better styling control
@@ -1901,7 +1900,7 @@ export class MedicalIdComponent implements OnInit {
   }
 
   private escapeHtml(value: string): string {
-    return value.replace(/[&<>"']/g, (char) => {
+    return value.replaceAll(/[&<>"']/g, (char) => {
       const entities: Record<string, string> = {
         '&': '&amp;',
         '<': '&lt;',

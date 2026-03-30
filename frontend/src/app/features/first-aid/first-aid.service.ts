@@ -377,7 +377,7 @@ export class FirstAidService {
     }
 
     // expected patterns: FIRST_AID.XYZ.TITLE, FIRST_AID.XYZ.STEP_1, FIRST_AID.XYZ.WARN_1 etc
-    const stepMatch = RegExp(/STEP_(\d+)/).exec(rawKey);
+    const stepMatch = new RegExp(/STEP_(\d+)/).exec(rawKey);
     if (stepMatch) {
       return `Step ${stepMatch[1]}`;
     }

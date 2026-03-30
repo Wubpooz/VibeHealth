@@ -642,8 +642,8 @@ metricsRoutes.get('/activities/week', async (c) => {
 
     return c.json({
       dailySummary,
-      totalMinutes: logs.reduce((sum: number, l: { duration: number }) => sum + l.duration, 0),
-      totalCalories: logs.reduce((sum: number, l: { calories?: number }) => sum + (l.calories || 0), 0),
+      totalMinutes: logs.reduce((sum: number, l) => sum + l.duration, 0),
+      totalCalories: logs.reduce((sum: number, l) => sum + (l.calories || 0), 0),
       activeDays: Object.values(dailySummary).filter((d) => d.count > 0).length,
     });
   } catch (error) {
@@ -786,12 +786,12 @@ metricsRoutes.get('/meals/today', async (c) => {
     });
 
     const summary = {
-      totalCalories: logs.reduce((sum: number, l: { calories?: number }) => sum + (l.calories || 0), 0),
-      totalProtein: logs.reduce((sum: number, l: { protein?: number }) => sum + (l.protein || 0), 0),
-      totalCarbs: logs.reduce((sum: number, l: { carbs?: number }) => sum + (l.carbs || 0), 0),
-      totalFat: logs.reduce((sum: number, l: { fat?: number }) => sum + (l.fat || 0), 0),
-      totalFiber: logs.reduce((sum: number, l: { fiber?: number }) => sum + (l.fiber || 0), 0),
-      totalSugar: logs.reduce((sum: number, l: { sugar?: number }) => sum + (l.sugar || 0), 0),
+      totalCalories: logs.reduce((sum: number, l) => sum + (l.calories || 0), 0),
+      totalProtein: logs.reduce((sum: number, l) => sum + (l.protein || 0), 0),
+      totalCarbs: logs.reduce((sum: number, l) => sum + (l.carbs || 0), 0),
+      totalFat: logs.reduce((sum: number, l) => sum + (l.fat || 0), 0),
+      totalFiber: logs.reduce((sum: number, l) => sum + (l.fiber || 0), 0),
+      totalSugar: logs.reduce((sum: number, l) => sum + (l.sugar || 0), 0),
       mealsCount: logs.length,
       byMealType: {} as Record<string, { count: number; calories: number }>,
     };
@@ -848,7 +848,7 @@ metricsRoutes.get('/meals/week', async (c) => {
 
     return c.json({
       dailySummary,
-      averageCalories: Math.round(logs.reduce((sum: number, l: { calories?: number }) => sum + (l.calories || 0), 0) / 7),
+      averageCalories: Math.round(logs.reduce((sum: number, l) => sum + (l.calories || 0), 0) / 7),
       totalMeals: logs.length,
     });
   } catch (error) {
@@ -1453,7 +1453,7 @@ metricsRoutes.post('/workout-plans/:planId/exercises', async (c) => {
       return c.json({ error: 'Exercise catalog entry not found' }, 404);
     }
 
-    const nextOrderIndex = (plan.exercises[plan.exercises.length - 1]?.orderIndex ?? 0) + 1;
+    const nextOrderIndex = (plan.exercises.at(-1)?.orderIndex ?? 0) + 1;
 
     await prisma.workoutPlanExercise.create({
       data: {

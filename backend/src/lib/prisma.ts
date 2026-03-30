@@ -125,7 +125,7 @@ const runtimePrisma = globalForPrisma.prisma ?? new PrismaClient({
   log: process.env.NODE_ENV === 'development' ? ['query', 'error', 'warn'] : ['error'],
 });
 
-export const prisma: any = isTest ? testPrisma : runtimePrisma;
+export const prisma = isTest ? (testPrisma as unknown as PrismaClient) : runtimePrisma;
 
 if (!isTest && process.env.NODE_ENV !== 'production') {
   globalForPrisma.prisma = runtimePrisma;

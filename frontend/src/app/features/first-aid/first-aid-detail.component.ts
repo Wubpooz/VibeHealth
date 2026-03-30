@@ -110,7 +110,8 @@ import { FirstAidCard, SeverityLevel } from './first-aid.types';
                         @if (step.warning) {
                           <div class="p-3 bg-amber-50 dark:bg-amber-900/20 rounded-xl">
                             <p class="text-sm text-amber-800 dark:text-amber-200 flex items-start gap-2">
-                              <span>⚠️</span>
+                              <span aria-hidden="true">⚠️</span>
+                              <span class="sr-only">Warning:</span>
                               {{ step.warning }}
                             </p>
                           </div>
@@ -118,7 +119,8 @@ import { FirstAidCard, SeverityLevel } from './first-aid.types';
                         @if (step.tip) {
                           <div class="p-3 bg-blue-50 dark:bg-blue-900/20 rounded-xl">
                             <p class="text-sm text-blue-800 dark:text-blue-200 flex items-start gap-2">
-                              <span>💡</span>
+                              <span aria-hidden="true">💡</span>
+                              <span class="sr-only">Tip:</span>
                               {{ step.tip }}
                             </p>
                           </div>
@@ -164,7 +166,8 @@ import { FirstAidCard, SeverityLevel } from './first-aid.types';
           @if (c.doNot?.length) {
             <div class="mb-6 p-4 bg-gray-100 dark:bg-gray-800 rounded-2xl">
               <h3 class="font-bold text-gray-800 dark:text-gray-200 mb-2 flex items-center gap-2">
-                <span>🚫</span>
+                <span aria-hidden="true">🚫</span>
+                <span class="sr-only">Do not:</span>
                 {{ 'FIRST_AID.DO_NOT' | translate }}
               </h3>
               <ul class="space-y-1">

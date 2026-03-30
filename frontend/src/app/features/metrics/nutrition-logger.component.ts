@@ -18,11 +18,11 @@ import {
   DAILY_GOALS,
   type MealType,
 } from '../../core/metrics/metrics.types';
-import { LucideLeaf } from '@lucide/angular';
+import { LucideLeaf, LucidePlus, LucideX } from '@lucide/angular';
 
 @Component({
   selector: 'app-nutrition-logger',
-  imports: [CommonModule, FormsModule, TranslateModule, BarcodeScannerComponent, AutocompleteComponent, LucideLeaf],
+  imports: [CommonModule, FormsModule, TranslateModule, BarcodeScannerComponent, AutocompleteComponent, LucideLeaf, LucidePlus, LucideX],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="nutrition-card">
@@ -44,7 +44,11 @@ import { LucideLeaf } from '@lucide/angular';
             (click)="toggleForm()"
             aria-label="Toggle add meal form"
           >
-            <span class="icon-add">{{ showForm() ? '✕' : '+' }}</span>
+            @if (showForm()) {
+              <svg lucideX [size]="20" [strokeWidth]="2" aria-hidden="true"></svg>
+            } @else {
+              <svg lucidePlus [size]="20" [strokeWidth]="2" aria-hidden="true"></svg>
+            }
           </button>
         </div>
         

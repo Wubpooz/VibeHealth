@@ -2,6 +2,7 @@ import { Hono } from 'hono';
 import { prisma } from '../lib/prisma';
 import { requireAuth } from '../middleware/auth.middleware';
 import type { Session as AuthSession, User as AuthUser } from 'better-auth';
+import type { MoodLog, JournalEntry } from '@prisma/client';
 import { z } from 'zod';
 import type { MoodEmoji } from '@prisma/client';
 
@@ -87,8 +88,8 @@ wellnessRoutes.get('/mood', async (c) => {
   const user = c.get('user');
   const limitParam = c.req.query('limit') || '30';
   const offsetParam = c.req.query('offset') || '0';
-  const limit = Math.min(parseInt(limitParam), 365); // Max 1 year
-  const offset = parseInt(offsetParam);
+  const limit = Math.min(Number.parseInt(limitParam), 365); // Max 1 year
+  const offset = Number.parseInt(offsetParam);
 
   try {
     const [moodLogs, total] = await Promise.all([
@@ -109,7 +110,7 @@ wellnessRoutes.get('/mood', async (c) => {
     return c.json(
       {
         success: true,
-        data: moodLogs.map((log: any) => ({
+        data: moodLogs.map((log: MoodLog & { journalEntries: Array<{ id: string }> }) => ({
           id: log.id,
           date: log.date,
           mood: log.mood,
@@ -215,8 +216,8 @@ wellnessRoutes.get('/journal', async (c) => {
   const user = c.get('user');
   const limitParam = c.req.query('limit') || '20';
   const offsetParam = c.req.query('offset') || '0';
-  const limit = Math.min(parseInt(limitParam), 100);
-  const offset = parseInt(offsetParam);
+  const limit = Math.min(Number.parseInt(limitParam), 100);
+  const offset = Number.parseInt(offsetParam);
 
   try {
     const [entries, total] = await Promise.all([
@@ -240,7 +241,7 @@ wellnessRoutes.get('/journal', async (c) => {
     return c.json(
       {
         success: true,
-        data: entries.map((entry: any) => ({
+        data: entries.map((entry: JournalEntry & { moodLog: { id: string; date: Date; mood: string } | null; mediaAttachments: Array<{ id: string; type: string; url: string; mimeType: string | null; durationSeconds: number | null }> }) => ({
           id: entry.id,
           title: entry.title,
           richText: entry.richText,
@@ -457,9 +458,9 @@ wellnessRoutes.patch('/journal/:id', async (c) => {
     const updatedEntry = await prisma.journalEntry.update({
       where: { id: journalId },
       data: {
-        title: validated.title !== undefined ? validated.title : undefined,
-        richText: validated.richText !== undefined ? validated.richText : undefined,
-        moodLogId: validated.moodLogId !== undefined ? validated.moodLogId : undefined,
+        title: validated.title ?? undefined,
+        richText: validated.richText ?? undefined,
+        moodLogId: validated.moodLogId === undefined ? undefined : validated.moodLogId,
       },
       include: {
         moodLog: true,
@@ -561,7 +562,7 @@ wellnessRoutes.post('/journal/:journalId/media', async (c) => {
     const attachment = await prisma.mediaAttachment.create({
       data: {
         journalEntryId: journalId,
-        type: validated.type as 'IMAGE' | 'AUDIO',
+        type: validated.type,
         url: validated.url,
         mimeType: validated.mimeType,
         durationSeconds: validated.durationSeconds || null,
