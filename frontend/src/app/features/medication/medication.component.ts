@@ -141,11 +141,14 @@ import { ReferenceDataService } from '../../core/reference-data/reference-data.s
         <h2 class="text-lg font-semibold">{{ 'MEDICATION.INTEL_TITLE' | translate }}</h2>
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
           <!-- TODO make use of autocomplete to help input medicine name with a separator between my current medications and the list of all the medications in the dropdown -->
-          <input
-            type="text"
-            [(ngModel)]="drugSearchTerm"
-            placeholder="{{ 'MEDICATION.INTEL_INPUT' | translate }}"
-            class="rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2 text-sm w-full"
+          <app-autocomplete
+            [suggestions]="drugSearchSuggestions()"
+            [selectedItems]="drugSearchSelection"
+            [placeholder]="'MEDICATION.INTEL_INPUT' | translate"
+            [allowCustom]="true"
+            [multiple]="false"
+            [sectionSeparatorIndex]="drugSuggestionSeparatorIndex()"
+            (itemsChange)="onDrugSearchSelectionChange($event)"
           />
           <button
             class="rounded-xl bg-indigo-500 text-white font-semibold px-4 py-2 hover:bg-indigo-600 transition"
@@ -564,6 +567,7 @@ export class MedicationPageComponent {
   newDuration = '';
 
   drugSearchTerm = '';
+  drugSearchSelection: string[] = [];
   drugIntel = signal<OpenFdaDrugIntel | null>(null);
   drugIntelLoading = signal(false);
   drugIntelError = signal<string | null>(null);
@@ -590,6 +594,15 @@ export class MedicationPageComponent {
 
   readonly medications = this.medicationService.medications;
   readonly medicationSuggestions = computed(() => this.referenceData.medications());
+  readonly userMedicationNames = computed(() => this.medications().map((med) => med.name));
+  readonly drugSearchSuggestions = computed(() => {
+    const userNames = this.userMedicationNames();
+    const allNames = this.medicationSuggestions();
+    const uniqueAll = [...new Set(allNames)];
+    const otherNames = uniqueAll.filter((name) => !userNames.includes(name));
+    return [...userNames, ...otherNames];
+  });
+  readonly drugSuggestionSeparatorIndex = computed(() => this.userMedicationNames().length);
   readonly quickMedicationSuggestions = computed(() => this.medicationSuggestions().slice(0, 10));
   readonly durationQuickPicks = [7, 14, 30, 60, 90] as const;
   readonly reminderFrequencyPresets = ['DAILY', 'WEEKLY', 'MONTHLY', 'ONE_TIME'] as const;
@@ -686,6 +699,11 @@ export class MedicationPageComponent {
     this.newStandardName = this.newStandardNameSelection[0] ?? '';
   }
 
+  onDrugSearchSelectionChange(items: string[]): void {
+    this.drugSearchSelection = items.slice(0, 1);
+    this.drugSearchTerm = this.drugSearchSelection[0] ?? '';
+  }
+
   setNewDuration(days: number): void {
     this.newDuration = String(days);
   }
@@ -697,11 +715,15 @@ export class MedicationPageComponent {
   }
 
   async searchDrugInfo(): Promise<void> {
-    if (!this.drugSearchTerm.trim()) {
+    const lookupName = this.drugSearchSelection[0] || this.drugSearchTerm;
+
+    if (!lookupName.trim()) {
       this.drugIntel.set(null);
       this.drugIntelError.set('Please provide a drug name to search');
       return;
     }
+
+    this.drugSearchTerm = lookupName;
 
     this.drugIntelLoading.set(true);
     this.drugIntelError.set(null);

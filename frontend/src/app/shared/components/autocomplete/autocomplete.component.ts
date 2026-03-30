@@ -119,6 +119,7 @@ interface HighlightPart {
                 class="dropdown-item"
                 [class.highlighted]="highlightedIndex() === i"
                 [class.selected]="isSelected(suggestion)"
+                [class.section-divider]="isSectionDivider(i)"
                 (click)="selectSuggestion(suggestion)"
                 (keydown.enter)="selectSuggestion(suggestion)"
                 (mouseenter)="highlightedIndex.set(i)"
@@ -390,6 +391,12 @@ interface HighlightPart {
       background: #fef2f2;
     }
 
+    .dropdown-item.section-divider {
+      border-bottom: 1px solid #e2e8f0;
+      margin-bottom: 0.25rem;
+      padding-bottom: 0.5rem;
+    }
+
     .dropdown-item.custom-entry {
       color: #f43f5e;
       border-top: 1px dashed #fecdd3;
@@ -490,6 +497,12 @@ interface HighlightPart {
       background: rgba(244, 63, 94, 0.1);
     }
 
+    :host-context(.dark) .dropdown-item.section-divider {
+      border-bottom: 1px solid rgba(148, 163, 184, 0.5);
+      margin-bottom: 0.25rem;
+      padding-bottom: 0.5rem;
+    }
+
     :host-context(.dark) .dropdown-item.selected {
       color: #fb7185;
     }
@@ -531,6 +544,7 @@ export class AutocompleteComponent implements AfterViewInit, OnDestroy, OnChange
   @Input() placeholder = 'Search...';
   @Input() allowCustom = true;
   @Input() multiple = true;
+  @Input() sectionSeparatorIndex = -1;
 
   // Outputs
   @Output() itemsChange = new EventEmitter<string[]>();
@@ -786,6 +800,10 @@ export class AutocompleteComponent implements AfterViewInit, OnDestroy, OnChange
 
   isSelected(item: string): boolean {
     return this.selectedItems.includes(item);
+  }
+
+  isSectionDivider(index: number): boolean {
+    return this.sectionSeparatorIndex > 0 && index === this.sectionSeparatorIndex - 1;
   }
 
   getHighlightParts(text: string): HighlightPart[] {
