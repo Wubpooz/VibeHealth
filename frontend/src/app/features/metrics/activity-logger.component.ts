@@ -1203,16 +1203,18 @@ export class ActivityLoggerComponent implements OnDestroy {
     const matches = this.activityCatalog().filter((activity) => activity.category === this.selectedType());
     const pool = matches.length > 0 ? matches : this.activityCatalog();
     return [...pool]
-      .sort((a, b) => b.metValue - a.metValue || a.name.localeCompare(b.name))
-      .slice(0, 24);
+      .sort((a, b) => b.metValue - a.metValue || a.name.localeCompare(b.name));
   });
 
   readonly quickActivities = [
     ACTIVITY_PRESETS.WALK,
     ACTIVITY_PRESETS.RUN,
+    ACTIVITY_PRESETS.CYCLE,
+    ACTIVITY_PRESETS.SWIM,
     ACTIVITY_PRESETS.STRENGTH,
+    ACTIVITY_PRESETS.HIIT,
   ].map((preset, i) => ({
-    type: ['WALK', 'RUN', 'STRENGTH'][i] as ActivityType,
+    type: ['WALK', 'RUN', 'CYCLE', 'SWIM', 'STRENGTH', 'HIIT'][i] as ActivityType,
     ...preset,
   }));
 
@@ -1282,7 +1284,16 @@ export class ActivityLoggerComponent implements OnDestroy {
 
   onActivityTypeChange(type: ActivityType): void {
     this.selectedType.set(type);
+
+    const bestMatch = this.bestCatalogActivityForType(type);
+    if (bestMatch) {
+      this.selectedActivitySearch.set([bestMatch.name]);
+      this.activityName.set(bestMatch.name);
+      return;
+    }
+
     this.selectedActivitySearch.set([]);
+    this.activityName.set('');
   }
 
   formatActivityTypeLabel(type: ActivityType, fallback?: string): string {
@@ -1393,28 +1404,30 @@ export class ActivityLoggerComponent implements OnDestroy {
       ? this.selectedCatalogActivity()
       : this.bestCatalogActivityForType(type);
     const preferredKey = catalogActivity?.key ?? null;
-    
-    const result = await this.metricsService.logActivity({
-      type,
-      name: `Quick ${preset.label}`,
-      duration: 30,
-      intensity: 'MODERATE',
-      activityCatalogKey: preferredKey ?? undefined,
-    });
 
-    if (result.success && result.carrots) {
-      this.rewardsService.awardCarrots(
-        result.carrots,
-        this.translate.instant('METRICS.ACTIVITY.REWARD_MSG'),
-        'activity'
-      );
+    try {
+      const result = await this.metricsService.logActivity({
+        type,
+        name: `Quick ${preset.label}`,
+        duration: 30,
+        intensity: 'MODERATE',
+        activityCatalogKey: preferredKey ?? undefined,
+      });
+
+      if (result.success && result.carrots) {
+        this.rewardsService.awardCarrots(
+          result.carrots,
+          this.translate.instant('METRICS.ACTIVITY.REWARD_MSG'),
+          'activity'
+        );
+      }
+
+      if (result.success && preferredKey) {
+        await this.profileService.updatePreferredWorkout(preferredKey);
+      }
+    } finally {
+      this.logging.set(false);
     }
-
-    if (preferredKey) {
-      await this.profileService.updatePreferredWorkout(preferredKey);
-    }
-
-    this.logging.set(false);
   }
 
   async submitForm(): Promise<void> {
@@ -1423,42 +1436,47 @@ export class ActivityLoggerComponent implements OnDestroy {
     this.logging.set(true);
     const preferredKey = this.resolvedCatalogActivity()?.key ?? null;
 
-    const result = await this.metricsService.logActivity({
-      type: this.selectedType(),
-      name: this.activityName() || `${ACTIVITY_PRESETS[this.selectedType()].label} Session`,
-      duration: this.duration(),
-      intensity: this.intensity(),
-      calories: this.estimatedCalories(),
-      distance: this.distanceKm() ?? undefined,
-      heartRateAvg: this.heartRateAvg() ?? undefined,
-      notes: this.buildCombinedNotes(),
-      activityCatalogKey: preferredKey ?? undefined,
-    });
+    try {
+      const result = await this.metricsService.logActivity({
+        type: this.selectedType(),
+        name: this.activityName() || `${ACTIVITY_PRESETS[this.selectedType()].label} Session`,
+        duration: this.duration(),
+        intensity: this.intensity(),
+        calories: this.estimatedCalories(),
+        distance: this.distanceKm() ?? undefined,
+        heartRateAvg: this.heartRateAvg() ?? undefined,
+        notes: this.buildCombinedNotes(),
+        activityCatalogKey: preferredKey ?? undefined,
+      });
 
-    if (result.success && result.carrots) {
-      this.rewardsService.awardCarrots(
-        result.carrots,
-        this.translate.instant('METRICS.ACTIVITY.REWARD_MSG'),
-        'activity'
-      );
+      if (result.success && result.carrots) {
+        this.rewardsService.awardCarrots(
+          result.carrots,
+          this.translate.instant('METRICS.ACTIVITY.REWARD_MSG'),
+          'activity'
+        );
+      }
+
+      if (result.success && preferredKey) {
+        await this.profileService.updatePreferredWorkout(preferredKey);
+      }
+
+      if (result.success) {
+        // Reset form only after successful submission
+        this.activityName.set('');
+        this.duration.set(30);
+        this.intensity.set('MODERATE');
+        this.elapsedSeconds.set(30 * 60);
+        this.selectedActivitySearch.set([]);
+        this.location.set('');
+        this.distanceKm.set(null);
+        this.heartRateAvg.set(null);
+        this.sessionNotes.set('');
+        this.showForm.set(false);
+      }
+    } finally {
+      this.logging.set(false);
     }
-
-    if (preferredKey) {
-      await this.profileService.updatePreferredWorkout(preferredKey);
-    }
-
-    // Reset form
-    this.activityName.set('');
-    this.duration.set(30);
-    this.intensity.set('MODERATE');
-    this.elapsedSeconds.set(30 * 60);
-    this.selectedActivitySearch.set([]);
-    this.location.set('');
-    this.distanceKm.set(null);
-    this.heartRateAvg.set(null);
-    this.sessionNotes.set('');
-    this.showForm.set(false);
-    this.logging.set(false);
   }
 
   private parseOptionalNumber(value: NumericInput): number | null {

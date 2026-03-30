@@ -20,6 +20,9 @@ import {
 } from '../../core/metrics/metrics.types';
 import { LucideLeaf, LucidePlus, LucideX } from '@lucide/angular';
 
+type NumericInput = number | string | null;
+type OptionalNumericInput = NumericInput | undefined;
+
 @Component({
   selector: 'app-nutrition-logger',
   imports: [CommonModule, FormsModule, TranslateModule, BarcodeScannerComponent, AutocompleteComponent, LucideLeaf, LucidePlus, LucideX],
@@ -157,7 +160,7 @@ import { LucideLeaf, LucidePlus, LucideX } from '@lucide/angular';
                 type="button"
                 class="tab-btn"
                 [class.active]="!useQuickEntry()"
-                (click)="useQuickEntry.set(false)"
+                (click)="setEntryMode(false)"
               >
                 {{ 'METRICS.NUTRITION.QUICK_SEARCH' | translate }}
               </button>
@@ -165,7 +168,7 @@ import { LucideLeaf, LucidePlus, LucideX } from '@lucide/angular';
                 type="button"
                 class="tab-btn"
                 [class.active]="useQuickEntry()"
-                (click)="useQuickEntry.set(true)"
+                (click)="setEntryMode(true)"
               >
                 {{ 'METRICS.NUTRITION.MANUAL_ENTRY' | translate }}
               </button>
@@ -219,7 +222,6 @@ import { LucideLeaf, LucidePlus, LucideX } from '@lucide/angular';
                   (ngModelChange)="mealName.set($event)"
                   placeholder="e.g. Grilled Chicken Salad"
                   required
-                  [value]="mealName()"
                 />
               </div>
             }
@@ -238,7 +240,7 @@ import { LucideLeaf, LucidePlus, LucideX } from '@lucide/angular';
                   id="calories"
                   class="form-input"
                   [ngModel]="calories()"
-                  (ngModelChange)="calories.set($event)"
+                  (ngModelChange)="onCaloriesChange($event)"
                   min="0"
                   max="5000"
                   placeholder="0"
@@ -270,7 +272,7 @@ import { LucideLeaf, LucidePlus, LucideX } from '@lucide/angular';
                       id="proteinInput"
                       class="form-input"
                       [ngModel]="protein()"
-                      (ngModelChange)="protein.set($event)"
+                      (ngModelChange)="onProteinChange($event)"
                       min="0"
                       max="200"
                       placeholder="0"
@@ -286,7 +288,7 @@ import { LucideLeaf, LucidePlus, LucideX } from '@lucide/angular';
                       id="carbsInput"
                       class="form-input"
                       [ngModel]="carbs()"
-                      (ngModelChange)="carbs.set($event)"
+                      (ngModelChange)="onCarbsChange($event)"
                       min="0"
                       max="500"
                       placeholder="0"
@@ -302,7 +304,7 @@ import { LucideLeaf, LucidePlus, LucideX } from '@lucide/angular';
                       id="fatInput"
                       class="form-input"
                       [ngModel]="fat()"
-                      (ngModelChange)="fat.set($event)"
+                      (ngModelChange)="onFatChange($event)"
                       min="0"
                       max="200"
                       placeholder="0"
@@ -1323,9 +1325,12 @@ export class NutritionLoggerComponent {
   }));
 
   readonly canSubmit = computed(() => {
-    const hasMealName = !this.useQuickEntry() || this.mealName().trim().length > 0;
-    const hasCalories = this.calories() !== null && this.calories()! > 0;
-    return this.selectedMealType() && (this.selectedCatalogMeal() || hasMealName) && hasCalories;
+    const hasMealName = this.mealName().trim().length > 0;
+    const hasSelectedCatalogMeal = Boolean(this.selectedCatalogMeal());
+    const currentCalories = this.calories();
+    const hasCalories = typeof currentCalories === 'number' && currentCalories > 0;
+
+    return this.selectedMealType() && (hasSelectedCatalogMeal || hasMealName) && hasCalories;
   });
 
   constructor() {
@@ -1357,28 +1362,34 @@ export class NutritionLoggerComponent {
   selectMealType(type: MealType): void {
     this.selectedMealType.set(type);
     this.showForm.set(true);
-    this.useQuickEntry.set(false);
+    this.setEntryMode(false);
 
     // Avoid empty form fields after tapping a meal type quick action by seeding values
     const catalogMatch = this.mealCatalog().find((meal) => meal.mealType === type);
     if (catalogMatch) {
+      this.selectedMealSearch.set([catalogMatch.name]);
       this.mealName.set(catalogMatch.name);
-      this.calories.set(catalogMatch.calories ?? this.calories() ?? 0);
-      this.protein.set(catalogMatch.protein ?? this.protein() ?? null);
-      this.carbs.set(catalogMatch.carbs ?? this.carbs() ?? null);
-      this.fat.set(catalogMatch.fat ?? this.fat() ?? null);
+      this.onCaloriesChange(catalogMatch.calories);
+      this.onProteinChange(catalogMatch.protein ?? null);
+      this.onCarbsChange(catalogMatch.carbs ?? null);
+      this.onFatChange(catalogMatch.fat ?? null);
+      return;
     }
+
+    this.selectedMealSearch.set([]);
+    this.mealName.set('');
   }
 
   onFoodScanned(food: ScannedFood): void {
     // Pre-fill form with scanned data
     this.mealName.set(food.brand ? `${food.brand} - ${food.name}` : food.name);
-    this.calories.set(food.calories);
-    this.protein.set(food.protein);
-    this.carbs.set(food.carbs);
-    this.fat.set(food.fat);
+    this.onCaloriesChange(food.calories);
+    this.onProteinChange(food.protein);
+    this.onCarbsChange(food.carbs);
+    this.onFatChange(food.fat);
+    this.selectedMealSearch.set([]);
     this.showMacros.set(true); // Expand macros section
-    this.useQuickEntry.set(false);
+    this.setEntryMode(true);
   }
 
   onMealSearchChange(items: string[]): void {
@@ -1391,39 +1402,118 @@ export class NutritionLoggerComponent {
 
     this.selectedMealType.set(catalogItem.mealType);
     this.mealName.set(catalogItem.name);
-    this.calories.set(catalogItem.calories);
-    this.protein.set(catalogItem.protein ?? null);
-    this.carbs.set(catalogItem.carbs ?? null);
-    this.fat.set(catalogItem.fat ?? null);
-    this.useQuickEntry.set(false);
+    this.onCaloriesChange(catalogItem.calories);
+    this.onProteinChange(catalogItem.protein ?? null);
+    this.onCarbsChange(catalogItem.carbs ?? null);
+    this.onFatChange(catalogItem.fat ?? null);
+    this.setEntryMode(false);
+  }
+
+  setEntryMode(manual: boolean): void {
+    this.useQuickEntry.set(manual);
+
+    if (manual) {
+      this.selectedMealSearch.set([]);
+      return;
+    }
+
+    if (this.selectedCatalogMeal()) {
+      return;
+    }
+
+    const trimmedName = this.mealName().trim();
+    if (trimmedName) {
+      const exactMatch = this.mealCatalog().find((meal) => meal.name === trimmedName);
+      if (exactMatch) {
+        this.selectedMealSearch.set([exactMatch.name]);
+      }
+      return;
+    }
+
+    const mealTypeMatch = this.mealCatalog().find((meal) => meal.mealType === this.selectedMealType());
+    if (mealTypeMatch) {
+      this.selectedMealSearch.set([mealTypeMatch.name]);
+      this.mealName.set(mealTypeMatch.name);
+      this.onCaloriesChange(mealTypeMatch.calories);
+      this.onProteinChange(mealTypeMatch.protein ?? null);
+      this.onCarbsChange(mealTypeMatch.carbs ?? null);
+      this.onFatChange(mealTypeMatch.fat ?? null);
+    }
+  }
+
+  onCaloriesChange(value: NumericInput): void {
+    this.calories.set(this.parsePositiveNumber(value, 5000, true));
+  }
+
+  onProteinChange(value: NumericInput): void {
+    this.protein.set(this.parsePositiveNumber(value, 200, false));
+  }
+
+  onCarbsChange(value: NumericInput): void {
+    this.carbs.set(this.parsePositiveNumber(value, 500, false));
+  }
+
+  onFatChange(value: NumericInput): void {
+    this.fat.set(this.parsePositiveNumber(value, 200, false));
   }
 
   async submitForm(): Promise<void> {
     if (!this.canSubmit()) return;
 
     this.logging.set(true);
+    const catalogMeal = this.selectedCatalogMeal();
+    const resolvedName = catalogMeal?.name ?? this.mealName().trim();
+    const mealName = resolvedName.length > 0
+      ? resolvedName
+      : this.getMealTypeLabel(this.selectedMealType());
 
-    const result = await this.metricsService.logMeal({
-      mealType: this.selectedMealType(),
-      name: this.mealName(),
-      calories: this.calories() ?? undefined,
-      protein: this.protein() ?? undefined,
-      carbs: this.carbs() ?? undefined,
-      fat: this.fat() ?? undefined,
-      mealCatalogKey: this.selectedCatalogMeal()?.key,
-    });
+    try {
+      const result = await this.metricsService.logMeal({
+        mealType: this.selectedMealType(),
+        name: mealName,
+        calories: this.calories() ?? undefined,
+        protein: this.protein() ?? undefined,
+        carbs: this.carbs() ?? undefined,
+        fat: this.fat() ?? undefined,
+        mealCatalogKey: catalogMeal?.key,
+      });
 
-    if (result.success && result.carrots) {
-      this.rewardsService.awardCarrots(
-        result.carrots,
-        this.translate.instant('METRICS.NUTRITION.REWARD_MSG'),
-        'nutrition'
-      );
+      if (result.success && result.carrots) {
+        this.rewardsService.awardCarrots(
+          result.carrots,
+          this.translate.instant('METRICS.NUTRITION.REWARD_MSG'),
+          'nutrition'
+        );
+      }
+
+      if (result.success) {
+        this.resetForm();
+      }
+    } finally {
+      this.logging.set(false);
+    }
+  }
+
+  private parsePositiveNumber(
+    value: OptionalNumericInput,
+    max: number,
+    roundToInt: boolean,
+  ): number | null {
+    if (value === null || value === undefined || value === '') {
+      return null;
     }
 
-    // Reset form
-    this.resetForm();
-    this.logging.set(false);
+    const parsed = Number(value);
+    if (!Number.isFinite(parsed) || parsed <= 0) {
+      return null;
+    }
+
+    const capped = Math.min(parsed, max);
+    if (roundToInt) {
+      return Math.round(capped);
+    }
+
+    return Math.round(capped * 10) / 10;
   }
 
   private resetForm(): void {
