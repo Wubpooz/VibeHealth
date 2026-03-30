@@ -8,7 +8,7 @@ import { BackButtonComponent } from '../back-button/back-button.component';
   imports: [CommonModule, BackButtonComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <header class="sticky top-0 z-40 bg-inherit px-4 sm:px-6 lg:px-8 py-4 shadow-sm">
+    <header class="relative bg-inherit px-4 sm:px-6 lg:px-8 py-4 shadow-sm">
       <div class="max-w-6xl mx-auto">
         <div class="flex items-center justify-between gap-4">
           <div class="shrink-0">
