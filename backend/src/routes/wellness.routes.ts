@@ -381,13 +381,57 @@ wellnessRoutes.post('/journal', async (c) => {
       },
     });
 
-    // TODO: Process and store media files
-    // For now, files are extracted but not persisted
+    // Process and store media files
     const media = body.media as File[] | undefined;
     if (media && Array.isArray(media) && media.length > 0) {
-      console.log(`[Journal] Received ${media.length} file(s) for entry ${entry.id}`);
-      // In future: validate file types, upload to blob storage, create MediaAttachment records
+      console.log(`[Journal] Processing ${media.length} file(s) for entry ${entry.id}`);
+      
+      for (const file of media) {
+        try {
+          // Validate file type (images and audio only)
+          const isValidImage = file.type.startsWith('image/');
+          const isValidAudio = file.type.startsWith('audio/');
+          
+          if (!isValidImage && !isValidAudio) {
+            console.warn(`[Journal] Skipping invalid file type: ${file.type}`);
+            continue;
+          }
+
+          // Convert file to base64
+          const buffer = await file.arrayBuffer();
+          const base64Data = Buffer.from(buffer).toString('base64');
+          const dataUrl = `data:${file.type};base64,${base64Data}`;
+
+          // Determine media type
+          const mediaType = isValidImage ? 'IMAGE' : 'AUDIO';
+
+          // Create media attachment record
+          await prisma.mediaAttachment.create({
+            data: {
+              journalEntryId: entry.id,
+              type: mediaType,
+              url: dataUrl,
+              mimeType: file.type,
+              durationSeconds: null, // TODO: Extract duration for audio files
+            },
+          });
+
+          console.log(`[Journal] Created media attachment for entry ${entry.id}: ${file.name} (${mediaType})`);
+        } catch (fileError) {
+          console.error(`[Journal] Error processing file ${file.name}:`, fileError);
+          // Continue with next file if one fails
+        }
+      }
     }
+
+    // Fetch the entry again with updated media attachments
+    const completedEntry = await prisma.journalEntry.findUnique({
+      where: { id: entry.id },
+      include: {
+        moodLog: true,
+        mediaAttachments: true,
+      },
+    });
 
     // Award carrots for creating journal entry
     await awardCarrots(user.id, 3);
@@ -396,13 +440,13 @@ wellnessRoutes.post('/journal', async (c) => {
       {
         success: true,
         data: {
-          id: entry.id,
-          title: entry.title,
-          richText: entry.richText,
-          moodLog: entry.moodLog,
-          mediaAttachments: entry.mediaAttachments,
-          createdAt: entry.createdAt,
-          updatedAt: entry.updatedAt,
+          id: completedEntry!.id,
+          title: completedEntry!.title,
+          richText: completedEntry!.richText,
+          moodLog: completedEntry!.moodLog,
+          mediaAttachments: completedEntry!.mediaAttachments || [],
+          createdAt: completedEntry!.createdAt,
+          updatedAt: completedEntry!.updatedAt,
         },
       },
       { status: 201 },
