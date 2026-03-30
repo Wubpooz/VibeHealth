@@ -18,240 +18,723 @@ import { animate } from 'motion/mini';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MetricsService } from '../../core/metrics/metrics.service';
 import type {
+  ExerciseCategory,
   WorkoutExerciseSuggestion,
   WorkoutPlan,
   WorkoutPlanExercise,
   HealthSyncProvider,
 } from '../../core/metrics/metrics.types';
-import { BackButtonComponent } from '../../shared/components/back-button/back-button.component';
+import { PageHeaderComponent } from '../../shared/components/page-header/page-header.component';
 import { ToastService } from '../../core/toast/toast.service';
 
 @Component({
   selector: 'app-workouts-page',
-  imports: [CommonModule, TranslateModule, FormsModule, BackButtonComponent],
+  imports: [CommonModule, TranslateModule, FormsModule, PageHeaderComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="min-h-screen bg-[#fdf8f8] dark:bg-gray-950 px-4 sm:px-6 lg:px-8 py-8 pb-24 space-y-6">
-      <div class="flex items-center justify-between">
-        <app-back-button [label]="'common.back_to_dashboard' | translate" [showLabel]="true" />
-        <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white font-heading">
-          {{ 'WORKOUTS.TITLE' | translate }}
-        </h1>
-      </div>
+    <div class="workouts-shell min-h-screen">
+      <app-page-header
+        [title]="'WORKOUTS.TITLE' | translate"
+        [subtitle]="'WORKOUTS.SUBTITLE' | translate"
+        [backLabel]="'common.back_to_dashboard' | translate"
+        [showBackLabel]="true"
+      >
+        <div pageHeaderIcon class="w-12 h-12 rounded-2xl bg-gradient-to-br from-primary-500 to-cyan-600 flex items-center justify-center shadow-lg shadow-primary-500/20">
+          <span class="dark:text-white text-xl">🏋️‍♀️</span>
+        </div>
 
-      <section class="bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-3xl p-5 sm:p-6 space-y-3">
-        <p class="text-sm text-gray-500 dark:text-gray-400">{{ 'WORKOUTS.SUBTITLE' | translate }}</p>
-        <div class="flex flex-wrap gap-3 text-sm">
-          <span class="px-3 py-1 rounded-full bg-primary-50 text-primary-700 dark:bg-primary-900/30 dark:text-primary-300">
-            {{ 'WORKOUTS.DIFFICULTY.LABEL' | translate }}:
-            @if (workoutSuggestions()?.difficulty) {
-              {{ ('WORKOUTS.DIFFICULTY.' + workoutSuggestions()!.difficulty) | translate }}
-            } @else {
-              -
-            }
-          </span>
-          @for (category of workoutSuggestions()?.categories ?? []; track category) {
-            <span class="px-3 py-1 rounded-full bg-orange-50 text-orange-700 dark:bg-orange-900/30 dark:text-orange-300">
-              {{ ('WORKOUTS.CATEGORY.' + category) | translate }}
+        <div pageHeaderRight class="workout-chip-wrap">
+            <span class="workout-chip">
+              {{ 'WORKOUTS.DIFFICULTY.LABEL' | translate }}:
+              @if (workoutSuggestions()?.difficulty) {
+                {{ ('WORKOUTS.DIFFICULTY.' + workoutSuggestions()!.difficulty) | translate }}
+              } @else {
+                -
+              }
             </span>
-          }
-        </div>
-      </section>
-
-      <section class="bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-3xl p-5 sm:p-6 space-y-4">
-        <div class="flex flex-col sm:flex-row sm:items-end gap-3">
-          <label class="flex-1">
-            <span class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{{ 'WORKOUTS.NEW_PLAN_NAME' | translate }}</span>
-            <input
-              id="workout-plan-name"
-              type="text"
-              [ngModel]="newPlanName()"
-              (ngModelChange)="newPlanName.set($event)"
-              class="w-full rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 px-4 py-2.5 text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-300"
-              [placeholder]="'WORKOUTS.NEW_PLAN_PLACEHOLDER' | translate"
-            />
-          </label>
-          <button
-            type="button"
-            (click)="createPlan()"
-            class="rounded-full bg-gradient-to-r from-primary-500 to-orange-500 text-white font-semibold px-5 py-2.5 shadow-md hover:shadow-lg transition-all"
-          >
-            {{ 'WORKOUTS.CREATE_PLAN' | translate }}
-          </button>
-        </div>
-      </section>
-
-      <section class="bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-3xl p-5 sm:p-6 space-y-4">
-        <div class="flex items-center justify-between gap-3">
-          <h2 class="text-lg font-bold text-gray-900 dark:text-white">{{ 'WORKOUTS.SUGGESTED_EXERCISES' | translate }}</h2>
-          @if (!activePlan()) {
-            <span class="text-xs font-semibold px-3 py-1 rounded-full bg-orange-50 text-orange-700 dark:bg-orange-900/30 dark:text-orange-300">
-              {{ 'WORKOUTS.CREATE_PLAN_FIRST' | translate }}
-            </span>
-          }
-        </div>
-        @if (suggestedExercises().length > 0) {
-          <div class="grid grid-cols-1 lg:grid-cols-2 gap-3">
-            @for (exercise of suggestedExercises(); track exercise.id) {
-              <article class="rounded-2xl border border-gray-100 dark:border-gray-700 p-4 flex flex-col gap-3">
-                <div>
-                  <p class="font-semibold text-gray-900 dark:text-white">{{ exercise.name }}</p>
-                  <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                    {{ ('WORKOUTS.CATEGORY.' + exercise.category) | translate }} •
-                    {{ exercise.defaultSets }} sets •
-                    {{ exercise.defaultRepsMin }}-{{ exercise.defaultRepsMax }} reps
-                  </p>
-                </div>
-                <button
-                  type="button"
-                  class="self-start rounded-full px-4 py-2 text-sm font-semibold"
-                  [class.bg-primary-500]="!isExerciseInActivePlan(exercise.id)"
-                  [class.text-white]="!isExerciseInActivePlan(exercise.id)"
-                  [class.bg-gray-200]="isExerciseInActivePlan(exercise.id)"
-                  [class.text-gray-600]="isExerciseInActivePlan(exercise.id)"
-                  [disabled]="planMutationLoading() || !activePlan() || isExerciseInActivePlan(exercise.id)"
-                  (click)="addExerciseToPlan(exercise)"
-                >
-                  {{ isExerciseInActivePlan(exercise.id) ? ('WORKOUTS.ALREADY_IN_PLAN' | translate) : ('WORKOUTS.ADD_TO_PLAN' | translate) }}
-                </button>
-              </article>
+            @for (category of workoutSuggestions()?.categories ?? []; track category) {
+              <span class="workout-chip workout-chip-muted">
+                {{ ('WORKOUTS.CATEGORY.' + category) | translate }}
+              </span>
             }
           </div>
-        } @else {
-          <p class="text-sm text-gray-500 dark:text-gray-400">{{ 'WORKOUTS.NO_SUGGESTIONS' | translate }}</p>
-        }
-      </section>
+      </app-page-header>
 
-      @if (activePlanExercises().length > 0) {
-        <section class="bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-3xl p-5 sm:p-6 space-y-4">
-          <h2 class="text-lg font-bold text-gray-900 dark:text-white">{{ 'WORKOUTS.ACTIVE_PLAN' | translate }}</h2>
-          <div class="grid gap-3">
-            @for (exercise of activePlanExercises(); track exercise.id; let isFirst = $first; let isLast = $last) {
-              <div #exerciseCard class="rounded-2xl border border-gray-100 dark:border-gray-700 p-4">
-                <div class="flex items-start justify-between gap-4">
-                  <div>
-                    <p class="font-semibold text-gray-900 dark:text-white">{{ exercise.exercise.name }}</p>
-                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                      {{ exercise.sets }} sets • {{ exercise.repsMin }}-{{ exercise.repsMax }} reps • {{ exercise.restSeconds }}s rest
+      <div class="px-4 sm:px-6 lg:px-8 py-8 pb-24">
+        <div class="mx-auto max-w-6xl space-y-6">
+
+        <section class="workout-surface">
+          <div class="flex items-center justify-between gap-3">
+            <h2 class="text-xl font-bold dark:text-white">{{ 'WORKOUTS.SUGGESTED_EXERCISES' | translate }}</h2>
+            <span class="workout-pill">{{ suggestedExercises().length }}</span>
+          </div>
+
+          @if (!activePlan()) {
+            <p class="mt-2 text-sm text-orange-700 dark:text-orange-300">{{ 'WORKOUTS.CREATE_PLAN_FIRST' | translate }}</p>
+          }
+
+          @if (suggestedExercises().length > 0) {
+            <div class="mt-4 workout-type-grid">
+              @for (exercise of suggestedExercises(); track exercise.id) {
+                <article class="workout-type-card" [class.workout-type-card-selected]="isExerciseInActivePlan(exercise.id)">
+                  <div class="flex items-start justify-between gap-3">
+                    <span class="workout-type-icon">{{ categoryIcon(exercise.category) }}</span>
+                    <span class="workout-type-meta">
+                      {{ ('WORKOUTS.CATEGORY.' + exercise.category) | translate }}
+                    </span>
+                  </div>
+                  <p class="mt-3 text-sm font-semibold dark:text-white leading-snug">{{ exercise.name }}</p>
+                  <p class="mt-1 text-xs dark:text-white/65">
+                    {{ exercise.defaultSets }} sets • {{ exercise.defaultRepsMin }}-{{ exercise.defaultRepsMax }} reps
+                  </p>
+                  <button
+                    type="button"
+                    class="mt-3 workout-action-button"
+                    [class.workout-action-button-disabled]="isExerciseInActivePlan(exercise.id)"
+                    [disabled]="planMutationLoading() || !activePlan() || isExerciseInActivePlan(exercise.id)"
+                    (click)="addExerciseToPlan(exercise)"
+                  >
+                    {{ isExerciseInActivePlan(exercise.id) ? ('WORKOUTS.ALREADY_IN_PLAN' | translate) : ('WORKOUTS.ADD_TO_PLAN' | translate) }}
+                  </button>
+                </article>
+              }
+            </div>
+          } @else {
+            <p class="mt-3 text-sm dark:text-white/70">{{ 'WORKOUTS.NO_SUGGESTIONS' | translate }}</p>
+          }
+        </section>
+
+        <section class="workout-surface space-y-4">
+          <div class="flex items-center justify-between gap-3">
+            <h2 class="text-xl font-bold dark:text-white">{{ 'WORKOUTS.ACTIVE_PLAN' | translate }}</h2>
+            <span class="workout-pill">{{ workoutPlans().length }}</span>
+          </div>
+
+          <div class="flex flex-col sm:flex-row sm:items-end gap-3">
+            <label class="flex-1">
+              <span class="block text-sm font-medium dark:text-white/90 mb-1">{{ 'WORKOUTS.NEW_PLAN_NAME' | translate }}</span>
+              <input
+                id="workout-plan-name"
+                type="text"
+                [ngModel]="newPlanName()"
+                (ngModelChange)="newPlanName.set($event)"
+                class="workout-input"
+                [placeholder]="'WORKOUTS.NEW_PLAN_PLACEHOLDER' | translate"
+              />
+            </label>
+            <button
+              type="button"
+              (click)="createPlan()"
+              class="workout-create-button"
+            >
+              {{ 'WORKOUTS.CREATE_PLAN' | translate }}
+            </button>
+          </div>
+
+          @if (workoutPlans().length > 0) {
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-3">
+              @for (plan of workoutPlans(); track plan.id; let i = $index) {
+                <article class="plan-card" [style.background]="planGradient(i)">
+                  <div class="plan-card-overlay"></div>
+                  <div class="relative z-[1] space-y-1">
+                    <p class="text-lg font-bold text-white">{{ plan.name }}</p>
+                    <p class="text-xs text-white/85">
+                      {{ ('WORKOUTS.DIFFICULTY.' + plan.difficulty) | translate }}
+                    </p>
+                    <p class="text-sm text-white/90">
+                      {{ plan.exercises.length }} • {{ estimatedDurationMinutes(plan.exercises) }} min
                     </p>
                   </div>
-                  <div class="flex items-center gap-2">
+                </article>
+              }
+            </div>
+          }
+        </section>
+
+        @if (activePlanExercises().length > 0) {
+          <section class="workout-surface space-y-4">
+            <h2 class="text-xl font-bold dark:text-white">{{ 'WORKOUTS.LOG_SET' | translate }}</h2>
+
+            <div class="grid gap-3">
+              @for (exercise of activePlanExercises(); track exercise.id; let isFirst = $first; let isLast = $last) {
+                <article #exerciseCard class="queue-card">
+                  <div class="flex flex-wrap items-start justify-between gap-3">
+                    <div class="flex items-start gap-3">
+                      <span class="queue-icon">{{ categoryIcon(exercise.exercise.category) }}</span>
+                      <div>
+                        <p class="font-semibold dark:text-white">{{ exercise.exercise.name }}</p>
+                        <p class="text-xs dark:text-white/65 mt-1">
+                          {{ exercise.sets }} sets • {{ exercise.repsMin }}-{{ exercise.repsMax }} reps • {{ exercise.restSeconds }}s rest
+                        </p>
+                      </div>
+                    </div>
+
+                    <button
+                      type="button"
+                      class="queue-play-button"
+                      [disabled]="planMutationLoading()"
+                      (click)="logSet(exercise)"
+                    >
+                      ▶
+                    </button>
+                  </div>
+
+                  <div class="mt-3 flex flex-wrap items-center gap-2">
                     <input
                       type="number"
                       min="1"
                       [attr.aria-label]="'WORKOUTS.REPS_INPUT_ARIA' | translate:{ exercise: exercise.exercise.name }"
-                      class="w-20 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 px-3 py-1.5 text-sm text-gray-900 dark:text-white"
+                      class="queue-input"
                       [ngModel]="repsByExercise()[exercise.id] || exercise.repsMin"
                       (ngModelChange)="setReps(exercise.id, $event)"
                     />
+
                     <button
                       type="button"
-                      class="rounded-full bg-primary-500 text-white text-sm font-semibold px-4 py-2"
-                      [disabled]="planMutationLoading()"
-                      (click)="logSet(exercise)"
+                      class="queue-control"
+                      [disabled]="isFirst || planMutationLoading()"
+                      (click)="moveExercise(exercise.id, 'up')"
                     >
-                      {{ 'WORKOUTS.LOG_SET' | translate }}
+                      {{ 'WORKOUTS.MOVE_UP' | translate }}
+                    </button>
+                    <button
+                      type="button"
+                      class="queue-control"
+                      [disabled]="isLast || planMutationLoading()"
+                      (click)="moveExercise(exercise.id, 'down')"
+                    >
+                      {{ 'WORKOUTS.MOVE_DOWN' | translate }}
+                    </button>
+                    <button
+                      type="button"
+                      class="queue-control queue-control-danger"
+                      [disabled]="planMutationLoading()"
+                      (click)="removeExerciseFromPlan(exercise)"
+                    >
+                      {{ 'WORKOUTS.REMOVE_EXERCISE' | translate }}
                     </button>
                   </div>
-                </div>
-                <div class="mt-3 flex flex-wrap gap-2">
-                  <button
-                    type="button"
-                    class="rounded-full border border-gray-200 dark:border-gray-600 px-3 py-1.5 text-xs font-semibold text-gray-700 dark:text-gray-200"
-                    [disabled]="isFirst || planMutationLoading()"
-                    (click)="moveExercise(exercise.id, 'up')"
-                  >
-                    {{ 'WORKOUTS.MOVE_UP' | translate }}
-                  </button>
-                  <button
-                    type="button"
-                    class="rounded-full border border-gray-200 dark:border-gray-600 px-3 py-1.5 text-xs font-semibold text-gray-700 dark:text-gray-200"
-                    [disabled]="isLast || planMutationLoading()"
-                    (click)="moveExercise(exercise.id, 'down')"
-                  >
-                    {{ 'WORKOUTS.MOVE_DOWN' | translate }}
-                  </button>
-                  <button
-                    type="button"
-                    class="rounded-full border border-red-200 dark:border-red-900/50 px-3 py-1.5 text-xs font-semibold text-red-600 dark:text-red-300"
-                    [disabled]="planMutationLoading()"
-                    (click)="removeExerciseFromPlan(exercise)"
-                  >
-                    {{ 'WORKOUTS.REMOVE_EXERCISE' | translate }}
-                  </button>
-                </div>
-                @if (restTimers()[exercise.id] && restTimers()[exercise.id]! > 0) {
-                  <p class="mt-2 text-xs text-orange-600 dark:text-orange-300">
-                    {{ 'WORKOUTS.REST_TIMER' | translate }}: {{ restTimers()[exercise.id] }}s
-                  </p>
+
+                  @if (restTimers()[exercise.id] && restTimers()[exercise.id]! > 0) {
+                    <p class="mt-2 text-xs font-semibold text-orange-300">
+                      {{ 'WORKOUTS.REST_TIMER' | translate }}: {{ restTimers()[exercise.id] }}s
+                    </p>
+                  }
+                </article>
+              }
+            </div>
+          </section>
+        }
+
+        <section class="workout-surface">
+          <h2 class="text-xl font-bold dark:text-white">{{ 'WORKOUTS.SUMMARY_TITLE' | translate }}</h2>
+          <p class="text-sm dark:text-white/70">{{ 'WORKOUTS.SUMMARY_SUBTITLE' | translate }}</p>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-3">
+            <div class="summary-card summary-card-green">
+              <p class="text-xs uppercase tracking-wide text-orange-700 dark:text-orange-200">{{ 'WORKOUTS.CALORIES_TODAY' | translate }}</p>
+              <p class="mt-1 text-2xl font-bold dark:text-white">{{ workoutSummary().calories }} kcal</p>
+            </div>
+            <div class="summary-card summary-card-purple">
+              <p class="text-xs uppercase tracking-wide text-orange-600 dark:text-orange-200">{{ 'WORKOUTS.HEART_RATE_LAST' | translate }}</p>
+              <p class="mt-1 text-2xl font-bold dark:text-white">
+                @if (workoutSummary().heartRate !== null) {
+                  {{ workoutSummary().heartRate }} bpm
+                } @else {
+                  {{ 'WORKOUTS.NO_HEART_RATE' | translate }}
                 }
-              </div>
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <section class="workout-surface">
+          <h2 class="text-xl font-bold dark:text-white">{{ 'WORKOUTS.SYNC_TITLE' | translate }}</h2>
+          <p class="text-sm dark:text-white/70">{{ 'WORKOUTS.SYNC_SUBTITLE' | translate }}</p>
+
+          <div class="mt-4 grid grid-cols-1 lg:grid-cols-2 gap-3">
+            @for (provider of providers; track provider) {
+              <article class="sync-card">
+                <div class="flex flex-wrap items-center justify-between gap-3">
+                  <p class="font-semibold dark:text-white">{{ providerLabel(provider) }}</p>
+                  <button
+                    type="button"
+                    class="queue-control"
+                    [class.workout-connect-button]="!isConnected(provider)"
+                    [class.workout-connected-button]="isConnected(provider)"
+                    (click)="connectProvider(provider)"
+                  >
+                    {{ isConnected(provider) ? ('WORKOUTS.CONNECTED' | translate) : ('WORKOUTS.CONNECT' | translate) }}
+                  </button>
+                </div>
+                <div class="mt-3 flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    [checked]="isAutoSync(provider)"
+                    #autoSyncInput
+                    (change)="toggleAutoSync(provider, autoSyncInput.checked)"
+                    [disabled]="!isConnected(provider)"
+                    [attr.aria-label]="'WORKOUTS.AUTO_SYNC' | translate"
+                  />
+                  <span class="text-sm dark:text-white/80">{{ 'WORKOUTS.AUTO_SYNC' | translate }}</span>
+                </div>
+                <button
+                  type="button"
+                  class="mt-3 queue-control workout-pull-button"
+                  (click)="pullNow(provider)"
+                  [disabled]="!isConnected(provider)"
+                >
+                  {{ 'WORKOUTS.PULL_NOW' | translate }}
+                </button>
+              </article>
             }
           </div>
         </section>
+      </div>
+      </div>
+    </div>
+  `,
+  styles: `
+    :host {
+      display: block;
+    }
+
+    /* Light mode (default) */
+    .workouts-shell {
+      background:
+        radial-gradient(circle at 15% 10%, rgba(255, 107, 107, 0.08), transparent 34%),
+        radial-gradient(circle at 90% 18%, rgba(255, 160, 122, 0.06), transparent 30%),
+        linear-gradient(180deg, #fffaf8 0%, #fff5f2 50%, #fff0ed 100%);
+    }
+
+    .workout-surface {
+      border-radius: 1.5rem;
+      border: 1px solid rgba(255, 107, 107, 0.15);
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.95), rgba(255, 250, 248, 0.88));
+      padding: 1.25rem;
+      backdrop-filter: saturate(120%);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      color: #1a1a1a;
+    }
+
+    /* Dark mode overrides */
+    :host-context(.dark) .workouts-shell {
+      background:
+        radial-gradient(circle at 15% 10%, rgba(255, 107, 107, 0.16), transparent 34%),
+        radial-gradient(circle at 90% 18%, rgba(255, 160, 122, 0.12), transparent 30%),
+        linear-gradient(180deg, #0a0a0f 0%, #14111a 48%, #0f0d14 100%);
+    }
+
+    :host-context(.dark) .workout-surface {
+      border-color: rgba(148, 163, 184, 0.25);
+      background: linear-gradient(180deg, rgba(15, 23, 42, 0.88), rgba(3, 7, 18, 0.88));
+      box-shadow: none;
+      color: #f5f5f5;
+    }
+
+    .workout-header-panel {
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(255, 250, 248, 0.92));
+      border: 1px solid rgba(255, 107, 107, 0.15);
+    }
+
+    :host-context(.dark) .workout-header-panel {
+      background: linear-gradient(135deg, rgba(15, 23, 42, 0.95), rgba(30, 41, 59, 0.92));
+      border-color: rgba(148, 163, 184, 0.25);
+    }
+
+    .workout-chip-wrap {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 0.5rem;
+      max-width: 32rem;
+    }
+
+    .workout-chip {
+      border-radius: 999px;
+      border: 1.5px solid rgba(255, 107, 107, 0.3);
+      background: linear-gradient(135deg, rgba(255, 107, 107, 0.1), rgba(255, 160, 122, 0.08));
+      color: #8a2f2f;
+      padding: 0.4rem 0.9rem;
+      font-size: 0.75rem;
+      font-weight: 700;
+      line-height: 1.2;
+      box-shadow: 0 1px 3px rgba(255, 107, 107, 0.08);
+    }
+
+    :host-context(.dark) .workout-chip {
+      border: 1.5px solid rgba(255, 107, 107, 0.6);
+      background: linear-gradient(135deg, rgba(255, 107, 107, 0.18), rgba(255, 160, 122, 0.12));
+      color: #ffd4cc;
+      box-shadow: 0 2px 8px rgba(255, 107, 107, 0.1);
+    }
+
+    .workout-chip-muted {
+      border-color: rgba(192, 160, 200, 0.25);
+      background: linear-gradient(135deg, rgba(192, 160, 200, 0.08), rgba(224, 214, 240, 0.05));
+      color: #6d4a8a;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+    }
+
+    :host-context(.dark) .workout-chip-muted {
+      border-color: rgba(192, 160, 200, 0.55);
+      background: linear-gradient(135deg, rgba(192, 160, 200, 0.15), rgba(224, 214, 240, 0.08));
+      color: #f5e8ff;
+      box-shadow: 0 2px 6px rgba(192, 160, 200, 0.08);
+    }
+
+    .workout-pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 2rem;
+      height: 2rem;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #8a2f2f;
+      border: 1px solid rgba(255, 107, 107, 0.2);
+      background: linear-gradient(135deg, rgba(255, 107, 107, 0.08), rgba(255, 160, 122, 0.06));
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+    }
+
+    :host-context(.dark) .workout-pill {
+      color: #ffb8a8;
+      border: 1px solid rgba(255, 107, 107, 0.5);
+      background: linear-gradient(135deg, rgba(255, 107, 107, 0.16), rgba(255, 160, 122, 0.1));
+      box-shadow: 0 1px 4px rgba(255, 107, 107, 0.12);
+    }
+
+    .workout-type-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 0.75rem;
+    }
+
+    .workout-type-card {
+      border-radius: 1rem;
+      border: 1px solid rgba(255, 107, 107, 0.15);
+      background: rgba(255, 255, 255, 0.85);
+      padding: 0.75rem;
+      transition: transform 0.25s ease, border-color 0.25s ease;
+      color: #1a1a1a;
+    }
+
+    .workout-type-card:hover {
+      transform: translateY(-2px);
+      border-color: rgba(255, 107, 107, 0.3);
+      background: rgba(255, 255, 255, 0.95);
+    }
+
+    .workout-type-card-selected {
+      border-color: rgba(255, 107, 107, 0.4);
+      box-shadow: inset 0 0 0 1px rgba(255, 107, 107, 0.2);
+    }
+
+    :host-context(.dark) .workout-type-card {
+      border: 1px solid rgba(148, 163, 184, 0.28);
+      background: rgba(15, 23, 42, 0.75);
+      color: #f5f5f5;
+    }
+
+    :host-context(.dark) .workout-type-card:hover {
+      border-color: rgba(255, 160, 122, 0.7);
+    }
+
+    :host-context(.dark) .workout-type-card-selected {
+      border-color: rgba(255, 107, 107, 0.8);
+      box-shadow: inset 0 0 0 1px rgba(255, 107, 107, 0.35);
+    }
+
+    .workout-type-icon {
+      display: inline-flex;
+      width: 2rem;
+      height: 2rem;
+      align-items: center;
+      justify-content: center;
+      border-radius: 0.75rem;
+      background: rgba(255, 107, 107, 0.1);
+      font-size: 1rem;
+    }
+
+    :host-context(.dark) .workout-type-icon {
+      background: rgba(255, 107, 107, 0.2);
+    }
+
+    .workout-type-meta {
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.08);
+      padding: 0.2rem 0.5rem;
+      color: rgba(255, 255, 255, 0.78);
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+    }
+
+    .workout-action-button,
+    .workout-create-button,
+    .queue-control {
+      border: none;
+      border-radius: 999px;
+      padding: 0.45rem 0.95rem;
+      font-size: 0.75rem;
+      font-weight: 700;
+      transition: transform 0.2s ease, opacity 0.2s ease;
+    }
+
+    .workout-action-button {
+      // color: #0d0a05;
+      color: white;
+      background: #ff9d87;
+    }
+
+    :host-context(.dark) .workout-action-button {
+      color: white;
+    }
+
+    .workout-action-button-disabled {
+      background: rgba(200, 200, 200, 0.4);
+      color: rgba(100, 100, 100, 0.8);
+    }
+
+    :host-context(.dark) .workout-action-button-disabled {
+      background: rgba(148, 163, 184, 0.35);
+      color: rgba(255, 255, 255, 0.8);
+    }
+
+    .workout-create-button {
+      background: linear-gradient(90deg, #ff9d87, #ffa07a);
+      color: white;
+      align-self: flex-end;
+      min-height: 2.75rem;
+      padding-inline: 1.25rem;
+    }
+
+    .workout-input,
+    .queue-input {
+      width: 100%;
+      border-radius: 0.9rem;
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      background: #ffffff;
+      color: #1a1a1a;
+      padding: 0.65rem 0.8rem;
+      font-size: 0.85rem;
+    }
+
+    :host-context(.dark) .workout-input,
+    :host-context(.dark) .queue-input {
+      background: rgba(2, 6, 23, 0.55);
+      color: #f5f5f5;
+      border-color: rgba(148, 163, 184, 0.6);
+    }
+
+    .queue-input {
+      width: 5.25rem;
+      padding: 0.45rem 0.65rem;
+      text-align: center;
+    }
+
+    .plan-card {
+      position: relative;
+      overflow: hidden;
+      border-radius: 1.15rem;
+      min-height: 6.5rem;
+      border: 1px solid rgba(255, 255, 255, 0.28);
+      padding: 0.9rem;
+    }
+
+    .plan-card-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(15, 23, 42, 0.24));
+      pointer-events: none;
+    }
+
+    .queue-card {
+      border-radius: 1rem;
+      border: 1px solid rgba(255, 107, 107, 0.15);
+      background: linear-gradient(140deg, rgba(255, 255, 255, 0.9), rgba(255, 250, 248, 0.85));
+      padding: 0.9rem;
+      color: #1a1a1a;
+    }
+
+    :host-context(.dark) .queue-card {
+      border: 1px solid rgba(255, 107, 107, 0.3);
+      background: linear-gradient(140deg, rgba(30, 15, 12, 0.6), rgba(15, 10, 8, 0.75));
+      color: #f5f5f5;
+    }
+
+    .queue-icon {
+      display: inline-flex;
+      width: 2rem;
+      height: 2rem;
+      align-items: center;
+      justify-content: center;
+      border-radius: 0.7rem;
+      background: rgba(255, 107, 107, 0.1);
+      color: white;
+      font-size: 1rem;
+      flex-shrink: 0;
+    }
+
+    :host-context(.dark) .queue-icon {
+      background: rgba(255, 107, 107, 0.22);
+      color: #ffb8a8;
+    }
+
+    .queue-play-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 2.3rem;
+      height: 2.3rem;
+      border-radius: 999px;
+      border: none;
+      background: #ff9d87;
+      color: #0d0a05;
+      font-weight: 800;
+    }
+
+    :host-context(.dark) .queue-play-button {
+      color: white;
+    }
+
+    .queue-control {
+      border: 1px solid rgba(255, 107, 107, 0.2);
+      background: rgba(255, 255, 255, 0.8);
+      color: #1a1a1a;
+    }
+
+    .queue-control-danger {
+      border-color: rgba(220, 38, 38, 0.25);
+      color: #b91c1c;
+      background: rgba(254, 202, 202, 0.12);
+    }
+
+    :host-context(.dark) .queue-control {
+      border: 1px solid rgba(148, 163, 184, 0.45);
+      background: rgba(15, 23, 42, 0.64);
+      color: rgba(255, 255, 255, 0.9);
+    }
+
+    :host-context(.dark) .queue-control-danger {
+      border-color: rgba(248, 113, 113, 0.55);
+      color: #fecaca;
+      background: rgba(127, 29, 29, 0.26);
+    }
+
+    .summary-card {
+      border-radius: 1rem;
+      border: 1px solid rgba(255, 107, 107, 0.15);
+      padding: 0.75rem;
+      color: black;
+    }
+    
+    :host-context(.dark) .summary-card {
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      color: #1a1a1a;
+      color: #f5f5f5;
+    }
+
+    .summary-card-green {
+      background: linear-gradient(135deg, rgba(255, 107, 107, 0.1), rgba(255, 160, 122, 0.08));
+    }
+
+    :host-context(.dark) .summary-card-green {
+      background: linear-gradient(135deg, rgba(255, 107, 107, 0.38), rgba(255, 160, 122, 0.28));
+    }
+
+    .summary-card-purple {
+      background: linear-gradient(135deg, rgba(192, 160, 200, 0.1), rgba(224, 214, 240, 0.08));
+    }
+
+    :host-context(.dark) .summary-card-purple {
+      background: linear-gradient(135deg, rgba(255, 160, 122, 0.42), rgba(255, 200, 150, 0.3));
+    }
+
+    .sync-card {
+      border-radius: 1rem;
+      border: 1px solid rgba(255, 107, 107, 0.15);
+      background: rgba(255, 255, 255, 0.8);
+      padding: 0.85rem;
+      color: #1a1a1a;
+    }
+
+    :host-context(.dark) .sync-card {
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      background: rgba(15, 23, 42, 0.65);
+      color: #f5f5f5;
+    }
+
+    .workout-connect-button {
+      background: rgba(255, 107, 107, 0.08);
+      border-color: rgba(255, 107, 107, 0.25);
+      color: #8a2f2f;
+    }
+
+    :host-context(.dark) .workout-connect-button {
+      background: rgba(255, 107, 107, 0.18);
+      border-color: rgba(255, 107, 107, 0.7);
+      color: #ffb8a8;
+    }
+
+    .workout-connected-button {
+      background: rgba(255, 107, 107, 0.12);
+      border-color: rgba(255, 107, 107, 0.2);
+      color: #8a2f2f;
+    }
+
+    :host-context(.dark) .workout-connected-button {
+      background: rgba(255, 157, 135, 0.24);
+      border-color: rgba(255, 160, 122, 0.75);
+      color: #fff0ea;
+    }
+
+    .workout-pull-button {
+      border-color: rgba(192, 160, 200, 0.25);
+      color: #6d4a8a;
+      background: rgba(192, 160, 200, 0.08);
+    }
+
+    :host-context(.dark) .workout-pull-button {
+      border-color: rgba(224, 214, 240, 0.55);
+      color: #f5e8ff;
+      background: rgba(192, 160, 200, 0.18);
+    }
+
+    button:not(:disabled):hover {
+      transform: translateY(-1px);
+    }
+
+    button:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+    }
+
+    button:focus-visible,
+    input:focus-visible {
+      outline: 2px solid #ff9d87;
+      outline-offset: 2px;
+    }
+
+    @media (max-width: 640px) {
+      .workout-surface {
+        padding: 1rem;
       }
 
-      <section class="bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-3xl p-5 sm:p-6 space-y-2">
-        <h2 class="text-lg font-bold text-gray-900 dark:text-white">{{ 'WORKOUTS.SUMMARY_TITLE' | translate }}</h2>
-        <p class="text-sm text-gray-500 dark:text-gray-400">{{ 'WORKOUTS.SUMMARY_SUBTITLE' | translate }}</p>
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
-          <div class="rounded-2xl border border-primary-100 dark:border-primary-900/40 bg-primary-50/70 dark:bg-primary-900/20 p-3">
-            <p class="text-xs uppercase tracking-wide text-primary-700 dark:text-primary-300">{{ 'WORKOUTS.CALORIES_TODAY' | translate }}</p>
-            <p class="mt-1 text-xl font-bold text-primary-900 dark:text-primary-100">{{ workoutSummary().calories }} kcal</p>
-          </div>
-          <div class="rounded-2xl border border-orange-100 dark:border-orange-900/40 bg-orange-50/70 dark:bg-orange-900/20 p-3">
-            <p class="text-xs uppercase tracking-wide text-orange-700 dark:text-orange-300">{{ 'WORKOUTS.HEART_RATE_LAST' | translate }}</p>
-            <p class="mt-1 text-xl font-bold text-orange-900 dark:text-orange-100">
-              @if (workoutSummary().heartRate !== null) {
-                {{ workoutSummary().heartRate }} bpm
-              } @else {
-                {{ 'WORKOUTS.NO_HEART_RATE' | translate }}
-              }
-            </p>
-          </div>
-        </div>
-      </section>
+      .workout-chip-wrap {
+        justify-content: flex-start;
+      }
+    }
 
-      <section class="bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-3xl p-5 sm:p-6 space-y-4">
-        <h2 class="text-lg font-bold text-gray-900 dark:text-white">{{ 'WORKOUTS.SYNC_TITLE' | translate }}</h2>
-        <p class="text-sm text-gray-500 dark:text-gray-400">{{ 'WORKOUTS.SYNC_SUBTITLE' | translate }}</p>
-        @for (provider of providers; track provider) {
-          <div class="rounded-2xl border border-gray-100 dark:border-gray-700 p-4 space-y-3">
-            <div class="flex flex-wrap items-center justify-between gap-3">
-              <p class="font-semibold text-gray-900 dark:text-white">{{ providerLabel(provider) }}</p>
-              <button
-                type="button"
-                class="rounded-full px-4 py-2 text-sm font-semibold text-white"
-                [class.bg-primary-500]="!isConnected(provider)"
-                [class.bg-gray-600]="isConnected(provider)"
-                (click)="connectProvider(provider)"
-              >
-                {{ isConnected(provider) ? ('WORKOUTS.CONNECTED' | translate) : ('WORKOUTS.CONNECT' | translate) }}
-              </button>
-            </div>
-            <div class="flex items-center gap-2">
-              <input
-                type="checkbox"
-                [checked]="isAutoSync(provider)"
-                #autoSyncInput
-                (change)="toggleAutoSync(provider, autoSyncInput.checked)"
-                [disabled]="!isConnected(provider)"
-                [attr.aria-label]="'WORKOUTS.AUTO_SYNC' | translate"
-              />
-              <span class="text-sm text-gray-700 dark:text-gray-300">{{ 'WORKOUTS.AUTO_SYNC' | translate }}</span>
-            </div>
-            <button
-              type="button"
-              class="rounded-full border border-primary-200 text-primary-700 dark:text-primary-300 text-sm font-semibold px-4 py-2"
-              (click)="pullNow(provider)"
-              [disabled]="!isConnected(provider)"
-            >
-              {{ 'WORKOUTS.PULL_NOW' | translate }}
-            </button>
-          </div>
-        }
-      </section>
-    </div>
+    @media (prefers-reduced-motion: reduce) {
+      .workout-type-card,
+      .workout-action-button,
+      .workout-create-button,
+      .queue-control,
+      .queue-play-button {
+        transition: none;
+      }
+    }
   `,
 })
 export class WorkoutsPageComponent implements AfterViewInit {
@@ -309,6 +792,47 @@ export class WorkoutsPageComponent implements AfterViewInit {
 
   providerLabel(provider: HealthSyncProvider): string {
     return provider === 'GOOGLE_FIT' ? 'Google Fit' : 'Samsung Health';
+  }
+
+  categoryIcon(category: ExerciseCategory): string {
+    switch (category) {
+      case 'STRENGTH':
+        return '🏋️';
+      case 'CARDIO':
+        return '🏃';
+      case 'MOBILITY':
+        return '🤸';
+      case 'FLEXIBILITY':
+        return '🧘';
+      case 'RECOVERY':
+        return '🫶';
+      default:
+        return '💪';
+    }
+  }
+
+  planGradient(index: number): string {
+    const gradients = [
+      'linear-gradient(135deg, rgba(56, 189, 248, 0.72), rgba(30, 64, 175, 0.72))',
+      'linear-gradient(135deg, rgba(236, 72, 153, 0.72), rgba(124, 58, 237, 0.72))',
+      'linear-gradient(135deg, rgba(250, 204, 21, 0.72), rgba(217, 119, 6, 0.72))',
+      'linear-gradient(135deg, rgba(34, 197, 94, 0.72), rgba(5, 150, 105, 0.72))',
+    ];
+    return gradients[index % gradients.length] ?? gradients[0];
+  }
+
+  estimatedDurationMinutes(exercises: WorkoutPlanExercise[]): number {
+    if (exercises.length === 0) {
+      return 0;
+    }
+
+    const totalSeconds = exercises.reduce((sum, exercise) => {
+      const setTimeSeconds = exercise.sets * 40;
+      const restTimeSeconds = Math.max(exercise.sets - 1, 0) * exercise.restSeconds;
+      return sum + setTimeSeconds + restTimeSeconds;
+    }, 0);
+
+    return Math.max(5, Math.round(totalSeconds / 60));
   }
 
   isConnected(provider: HealthSyncProvider): boolean {

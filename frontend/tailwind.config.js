@@ -12,17 +12,30 @@ module.exports = {
       },
       colors: {
         primary: {
-          50: '#fff1f2',
-          100: '#ffe4e6',
-          200: '#fecdd3',
-          300: '#fda4af',
-          400: '#fb7185',
-          500: '#f43f5e', // Vibrant Rose
-          600: '#e11d48',
-          700: '#be123c',
-          800: '#9f1239',
-          900: '#881337',
-          950: '#4c0519',
+          50: '#fffbf9',
+          100: '#fff3ed',
+          200: '#ffe4d6',
+          300: '#ffc9a8',
+          400: '#ff9d87', // Warm Coral
+          500: '#ff6b6b', // Primary Coral
+          600: '#ff5f5f',
+          700: '#e85555',
+          800: '#d94949',
+          900: '#c43f3f',
+          950: '#8a2f2f',
+        },
+        accent: {
+          50: '#fffef9',
+          100: '#fff9f0',
+          200: '#ffefd4',
+          300: '#ffddb5',
+          400: '#ffa07a', // Warm Peach
+          500: '#ffcc80', // Light Peach
+          600: '#ffb366',
+          700: '#ff9d4d',
+          800: '#ff8833',
+          900: '#e67e22',
+          950: '#c25900',
         },
         sage: {
           50: '#f6fbf9',

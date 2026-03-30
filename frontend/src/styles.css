@@ -6,6 +6,57 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Light & Dark Mode CSS Custom Properties */
+:root {
+  /* Light mode (default) */
+  --color-bg-primary: #fffaf8;
+  --color-bg-secondary: #fff5f2;
+  --color-bg-tertiary: #fff0ed;
+  --color-surface: #ffffff;
+  --color-surface-variant: #fff5f2;
+  
+  --color-text-primary: #1a1a1a;
+  --color-text-secondary: #666666;
+  --color-text-tertiary: #999999;
+  --color-text-muted: #cccccc;
+  
+  --color-border: rgba(255, 107, 107, 0.15);
+  --color-border-hover: rgba(255, 107, 107, 0.25);
+  
+  --color-icon-bg: rgba(255, 107, 107, 0.1);
+  --color-icon-bg-hover: rgba(255, 107, 107, 0.15);
+  
+  --gradient-primary: linear-gradient(135deg, #ff6b6b 0%, #ffa07a 50%, #ffcc80 100%);
+  --gradient-bg: linear-gradient(180deg, #fffaf8 0%, #fff5f2 50%, #fff0ed 100%);
+  --gradient-warm: linear-gradient(135deg, #fff9f5 0%, #fff 100%);
+  --gradient-overlay: linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 107, 107, 0.05));
+}
+
+/* Dark mode overrides */
+.dark {
+  --color-bg-primary: #0a0a0f;
+  --color-bg-secondary: #14111a;
+  --color-bg-tertiary: #1a1620;
+  --color-surface: #0f0d14;
+  --color-surface-variant: #16131c;
+  
+  --color-text-primary: #f5f5f5;
+  --color-text-secondary: #b0b0b0;
+  --color-text-tertiary: #808080;
+  --color-text-muted: #505050;
+  
+  --color-border: rgba(255, 107, 107, 0.25);
+  --color-border-hover: rgba(255, 107, 107, 0.35);
+  
+  --color-icon-bg: rgba(255, 107, 107, 0.15);
+  --color-icon-bg-hover: rgba(255, 107, 107, 0.22);
+  
+  --gradient-primary: linear-gradient(135deg, #ff6b6b 0%, #ffa07a 50%, #ffcc80 100%);
+  --gradient-bg: linear-gradient(180deg, #0a0a0f 0%, #14111a 50%, #0f0d14 100%);
+  --gradient-warm: linear-gradient(135deg, #1a1620 0%, #161518 100%);
+  --gradient-overlay: linear-gradient(180deg, rgba(255, 107, 107, 0.08), rgba(255, 160, 122, 0.04));
+}
+
 @layer components {
   /* Subtle Noise Texture */
   .noise-texture {
@@ -65,7 +116,9 @@ body {
   font-family: 'Satoshi', 'Avenir Next', 'Segoe UI', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  @apply bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-100;
+  background: var(--color-bg-primary);
+  color: var(--color-text-primary);
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -89,33 +142,48 @@ h1, h2, h3, h4, h5, h6 {
   
   /* Performance-optimized glass panel - NO backdrop-blur */
   .glass-panel {
-    @apply bg-white/95 border border-gray-200/60 shadow-xl dark:bg-gray-900/95 dark:border-gray-700/60;
+    background: rgba(255, 255, 255, 0.98);
+    border: 1px solid rgba(255, 107, 107, 0.12);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
+    @apply dark:bg-gray-900/95 dark:border-gray-700/60 dark:shadow-none;
+    transition: all 0.3s ease;
   }
   
   /* Lighter glass for less important elements */
   .glass-panel-light {
-    @apply bg-white/90 border border-gray-100 shadow-lg dark:bg-gray-800/90 dark:border-gray-700;
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(255, 107, 107, 0.08);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    @apply dark:bg-gray-800/90 dark:border-gray-700 dark:shadow-none;
+    transition: all 0.3s ease;
   }
   
   .input-field {
-    @apply w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50/80 text-gray-900 transition-colors duration-150
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(255, 107, 107, 0.2);
+    color: var(--color-text-primary);
+    @apply w-full px-4 py-3 rounded-xl transition-colors duration-150
     focus:border-primary-500 focus:bg-white focus:ring-2 focus:ring-primary-500/20 focus:outline-none
     dark:border-gray-700 dark:bg-gray-800/80 dark:text-white dark:focus:border-primary-400 dark:focus:bg-gray-800;
   }
   
   /* Input with error state */
   .input-field-error {
-    @apply border-red-400 bg-red-50/50 focus:border-red-500 focus:ring-red-500/20
+    background: rgba(248, 113, 113, 0.05);
+    border: 1px solid rgba(248, 113, 113, 0.3);
+    @apply focus:border-red-500 focus:ring-red-500/20
     dark:border-red-500 dark:bg-red-900/20;
   }
 
   .btn-primary {
-    @apply relative overflow-hidden rounded-xl bg-gradient-to-br from-primary-500 to-primary-600 px-6 py-3.5 font-bold text-white shadow-lg shadow-primary-500/25 transition-all duration-150
+    background: linear-gradient(135deg, #ff6b6b 0%, #ff9d87 100%);
+    @apply relative overflow-hidden rounded-xl px-6 py-3.5 font-bold text-white shadow-lg shadow-primary-500/25 transition-all duration-150
     hover:shadow-primary-500/40 hover:brightness-110 active:scale-[0.98] disabled:opacity-70 disabled:cursor-not-allowed disabled:shadow-none;
   }
 
   .link-text {
-    @apply font-semibold text-primary-600 transition-colors hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300;
+    color: #ff6b6b;
+    @apply font-semibold transition-colors hover:text-orange-600 dark:text-primary-400 dark:hover:text-primary-300;
   }
 
   .no-select {
@@ -128,6 +196,32 @@ h1, h2, h3, h4, h5, h6 {
   /* GPU-accelerated animations hint */
   .will-animate {
     will-change: transform, opacity;
+  }
+
+  /* Light mode specific card styling */
+  .card-light {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    @apply rounded-2xl p-4 transition-all duration-200;
+  }
+
+  .card-light:hover {
+    border-color: var(--color-border-hover);
+    box-shadow: 0 4px 16px rgba(255, 107, 107, 0.1);
+  }
+
+  /* Light mode badge */
+  .badge-light {
+    background: linear-gradient(135deg, rgba(255, 107, 107, 0.12), rgba(255, 160, 122, 0.08));
+    border: 1px solid rgba(255, 107, 107, 0.25);
+    color: #330607;
+    @apply rounded-full px-3 py-1 text-sm font-medium;
+  }
+
+  .badge-light.dark {
+    background: #8a2f2f;
+    border-color: rgba(255, 107, 107, 0.8);
+    color: #ffd6cc;
   }
 }
 
