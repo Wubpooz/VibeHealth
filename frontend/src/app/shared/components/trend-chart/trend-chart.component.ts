@@ -42,7 +42,7 @@ export interface TrendDataPoint {
         </div>
 
         <!-- Bars -->
-        <div class="bars-container">
+        <div class="bars-container" [class.dense]="data().length > 14">
           <div class="grid-lines">
             @for (tick of yAxisTicks(); track tick) {
               <span class="grid-line" [style.bottom.%]="(tick / maxValue()) * 100"></span>
@@ -71,7 +71,9 @@ export interface TrendDataPoint {
               </div>
               
               <!-- X-axis label -->
-              <span class="x-label">{{ point.label }}</span>
+              <span class="x-label" [class.suppressed]="!shouldShowXLabel(i, data().length)">
+                {{ shouldShowXLabel(i, data().length) ? point.label : '' }}
+              </span>
             </div>
           }
         </div>
@@ -136,6 +138,10 @@ export interface TrendDataPoint {
       gap: 1rem;
       height: 200px;
       position: relative;
+      max-width: 100%;
+      overflow-x: auto;
+      overflow-y: hidden;
+      padding-bottom: 0.5rem;
     }
 
     .y-axis {
@@ -166,6 +172,24 @@ export interface TrendDataPoint {
       border-left: 1px solid #e5e7eb;
       border-bottom: 1px solid #e5e7eb;
       padding-left: 0.5rem;
+      min-width: 100%;
+      overflow-x: auto;
+      overflow-y: hidden;
+    }
+
+    .bars-container.dense {
+      gap: 0.2rem;
+      min-width: max(100%, 30rem);
+    }
+
+    .bars-container.dense .bar-wrapper {
+      flex: 0 0 1rem;
+      min-width: 1rem;
+    }
+
+    .bars-container:not(.dense) .bar-wrapper {
+      flex: 1;
+      min-width: 0;
     }
 
     .grid-lines {
@@ -201,6 +225,7 @@ export interface TrendDataPoint {
       align-items: center;
       position: relative;
       height: 100%;
+      min-width: 0;
     }
 
     .target-line {
@@ -300,6 +325,15 @@ export interface TrendDataPoint {
       color: #6b7280;
       margin-top: 0.5rem;
       text-align: center;
+      width: 100%;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .x-label.suppressed {
+      color: transparent;
+      user-select: none;
     }
 
     :host-context([data-theme="dark"]) .x-label {
@@ -420,6 +454,12 @@ export class TrendChartComponent implements AfterViewInit {
 
   getTargetPercent(value: number): number {
     return this.valueToPercent(value);
+  }
+
+  shouldShowXLabel(index: number, total: number): boolean {
+    if (total <= 10) return true;
+    if (total <= 20) return index % 2 === 0 || index === total - 1;
+    return index % 3 === 0 || index === total - 1;
   }
 
   ngAfterViewInit(): void {
