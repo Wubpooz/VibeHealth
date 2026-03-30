@@ -464,8 +464,12 @@ type ViewMode = 'card' | 'edit';
 
     .cross-h, .cross-v {
       position: absolute;
-      background: white;
+      background: #D12222;
       border-radius: 2px;
+    }
+
+    :host-context(.dark) .cross-h, :host-context(.dark) .cross-v {
+      background: white;
     }
 
     .cross-h {
@@ -498,7 +502,7 @@ type ViewMode = 'card' | 'edit';
       height: 40px;
       border-radius: 12px;
       background: rgba(255,255,255,0.15);
-      color: white;
+      color: #D12222;
       border: none;
       cursor: pointer;
       transition: all 0.2s;
@@ -506,6 +510,10 @@ type ViewMode = 'card' | 'edit';
 
     .mode-toggle:hover {
       background: rgba(255,255,255,0.25);
+    }
+
+    :host-context(.dark) .mode-toggle {
+      color: white;
     }
 
     /* Main Content */
