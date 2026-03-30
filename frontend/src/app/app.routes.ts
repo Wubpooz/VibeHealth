@@ -137,6 +137,14 @@ export const routes: Routes = [
     canActivate: [authGuard],
   },
   {
+    path: "period",
+    loadComponent: () =>
+      import("./features/wellness/period/period-tracker-page.component").then(
+        (m) => m.PeriodTrackerPageComponent,
+      ),
+    canActivate: [authGuard],
+  },
+  {
     path: "rewards",
     loadComponent: () =>
       import("./features/rewards/rewards-page.component").then(
