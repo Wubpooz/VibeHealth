@@ -1,31 +1,118 @@
-import { Component, ChangeDetectionStrategy, signal, computed } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
+import { WikiCondition } from './wiki.model';
+import { PageHeaderComponent } from '../../shared/components/page-header/page-header.component';
 
-interface WikiCondition {
-  id: string;
-  title: string;
-  subtitle: string;
-  summary: string;
-  sourceUrl: string;
-  sourceName: string;
-  tags: string[];
+const CONDITION_TITLES: string[] = [
+  'Hypertension', 'Type 2 Diabetes', 'Asthma', 'Chronic Kidney Disease', 'COPD',
+  'Depression', 'Anxiety Disorders', 'Anemia', 'Osteoarthritis', 'Rheumatoid Arthritis',
+  'Migraine', 'Hypothyroidism', 'Hyperthyroidism', 'Sleep Apnea', 'GERD',
+  'Eczema', 'Psoriasis', 'Stroke', 'Heart Failure', 'Alzheimer Disease',
+  'Atrial Fibrillation', 'Coronary Artery Disease', 'Peripheral Artery Disease', 'Deep Vein Thrombosis', 'Pulmonary Embolism',
+  'Hyperlipidemia', 'Metabolic Syndrome', 'Obesity', 'Nonalcoholic Fatty Liver Disease', 'Acute Myocardial Infarction',
+  'Varicose Veins', 'Parkinson Disease', 'Epilepsy', 'Multiple Sclerosis', 'Systemic Lupus Erythematosus',
+  'Sjogren Syndrome', 'Psoriatic Arthritis', 'Ulcerative Colitis', 'Crohn Disease', 'Irritable Bowel Syndrome',
+  'Celiac Disease', 'Chronic Pancreatitis', 'Gallstones', 'Peptic Ulcer Disease', 'Hepatitis B',
+  'Hepatitis C', 'Cirrhosis', 'Gout', 'Osteoporosis', 'Sarcopenia',
+  'Fibromyalgia', 'Chronic Fatigue Syndrome', 'Lupus Nephritis', 'Polycystic Ovary Syndrome', 'Endometriosis',
+  'Uterine Fibroids', 'HPV Infection', 'Pelvic Inflammatory Disease', 'Benign Prostatic Hyperplasia', 'Prostate Cancer',
+  'Breast Cancer', 'Lung Cancer', 'Colorectal Cancer', 'Pancreatic Cancer', 'Melanoma',
+  'Non-Hodgkin Lymphoma', 'Hodgkin Lymphoma', 'Leukemia', 'Bone Metastasis', 'Sepsis',
+  'Meningitis', 'Encephalitis', 'Guillain-Barre Syndrome', 'Amyotrophic Lateral Sclerosis', 'Huntington Disease',
+  'Autism Spectrum Disorder', 'Attention Deficit Hyperactivity Disorder', 'Schizophrenia', 'Bipolar Disorder', 'Obsessive Compulsive Disorder',
+  'Posttraumatic Stress Disorder', 'Panic Disorder', 'Social Anxiety Disorder', 'Dyslipidemia', 'Hypokalemia',
+  'Hyperkalemia', 'Hyponatremia', 'Hypernatremia', 'Hypercalcemia', 'Hypocalcemia',
+  'Addison Disease', 'Cushing Syndrome', 'Diabetes Insipidus', 'Gestational Diabetes', 'Polymyalgia Rheumatica',
+  'Giant Cell Arteritis', 'Takayasu Arteritis', 'Systemic Sclerosis', 'Dermatomyositis', 'Polymyositis',
+  'Myasthenia Gravis', 'Carpal Tunnel Syndrome', 'Restless Leg Syndrome', 'Peripheral Neuropathy', 'Tinnitus',
+  'Vertigo', 'Erectile Dysfunction', 'Chronic Pelvic Pain', 'Interstitial Cystitis', 'Kidney Stones',
+  'Urinary Tract Infection', 'Pyelonephritis', 'Acute Renal Failure', 'Nephrotic Syndrome', 'Nephritic Syndrome',
+  'Polycystic Kidney Disease', 'Renal Cell Carcinoma', 'Testicular Cancer', 'Ovarian Cancer', 'Cervical Cancer',
+  'Endometrial Cancer', 'Cholecystitis', 'Appendicitis', 'Diverticulitis', 'Hemorrhoids',
+  'Anal Fissure', 'Cystic Fibrosis', 'Scurvy', 'Rickets', 'Beriberi',
+  'Pellagra', 'Night Blindness', 'Macular Degeneration', 'Glaucoma', 'Cataracts',
+  'Conjunctivitis', 'Otitis Media', 'Sinusitis', 'Pharyngitis', 'Tonsillitis',
+  'Laryngitis', 'Influenza', 'COVID-19', 'Viral Pneumonia', 'Bacterial Pneumonia',
+  'Tuberculosis', 'HIV/AIDS', 'Herpes Simplex', 'Varicella Zoster', 'Epstein-Barr Virus',
+  'Cytomegalovirus', 'Dengue Fever', 'Malaria', 'Lyme Disease', 'Rocky Mountain Spotted Fever',
+  'Zika Virus', 'Yellow Fever', 'Chikungunya', 'Syphilis', 'Gonorrhea',
+  'Chlamydia', 'Genital Herpes', 'Toxic Shock Syndrome', 'Vitamin D Deficiency', 'Hyperparathyroidism',
+  'Hypoparathyroidism', 'Bipolar II Disorder', 'Cyclothymic Disorder', 'Agoraphobia', 'Preeclampsia',
+  'Eclampsia', 'Placenta Previa', 'Placental Abruption', 'Gestational Hypertension', 'Hyperemesis Gravidarum',
+  'Premature Labor', 'Reactive Arthritis', 'Ankylosing Spondylitis', 'Juvenile Idiopathic Arthritis', 'Trigeminal Neuralgia',
+  'Cluster Headache', 'Tension Headache', 'Temporomandibular Disorder', 'Primary Biliary Cholangitis', 'Autoimmune Hepatitis',
+  'Acute Lymphoblastic Leukemia', 'Chronic Lymphocytic Leukemia', 'Multiple Myeloma', 'Myelodysplastic Syndrome', 'Hemophilia',
+  'Sickle Cell Disease', 'Thalassemia', 'Aplastic Anemia', 'Pulmonary Hypertension', 'Bronchiectasis',
+  'Interstitial Lung Disease', 'Amyloidosis', 'Polyarteritis Nodosa', 'Henoch-Schonlein Purpura', 'Superior Vena Cava Syndrome',
+  'Aortic Aneurysm', 'Transient Ischemic Attack', 'Dementia with Lewy Bodies', 'Normal Pressure Hydrocephalus', 'Carcinoid Syndrome',
+  'Pheochromocytoma', 'Pituitary Adenoma', 'Macrophage Activation Syndrome', 'Bisphosphonate-related Osteonecrosis', 'Hemophagocytic Lymphohistiocytosis',
+  'Ehlers-Danlos Syndrome', 'Marfan Syndrome', 'Neuromyelitis Optica', 'Adenosine Deaminase Deficiency', 'Epidermolysis Bullosa',
+  'Sleep Wake Circadian Disorder', 'Metastatic Melanoma', 'Chronic Eosinophilic Leukemia', 'Severe Atopic Dermatitis',
+];
+
+function buildWikiConditions(): WikiCondition[] {
+  return CONDITION_TITLES.map((title) => {
+    const slug = title.toLowerCase().replaceAll(/[^a-z0-9]+/g, '-').replaceAll(/(^-|-$)/g, '');
+    const lower = title.toLowerCase();
+    const tags: string[] = [];
+
+    if (/heart|cardio|hypertension|stroke|cholesterol|myocardial|arrhythmia|aortic/.test(lower)) tags.push('cardiovascular');
+    if (/diabetes|thyroid|adrenal|cortisol|hormone|obesity|metabolic|parathyroid|pituitary/.test(lower)) tags.push('endocrine');
+    if (/asthma|copd|pneumonia|tuberculosis|sleep|pulmonary|lung|bronchiectasis|interstitial/.test(lower)) tags.push('respiratory');
+    if (/cancer|lymphoma|leukemia|myeloma|melanoma|metastatic|oncology/.test(lower)) tags.push('oncology');
+    if (/arthritis|rheumatoid|scleroderma|vasculitis|fibromyalgia|polymyalgia/.test(lower)) tags.push('rheumatological');
+    if (/kidney|renal|nephro|pyelonephritis|nephrotic|nephritic/.test(lower)) tags.push('nephrology');
+    if (/depression|anxiety|schizophrenia|bipolar|ptsd|agoraphobia|obsessive|psychosis/.test(lower)) tags.push('mental-health');
+    if (/hepatitis|liver|cirrhosis|gallstones|pancreatitis|colitis|diverticulitis|appendicitis/.test(lower)) tags.push('gastrointestinal');
+    if (/infection|viral|bacterial|tuberculosis|hiv|aids|syphilis|gonorrhea|chlamydia|dengue|malaria|zika|yellow|chikungunya|covid/.test(lower)) tags.push('infectious');
+    if (/eczema|psoriasis|dermatitis|atopic|melanoma|bullosa/.test(lower)) tags.push('dermatological');
+    if (/vision|macular|glaucoma|cataracts|conjunctivitis|otitis|sinusitis/.test(lower)) tags.push('otolaryngology');
+    if (/pregnancy|preeclampsia|eclampsia|gestational|placenta|labor/.test(lower)) tags.push('obstetric');
+    if (/sepsis|shock|syndrome|acute|chronic|pain|anemia|fracture|metastatic|sickle/.test(lower)) tags.push('general');
+    if (tags.length === 0) tags.push('general');
+
+    const clinicalArea = tags.join(', ');
+    const riskFactors = /cardiovascular|endocrine|nephrology/.test(tags.join(' '))
+      ? 'Age, family history, diet, inactivity, smoking, obesity, hypertension'
+      : 'Genetics, environment, immune status, infection, lifestyle';
+
+    return {
+      id: slug,
+      title,
+      subtitle: title,
+      summary: `${title} is a condition that often requires specialized diagnosis, evidence-based management, and regular patient follow-up.`,
+      sourceUrl: 'https://www.vidal.fr/maladies/a-z.html',
+      sourceName: 'Vidal',
+      vidalUrl: `https://www.vidal.fr/maladies/a-z.html#${slug}`,
+      details: {
+        clinicalArea,
+        riskFactors,
+        diagnostics: 'Clinical exam, lab tests, imaging, specialist consultation when appropriate',
+        treatments: 'Lifestyle measures, pharmacologic therapy as indicated, monitoring, and specialist referral when needed',
+      },
+      tags,
+    };
+  });
 }
 
 @Component({
   selector: 'app-wiki',
   standalone: true,
-  imports: [CommonModule, FormsModule, TranslateModule],
+  imports: [CommonModule, FormsModule, TranslateModule, PageHeaderComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="min-h-screen bg-gradient-to-br from-slate-50 via-white to-sky-50 dark:from-gray-950 dark:via-gray-900 dark:to-gray-950">
-      <div class="max-w-6xl mx-auto px-4 sm:px-6 py-6">
-        <header class="mb-6">
-          <h1 class="text-2xl font-bold text-gray-900 dark:text-white">{{ 'WIKI.TITLE' | translate }}</h1>
-          <p class="text-gray-600 dark:text-gray-300 mt-1">{{ 'WIKI.SUBTITLE' | translate }}</p>
-        </header>
+      <app-page-header
+        [title]="'WIKI.TITLE' | translate"
+        [subtitle]="'WIKI.SUBTITLE' | translate"
+        [showBackLabel]="false"
+      >
+        <span pageHeaderIcon class="text-2xl">📚</span>
+      </app-page-header>
 
+      <div class="max-w-6xl mx-auto px-4 sm:px-6 py-6">
         <div class="rounded-2xl bg-white dark:bg-gray-800 p-4 border border-gray-200 dark:border-gray-700 shadow-sm mb-6">
           <input
             type="search"
@@ -36,7 +123,6 @@ interface WikiCondition {
           />
         </div>
 
-        <!-- Tag Filters -->
         <div class="rounded-2xl bg-white dark:bg-gray-800 p-4 border border-gray-200 dark:border-gray-700 shadow-sm mb-6">
           <h3 class="text-sm font-semibold text-gray-900 dark:text-white mb-3">{{ 'WIKI.FILTER_BY_TAGS' | translate }}</h3>
           <div class="flex flex-wrap gap-2">
@@ -68,7 +154,7 @@ interface WikiCondition {
                 (click)="selectCondition(item.id)"
                 (keydown.enter)="selectCondition(item.id)"
                 (keydown.space)="selectCondition(item.id)"
-                class="cursor-pointer rounded-xl p-3 border transition-all hover:shadow-lg hover:border-primary-300 dark:hover:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500" 
+                class="cursor-pointer rounded-xl p-3 border transition-all hover:shadow-lg hover:border-primary-300 dark:hover:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500"
                 [class.border-primary-500]="getSelectedCondition()?.id === item.id"
                 [class.bg-primary-50]="getSelectedCondition()?.id === item.id"
                 [class.dark:bg-sky-950]="getSelectedCondition()?.id === item.id"
@@ -85,6 +171,34 @@ interface WikiCondition {
                 <h2 class="text-2xl font-bold text-gray-900 dark:text-white">{{ getSelectedCondition()?.title }}</h2>
                 <p class="text-sm text-gray-500 dark:text-gray-300 mt-1 mb-4">{{ getSelectedCondition()?.subtitle }}</p>
                 <p class="text-gray-700 dark:text-gray-200 leading-relaxed">{{ getSelectedCondition()?.summary }}</p>
+
+                <div class="mt-5">
+                  <h3 class="text-lg font-semibold text-gray-900 dark:text-white">{{ 'WIKI.DETAILS_TITLE' | translate }}</h3>
+                  <div class="overflow-x-auto mt-3">
+                    <table class="w-full text-left border border-gray-200 dark:border-gray-700 rounded-lg">
+                      <tbody>
+                        <tr class="border-b border-gray-200 dark:border-gray-700">
+                          <th class="px-3 py-2 font-medium text-gray-700 dark:text-gray-300">{{ 'WIKI.CLINICAL_AREA' | translate }}</th>
+                          <td class="px-3 py-2 text-gray-700 dark:text-gray-200">{{ getSelectedCondition()!.details.clinicalArea }}</td>
+                        </tr>
+                        <tr class="border-b border-gray-200 dark:border-gray-700">
+                          <th class="px-3 py-2 font-medium text-gray-700 dark:text-gray-300">{{ 'WIKI.RISK_FACTORS' | translate }}</th>
+                          <td class="px-3 py-2 text-gray-700 dark:text-gray-200">{{ getSelectedCondition()!.details.riskFactors }}</td>
+                        </tr>
+                        <tr class="border-b border-gray-200 dark:border-gray-700">
+                          <th class="px-3 py-2 font-medium text-gray-700 dark:text-gray-300">{{ 'WIKI.DIAGNOSTICS' | translate }}</th>
+                          <td class="px-3 py-2 text-gray-700 dark:text-gray-200">{{ getSelectedCondition()!.details.diagnostics }}</td>
+                        </tr>
+                        <tr>
+                          <th class="px-3 py-2 font-medium text-gray-700 dark:text-gray-300">{{ 'WIKI.TREATMENTS' | translate }}</th>
+                          <td class="px-3 py-2 text-gray-700 dark:text-gray-200">{{ getSelectedCondition()!.details.treatments }}</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  <p class="mt-3 text-xs text-gray-500 dark:text-gray-400">{{ 'WIKI.VIDAL_URL' | translate }} <a class="text-primary-600 dark:text-primary-400 hover:underline" [href]="getSelectedCondition()?.vidalUrl" target="_blank" rel="noopener">{{ getSelectedCondition()?.vidalUrl }}</a></p>
+                </div>
+
                 <p class="mt-4 text-xs text-gray-500 dark:text-gray-400">{{ 'WIKI.SOURCE_LABEL' | translate }} <a class="text-primary-600 dark:text-primary-400 hover:underline" [href]="getSelectedCondition()?.sourceUrl" target="_blank" rel="noopener">{{ getSelectedCondition()?.sourceName }}</a></p>
               </article>
             } @else {
@@ -133,237 +247,35 @@ export class WikiComponent {
   searchQuery = signal('');
   selectedTags = signal<string[]>([]);
 
-  conditions: WikiCondition[] = [
-    {
-      id: 'hypertension',
-      title: 'Hypertension',
-      subtitle: 'High blood pressure',
-      summary:
-        'Hypertension is a chronic condition where arterial blood pressure is elevated; it increases risk for stroke, heart attack, and kidney disease.',
-      sourceUrl: 'https://medlineplus.gov/highbloodpressure.html',
-      sourceName: 'MedlinePlus',
-      tags: ['cardiovascular', 'chronic'],
-    },
-    {
-      id: 'type-2-diabetes',
-      title: 'Type 2 Diabetes',
-      subtitle: 'Insulin resistance and high blood sugar',
-      summary:
-        'Type 2 Diabetes is a long-term metabolic disorder caused by insulin resistance and relative insulin deficiency; it requires lifestyle and medication management.',
-      sourceUrl: 'https://medlineplus.gov/type2diabetes.html',
-      sourceName: 'MedlinePlus',
-      tags: ['endocrine', 'metabolic', 'chronic'],
-    },
-    {
-      id: 'asthma',
-      title: 'Asthma',
-      subtitle: 'Inflammatory airway disease',
-      summary:
-        'Asthma causes airway inflammation and bronchoconstriction producing wheeze, cough, shortness of breath and variable expiratory flow obstruction.',
-      sourceUrl: 'https://medlineplus.gov/asthma.html',
-      sourceName: 'MedlinePlus',
-      tags: ['respiratory', 'chronic', 'inflammatory'],
-    },
-    {
-      id: 'chronic-kidney-disease',
-      title: 'Chronic Kidney Disease',
-      subtitle: 'Progressive loss of kidney function',
-      summary:
-        'Chronic kidney disease is long-term kidney damage leading to reduced glomerular filtration and risk of electrolyte imbalance and cardiovascular complications.',
-      sourceUrl: 'https://medlineplus.gov/chronickidneydisease.html',
-      sourceName: 'MedlinePlus',
-      tags: ['renal', 'chronic', 'metabolic'],
-    },
-    {
-      id: 'copd',
-      title: 'COPD',
-      subtitle: 'Chronic obstructive pulmonary disease',
-      summary:
-        'COPD combines emphysema and chronic bronchitis; it is typically caused by smoking and leads to progressive airflow limitation and breathlessness.',
-      sourceUrl: 'https://medlineplus.gov/copd.html',
-      sourceName: 'MedlinePlus',
-      tags: ['respiratory', 'chronic', 'smoking-related'],
-    },
-    {
-      id: 'depression',
-      title: 'Depression',
-      subtitle: 'Mood disorder',
-      summary:
-        'Major depressive disorder is characterized by persistent low mood, loss of interest, and functional impairment, often requiring psychotherapy and medication.',
-      sourceUrl: 'https://medlineplus.gov/depression.html',
-      sourceName: 'MedlinePlus',
-      tags: ['mental health', 'mood disorder'],
-    },
-    {
-      id: 'anxiety-disorders',
-      title: 'Anxiety Disorders',
-      subtitle: 'Excessive worry and fear',
-      summary:
-        'Anxiety disorders involve chronic worry, panic, or phobia symptoms that exceed normal stress responses and impair daily life.',
-      sourceUrl: 'https://medlineplus.gov/anxiety.html',
-      sourceName: 'MedlinePlus',
-      tags: ['mental health', 'anxiety'],
-    },
-    {
-      id: 'anemia',
-      title: 'Anemia',
-      subtitle: 'Low red blood cell count',
-      summary:
-        'Anemia is a deficiency in hemoglobin or red cells, often causing fatigue, pallor and weakness; causes include iron deficiency, chronic disease, and genetic conditions.',
-      sourceUrl: 'https://medlineplus.gov/anemia.html',
-      sourceName: 'MedlinePlus',
-      tags: ['hematological', 'blood disorder'],
-    },
-    {
-      id: 'osteoarthritis',
-      title: 'Osteoarthritis',
-      subtitle: 'Degenerative joint disease',
-      summary:
-        'Osteoarthritis results from joint cartilage wear, causing pain, stiffness and reduced mobility especially in knees, hips and hands.',
-      sourceUrl: 'https://medlineplus.gov/osteoarthritis.html',
-      sourceName: 'MedlinePlus',
-      tags: ['musculoskeletal', 'degenerative', 'joints'],
-    },
-    {
-      id: 'rheumatoid-arthritis',
-      title: 'Rheumatoid Arthritis',
-      subtitle: 'Autoimmune joint inflammation',
-      summary:
-        'Rheumatoid arthritis is an autoimmune condition with symmetric joint inflammation, pain and deformity; early treatment helps prevent damage.',
-      sourceUrl: 'https://medlineplus.gov/rheumatoidarthritis.html',
-      sourceName: 'MedlinePlus',
-      tags: ['autoimmune', 'musculoskeletal', 'inflammatory', 'joints'],
-    },
-    {
-      id: 'migraine',
-      title: 'Migraine',
-      subtitle: 'Neurological headache disorder',
-      summary:
-        'Migraine causes recurrent headaches with throbbing pain, nausea, and sensory sensitivity; attacks may last hours to days.',
-      sourceUrl: 'https://medlineplus.gov/migraine.html',
-      sourceName: 'MedlinePlus',
-      tags: ['neurological', 'headache', 'chronic'],
-    },
-    {
-      id: 'hypothyroidism',
-      title: 'Hypothyroidism',
-      subtitle: 'Low thyroid hormone production',
-      summary:
-        'Hypothyroidism causes slow metabolism, fatigue, weight gain, and cold intolerance; it is often treated with levothyroxine.',
-      sourceUrl: 'https://medlineplus.gov/hypothyroidism.html',
-      sourceName: 'MedlinePlus',
-      tags: ['endocrine', 'thyroid', 'hormonal'],
-    },
-    {
-      id: 'hyperthyroidism',
-      title: 'Hyperthyroidism',
-      subtitle: 'Excess thyroid hormone production',
-      summary:
-        'Hyperthyroidism can cause rapid heart rate, weight loss, anxiety and heat intolerance; common causes include Graves disease.',
-      sourceUrl: 'https://medlineplus.gov/hyperthyroidism.html',
-      sourceName: 'MedlinePlus',
-      tags: ['endocrine', 'thyroid', 'hormonal'],
-    },
-    {
-      id: 'sleep-apnea',
-      title: 'Sleep Apnea',
-      subtitle: 'Sleep-disordered breathing',
-      summary:
-        'Sleep apnea is repeated airway collapse during sleep causing interrupted breathing, daytime sleepiness, and cardiovascular risk.',
-      sourceUrl: 'https://medlineplus.gov/sleepapnea.html',
-      sourceName: 'MedlinePlus',
-      tags: ['respiratory', 'sleep disorder', 'chronic'],
-    },
-    {
-      id: 'gastroesophageal-reflux',
-      title: 'GERD',
-      subtitle: 'Acid reflux disorder',
-      summary:
-        'Gastroesophageal reflux disease causes heartburn and regurgitation due to acid leakage from the stomach into the esophagus.',
-      sourceUrl: 'https://medlineplus.gov/gerd.html',
-      sourceName: 'MedlinePlus',
-      tags: ['gastrointestinal', 'digestive'],
-    },
-    {
-      id: 'eczema',
-      title: 'Eczema',
-      subtitle: 'Atopic dermatitis',
-      summary:
-        'Eczema is an inflammatory skin condition with itching, redness and dry patches; triggers include irritants, allergens and stress.',
-      sourceUrl: 'https://medlineplus.gov/eczema.html',
-      sourceName: 'MedlinePlus',
-      tags: ['dermatological', 'inflammatory', 'skin'],
-    },
-    {
-      id: 'psoriasis',
-      title: 'Psoriasis',
-      subtitle: 'Chronic skin condition',
-      summary:
-        'Psoriasis produces red, scaly plaques due to immune overactivity; treatment may include topical agents, biologics, and phototherapy.',
-      sourceUrl: 'https://medlineplus.gov/psoriasis.html',
-      sourceName: 'MedlinePlus',
-      tags: ['dermatological', 'autoimmune', 'skin', 'chronic'],
-    },
-    {
-      id: 'stroke',
-      title: 'Stroke',
-      subtitle: 'Acute cerebrovascular event',
-      summary:
-        'Stroke is sudden brain injury from blocked or ruptured blood vessels; immediate care is critical to reduce lasting impairment.',
-      sourceUrl: 'https://medlineplus.gov/stroke.html',
-      sourceName: 'MedlinePlus',
-      tags: ['neurological', 'cardiovascular', 'acute'],
-    },
-    {
-      id: 'heart-failure',
-      title: 'Heart Failure',
-      subtitle: 'Inadequate cardiac output',
-      summary:
-        'Heart failure occurs when the heart cannot pump enough blood to meet body needs, causing fatigue, swelling and shortness of breath.',
-      sourceUrl: 'https://medlineplus.gov/heartfailure.html',
-      sourceName: 'MedlinePlus',
-      tags: ['cardiovascular', 'chronic', 'heart'],
-    },
-    {
-      id: 'alzheimer',
-      title: 'Alzheimer Disease',
-      subtitle: 'Progressive cognitive decline',
-      summary:
-        'Alzheimer disease is a neurodegenerative disorder featuring memory loss, confusion, and behavioral change over years.',
-      sourceUrl: 'https://medlineplus.gov/alzheimersdisease.html',
-      sourceName: 'MedlinePlus',
-      tags: ['neurological', 'degenerative', 'cognitive', 'chronic'],
-    },
-  ];
+  conditions = buildWikiConditions();
 
-  selectedConditionSignal = signal<WikiCondition | null>(this.conditions[0]);
+  selectedConditionSignal = signal<WikiCondition | null>(this.conditions[0] ?? null);
 
-  availableTags = computed(() => {
+  availableTags = computed<string[]>(() => {
     const allTags = new Set<string>();
-    this.conditions.forEach(condition => {
-      condition.tags.forEach(tag => allTags.add(tag));
+    this.conditions.forEach((condition: WikiCondition) => {
+      condition.tags.forEach((tag: string) => allTags.add(tag));
     });
-    return Array.from(allTags).sort();
+
+    return Array.from(allTags).sort((a, b) => a.localeCompare(b));
   });
 
-  filteredConditions = computed(() => {
-    let filtered = this.conditions;
+  filteredConditions = computed<WikiCondition[]>(() => {
+    let filtered: WikiCondition[] = this.conditions;
 
-    // Filter by search query
     const query = this.searchQuery().trim().toLowerCase();
     if (query) {
-      filtered = filtered.filter((condition) =>
+      filtered = filtered.filter((condition: WikiCondition) =>
         condition.title.toLowerCase().includes(query) ||
         condition.subtitle.toLowerCase().includes(query) ||
         condition.summary.toLowerCase().includes(query),
       );
     }
 
-    // Filter by selected tags
     const tags = this.selectedTags();
     if (tags.length > 0) {
-      filtered = filtered.filter((condition) =>
-        tags.every(tag => condition.tags.includes(tag))
+      filtered = filtered.filter((condition: WikiCondition) =>
+        tags.every((tag: string) => condition.tags.includes(tag)),
       );
     }
 
@@ -380,7 +292,7 @@ export class WikiComponent {
   toggleTag(tag: string): void {
     const currentTags = this.selectedTags();
     if (currentTags.includes(tag)) {
-      this.selectedTags.set(currentTags.filter(t => t !== tag));
+      this.selectedTags.set(currentTags.filter((currentTag) => currentTag !== tag));
     } else {
       this.selectedTags.set([...currentTags, tag]);
     }
