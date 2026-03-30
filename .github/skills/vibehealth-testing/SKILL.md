@@ -13,6 +13,9 @@ description: Unit tests, E2E patterns, coverage requirements. Use this for vibeh
 
 VibeHealth follows a **practical testing approach**:
 
+- Prefer data-driven tests that mirror database-backed behavior (use Prisma test fixtures when possible, not ephemeral in-memory state only).
+- Include integration tests for route -> DB -> frontend data flow for critical metrics and profile updates.
+
 1. **Test behavior, not implementation** — Focus on what components do, not how
 2. **High confidence, low maintenance** — Tests that catch bugs without breaking on refactors
 3. **Fast feedback loops** — Tests should run quickly

@@ -137,7 +137,7 @@ Example:
   [backLabel]="'common.back_to_dashboard' | translate"
   [showBackLabel]="true"
 >
-  <span pageHeaderIcon class="text-3xl text-primary-500">🏃‍♂️</span>
+  <span pageHeaderIcon class="text-3xl text-primary-500">🏃</span>
 
   <div pageHeaderRight>
     <button class="btn">More</button>
@@ -146,8 +146,15 @@ Example:
 ```
 
 - Icon should be aligned vertically with title+subtitle via `flex items-center` inside `PageHeaderComponent`.
+- Do not use emojis in production UI copy or labels; use icon glyphs from `@lucide/angular` and accessible aria labels.
 - For pages with no right action, do not provide `pageHeaderRight`.
 
+### Latest App-wide Best Practices
+
+- Persist feature data through backend APIs to Prisma DB; no in-memory-only persistence for user data.
+- Use centralized reuseable components and CSS variables in `styles.css` for global styling.
+- Avoid inline styles and emoji-based textual content in header, cards, charts, and toasts.
+- Always add i18n keys to both `en.json` and `fr.json`.
 @for (item of items(); track item.id) {
   <item-card [item]="item" />
 } @empty {

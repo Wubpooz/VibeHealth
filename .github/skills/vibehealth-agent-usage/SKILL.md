@@ -17,6 +17,7 @@ File created here: `.github/.vibehealth/agent-usage.md`
 ## 1. Principles (applies to all tools)
 
 - Load the master skill first: `.github/.vibehealth/SKILL.md`.
+- Follow app conventions: use `app-page-header`, avoid emojis in UI text, and expect DB-backed storage for user data.
 - Load only required subskills next (frontend.md, backend.md, design.md, testing.md, prompts.md) to avoid token overload.
 - Use the deep references (`.github/.angular/*`, `.github/.hono/*`, `.github/.gsap/*`) only when you need framework-level details.
 - Verify the agent by asking it to list loaded files and summarize key conventions.

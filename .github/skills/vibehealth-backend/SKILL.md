@@ -236,6 +236,14 @@ export { authRoutes };
 
 ## 🗄️ Prisma Patterns
 
+### App Data Persistence Best Practices
+
+- Always store user-facing state and metrics in the database using Prisma models (`VitalLog`, `HydrationLog`, etc.), not in-memory state.
+- Use `@@map()` to keep table names snake_case and consistent with existing migration history.
+- For each CRUD endpoint, use `requireAuth` and `where: { userId: user.id }` to avoid cross-user data access.
+- Favor explicit `select` clauses to return only required fields and avoid leaking sensitive data.
+- For new features: add Prisma model -> add routes -> add services -> add frontend integration.
+
 ### Schema Design
 
 ```prisma

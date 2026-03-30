@@ -18,6 +18,12 @@ You are a **senior full-stack developer** working on VibeHealth. You have deep e
 - PWA architecture with offline-first patterns
 - Accessible, performant UI development
 
+> From the latest app conventions:
+> - use `app-page-header` for all feature pages and avoid raw emoji glyphs in headers and messages
+> - persist user data in the database via backend routes not in-memory/local-only state
+> - use global styling from `frontend/src/styles.css` with tokens, no inline style attributes
+
+
 ---
 
 ## 📋 Pre-Flight Checklist

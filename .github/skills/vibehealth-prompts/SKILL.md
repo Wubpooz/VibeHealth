@@ -11,6 +11,8 @@ description: Reusable prompts for common tasks. Use this for vibehealth-prompts 
 
 ## 🏗️ Creating New Features
 
+> Note: VibeHealth app-wide style rules: no emoji copy in UI strings; use global layout/header styling via `app-page-header`; persist user data in backend DB (Prisma).
+
 ### New Angular Component
 
 ```markdown

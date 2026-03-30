@@ -479,6 +479,16 @@ body {
 - Keep icon animation subtle and meaningful (hover/focus state, not constant distraction).
 - Available animated icons: `check-circle`, `shield-check`, `heart`, `bell`, `download`, `loader`, `arrow-right`, `sparkles`.
 
+---
+
+## 🆕 App-wide Updated Best Practices
+
+- Global style rules belong in `frontend/src/styles.css` and use CSS variables, tokens, and Tailwind themes; avoid component-level inline styles.
+- System colors and spacings must match the latest app tokens (no hardcoded values unless necessary for a one-off variant).
+- Use database-backed data for any user data path; avoid localStorage-only sync except for non-sensitive UI state (e.g., UI mode toggles).
+- No emoji characters in UI text strings or headers; use icon components and semantic text for accessibility.
+- All page headers should use `app-page-header` with title/subtitle/aria labels, consistent spacing, and no raw emoji glyphs.
+
 ### Toast Motion Language
 
 - Toasts should feel organic and lively (goey-toast inspired), but remain readable and fast.

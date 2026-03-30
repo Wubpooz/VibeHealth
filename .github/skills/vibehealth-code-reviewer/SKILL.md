@@ -28,6 +28,9 @@ When asked to review a PR, file, or code snippet, follow these structured steps:
 
 ### Styling & UI
 *   **Tailwind CSS:** Ensure classes are used consistently. Group logically (layout -> spacing -> typography -> colors). Reject inline `style="..."` attributes.
+*   **Global styling:** Enforce global tokens in `frontend/src/styles.css`; avoid per-component hardcoded color/spacing. Use Tailwind variables and theme config.
+*   **Header UI:** All pages should use `app-page-header` component with consistent title/subtitle/back action pattern. No standalone emojis in headings.
+*   **Emoji policy:** No emojis in product copy or labels; use icon components and accessible text alternatives.
 *   **Animations (Motion.dev & Lottie):** Verify animations are performant and don't block the main thread. Suggest `content-visibility: auto` or `will-change` for complex motion. 
 *   **Accessibility (a11y):** Ensure proper `aria-` attributes, focus management, and semantic HTML structure.
 
