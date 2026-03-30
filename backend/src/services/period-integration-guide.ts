@@ -125,7 +125,7 @@ function example_getCycleInsights() {
  * Pattern 1: POST /api/v1/wellness/period
  * Create a new period log entry
  */
-interface CreatePeriodLogRequest {
+export interface CreatePeriodLogRequest {
   startDate: string; // YYYY-MM-DD format
   endDate?: string;  // YYYY-MM-DD format (optional)
   flowIntensity: "LIGHT" | "MEDIUM" | "HEAVY";
@@ -165,7 +165,7 @@ interface CreatePeriodLogRequest {
  * Pattern 2: GET /api/v1/wellness/period
  * Fetch user's period history and predictions
  */
-interface PeriodHistoryResponse {
+export interface PeriodHistoryResponse {
   success: boolean;
   data: {
     logs: PeriodLog[];
@@ -296,7 +296,7 @@ interface CycleInsights {
   dataPoints?: number;
 }
 
-interface PeriodTrackerResponse {
+export interface PeriodTrackerResponse {
   success: boolean;
   data: {
     logs: PeriodLogData[];
