@@ -754,6 +754,8 @@ model OnboardingMedication {
   @@unique([key, locale])
   @@index([locale, isActive])
   @@map("onboarding_medications")
+}
+
 // Period & Cycle Tracking (Phase 3 — Wellness)
 model PeriodLog {
   id             String    @id @default(cuid())
