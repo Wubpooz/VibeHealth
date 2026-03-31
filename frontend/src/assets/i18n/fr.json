@@ -28,6 +28,7 @@
     "journal": "Journal",
     "vitals": "Signes vitaux",
     "wellness": "Bien-être",
+    "relaxation_sounds": "Relaxation sonore",
     "medical": "Médicaments",
     "activity": "Activité",
     "workouts": "Entraînements",
@@ -35,7 +36,8 @@
     "goals": "Objectifs",
     "period": "Règles",
     "rewards": "Récompenses",
-    "wiki": "Wiki santé"
+    "wiki": "Wiki santé",
+    "practitioner_map": "Carte des praticiens"
   },
   "SIDEBAR": {
     "BRAND_NAME": "VibeHealth",
@@ -1216,7 +1218,38 @@
         "updateLog": "Échec de la mise à jour du journal de cycle",
         "deleteLog": "Échec de la suppression du journal de cycle"
       }
+    },
+    "RELAXATION_SOUNDS": {
+      "TITLE": "Relaxation sonore",
+      "SUBTITLE": "Jouez des pistes apaisantes pour favoriser la détente et la concentration",
+      "CURRENT_TRACK": "Piste en cours",
+      "SELECT_TRACK": "Sélectionner une piste",
+      "PLAY": "Jouer",
+      "PAUSE": "Pause",
+      "STOP": "Arrêter",
+      "SEEK": "Recherche dans la piste",
+      "RAINFOREST_RAIN_TITLE": "Pluie de forêt tropicale",
+      "RAINFOREST_RAIN_DESCRIPTION": "Pluie tropicale ambiante avec tonnerre doux au loin.",
+      "OCEAN_WAVES_TITLE": "Vagues océaniques apaisantes",
+      "OCEAN_WAVES_DESCRIPTION": "Vagues océaniques chaudes et continues pour la relaxation.",
+      "FOREST_BREEZE_TITLE": "Brise forestière",
+      "FOREST_BREEZE_DESCRIPTION": "Douce brise forestière et chant d'oiseaux."
     }
+  },
+  "PRACTITIONER_MAP": {
+    "TITLE": "Trouver des praticiens à proximité",
+    "SUBTITLE": "Recherchez des médecins et des équipes soignantes sur la carte",
+    "OPENSTREETMAP": "OpenStreetMap",
+    "GOOGLE_MAPS": "Google Maps",
+    "CURRENT_LOCATION": "Position actuelle",
+    "SELECTED_PROVIDER": "Fournisseur de cartographie",
+    "REFRESH_LOCATION": "Rafraîchir la position",
+    "LOADING_MAP": "Chargement de la carte...",
+    "MAP_TITLE": "Carte des praticiens",
+    "GEOLOCATION_UNSUPPORTED": "La géolocalisation n'est pas prise en charge par ce navigateur.",
+    "GEOLOCATION_DENIED": "Accès à la position refusé. Affichage de la position par défaut.",
+    "IMPLICIT_PERMISSIONS": "La carte utilise la position de l’appareil pour afficher des praticiens proches. Vous pouvez refuser tout en continuant d’utiliser l’application.",
+    "BACK_TO_DASHBOARD": "Retour au tableau de bord"
   },
   "SETTINGS": {
     "TITLE": "Paramètres",

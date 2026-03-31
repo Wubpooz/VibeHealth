@@ -60,9 +60,11 @@ export class SidebarComponent {
     { route: '/goals', labelKey: 'nav.goals', icon: 'track_changes' },
     { route: '/medical-id', labelKey: 'nav.medical_id', icon: 'badge' },
     { route: '/first-aid', labelKey: 'nav.first_aid', icon: 'medical_services' },
+    { route: '/practitioner-map', labelKey: 'nav.practitioner_map', icon: 'place' },
     { route: '/wiki', labelKey: 'nav.wiki', icon: 'local_library' },
     { route: '/journal', labelKey: 'nav.journal', icon: 'menu_book' },
     { route: '/period', labelKey: 'nav.period', icon: 'calendar_today' },
+    { route: '/relaxation-sounds', labelKey: 'nav.relaxation_sounds', icon: 'spa' },
     { route: '/rewards', labelKey: 'nav.rewards', icon: 'emoji_events' }
   ];
 

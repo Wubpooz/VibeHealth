@@ -145,6 +145,14 @@ export const routes: Routes = [
     canActivate: [authGuard],
   },
   {
+    path: "relaxation-sounds",
+    loadComponent: () =>
+      import("./features/wellness/relaxation-sounds/relaxation-sounds-page.component").then(
+        (m) => m.RelaxationSoundsPageComponent,
+      ),
+    canActivate: [authGuard],
+  },
+  {
     path: "rewards",
     loadComponent: () =>
       import("./features/rewards/rewards-page.component").then(
@@ -157,6 +165,14 @@ export const routes: Routes = [
     loadComponent: () =>
       import("./features/wiki/wiki.component").then(
         (m) => m.WikiComponent,
+      ),
+    canActivate: [authGuard],
+  },
+  {
+    path: "practitioner-map",
+    loadComponent: () =>
+      import("./features/practitioner-map/practitioner-map.component").then(
+        (m) => m.PractitionerMapComponent,
       ),
     canActivate: [authGuard],
   },

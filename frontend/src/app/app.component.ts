@@ -108,7 +108,9 @@ export class AppComponent implements OnInit {
     if (url.startsWith('/medical-id')) return 'Medical ID';
     if (url.startsWith('/medication')) return 'Medication';
     if (url.startsWith('/first-aid')) return 'First Aid';
+    if (url.startsWith('/practitioner-map')) return 'Practitioner Map';
     if (url.startsWith('/journal')) return 'Journal';
+    if (url.startsWith('/relaxation-sounds')) return 'Relaxation Sounds';
     if (url.startsWith('/rewards')) return 'Rewards';
     if (url.startsWith('/onboarding')) return 'Onboarding';
     if (url.startsWith('/settings')) return 'Settings';

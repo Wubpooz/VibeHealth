@@ -28,6 +28,7 @@
     "journal": "Journal",
     "vitals": "Vitals",
     "wellness": "Wellness",
+    "relaxation_sounds": "Relaxation Sounds",
     "medical": "Medication",
     "activity": "Activity",
     "workouts": "Workouts",
@@ -35,7 +36,8 @@
     "goals": "Goals",
     "period": "Period",
     "rewards": "Rewards",
-    "wiki": "Health Wiki"
+    "wiki": "Health Wiki",
+    "practitioner_map": "Practitioner Map"
   },
   "SIDEBAR": {
     "BRAND_NAME": "VibeHealth",
@@ -1216,7 +1218,38 @@
         "updateLog": "Failed to update period log",
         "deleteLog": "Failed to delete period log"
       }
+    },
+    "RELAXATION_SOUNDS": {
+      "TITLE": "Relaxation Sounds",
+      "SUBTITLE": "Play calming nature and ambient tracks to support focus and rest",
+      "CURRENT_TRACK": "Current track",
+      "SELECT_TRACK": "Select track",
+      "PLAY": "Play",
+      "PAUSE": "Pause",
+      "STOP": "Stop",
+      "SEEK": "Seek timeline",
+      "RAINFOREST_RAIN_TITLE": "Rainforest Rain",
+      "RAINFOREST_RAIN_DESCRIPTION": "Ambient rainforest rain with soft thunder in the distance.",
+      "OCEAN_WAVES_TITLE": "Calm Ocean Waves",
+      "OCEAN_WAVES_DESCRIPTION": "Continuous warm ocean wave sounds for relaxation.",
+      "FOREST_BREEZE_TITLE": "Forest Breeze",
+      "FOREST_BREEZE_DESCRIPTION": "Gentle forest breeze and birdsong track."
     }
+  },
+  "PRACTITIONER_MAP": {
+    "TITLE": "Find nearby practitioners",
+    "SUBTITLE": "Search physicians and care teams on a map",
+    "OPENSTREETMAP": "OpenStreetMap",
+    "GOOGLE_MAPS": "Google Maps",
+    "CURRENT_LOCATION": "Current location",
+    "SELECTED_PROVIDER": "Map provider",
+    "REFRESH_LOCATION": "Refresh location",
+    "LOADING_MAP": "Loading map…",
+    "MAP_TITLE": "Practitioner map",
+    "GEOLOCATION_UNSUPPORTED": "Geolocation is not supported in this browser.",
+    "GEOLOCATION_DENIED": "Location access denied. Showing default location.",
+    "IMPLICIT_PERMISSIONS": "Maps use your device location to show nearby practitioners. You can deny while still using the app.",
+    "BACK_TO_DASHBOARD": "Back to dashboard"
   },
   "SETTINGS": {
     "TITLE": "Settings",
