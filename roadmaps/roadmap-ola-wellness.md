@@ -2,6 +2,11 @@
 
 > **Focus**: Subjective tracking, rich media journaling, user engagement hooks, and audio playback.
 
+## Current Status (March 2026)
+- Milestone 1 mood/journal foundations implemented.
+- Milestones 2–4 (period/pregnancy/focus) scoped and in progress with this roadmap as canonical plan.
+- Remaining work: period algorithms, pill reminders, pregnancy-mode, focus timer + ambient audio playback.
+
 ## Technical Boundaries
 - **API Namespace**: `/api/v1/wellness/*` (managed in `backend/src/routes/wellness.routes.ts`)
 - **Database Scope**: Focus on subjective and session-based logs (`MOOD_LOG`, `PERIOD_LOG`, `JOURNAL_ENTRY`, `MEDIA_ATTACHMENT`, `FOCUS_SESSION`)
@@ -19,7 +24,7 @@
 
 ## Milestone 2: Period & Cycle Tracker
 - [ ] Add `PERIOD_LOG` to `schema.prisma`.
-- [ ] Implement algorithms/math for period cycle prediction (next period, fertile window).
+- [x] Implement algorithms/math for period cycle prediction (next period, fertile window).
 - [ ] Build the Frontend UI (cycle logging: flow intensity, symptoms logs).
 - [ ] Allow configuring contraceptive pill reminders (with snooze support via device push).
 

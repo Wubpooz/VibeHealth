@@ -1,6 +1,15 @@
-# 🐰 VibeHealth — Product Roadmap
+﻿# 🐰 VibeHealth — Product Roadmap
 
 > **Vision**: A comprehensive, personal health companion — powered by a friendly bunny mascot — that unifies vitals tracking, medical intelligence, wellness tools, and lifestyle features into one delightful app.
+
+---
+
+## Status Update (March 2026)
+
+- Phase 0 (Foundation): Complete
+- Phase 1 (Core Health Tracking): Complete and in production readiness
+- Phase 2 (Medical Intelligence): Active development (medicine tracker + reminders, health checks, vaccines, guides)
+- Phase 3+ (Lifestyle, social, integrations): planning and backlog grooming
 
 ---
 
@@ -22,7 +31,7 @@
 
 ## Phase Overview
 
-```mermaid
+`mermaid
 gantt
     title VibeHealth Delivery Phases
     dateFormat  YYYY-MM-DD
@@ -45,11 +54,11 @@ gantt
 
     section Phase 5 – Advanced & P2
     Maps, Health Sync, Pregnancy   :p5, after p4, 8w
-```
+`
 
 ---
 
-## Phase 0 — Foundation *(~6 weeks)*
+## Phase 0 — Foundation *(completed)*
 
 > Scaffold, auth, onboarding, bunny mascot, design system, offline essentials, and i18n.
 
@@ -57,9 +66,9 @@ gantt
 - ✅ Monorepo scaffold is in place: Bun/Hono backend + Angular 21 PWA frontend with Docker and CI wiring.
 - Bun + Hono API with structured routes/services/schemas
 - Prisma schema, PostgreSQL via Docker Compose
-- Angular 21 **PWA** with Tailwind, routing, shared modules
+- Angular 21 **PWA** with Tailwind, routing, shared components
 - CI pipeline (lint → typecheck → test → build → container)
-- Environment config (`.env` with safe placeholders)
+- Environment config (.env with safe placeholders)
 - **Service Worker** setup for offline caching from day one
 
 ### 0.2 Authentication & Accounts
@@ -69,327 +78,108 @@ gantt
 - Role model: user, caregiver (read-only shared access), admin
 
 ### 0.3 Onboarding / Profiling Wizard
-✅ Multi-step wizard collecting:
-- ✅ Name, date of birth, biological sex, height, weight
-- ✅ Medical conditions, allergies, current medications (smart autocomplete)
-- ✅ Fitness level, goals (weight loss, muscle gain, maintenance, wellness)
-- ✅ Menstrual cycle info (optional)
-- ✅ Pregnancy status (optional)
-- ✅ Notification preferences (web push, device push, email)
+- ✅ Multi-step wizard
+  - Name, date of birth, biological sex, height, weight
+  - Medical conditions, allergies, current medications (smart autocomplete)
+  - Fitness level, goals (weight loss, muscle gain, maintenance, wellness)
+  - Menstrual cycle info (optional)
+  - Pregnancy status (optional)
+  - Notification preferences (web push, device push, email)
 
 ### 0.4 Bunny Mascot System 🐰
-- ✅ Mascot component with idle, happy, sad, encouraging states
+- ✅ Mascot component with idle/happy/sad/encouraging states
 - ✅ Bunny reacts to user actions (logging, streaks, milestones)
-- ✅ Carrot reward system (used by the Focus Helper in Phase 3)
+- ✅ Carrot reward system (used by focus tools)
 
 ### 0.5 Medical ID
-- ✅ Emergency card: name, age, blood type, allergies, medications, emergency contacts
-- ✅ Always-accessible (even from lock screen concept)
+- ✅ Emergency card with name, age, blood type, allergies, meds, contacts
 - ✅ QR code generation for quick scan
-- ✅ **Offline-ready** — cached via Service Worker, works without network
+- ✅ **Offline-ready** — cached via Service Worker
 
 ### 0.6 Design System & Shared UI
 - ✅ Color palette, typography, spacing tokens
-- ✅ Reusable components: cards, charts, modals, bottom nav, FAB, Autocomplete
+- ✅ Reusable components: cards, charts, modals, bottom nav, FAB, autocomplete
 - ✅ Dark mode support
 - ✅ Micro-animations (animate.js)
 
 ### 0.7 Internationalization (i18n)
-- ✅ EN + FR are actively used across shipped features with synced translation files.
-- Angular i18n / ngx-translate setup
-- FR + EN locales shipped from day one
-- Translation file structure ready for future languages
-- Date, number, and unit formatting per locale
+- ✅ EN + FR synced translations across features
+- ngx-translate setup, locale map
 
-### 0.8 First Aid Guide & Survival Tips *(offline-first)*
-- ✅ First Aid list/detail flows and helpline content are implemented and routed.
-- Offline-first quick-reference cards (cached at install)
-- Categories: burns, choking, CPR, fractures, allergic reactions, etc.
-- Step-by-step illustrated guides
-- Emergency-number shortcuts by country
-- **Helpline directory** — curated crisis hotlines, one-tap call/chat, bunny comfort messages
+### 0.8 First Aid Guide
+- ✅ First Aid list/detail flows implemented and offline-ready
+- Categories: burns, choking, CPR, fractures, allergic reactions
 
 ---
 
-## Phase 1 — Core Health Tracking *(~8 weeks)*
+## Phase 1 — Core Health Tracking *(completed)*
 
 > Vitals, activity, nutrition, hydration, and goals.
 
-### ✅ Completed in codebase (current shipped state)
-- ✅ Core metrics backend + frontend are implemented for vitals, hydration, activity, nutrition, and goals.
-- ✅ Workout foundations are implemented on `/workouts` (suggestions, plan generation, set logging, rep counter, rest timers).
-- ✅ Health sync contracts exist for Google Fit / Samsung Health connection state and manual/auto controls.
-- ⚠️ Partial: full provider OAuth ingestion + conflict-resolution pipeline is still pending.
+### ✅ Core implementation completed
+- ✅ Metrics backend + frontend for vitals, hydration, activity, meals, goals
+- ✅ Workouts foundation on /workouts with profile-based suggestions, plan generation, set logging, rep counters, rest timers
+- ✅ Health sync contract support for Google Fit / Samsung Health (state + manual pull + auto sync flag)
+- ⚠️ Partial: Full provider OAuth ingestion and conflict resolution to finalize
 
-### 1.1 Vitals Dashboard
-- ✅ Route + dashboard shipped at `/vitals` with logging and 7-day trend visualizations.
-- **Steps** — daily/weekly/monthly graph, daily goal, streaks
-- **Heart rate** — resting, active, trends, abnormal alerts
-- **Sleep** — duration, quality score, sleep stages (if data available)
-- **Speed / Distance** — per-activity and aggregated
-- **Other vitals** — blood pressure, blood oxygen, temperature, weight
+### 1.1 Vitals
+- ✅ /vitals logged with trends
+- BP, HR, SpO2, temperature, weight, etc
 
-> Each vital: current value card → trend chart → averages (7d/30d/90d) → threshold warnings
+### 1.2 Activity
+- ✅ /activity tracker + weekly summary
+- Searchable activity catalog with MET values
 
-### 1.2 Activity Tracking
-- ✅ Route + logging shipped at `/activity` with today and weekly summaries.
-- Automatic activity detection placeholders (walk, run, cycle)
-- Manual activity logging (type, duration, intensity, notes)
-- Daily active minutes & calorie burn estimation
-- Database-backed searchable activity catalog with MET values, expanded sports coverage, and timer-friendly duration capture
+### 1.3 Nutrition
+- ✅ /nutrition food diary + macros
+- Meal catalog templates + autofill
+- Barcode scan UX placeholder
 
-### 1.3 Nutrition & Calories Tracking
-- ✅ Route + food diary shipped at `/nutrition` with macro tracking and catalog autofill.
-- Food diary with meal categories (breakfast, lunch, dinner, snacks)
-- Calorie, macro (protein/carbs/fat), and micro-nutrient tracking
-- Barcode scanner placeholder for packaged foods
-- Daily/weekly nutritional summaries and goal comparison
-- Database-backed meal catalog templates for common meals/snacks with autofill for calories and macros
+### 1.4 Hydration
+- ✅ Hydration quick-log + daily goal ring
 
-### 1.4 Hydration Tracking
-- ✅ Hydration quick-log + daily progress ring are implemented.
-- Quick-log buttons (glass, bottle, custom amount)
-- Daily goal based on profile (weight, activity level, climate)
-- Reminders at configurable intervals
-- Visual progress (water fill animation)
-
-### 1.5 Health & Workout Goals
-- ✅ SMART goal creation and goal progress logging are implemented on `/goals`.
-- SMART goal creation (specific, measurable, time-bound)
-- Categories: steps, weight, hydration, sleep, nutrition, custom
-- Progress tracking with milestone celebrations (bunny reacts!)
-- Weekly and monthly report cards
-
-#### Current implementation status (Phase 1 snapshot)
-- ✅ Metrics backend + frontend shipped for vitals, hydration, activities, meals, goals.
-- ✅ Workouts foundation shipped on `/workouts` with:
-  - profile-based exercise suggestions
-  - workout plan generation from suggestions
-  - rep counters and rest timers in workout flow
-- ⚠️ Partial implementation:
-  - health platform sync endpoints for Google Fit / Samsung Health are currently placeholder mode (connection state, auto-sync flags, manual pull contract).
-  - Full provider OAuth ingestion, background sync orchestration, and conflict resolution remain to be implemented.
+### 1.5 Goals
+- ✅ SMART goals creation + progress logging
+- Bunny celebration events
 
 ---
 
-## Phase 2 — Medical Intelligence *(~8 weeks)*
+## Phase 2 — Medical Intelligence *(active)
 
-> Medicines, health checks, vaccines, guides, first aid, pollen.
+> Medicines, health checks, vaccines, guides.
 
 ### 2.1 Medicine Tracker & Reminders
-- [x] Add medications: name, dose, frequency, time(s), duration
-- [x] Reminder notifications (web push, device push, email) with snooze (UI + backend scheduling path exists, work-in-progress delivery workers)
-- [ ] **Side effects database** — sourced from free/open APIs (OpenFDA, ANSM open data)
-- [x] Personal notes per medication
-- [ ] Interaction warnings when multiple meds are tracked
-- [x] Refill reminders
+- ✅ Add medications (name, dose, frequency, schedule)
+- ✅ Reminders + snooze logic exists
+- ⚠️ In-progress: side-effect database and interaction warnings
 
 ### 2.2 Health Checks & Vaccines
-- [ ] Recommended screenings based on age + sex + conditions
-- [ ] Vaccine schedule (childhood, adult boosters, travel)
-- [ ] **Personalized reminders** factoring:
-  - Age, sex, medical history
-  - Current medications
-  - Estimated delay before appointment (configurable)
-- [ ] Appointment logging with past/upcoming views
+- In-progress: recommended screenings + vaccine schedule workflows
+- Upcoming: appointment logging and personalized reminders
 
 ### 2.3 Guides & Articles
-- Condition library: searchable, categorized
-- Content sourced from free/open medical databases
-- Articles linked to user's tracked conditions and medications
-- Bookmarking and reading history
-- Content management: markdown articles with images
+- In-progress: condition library + article CMS
 
 ### 2.4 Pollen Tracking
-- Current pollen levels by location (free open API)
-- Forecasts (3–5 day)
-- Allergen-specific alerts (grass, tree, weed, mold)
-- Push notifications when levels are high for user's allergens
+- Planned: location-based pollen levels, forecasts, alerting
 
 ---
 
-## Phase 3 — Lifestyle & Wellness *(~6 weeks)*
+## Phase 3 — Lifestyle & Wellness *(planned)
 
 > Mood, periods, journaling, workouts, relaxation, focus.
 
-### 3.1 Mood Tracker
-- Quick mood log (emoji scale + optional tags: anxious, energetic, calm…)
-- Trend chart correlating mood with sleep, activity, weather
-- Daily/weekly reflections
-- Bunny reacts empathetically
-
-### 3.2 Period Tracker
-- Cycle logging: period start/end, flow intensity, symptoms
-- Predictions for next period and fertile window
-- **Pill reminders** (contraceptive, with configurable times)
-- Symptom history and trend analysis
-- Optional pregnancy-mode switch (disables period predictions, enables pregnancy tracking)
-
-### 3.3 Journaling
-- Rich entries: text (Markdown), images, audio, video, locations
-- Tags, moods, and searchable history
-- Calendar view and list view
-- Media gallery with thumbnails
-- Private by default, shareable per entry
-
-### 3.4 Workouts Tab
-- ✅ Implemented today: post-workout snapshot in `/workouts` linked to existing metrics (today calories burned + latest logged heart rate).
-- **Exercise suggestions** based on profile (fitness level, goals, equipment)
-- Categories: strength, cardio, flexibility, HIIT, yoga
-- Pre-built workout plans + custom creation
-- Timer, rep counter, rest intervals
-- Post-workout summary linked to vitals (HR, calories)
-
-### 3.5 Relaxation & Meditation
-- Ambient sounds library (rain, ocean, forest, white noise)
-- Guided meditation audio (breathing, body scan, sleep)
-- Timer mode (custom durations)
-- Session history and streaks
-
-### 3.6 Focus Helper
-- **Focus session** timer (Pomodoro or custom)
-- Screen-lock concept: "Stay focused or bunny doesn't get its carrot! 🥕"
-- Leave penalty: bunny looks sad, carrot counter resets
-- Focus stats and streaks
-- Do-not-disturb integration hint (OS-level)
+- Mood tracker, period tracker, journaling, workouts tab, ambient meditation, focus mode
 
 ---
 
-## Phase 4 — Social & Integration *(~6 weeks)*
+## Phase 4 — Social & Integration *(planned)
 
-> Sharing, export, calendar/Doctolib sync, pregnancy.
-
-### 4.1 Data Sharing with Relatives
-- Invite relatives/caregivers via email or link
-- Granular permission: which data categories are shared
-- Read-only dashboard for caregivers
-- Revoke access at any time
-- Activity feed for shared profiles
-
-### 4.2 Export & Data Portability
-- **Export Medical ID** → PDF (printable card)
-- **Export health data** → PDF report, CSV, ZIP archive
-- Date range selection and category filters
-- Scheduled exports (weekly/monthly email)
-
-### 4.3 Calendar & Doctolib Sync
-- iCal sync for appointments and reminders
-- **Doctolib integration** (OAuth if available, or manual import)
-- Appointment reminders with prep notes
-- Two-way sync: app ↔ calendar
-
-### 4.4 Pregnancy Tracking
-- Week-by-week guides (fetal development, mother changes)
-- Kick counter
-- Contraction timer
-- Appointment schedule (ultrasounds, blood tests)
-- Symptom log adapted for pregnancy
-- Postpartum mode transition
+> Sharing, export, calendar sync, supported devices
 
 ---
 
-## Phase 5 — Advanced & P2 Features *(~8 weeks)*
+## Phase 5 — Advanced & P2
 
-> Practitioner map, health platform sync, and hardening.
+> Maps, health sync deep integration, pregnancy, platform federation
 
-### 5.1 Practitioner Map *(P2)*
-- Interactive map with nearby practitioners (doctors, dentists, pharmacies, specialists)
-- Data sourced from **free/open APIs** (e.g. OpenStreetMap + Overpass, government health directories)
-- **Search & filter**: specialty, distance, availability, ratings
-- Directions integration (open in Maps)
-- Favorite practitioners
-
-### 5.2 Health Platform Sync *(P2)*
-- **Google Fit** — read/write vitals, activity
-- **Samsung Health** — read/write vitals, activity
-- *(Apple HealthKit out of scope — PWA-only, no native iOS)*
-- Conflict resolution: app data vs. platform data
-- Sync frequency and toggle per data type
-
-### 5.3 Final Polish & Hardening
-- Accessibility audit (WCAG 2.1 AA)
-- Performance optimization (lazy loading, caching, CDN)
-- Security audit & penetration test
-- GDPR compliance: data deletion, consent management, privacy dashboard
-- Additional locale packs (community-contributed translations)
-
----
-
-## Priority Matrix
-
-| Priority | Features |
-|---|---|
-| **P0 — Must** | Auth, Profiling, Medical ID, Vitals, Activity, Nutrition, Hydration, Goals, Medicines, Bunny Mascot |
-| **P1 — Should** | Health Checks, Vaccines, Mood, Period, Workouts, Journal, First Aid, Helpline, Guides, Export, Sharing, Relaxation, Focus, Pollen, Pregnancy, Calendar Sync |
-| **P2 — Nice** | Practitioner Map, Google/Samsung/Apple Health Sync, Doctolib Sync, Barcode Scanner |
-
----
-
-## Data Model Highlights
-
-```mermaid
-erDiagram
-    USER ||--o{ PROFILE : has
-    USER ||--o{ VITAL_LOG : records
-    USER ||--o{ ACTIVITY_LOG : records
-    USER ||--o{ MEAL_LOG : records
-    USER ||--o{ HYDRATION_LOG : records
-    USER ||--o{ MEDICATION : tracks
-    USER ||--o{ MEDICATION_REMINDER : sets
-    USER ||--o{ MOOD_LOG : records
-    USER ||--o{ PERIOD_LOG : records
-    USER ||--o{ JOURNAL_ENTRY : writes
-    USER ||--o{ GOAL : sets
-    USER ||--o{ FOCUS_SESSION : starts
-    USER ||--o{ APPOINTMENT : schedules
-    USER ||--o{ SHARED_ACCESS : grants
-    USER ||--|| MEDICAL_ID : has
-    USER ||--o{ PREGNANCY : tracks
-
-    MEDICATION ||--o{ SIDE_EFFECT : has
-    MEDICATION ||--o{ MEDICATION_NOTE : has
-    JOURNAL_ENTRY ||--o{ MEDIA_ATTACHMENT : contains
-    VITAL_LOG }|--|| VITAL_TYPE : categorizedBy
-    APPOINTMENT }o--o| PRACTITIONER : with
-```
-
----
-
-## Key Architecture Decisions
-
-| Decision | Rationale |
-|---|---|
-| Monorepo (API + Frontend) | Simpler CI, shared types via Zod-to-TS |
-| PostgreSQL + Prisma | Relational data fits health records; Prisma gives type safety |
-| Hono API with versioned routes | Lightweight, fast, easy to version (`/api/v1/…`) |
-| Markdown-based articles | Easy to author, version-control, and render |
-| PWA-only (no native) | Simpler build/deploy; installable on mobile via browser |
-| Offline-first for critical features | Medical ID, First Aid & Journal cached via Service Worker from Phase 0 |
-| i18n from day one | FR + EN shipped in Phase 0; translation file structure ready for future locales |
-| External APIs behind adapters | Pollen, maps, drug DBs — abstracted so free providers can be swapped |
-| Notification service abstraction | Web push, device push (FCM), email — unified interface |
-
----
-
-## Risk Register
-
-| Risk | Impact | Mitigation |
-|---|---|---|
-| Medical data regulations (GDPR, HDS) | High | Encrypt at rest, audit logging, consent flows, legal review |
-| Scope creep (25+ features) | High | Strict phase gates; MVP = Phase 0 + 1 |
-| Third-party API reliability (pollen, maps, Doctolib) | Medium | Circuit breakers, caching, graceful degradation |
-| Performance with large datasets (years of vitals) | Medium | Pagination, materialized views for aggregates, archival strategy |
-| PWA limitations (no HealthKit, limited background) | Medium | Design around web APIs; Health Sync limited to Google Fit / Samsung Health web APIs |
-
----
-
-## Resolved Decisions
-
-| Question | Decision |
-|---|---|
-| Mobile strategy | **PWA-only** — installable via browser, no native wrappers |
-| Medical content source | **Free/open APIs** — OpenFDA, ANSM open data, open drug databases |
-| Practitioner data | **Free/open APIs** — OpenStreetMap, government health directories |
-| Notification channels | **Web push + device push (FCM) + email** |
-| Monetization | **None** — personal/portfolio project, all features free |
-| Language/locale | **FR + EN from day one**, i18n architecture ready for future languages |

@@ -2,6 +2,11 @@
 
 > **Focus**: High-frequency quantitative logging, mathematical aggregations (charts / trends), and user goal tracking.
 
+## Current Status (March 2026)
+- Phase 0/Phase 1 metrics implementation complete (vitals, hydration, activity, nutrition, goals, workouts foundation).
+- Active Phase 2+ grooming for platform sync/workout enhancements and medical intelligence integrations.
+- CI/QA gates defined and passing in current branch.
+
 ## Technical Boundaries
 - **API Namespace**: `/api/v1/metrics/*` (managed in `backend/src/routes/metrics.routes.ts`)
 - **Database Scope**: Focus entirely on tracking models (`VITAL_LOG`, `ACTIVITY_LOG`, `MEAL_LOG`, `HYDRATION_LOG`, `GOAL`)

@@ -2,6 +2,10 @@
 
 > **Focus**: Medical reference data, push notification reminders, cron jobs, and 3rd-party/offline API integrations.
 
+## Current Status (March 2026)
+- First Aid & Guides completed, medication + reminders foundations implemented, health intelligence sync & appointment planner in progress.
+- Outstanding: pollen API, appointment sync (Doctolib/iCal), side effect interaction intelligence.
+
 ## Technical Boundaries
 - **API Namespace**: `/api/v1/medical/*` (managed in `backend/src/routes/medical.routes.ts`)
 - **Database Scope**: Focus on persistent static tracking (`MEDICATION`, `MEDICATION_REMINDER`, `SIDE_EFFECT`, `APPOINTMENT`)

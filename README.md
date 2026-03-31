@@ -1,4 +1,4 @@
-# 🐰 VibeHealth
+﻿# 🐰 VibeHealth
 
 > Your personal health companion — a delightful full-stack PWA for tracking health, habits, and wellness.
 
@@ -37,33 +37,36 @@ VibeHealth combines medical essentials, lifestyle tracking, and a bunny-powered 
 - Bunny mascot and rewards
 - Shared design system + i18n
 
-### Phase 1 — Health Tracking (in progress) 🚧
-- Metrics API and Prisma data models for:
+### Phase 1 — Health Tracking ✅
+- Metrics API and Prisma models implemented for:
   - vitals
   - hydration
   - activity
   - meals/nutrition
   - goals + goal progress
 - Frontend pages/routes implemented:
-  - `/vitals`
-  - `/activity`
-  - `/nutrition`
-  - `/goals`
-  - `/workouts` (profile-based suggestions + rep/rest workflow)
+  - /vitals
+  - /activity
+  - /nutrition
+  - /goals
+  - /workouts (profile-based suggestions + rep/rest workflow)
 - Input experiences implemented:
   - vitals/activity/nutrition loggers
   - goals wizard modal/overlay
-- Reference data is now database-backed for key Phase 1 flows:
-  - searchable activity catalog with MET values, calorie estimates, and timer-based duration capture
-  - nutrition meal catalog templates for autofill and smarter meal logging
-- Barcode scanner UI currently shows a "coming soon" overlay (camera scan not yet implemented).
-- Health platform sync currently uses a persisted placeholder contract (`Google Fit` / `Samsung Health` connect + auto-sync flags + manual pull endpoint). Full OAuth ingestion/conflict resolution is not yet implemented.
+- Reference data is database-backed for cataloged activities and meals templates
+- Barcode scanner UI is a  coming soon interaction placeholder
+- Health platform sync contract exists, with provider ingestion and full conflict resolution pending
+
+### Phase 2 — Medical Intelligence (active)
+- Medicine tracker + reminders foundations are in place (CRUD, schedule reminders, data model)
+- Health checks, vaccines, and condition guides are in design and early implementation
+- Pollen/allergen tracking components are planned
 
 See [roadmap.md](./roadmap.md) for phase planning.
 
 ## 🧭 Project Structure
 
-```text
+`	ext
 vibehealth/
 ├── backend/
 │   ├── prisma/schema.prisma
@@ -78,47 +81,51 @@ vibehealth/
 │       └── shared/
 ├── docker-compose.yml
 └── .github/
-```
+`
 
 ## 📈 Metrics API Snapshot
 
-All metrics endpoints are under `/api/v1/metrics`:
-- `GET/POST /vitals`
-- `GET/POST /hydration`
-- `GET/POST /activities`
-- `GET/POST /meals`
-- `GET/POST/PATCH/DELETE /goals`
-- `GET/POST /goals/:id/progress`
+All metrics endpoints are under /api/v1/metrics:
+- GET/POST /vitals
+- GET/POST /hydration
+- GET/POST /activities
+- GET/POST /meals
+- GET/POST/PATCH/DELETE /goals
+- GET/POST /goals/:id/progress
 
 ## 🛠️ Quick Start
 
 1. Clone repository
-2. Set up backend environment file (`backend/.env`)
-3. Start containers (`npm run docker:up`) or run services locally
+2. Set up backend environment file (ackend/.env)
+3. Start containers (
+pm run docker:up) or run services locally
 
 ### Local development
 
 Backend:
-- `cd backend`
-- `bun install`
-- `bun run db:generate`
-- `bun run db:push`
-- `bun run dev`
+- cd backend
+- un install
+- un run db:generate
+- un run db:push
+- un run dev
 
 Frontend:
-- `cd frontend`
-- `npm install`
-- `npm start`
+- cd frontend
+- 
+pm install
+- 
+pm start
 
 ## ✅ Quality Gates
 
-- Backend: `bun run lint && bun run typecheck && bun test && bun run build`
-- Frontend: `npm run lint && npm run test -- --watch=false --browsers=ChromeHeadless && npm run build`
+- Backend: un run lint && bun run typecheck && bun test && bun run build
+- Frontend: 
+pm run lint && npm run test -- --watch=false --browsers=ChromeHeadless && npm run build
 
 ## 🌍 Internationalization
 
-Translations live in `frontend/src/assets/i18n/`:
-- `en.json`
-- `fr.json`
+Translations live in rontend/src/assets/i18n/:
+- en.json
+- r.json
 
 Both locales must stay in sync for user-facing strings.
