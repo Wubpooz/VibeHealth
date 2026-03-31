@@ -9,7 +9,6 @@ export async function awardCarrots(userId: string, amount: number): Promise<void
     const updated = await prisma.profile.update({
       where: { userId },
       data: {
-        // @ts-expect-error Prisma client may require regenerate after schema change.
         carrotBalance: { increment: amount },
       },
     });
