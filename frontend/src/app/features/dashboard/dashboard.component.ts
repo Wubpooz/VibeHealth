@@ -492,7 +492,7 @@ interface DashboardActivityLogItem {
                           ? 'text-primary-500'
                           : 'text-gray-400 dark:text-gray-500'
                       "
-                      >{{ day.day }}</span
+                      >{{ day.day | translate }}</span
                     >
                   </div>
                 }
