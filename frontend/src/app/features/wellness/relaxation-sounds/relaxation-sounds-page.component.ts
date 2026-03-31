@@ -116,11 +116,18 @@ interface RecentlyPlayedItem {
           <p class="text-gray-600 dark:text-gray-300 mt-1">{{ 'WELLNESS.RELAXATION_SOUNDS.IMMERSIVE_SOUNDSCAPES_SUBTITLE' | translate }}</p>
           <div class="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             @for (soundscape of soundscapes(); track soundscape.id) {
-              <article class="group relative rounded-2xl overflow-hidden cursor-pointer border border-gray-200 dark:border-gray-800" (click)="selectSoundscape(soundscape)">
+              <article
+                class="group relative rounded-2xl overflow-hidden cursor-pointer border border-gray-200 dark:border-gray-800"
+                role="button"
+                tabindex="0"
+                (click)="selectSoundscape(soundscape)"
+                (keydown.enter)="selectSoundscape(soundscape)"
+                (keydown.space)="$event.preventDefault(); selectSoundscape(soundscape)"
+              >
                 <img src="{{ soundscape.imageUrl }}" alt="{{ soundscape.titleKey | translate }}" class="h-40 w-full object-cover transition-transform duration-300 group-hover:scale-105" />
                 <div class="p-4 bg-white dark:bg-gray-900">
                   <h4 class="font-semibold">{{ soundscape.titleKey | translate }}</h4>
-                  <button class="mt-2 btn btn-xs px-3 py-1.5 rounded-lg bg-indigo-500 text-white">{{ 'WELLNESS.RELAXATION_SOUNDS.PLAY' | translate }}</button>
+                  <button class="mt-2 btn btn-xs px-3 py-1.5 rounded-lg bg-indigo-500 text-white" (click)="$event.stopPropagation(); selectSoundscape(soundscape)">{{ 'WELLNESS.RELAXATION_SOUNDS.PLAY' | translate }}</button>
                 </div>
               </article>
             }
