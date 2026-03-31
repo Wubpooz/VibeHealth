@@ -775,12 +775,12 @@ export class WorkoutsPageComponent implements AfterViewInit {
 
   constructor() {
     afterNextRender(() => {
-      void this.tryFinalizeSyncOAuthFromUrl();
-      void this.metricsService.loadWorkoutSuggestions();
-      void this.metricsService.loadWorkoutPlans();
-      void this.metricsService.loadSyncConnections();
-      void this.metricsService.loadActivityToday();
-      void this.metricsService.loadVitalsToday();
+      this.tryFinalizeSyncOAuthFromUrl();
+      this.metricsService.loadWorkoutSuggestions();
+      this.metricsService.loadWorkoutPlans();
+      this.metricsService.loadSyncConnections();
+      this.metricsService.loadActivityToday();
+      this.metricsService.loadVitalsToday();
     });
     this.destroyRef.onDestroy(() => this.clearAllTimers());
   }

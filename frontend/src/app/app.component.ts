@@ -52,7 +52,7 @@ export class AppComponent implements OnInit {
   readonly isMobile = signal(false);
 
   ngOnInit(): void {
-    void this.authService.initSession().then(async () => {
+    this.authService.initSession().then(async () => {
       const profile = await this.profileService.loadProfile();
       const countryCode = profile?.preferredCountryCode;
       if (countryCode) {

@@ -1621,8 +1621,8 @@ export class WellnessJournalPageComponent implements OnInit {
     });
 
     // Load data asynchronously; don't block change detection with a Promise return.
-    void this.journalService.fetchJournalEntries();
-    void this.journalService.fetchMoodLogs();
+    this.journalService.fetchJournalEntries();
+    this.journalService.fetchMoodLogs();
   }
 
   getMoodEmoji(mood: MoodEmoji): string {

@@ -1249,7 +1249,7 @@ export class VitalsLoggerComponent {
   setTimespan(days: TimespanDays): void {
     if (this.selectedTimespan() === days || this.historyLoading()) return;
     this.selectedTimespan.set(days);
-    void this.loadRangeVitals();
+    this.loadRangeVitals();
   }
 
   chartUnit(type: VitalType): string {

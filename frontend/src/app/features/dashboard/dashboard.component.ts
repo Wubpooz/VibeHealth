@@ -944,7 +944,7 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnInit() {
-    void this.initializeDashboardData();
+    this.initializeDashboardData();
     this.rewards.logDailyActivity();
   }
 

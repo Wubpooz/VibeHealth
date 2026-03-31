@@ -657,7 +657,7 @@ export class MedicationPageComponent {
 
   constructor() {
     afterNextRender(() => {
-      void this.medicationService.loadMedications();
+      this.medicationService.loadMedications();
     });
   }
 

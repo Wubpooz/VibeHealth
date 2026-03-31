@@ -453,7 +453,7 @@ export class SettingsComponent {
     this.firstAidService.setUserCountry(normalized);
 
     // Persist to profile DB and persist preferred language if needed
-    void this.profileService.updatePreferredCountry(normalized);
+    this.profileService.updatePreferredCountry(normalized);
 
     // Show saved status briefly
     setTimeout(() => {
