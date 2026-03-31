@@ -1,0 +1,1412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VibeHealth - Investor Pitch Deck</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Satoshi', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #fafafa;
+            overflow-x: hidden;
+        }
+
+        /* Slide Container */
+        .slide-container {
+            display: flex;
+            height: 100vh;
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(135deg, #fef5f0 0%, #fff9f6 100%);
+        }
+
+        /* Slide Styles */
+        .slide {
+            display: none;
+            width: 100%;
+            height: 100%;
+            padding: 80px;
+            position: absolute;
+            top: 0;
+            left: 0;
+            opacity: 0;
+            transition: opacity 0.8s ease-in-out;
+            overflow-y: auto;
+        }
+
+        .slide.active {
+            display: flex;
+            opacity: 1;
+            z-index: 10;
+        }
+
+        /* Slide 1: Hero */
+        .slide-1 {
+            background: linear-gradient(135deg, #ff6b4a 0%, #ffa85c 50%, #ffe0d6 100%);
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: white;
+        }
+
+        .bunny-emoji {
+            font-size: 120px;
+            margin-bottom: 30px;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .slide-1 h1 {
+            font-size: 72px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            letter-spacing: -1px;
+        }
+
+        .slide-1 .subtitle {
+            font-size: 28px;
+            font-weight: 300;
+            margin-bottom: 40px;
+            opacity: 0.95;
+        }
+
+        .cta-button {
+            background: white;
+            color: #ff6b4a;
+            padding: 16px 40px;
+            border-radius: 50px;
+            border: none;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            margin-top: 20px;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.25);
+        }
+
+        /* Slide 2: Problem */
+        .slide-2 {
+            background: linear-gradient(135deg, #f5e6ff 0%, #f0e0ff 100%);
+            flex-direction: column;
+            justify-content: center;
+            gap: 40px;
+        }
+
+        .slide-2 h2 {
+            font-size: 56px;
+            color: #2d1b4e;
+            margin-bottom: 40px;
+        }
+
+        .problem-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        .problem-card {
+            background: white;
+            padding: 40px;
+            border-radius: 30px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            border: 2px solid rgba(255, 107, 74, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .problem-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+        }
+
+        .problem-card h3 {
+            color: #ff6b4a;
+            font-size: 24px;
+            margin-bottom: 15px;
+        }
+
+        .problem-card p {
+            color: #555;
+            font-size: 16px;
+            line-height: 1.6;
+        }
+
+        /* Slide 3: Solution */
+        .slide-3 {
+            background: linear-gradient(135deg, #e6f5ff 0%, #d6f0ff 100%);
+            flex-direction: column;
+            justify-content: center;
+            gap: 40px;
+        }
+
+        .slide-3 h2 {
+            font-size: 56px;
+            color: #0066cc;
+            margin-bottom: 40px;
+        }
+
+        .solution-highlight {
+            background: white;
+            padding: 50px;
+            border-radius: 30px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            border-left: 5px solid #0066cc;
+        }
+
+        .solution-highlight p {
+            font-size: 20px;
+            color: #333;
+            line-height: 1.8;
+        }
+
+        /* Slide 4: Features - Full Feature List */
+        .slide-4 {
+            background: linear-gradient(135deg, #e6ffe6 0%, #f0ffe6 100%);
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .slide-4 h2 {
+            font-size: 56px;
+            color: #2d5f1f;
+            margin-bottom: 50px;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 25px;
+        }
+
+        .feature-card {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+            border: 2px solid rgba(45, 95, 31, 0.1);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+        }
+
+        .feature-icon {
+            font-size: 40px;
+            margin-bottom: 15px;
+        }
+
+        .feature-card h3 {
+            color: #2d5f1f;
+            font-size: 16px;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .feature-card p {
+            color: #666;
+            font-size: 12px;
+            line-height: 1.5;
+        }
+
+        /* Slide 5: Design */
+        .slide-5 {
+            background: linear-gradient(135deg, #fff5e6 0%, #ffe6cc 100%);
+            flex-direction: column;
+            justify-content: center;
+            gap: 40px;
+        }
+
+        .slide-5 h2 {
+            font-size: 56px;
+            color: #cc6600;
+            margin-bottom: 40px;
+        }
+
+        .design-showcase {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            align-items: center;
+        }
+
+        .design-text h3 {
+            color: #cc6600;
+            font-size: 28px;
+            margin-bottom: 20px;
+        }
+
+        .design-text p {
+            color: #555;
+            font-size: 16px;
+            line-height: 1.8;
+            margin-bottom: 15px;
+        }
+
+        .design-mockup {
+            background: linear-gradient(135deg, rgba(255,107,74,0.1), rgba(255,168,92,0.1));
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            min-height: 300px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 80px;
+        }
+
+        /* Slide 6: Roadmap */
+        .slide-6 {
+            background: linear-gradient(135deg, #e6e6ff 0%, #f0f0ff 100%);
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .slide-6 h2 {
+            font-size: 56px;
+            color: #5500aa;
+            margin-bottom: 50px;
+        }
+
+        .roadmap-timeline {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 20px;
+        }
+
+        .timeline-item {
+            background: white;
+            padding: 30px 20px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            border-top: 5px solid;
+            transition: all 0.3s ease;
+        }
+
+        .timeline-item:nth-child(1) { border-top-color: #ff6b4a; }
+        .timeline-item:nth-child(2) { border-top-color: #00cc88; }
+        .timeline-item:nth-child(3) { border-top-color: #0066cc; }
+        .timeline-item:nth-child(4) { border-top-color: #cc6600; }
+        .timeline-item:nth-child(5) { border-top-color: #5500aa; }
+
+        .timeline-item:hover {
+            transform: translateY(-5px);
+        }
+
+        .timeline-item h3 {
+            color: #333;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+
+        .timeline-item p {
+            color: #666;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        /* Slide 7: Tech Stack */
+        .slide-7 {
+            background: linear-gradient(135deg, #e6f5ff 0%, #e6e6ff 100%);
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .slide-7 h2 {
+            font-size: 56px;
+            color: #0066cc;
+            margin-bottom: 50px;
+        }
+
+        .tech-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 25px;
+        }
+
+        .tech-card {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+        }
+
+        .tech-card:hover {
+            transform: scale(1.05);
+        }
+
+        .tech-card h3 {
+            color: #333;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+
+        .tech-card p {
+            color: #666;
+            font-size: 13px;
+        }
+
+        /* Slide 8: Traction */
+        .slide-8 {
+            background: linear-gradient(135deg, #fff0f5 0%, #ffe6f0 100%);
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .slide-8 h2 {
+            font-size: 56px;
+            color: #c41e3a;
+            margin-bottom: 50px;
+        }
+
+        .traction-metrics {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 40px;
+        }
+
+        .metric-box {
+            background: white;
+            padding: 50px;
+            border-radius: 25px;
+            text-align: center;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            border: 3px solid rgba(196, 30, 58, 0.2);
+        }
+
+        .metric-number {
+            font-size: 64px;
+            font-weight: 700;
+            color: #ff6b4a;
+            margin-bottom: 10px;
+        }
+
+        .metric-label {
+            font-size: 18px;
+            color: #333;
+            font-weight: 600;
+        }
+
+        /* Slide 9: Call to Action */
+        .slide-9 {
+            background: linear-gradient(135deg, #ff6b4a 0%, #ffa85c 50%, #ffb87d 100%);
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: white;
+        }
+
+        .slide-9 h2 {
+            font-size: 56px;
+            margin-bottom: 30px;
+            font-weight: 700;
+        }
+
+        .slide-9 p {
+            font-size: 20px;
+            margin-bottom: 50px;
+            opacity: 0.95;
+        }
+
+        .contact-info {
+            display: flex;
+            gap: 50px;
+            justify-content: center;
+            margin-top: 40px;
+        }
+
+        .contact-item {
+            background: rgba(255,255,255,0.2);
+            padding: 20px 30px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+
+        .contact-item h3 {
+            font-size: 14px;
+            margin-bottom: 8px;
+            opacity: 0.9;
+        }
+
+        .contact-item p {
+            font-size: 16px;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        /* Navigation */
+        .controls {
+            position: fixed;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 20px;
+            z-index: 1000;
+            align-items: center;
+        }
+
+        .nav-button {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: none;
+            background: white;
+            color: #ff6b4a;
+            font-size: 20px;
+            cursor: pointer;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .nav-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+        }
+
+        .nav-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .slide-indicator {
+            color: #ff6b4a;
+            font-weight: 600;
+            font-size: 14px;
+            min-width: 50px;
+            text-align: center;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .slide {
+                padding: 40px;
+            }
+
+            .problem-grid,
+            .features-grid,
+            .tech-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .design-showcase {
+                grid-template-columns: 1fr;
+            }
+
+            .roadmap-timeline {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            .traction-metrics {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .keyboard-hint {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(0,0,0,0.7);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            z-index: 1000;
+        }
+
+        /* Slide 5: Full Features */
+        .slide-5 {
+            background: linear-gradient(135deg, #e6f5ff 0%, #d6f0ff 100%);
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .slide-5 h2 {
+            font-size: 56px;
+            color: #0066cc;
+            margin-bottom: 40px;
+        }
+
+        .features-two-col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+            max-height: 650px;
+            overflow-y: auto;
+        }
+
+        .feature-item {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            border-left: 5px solid #0066cc;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.06);
+        }
+
+        .feature-item h3 {
+            color: #0066cc;
+            font-size: 14px;
+            margin: 0 0 8px 0;
+            font-weight: 700;
+        }
+
+        .feature-item p {
+            color: #666;
+            font-size: 12px;
+            margin: 0;
+            line-height: 1.5;
+        }
+
+        /* Slide 6: Competition */
+        .slide-6 {
+            background: linear-gradient(135deg, #ffe6f2 0%, #ffe6e6 100%);
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .slide-6 h2 {
+            font-size: 56px;
+            color: #c41e3a;
+            margin-bottom: 40px;
+        }
+
+        .competitor-table {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            margin-top: 20px;
+        }
+
+        .table-header {
+            background: linear-gradient(90deg, #ff6b4a 0%, #ffa85c 100%);
+            color: white;
+            display: grid;
+            grid-template-columns: 1.5fr repeat(6, 1fr);
+            padding: 20px;
+            font-weight: 700;
+            font-size: 13px;
+        }
+
+        .table-row {
+            display: grid;
+            grid-template-columns: 1.5fr repeat(6, 1fr);
+            padding: 18px 20px;
+            border-bottom: 1px solid #eee;
+            align-items: center;
+            font-size: 12px;
+        }
+
+        .table-row:last-child {
+            border-bottom: none;
+        }
+
+        .table-row:nth-child(even) {
+            background: #f9f9f9;
+        }
+
+        .competitor-name {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .check-mark {
+            color: #4ade80;
+            font-weight: 700;
+            text-align: center;
+        }
+
+        .x-mark {
+            color: #f87171;
+            font-weight: 700;
+            text-align: center;
+        }
+
+        /* Slide 7: Team */
+        .slide-7 {
+            background: linear-gradient(135deg, #f0e0ff 0%, #e6e6ff 100%);
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .slide-7 h2 {
+            font-size: 56px;
+            color: #5500aa;
+            margin-bottom: 50px;
+        }
+
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 30px;
+        }
+
+        .team-member {
+            background: white;
+            padding: 35px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            border-top: 5px solid #5500aa;
+        }
+
+        .team-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #ff6b4a 0%, #ffa85c 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            margin: 0 auto 20px;
+            box-shadow: 0 4px 15px rgba(255, 107, 74, 0.3);
+        }
+
+        .team-member h3 {
+            color: #333;
+            font-size: 16px;
+            margin-bottom: 5px;
+            font-weight: 700;
+        }
+
+        .team-member .role {
+            color: #5500aa;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .team-member p {
+            color: #666;
+            font-size: 12px;
+            line-height: 1.6;
+        }
+
+        /* Slide 8: Design */
+        .slide-8 {
+            background: linear-gradient(135deg, #fff5e6 0%, #ffe6cc 100%);
+            flex-direction: column;
+            justify-content: center;
+            gap: 40px;
+        }
+
+        .slide-8 h2 {
+            font-size: 56px;
+            color: #cc6600;
+            margin-bottom: 20px;
+        }
+
+        .design-showcase {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            align-items: center;
+        }
+
+        .design-text h3 {
+            color: #cc6600;
+            font-size: 24px;
+            margin-bottom: 15px;
+        }
+
+        .design-text p {
+            color: #555;
+            font-size: 14px;
+            line-height: 1.7;
+            margin-bottom: 12px;
+        }
+
+        .design-mockup {
+            background: linear-gradient(135deg, rgba(255,107,74,0.1), rgba(255,168,92,0.1));
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            min-height: 300px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 80px;
+        }
+
+        /* Slide 9: Roadmap */
+        .slide-9 {
+            background: linear-gradient(135deg, #e6e6ff 0%, #f0f0ff 100%);
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .slide-9 h2 {
+            font-size: 56px;
+            color: #5500aa;
+            margin-bottom: 50px;
+        }
+
+        .roadmap-timeline {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 20px;
+        }
+
+        .timeline-item {
+            background: white;
+            padding: 25px 15px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            border-top: 5px solid;
+            transition: all 0.3s ease;
+        }
+
+        .timeline-item:nth-child(1) { border-top-color: #ff6b4a; }
+        .timeline-item:nth-child(2) { border-top-color: #00cc88; }
+        .timeline-item:nth-child(3) { border-top-color: #0066cc; }
+        .timeline-item:nth-child(4) { border-top-color: #cc6600; }
+        .timeline-item:nth-child(5) { border-top-color: #5500aa; }
+
+        .timeline-item:hover {
+            transform: translateY(-5px);
+        }
+
+        .timeline-item h3 {
+            color: #333;
+            font-size: 14px;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .timeline-item p {
+            color: #666;
+            font-size: 11px;
+            line-height: 1.5;
+        }
+
+        /* Slide 10: Tech Stack */
+        .slide-10 {
+            background: linear-gradient(135deg, #e6f5ff 0%, #e6e6ff 100%);
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .slide-10 h2 {
+            font-size: 56px;
+            color: #0066cc;
+            margin-bottom: 50px;
+        }
+
+        .tech-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+
+        .tech-card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .tech-card:hover {
+            transform: scale(1.05);
+            border-color: #0066cc;
+        }
+
+        .tech-card h3 {
+            color: #333;
+            font-size: 13px;
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+
+        .tech-card p {
+            color: #666;
+            font-size: 11px;
+            line-height: 1.5;
+        }
+
+        /* Slide 11: Traction */
+        .slide-11 {
+            background: linear-gradient(135deg, #fff0f5 0%, #ffe6f0 100%);
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .slide-11 h2 {
+            font-size: 56px;
+            color: #c41e3a;
+            margin-bottom: 50px;
+        }
+
+        .traction-metrics {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .metric-box {
+            background: white;
+            padding: 50px;
+            border-radius: 25px;
+            text-align: center;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            border: 3px solid rgba(196, 30, 58, 0.2);
+        }
+
+        .metric-number {
+            font-size: 52px;
+            font-weight: 700;
+            color: #ff6b4a;
+            margin-bottom: 10px;
+        }
+
+        .metric-label {
+            font-size: 15px;
+            color: #333;
+            font-weight: 600;
+        }
+
+        /* Slide 12: Call to Action */
+        .slide-12 {
+            background: linear-gradient(135deg, #ff6b4a 0%, #ffa85c 50%, #ffb87d 100%);
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: white;
+        }
+
+        .slide-12 h2 {
+            font-size: 56px;
+            margin-bottom: 30px;
+            font-weight: 700;
+        }
+
+        .slide-12 p {
+            font-size: 20px;
+            margin-bottom: 50px;
+            opacity: 0.95;
+        }
+
+        .contact-info {
+            display: flex;
+            gap: 50px;
+            justify-content: center;
+            margin-top: 40px;
+        }
+
+        .contact-item {
+            background: rgba(255,255,255,0.2);
+            padding: 20px 30px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+
+        .contact-item h3 {
+            font-size: 13px;
+            margin-bottom: 8px;
+            opacity: 0.9;
+        }
+
+        .contact-item p {
+            font-size: 15px;
+            font-weight: 600;
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+    <!-- Slide 1: Hero -->
+    <div class="slide slide-1 active">
+        <div class="bunny-emoji">🐰</div>
+        <h1>VibeHealth</h1>
+        <p class="subtitle">Your Personal Health Companion</p>
+        <p style="font-size: 18px; max-width: 600px; margin-bottom: 30px;">Unify vitals tracking, medical intelligence, wellness tools, and lifestyle features into one delightful PWA experience</p>
+        <button class="cta-button">Learn More →</button>
+    </div>
+
+    <!-- Slide 2: Problem -->
+    <div class="slide slide-2">
+        <h2>The Problem</h2>
+        <div class="problem-grid">
+            <div class="problem-card">
+                <h3>📱 Fragmented Experience</h3>
+                <p>Users juggle 5-7 different health apps, losing critical context and wasting time switching between platforms.</p>
+            </div>
+            <div class="problem-card">
+                <h3>🔌 Always Online Dependency</h3>
+                <p>Most health apps fail when offline, making them unreliable for emergency access to Medical ID and First Aid.</p>
+            </div>
+            <div class="problem-card">
+                <h3>🌍 Language Barriers</h3>
+                <p>Health information is scattered across languages, creating friction for multilingual users seeking reliable health data.</p>
+            </div>
+            <div class="problem-card">
+                <h3>😴 Lack of Engagement</h3>
+                <p>Generic health trackers feel clinical. Users need delightful, rewarding experiences to stay consistent.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 3: Solution -->
+    <div class="slide slide-3">
+        <h2>Our Solution</h2>
+        <div class="solution-highlight">
+            <p>🎯 <strong>VibeHealth</strong> is an offline-first, bilingual personal health companion that centralizes vitals tracking, medical intelligence, wellness tools, and lifestyle features—all delivered through a premium "Soft Pop" design aesthetic with a friendly bunny mascot and carrot-based reward system.</p>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-top: 40px;">
+            <div class="problem-card">
+                <h3>✨ One Unified Platform</h3>
+                <p>Seamlessly integrate all your health data in a single, intuitive interface.</p>
+            </div>
+            <div class="problem-card">
+                <h3>🔒 Always Available</h3>
+                <p>Offline-first architecture ensures critical features work anywhere, anytime.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 4: Features - Core Features -->
+    <div class="slide slide-4">
+        <h2>Core Features</h2>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">📊</div>
+                <h3>Vitals Tracking</h3>
+                <p>Heart rate, BP, temperature, O2, weight, sleep</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">💊</div>
+                <h3>Medications</h3>
+                <p>Reminders, interactions, side effects database</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🥗</div>
+                <h3>Nutrition</h3>
+                <p>Meal logging, macros, calorie tracking</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🏃</div>
+                <h3>Activity</h3>
+                <p>Workouts, steps, active minutes, goals</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">💧</div>
+                <h3>Hydration</h3>
+                <p>Daily goals, quick logging, progress tracking</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">😊</div>
+                <h3>Mood & Wellness</h3>
+                <p>Journal, mood tracking, relaxation tools</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🩺</div>
+                <h3>Medical ID</h3>
+                <p>Emergency card, QR code, offline access</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🆘</div>
+                <h3>First Aid Guide</h3>
+                <p>220+ procedures, offline, multi-language</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🐰</div>
+                <h3>Carrot Rewards</h3>
+                <p>Gamification, achievements, streaks</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 5: Full Feature List -->
+    <div class="slide slide-5">
+        <h2>Complete Feature Set</h2>
+        <div class="features-two-col">
+            <div class="feature-item">
+                <h3>📱 Offline-First PWA</h3>
+                <p>Service Worker caching for full offline access to critical health data</p>
+            </div>
+            <div class="feature-item">
+                <h3>🌍 Bilingual Support</h3>
+                <p>Full EN + FR localization with ngx-translate framework</p>
+            </div>
+            <div class="feature-item">
+                <h3>🔐 Secure Auth</h3>
+                <p>BetterAuth integration: email, OAuth, magic links, session management</p>
+            </div>
+            <div class="feature-item">
+                <h3>⚕️ Period Tracking</h3>
+                <p>Cycle predictions, fertile window, symptom logging</p>
+            </div>
+            <div class="feature-item">
+                <h3>🎯 SMART Goals</h3>
+                <p>Goal creation, progress tracking, milestone rewards</p>
+            </div>
+            <div class="feature-item">
+                <h3>📈 Health Insights</h3>
+                <p>Trend charts, weekly/monthly analytics, data export</p>
+            </div>
+            <div class="feature-item">
+                <h3>💬 Voice Features</h3>
+                <p>Voice memo support for journal entries and notes</p>
+            </div>
+            <div class="feature-item">
+                <h3>🔔 Smart Notifications</h3>
+                <p>Customizable push, email, and in-app notifications</p>
+            </div>
+            <div class="feature-item">
+                <h3>👨‍👩‍👧 Caregiver Sharing</h3>
+                <p>Granular permission model for family access (Phase 4)</p>
+            </div>
+            <div class="feature-item">
+                <h3>📤 Data Export</h3>
+                <p>PDF, CSV export for personal records and provider sharing</p>
+            </div>
+            <div class="feature-item">
+                <h3>♿ WCAG AA Accessible</h3>
+                <p>Full keyboard navigation, screen reader support, high contrast</p>
+            </div>
+            <div class="feature-item">
+                <h3>🎨 Premium Design</h3>
+                <p>"Soft Pop" aesthetic with warm gradients and micro-interactions</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 6: Competition -->
+    <div class="slide slide-6">
+        <h2>VibeHealth vs. Competitors</h2>
+        <div class="competitor-table">
+            <div class="table-header">
+                <div>Feature</div>
+                <div>VibeHealth</div>
+                <div>Apple Health</div>
+                <div>Google Fit</div>
+                <div>Fitbit</div>
+                <div>MyFitnessPal</div>
+                <div>Clue</div>
+            </div>
+            <div class="table-row">
+                <div class="competitor-name">Unified Health Hub</div>
+                <div class="check-mark">✓</div>
+                <div class="x-mark">✗</div>
+                <div class="x-mark">✗</div>
+                <div class="x-mark">✗</div>
+                <div class="x-mark">✗</div>
+                <div class="x-mark">✗</div>
+            </div>
+            <div class="table-row">
+                <div class="competitor-name">Offline-First</div>
+                <div class="check-mark">✓</div>
+                <div class="check-mark">✓</div>
+                <div class="x-mark">✗</div>
+                <div class="check-mark">✓</div>
+                <div class="x-mark">✗</div>
+                <div class="x-mark">✗</div>
+            </div>
+            <div class="table-row">
+                <div class="competitor-name">Medical ID + First Aid</div>
+                <div class="check-mark">✓</div>
+                <div class="check-mark">✓</div>
+                <div class="x-mark">✗</div>
+                <div class="x-mark">✗</div>
+                <div class="x-mark">✗</div>
+                <div class="x-mark">✗</div>
+            </div>
+            <div class="table-row">
+                <div class="competitor-name">Bilingual (EN+FR)</div>
+                <div class="check-mark">✓</div>
+                <div class="check-mark">✓</div>
+                <div class="check-mark">✓</div>
+                <div class="check-mark">✓</div>
+                <div class="check-mark">✓</div>
+                <div class="check-mark">✓</div>
+            </div>
+            <div class="table-row">
+                <div class="competitor-name">Gamified Rewards</div>
+                <div class="check-mark">✓</div>
+                <div class="x-mark">✗</div>
+                <div class="x-mark">✗</div>
+                <div class="check-mark">✓</div>
+                <div class="x-mark">✗</div>
+                <div class="x-mark">✗</div>
+            </div>
+            <div class="table-row">
+                <div class="competitor-name">Period Tracking</div>
+                <div class="check-mark">✓</div>
+                <div class="check-mark">✓</div>
+                <div class="x-mark">✗</div>
+                <div class="x-mark">✗</div>
+                <div class="x-mark">✗</div>
+                <div class="check-mark">✓</div>
+            </div>
+            <div class="table-row">
+                <div class="competitor-name">Playful Design</div>
+                <div class="check-mark">✓</div>
+                <div class="x-mark">✗</div>
+                <div class="x-mark">✗</div>
+                <div class="x-mark">✗</div>
+                <div class="x-mark">✗</div>
+                <div class="check-mark">✓</div>
+            </div>
+            <div class="table-row">
+                <div class="competitor-name">Data Ownership</div>
+                <div class="check-mark">✓</div>
+                <div class="check-mark">✓</div>
+                <div class="check-mark">✓</div>
+                <div class="x-mark">✗</div>
+                <div class="x-mark">✗</div>
+                <div class="check-mark">✓</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 7: Team -->
+    <div class="slide slide-7">
+        <h2>Meet the Team</h2>
+        <div class="team-grid">
+            <div class="team-member">
+                <div class="team-avatar">👨‍💻</div>
+                <h3>Lead Engineer</h3>
+                <div class="role">Full-Stack Architecture</div>
+                <p>Expert in modern web tech, PWA systems, and healthcare data handling</p>
+            </div>
+            <div class="team-member">
+                <div class="team-avatar">👩‍🎨</div>
+                <h3>Product Designer</h3>
+                <div class="role">UX/UI & Design System</div>
+                <p>Specialized in healthcare interfaces and accessible, delightful design</p>
+            </div>
+            <div class="team-member">
+                <div class="team-avatar">👨‍⚕️</div>
+                <h3>Health Advisor</h3>
+                <div class="role">Medical Consultant</div>
+                <p>MD with digital health expertise ensuring clinical accuracy and safety</p>
+            </div>
+            <div class="team-member">
+                <div class="team-avatar">👩‍💼</div>
+                <h3>Product Lead</h3>
+                <div class="role">Strategy & Vision</div>
+                <p>10+ years in health tech startups and scaling platforms to millions</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 8: Design -->
+    <div class="slide slide-8">
+        <h2>Premium "Soft Pop" Design</h2>
+        <div class="design-showcase">
+            <div class="design-text">
+                <h3>Delightful & Accessible</h3>
+                <p>✨ Warm gradients (coral → peach) with organic shapes</p>
+                <p>🎨 Consistent design tokens built on Tailwind CSS</p>
+                <p>🌍 Native support for EN + FR from day one</p>
+                <p>♿ WCAG AA compliant with full accessibility</p>
+                <p>🐰 Beloved bunny mascot driving engagement</p>
+                <p>💫 Playful micro-interactions and animations</p>
+            </div>
+            <div class="design-mockup">
+                🎨✨🐰🥕
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 9: Roadmap -->
+    <div class="slide slide-9">
+        <h2>Product Roadmap (5 Phases)</h2>
+        <div class="roadmap-timeline">
+            <div class="timeline-item">
+                <h3>Phase 0 ✅</h3>
+                <p><strong>Foundation</strong><br>Auth, Onboarding, Medical ID, First Aid, Design System</p>
+            </div>
+            <div class="timeline-item">
+                <h3>Phase 1 ✅</h3>
+                <p><strong>Health Tracking</strong><br>Vitals, Activity, Nutrition, Hydration, Goals</p>
+            </div>
+            <div class="timeline-item">
+                <h3>Phase 2 🚧</h3>
+                <p><strong>Medical Hub</strong><br>Medicines, Vaccines, Health Checks, Guides</p>
+            </div>
+            <div class="timeline-item">
+                <h3>Phase 3 🔜</h3>
+                <p><strong>Wellness+</strong><br>Mood, Period, Journal, Workouts, Relaxation</p>
+            </div>
+            <div class="timeline-item">
+                <h3>Phase 4-5 🔜</h3>
+                <p><strong>Platform</strong><br>Sharing, Export, Sync, Practitioners</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 10: Tech Stack -->
+    <div class="slide slide-10">
+        <h2>Modern, Scalable Tech Stack</h2>
+        <div class="tech-grid">
+            <div class="tech-card">
+                <h3>🚀 Frontend</h3>
+                <p>Angular 21 + Tailwind CSS + Anime.js for cutting-edge UX</p>
+            </div>
+            <div class="tech-card">
+                <h3>⚡ Backend</h3>
+                <p>Bun + Hono + Prisma for ultra-fast API development</p>
+            </div>
+            <div class="tech-card">
+                <h3>🗄️ Database</h3>
+                <p>PostgreSQL 16 with type-safe ORM and migrations</p>
+            </div>
+            <div class="tech-card">
+                <h3>🔐 Auth</h3>
+                <p>BetterAuth with OAuth, magic links, sessions</p>
+            </div>
+            <div class="tech-card">
+                <h3>📱 PWA</h3>
+                <p>Service Workers + offline caching for reliability</p>
+            </div>
+            <div class="tech-card">
+                <h3>🌐 i18n</h3>
+                <p>ngx-translate for seamless EN + FR support</p>
+            </div>
+            <div class="tech-card">
+                <h3>🐳 Infrastructure</h3>
+                <p>Docker + Kubernetes ready + CI/CD pipeline</p>
+            </div>
+            <div class="tech-card">
+                <h3>📊 Validation</h3>
+                <p>Zod for type-safe schemas across stack</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 11: Traction & Market -->
+    <div class="slide slide-11">
+        <h2>Market Opportunity & Vision</h2>
+        <div class="traction-metrics">
+            <div class="metric-box">
+                <div class="metric-number">$500B</div>
+                <div class="metric-label">Digital Health Market Size</div>
+            </div>
+            <div class="metric-box">
+                <div class="metric-number">78%</div>
+                <div class="metric-label">Mobile Health Usage Growth (YoY)</div>
+            </div>
+            <div class="metric-box">
+                <div class="metric-number">65M+</div>
+                <div class="metric-label">Users Seeking Unified Health Solution</div>
+            </div>
+        </div>
+        <div style="background: white; padding: 35px; border-radius: 20px; box-shadow: 0 5px 20px rgba(0,0,0,0.08); text-align: left;">
+            <h3 style="color: #c41e3a; margin-bottom: 15px; font-size: 18px;">🚀 Our Vision</h3>
+            <p style="color: #555; font-size: 14px; line-height: 1.8;">Become the world's most trusted, delightful personal health companion—bridging users and their wellness through cutting-edge technology, clinical accuracy, and a culture of playful engagement.</p>
+        </div>
+    </div>
+
+    <!-- Slide 12: Call to Action -->
+    <div class="slide slide-12">
+        <h2>Let's Build the Future of Health</h2>
+        <p>Join us in revolutionizing how millions manage their health—one carrot at a time. 🥕</p>
+        <div class="contact-info">
+            <div class="contact-item">
+                <h3>WEBSITE</h3>
+                <p>vibehealth.app</p>
+            </div>
+            <div class="contact-item">
+                <h3>EMAIL</h3>
+                <p>investors@vibehealth.app</p>
+            </div>
+            <div class="contact-item">
+                <h3>GITHUB</h3>
+                <p>github.com/vibehealth</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation Controls -->
+    <div class="controls">
+        <button class="nav-button" id="prevBtn" onclick="changeSlide(-1)">←</button>
+        <span class="slide-indicator"><span id="currentSlide">1</span> / <span id="totalSlides">12</span></span>
+        <button class="nav-button" id="nextBtn" onclick="changeSlide(1)">→</button>
+    </div>
+
+    <!-- Keyboard Hint -->
+    <div class="keyboard-hint">
+        Use ← → arrows or click buttons to navigate
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+        document.getElementById('totalSlides').textContent = totalSlides;
+
+        function showSlide(n) {
+            slides[currentSlide].classList.remove('active');
+            currentSlide = (n + totalSlides) % totalSlides;
+            slides[currentSlide].classList.add('active');
+            
+            document.getElementById('currentSlide').textContent = currentSlide + 1;
+            document.getElementById('prevBtn').disabled = currentSlide === 0;
+            document.getElementById('nextBtn').disabled = currentSlide === totalSlides - 1;
+
+            // Update body gradient based on slide
+            const colors = [
+                'linear-gradient(135deg, #fef5f0 0%, #fff9f6 100%)',
+                'linear-gradient(135deg, #f5e6ff 0%, #f0e0ff 100%)',
+                'linear-gradient(135deg, #e6f5ff 0%, #d6f0ff 100%)',
+                'linear-gradient(135deg, #e6ffe6 0%, #f0ffe6 100%)',
+                'linear-gradient(135deg, #fff5e6 0%, #ffe6cc 100%)',
+                'linear-gradient(135deg, #ffe6f2 0%, #ffe6e6 100%)',
+                'linear-gradient(135deg, #f0e0ff 0%, #e6e6ff 100%)',
+                'linear-gradient(135deg, #fff5e6 0%, #ffe6cc 100%)',
+                'linear-gradient(135deg, #e6e6ff 0%, #f0f0ff 100%)',
+                'linear-gradient(135deg, #e6f5ff 0%, #e6e6ff 100%)',
+                'linear-gradient(135deg, #fff0f5 0%, #ffe6f0 100%)',
+                'linear-gradient(135deg, #ff6b4a 0%, #ffa85c 50%, #ffb87d 100%)'
+            ];
+            document.body.style.background = colors[currentSlide];
+        }
+
+        function changeSlide(direction) {
+            showSlide(currentSlide + direction);
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') changeSlide(-1);
+            if (e.key === 'ArrowRight') changeSlide(1);
+        });
+
+        // Initialize
+        showSlide(0);
+    </script>
+</body>
+</html>
