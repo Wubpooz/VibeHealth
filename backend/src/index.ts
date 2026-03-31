@@ -10,6 +10,7 @@ import { metricsRoutes } from './routes/metrics.routes';
 import referenceDataRoutes from './routes/reference-data.routes';
 import wellnessRoutes from './routes/wellness.routes';
 import localizedRoutes from './routes/localized-content.routes';
+import { rewardsRoutes } from './routes/rewards.routes';
 import { requireAuth, type AuthUser, type AuthSession } from './middleware/auth.middleware';
 
 // Extend Hono context types for auth
@@ -82,6 +83,9 @@ api.route('/metrics', metricsRoutes);
 
 // Wellness routes (mood, journaling, media)
 api.route('/wellness', wellnessRoutes);
+
+// Rewards routes (carrots, streaks)
+api.route('/rewards', rewardsRoutes);
 
 // Localized content routes (first-aid, wiki, onboarding)
 api.route('/localized', localizedRoutes);

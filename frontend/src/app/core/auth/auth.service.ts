@@ -1,6 +1,7 @@
 import { Injectable, signal, computed, inject } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { RewardsService } from '../rewards/rewards.service';
 import { catchError, of, firstValueFrom, Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import type { User, SignInCredentials, SignUpCredentials, AuthResponse, AuthError, OAuthProvider } from './auth.types';
@@ -24,6 +25,8 @@ export class AuthService {
   readonly error = this.errorSignal.asReadonly();
   readonly enabledProviders = this.enabledProvidersSignal.asReadonly();
   readonly isEmailVerified = computed(() => this.userSignal()?.emailVerified ?? false);
+
+  private readonly rewardsService = inject(RewardsService);
 
   constructor() {
     // Startup session load should be invoked explicitly by the app bootstrap flow.
@@ -53,6 +56,10 @@ export class AuthService {
 
       if (response?.user) {
         this.userSignal.set(response.user);
+        this.rewardsService.setUser(response.user.id);
+      } else {
+        this.userSignal.set(null);
+        this.rewardsService.setUser(null);
       }
     } finally {
       this.loadingSignal.set(false);
@@ -92,6 +99,7 @@ export class AuthService {
 
     if (response?.user) {
       this.userSignal.set(response.user);
+      this.rewardsService.setUser(response.user.id);
       return true;
     }
     return false;
@@ -105,6 +113,7 @@ export class AuthService {
 
     if (response?.user) {
       this.userSignal.set(response.user);
+      this.rewardsService.setUser(response.user.id);
       return true;
     }
     return false;
@@ -121,6 +130,7 @@ export class AuthService {
       );
     } finally {
       this.userSignal.set(null);
+      this.rewardsService.setUser(null);
       this.loadingSignal.set(false);
       this.router.navigate(['/login']);
     }

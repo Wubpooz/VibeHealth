@@ -1,4 +1,7 @@
-import { Injectable, signal, computed } from '@angular/core';
+import { Injectable, signal, computed, inject } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { firstValueFrom } from 'rxjs';
+import { environment } from '../../../environments/environment';
 
 export interface CarrotReward {
   id: string;
@@ -22,11 +25,20 @@ const LEVEL_THRESHOLDS = [0, 10, 25, 50, 100, 175, 275, 400, 550, 750, 1000];
 
 @Injectable({ providedIn: 'root' })
 export class RewardsService {
+  private readonly http = inject(HttpClient);
+
+  // Active user context for storage isolation (guest if null)
+  private userId: string | null = null;
+
+  constructor() {
+    this.setUser(null);
+  }
+
   // Signal-based state
-  private _carrots = signal<number>(this.loadCarrots());
-  private _recentRewards = signal<CarrotReward[]>([]);
-  private _streak = signal<number>(this.loadStreak());
-  private _longestStreak = signal<number>(this.loadLongestStreak());
+  private readonly _carrots = signal<number>(0);
+  private readonly _recentRewards = signal<CarrotReward[]>([]);
+  private readonly _streak = signal<number>(0);
+  private readonly _longestStreak = signal<number>(0);
 
   // Public computed signals
   readonly carrots = this._carrots.asReadonly();
@@ -81,7 +93,7 @@ export class RewardsService {
   /**
    * Award carrots for an action
    */
-  awardCarrots(amount: number, reason: string, category: CarrotReward['category'] = 'bonus'): CarrotReward {
+  async awardCarrots(amount: number, reason: string, category: CarrotReward['category'] = 'bonus'): Promise<CarrotReward | null> {
     const reward: CarrotReward = {
       id: crypto.randomUUID(),
       amount,
@@ -90,51 +102,61 @@ export class RewardsService {
       category,
     };
 
-    this._carrots.update(c => c + amount);
-    this._recentRewards.update(rewards => [reward, ...rewards.slice(0, 9)]);
+    try {
+      await firstValueFrom(this.http.post<{ success: boolean; data: { carrotBalance: number } }>(
+        `${environment.apiUrl}/api/v1/rewards/award`,
+        { amount },
+        { withCredentials: true }
+      ));
 
-    // Persist
-    this.saveCarrots();
-
-    return reward;
+      this._carrots.update(c => c + amount);
+      this._recentRewards.update(rewards => [reward, ...rewards.slice(0, 9)]);
+      return reward;
+    } catch (error) {
+      console.error('Failed to award carrots:', error);
+      return null;
+    }
   }
 
   /**
-   * Log daily activity and check streak
+   * Log daily activity and check streak backend
    */
-  logDailyActivity() {
-    const lastLog = localStorage.getItem('vibehealth_last_activity');
-    const today = new Date().toDateString();
+  async logDailyActivity(): Promise<boolean> {
+    try {
+      const response = await firstValueFrom(this.http.post<{
+        success: boolean;
+        data: { carrotBalance: number; currentStreak: number; longestStreak: number };
+      }>(
+        `${environment.apiUrl}/api/v1/rewards/daily-checkin`,
+        {},
+        { withCredentials: true }
+      ));
 
-    if (lastLog === today) {
-      return; // Already logged today
-    }
-
-    const yesterday = new Date();
-    yesterday.setDate(yesterday.getDate() - 1);
-
-    if (lastLog === yesterday.toDateString()) {
-      // Continue streak
-      this._streak.update(s => s + 1);
-      if (this._streak() > this._longestStreak()) {
-        this._longestStreak.set(this._streak());
-        localStorage.setItem('vibehealth_longest_streak', String(this._longestStreak()));
+      if (!response.success) {
+        return false;
       }
-    } else if (lastLog !== today) {
-      // Streak broken, reset to 1
-      this._streak.set(1);
+
+      this._carrots.set(response.data.carrotBalance);
+      this._streak.set(response.data.currentStreak);
+      this._longestStreak.set(response.data.longestStreak);
+
+      // Daily check-in yields at least a +2 carrot event locally
+      this._recentRewards.update(rewards => [
+        {
+          id: crypto.randomUUID(),
+          amount: 2,
+          reason: 'Daily check-in',
+          earnedAt: new Date(),
+          category: 'logging',
+        },
+        ...rewards.slice(0, 9),
+      ]);
+
+      return true;
+    } catch (error) {
+      console.error('Failed to perform daily check-in:', error);
+      return false;
     }
-
-    localStorage.setItem('vibehealth_last_activity', today);
-    localStorage.setItem('vibehealth_streak', String(this._streak()));
-
-    // Award daily carrots
-    this.awardCarrots(2, 'Daily check-in', 'logging');
-
-    // Streak bonuses
-    if (this._streak() === 3) this.awardCarrots(5, '3-day streak! 🔥', 'streak');
-    if (this._streak() === 7) this.awardCarrots(15, 'Week streak! 🌟', 'streak');
-    if (this._streak() === 30) this.awardCarrots(50, 'Monthly streak! 🏆', 'streak');
   }
 
   /**
@@ -156,25 +178,50 @@ export class RewardsService {
    */
   spendCarrots(amount: number): boolean {
     if (this._carrots() < amount) return false;
-
     this._carrots.update(c => c - amount);
-    this.saveCarrots();
     return true;
   }
 
-  private loadCarrots(): number {
-    return Number.parseInt(localStorage.getItem('vibehealth_carrots') || '0', 10);
+  private async loadFromServer(): Promise<void> {
+    try {
+      const response = await firstValueFrom(this.http.get<{ success: boolean; data: { carrotBalance: number; currentStreak: number; longestStreak: number } }>(
+        `${environment.apiUrl}/api/v1/rewards`,
+        { withCredentials: true }
+      ));
+
+      if (!response.success || !response.data) {
+        this.resetState();
+        return;
+      }
+
+      this._carrots.set(response.data.carrotBalance);
+      this._streak.set(response.data.currentStreak);
+      this._longestStreak.set(response.data.longestStreak);
+    } catch (error) {
+      console.error('Failed to load rewards from server:', error);
+      this.resetState();
+    }
   }
 
-  private loadStreak(): number {
-    return Number.parseInt(localStorage.getItem('vibehealth_streak') || '0', 10);
+  private resetState(): void {
+    this._carrots.set(0);
+    this._streak.set(0);
+    this._longestStreak.set(0);
+    this._recentRewards.set([]);
   }
 
-  private loadLongestStreak(): number {
-    return Number.parseInt(localStorage.getItem('vibehealth_longest_streak') || '0', 10);
+  setUser(userId: string | null): void {
+    this.userId = userId;
+    if (this.userId) {
+      void this.loadFromServer();
+    } else {
+      this.resetState();
+    }
   }
 
-  private saveCarrots() {
-    localStorage.setItem('vibehealth_carrots', String(this._carrots()));
+  clear(): void {
+    this.userId = null;
+    this.resetState();
   }
 }
+

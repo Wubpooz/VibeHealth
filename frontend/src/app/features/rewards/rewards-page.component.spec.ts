@@ -47,4 +47,22 @@ describe('RewardsPageComponent', () => {
     const unlockedCards = fixture.nativeElement.querySelectorAll('.achievement-card.unlocked');
     expect(unlockedCards.length).toBe(component.unlockedAchievementsCount());
   });
+
+  it('should not inherit guest reward values when setting a new signed-in user', async () => {
+    localStorage.setItem('vibehealth_carrots', '130');
+    localStorage.setItem('vibehealth_streak', '8');
+    localStorage.setItem('vibehealth_longest_streak', '35');
+
+    const fixture = await createComponent();
+    const component = fixture.componentInstance;
+
+    expect(component.rewards.carrots()).toBe(130);
+
+    component.rewards.setUser('user-123');
+
+    expect(component.rewards.carrots()).toBe(0);
+    expect(component.rewards.streak()).toBe(0);
+    expect(component.rewards.longestStreak()).toBe(0);
+    expect(component.unlockedAchievementsCount()).toBe(0);
+  });
 });
