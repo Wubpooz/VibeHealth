@@ -6,6 +6,7 @@
  * - When that happens, direct docker commands fail with API version mismatch errors.
  * - We intentionally remove DOCKER_API_VERSION for child docker commands so negotiation can succeed.
  */
+import path from 'node:path';
 import { spawnSync } from 'node:child_process';
 
 type CommandResult = {
@@ -23,26 +24,29 @@ let negotiatedApiVersion: string | undefined;
 
 function getSafePath(): string {
   if (process.platform === 'win32') {
-    // Windows system directories that are typically protected
-    return String.raw`
-C:\Windows\System32;
-C:\Windows;
-C:\Windows\System32\Wbem;
-C:\Windows\System32\WindowsPowerShell\v1.0`
-      .split('\n')
-      .map((path) => path.trim())
-      .filter(Boolean)
-      .join(';');
+    const safePaths = [
+      String.raw`C:\Program Files\Docker\Docker\resources\bin`,
+      String.raw`C:\Windows\System32`,
+      String.raw`C:\Windows`,
+      String.raw`C:\Windows\System32\Wbem`,
+      String.raw`C:\Windows\System32\WindowsPowerShell\v1.0`
+    ];
+
+    const existingPATH = process.env.PATH ? process.env.PATH.split(path.delimiter) : [];
+    const merged = Array.from(new Set([...existingPATH, ...safePaths]));
+    return merged.join(path.delimiter);
   }
 
-  // Unix-like protected system directories
-  return ['/usr/local/bin', '/usr/bin', '/bin', '/usr/sbin', '/sbin'].join(':');
+  const safePaths = ['/usr/local/bin', '/usr/bin', '/bin', '/usr/sbin', '/sbin'];
+  const existingPATH = process.env.PATH ? process.env.PATH.split(path.delimiter) : [];
+  const merged = Array.from(new Set([...existingPATH, ...safePaths]));
+  return merged.join(path.delimiter);
 }
 
 function cleanDockerEnv(): NodeJS.ProcessEnv {
   const env = { ...process.env };
   delete env.DOCKER_API_VERSION;
-  // Ensure PATH cannot be polluted by writable user directories.
+  // Keep existing PATH (including Docker CLI install dir) plus a safe default path.
   env.PATH = getSafePath();
   return env;
 }
@@ -53,17 +57,27 @@ function runDockerRaw(args: string[], apiVersion?: string): CommandResult {
     env.DOCKER_API_VERSION = apiVersion;
   }
 
-  const res = spawnSync('docker', args, {
-    env,
-    encoding: 'utf8'
-  });
+  try {
+    const res = spawnSync('docker', args, {
+      env,
+      encoding: 'utf8'
+    });
 
-  return {
-    ok: res.status === 0,
-    stdout: res.stdout?.trim() ?? '',
-    stderr: res.stderr?.trim() ?? '',
-    status: res.status
-  };
+    return {
+      ok: res.status === 0,
+      stdout: res.stdout?.trim() ?? '',
+      stderr: res.stderr?.trim() ?? '',
+      status: res.status
+    };
+  } catch (error) {
+    const stderr = error instanceof Error ? error.message : String(error);
+    return {
+      ok: false,
+      stdout: '',
+      stderr,
+      status: null
+    };
+  }
 }
 
 function runDocker(args: string[]): CommandResult {
@@ -93,6 +107,20 @@ function ensureDockerAvailable(): void {
     }
   }
 
+  const notFoundPattern = /ENOENT|not recognized as an internal or external command|executable file not found/i;
+  const isCommandMissing = notFoundPattern.test(check.stderr) || notFoundPattern.test(check.stdout);
+
+  if (isCommandMissing) {
+    fail(
+      [
+        'Docker CLI is not available or not found in PATH.',
+        'Please install Docker Desktop and ensure the docker CLI is accessible from your shell.',
+        'In PowerShell, run: Get-Command docker',
+        'If this persists, verify that Docker Desktop has added docker to PATH and that terminal restart has been done.'
+      ].join('\n')
+    );
+  }
+
   if (!check.ok) {
     const details = [check.stderr, check.stdout].filter(Boolean).join('\n');
     fail(
@@ -108,6 +136,10 @@ function ensureDockerAvailable(): void {
     console.log(
       `ℹ️ Ignoring DOCKER_API_VERSION=${process.env.DOCKER_API_VERSION} for docker commands to avoid API mismatch.`
     );
+  }
+
+  if (process.env.DOCKER_HOST) {
+    console.log(`ℹ️ Using DOCKER_HOST=${process.env.DOCKER_HOST}`);
   }
 }
 
