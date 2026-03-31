@@ -1,21 +1,35 @@
-import * as webPush from 'web-push';
 import { sendTransactionalEmail } from './email';
 import { prisma } from './prisma';
 
-// Configure web push only if VAPID keys are available
-const vapidPublicKey = process.env.VAPID_PUBLIC_KEY;
-const vapidPrivateKey = process.env.VAPID_PRIVATE_KEY;
-const vapidEmail = process.env.VAPID_EMAIL || 'noreply@vibehealth.app';
+let webPush: typeof import('web-push') | null = null;
+let webPushAvailable = false;
 
-if (vapidPublicKey && vapidPrivateKey) {
-  webPush.setVapidDetails(
-    'mailto:' + vapidEmail,
-    vapidPublicKey,
-    vapidPrivateKey
-  );
-} else {
-  console.warn('VAPID keys not configured. Web push notifications will be disabled.');
+async function initWebPush(): Promise<void> {
+  try {
+    webPush = await import('web-push');
+  } catch (error) {
+    console.warn(
+      'web-push package is not installed or cannot be resolved. Web push notifications are disabled.',
+      error instanceof Error ? error.message : String(error)
+    );
+    return;
+  }
+
+  const vapidPublicKey = process.env.VAPID_PUBLIC_KEY;
+  const vapidPrivateKey = process.env.VAPID_PRIVATE_KEY;
+  const vapidEmail = process.env.VAPID_EMAIL || 'noreply@vibehealth.app';
+
+  if (vapidPublicKey && vapidPrivateKey) {
+    webPush.setVapidDetails('mailto:' + vapidEmail, vapidPublicKey, vapidPrivateKey);
+    webPushAvailable = true;
+    console.log('✅ web-push has been configured with VAPID keys.');
+  } else {
+    console.warn('VAPID keys not configured. Web push notifications will be disabled.');
+  }
 }
+
+// Initialize web-push at module load time
+await initWebPush();
 
 export interface NotificationPayload {
   title: string;
@@ -38,8 +52,14 @@ export async function sendWebPushNotification(
   userId: string,
   payload: NotificationPayload
 ): Promise<void> {
+  const webPushClient = webPush;
+  if (!webPushAvailable || !webPushClient) {
+    console.log('Skipping web push notification: web-push module unavailable.');
+    return;
+  }
+
   // Skip if VAPID keys are not configured
-  if (!vapidPublicKey || !vapidPrivateKey) {
+  if (!process.env.VAPID_PUBLIC_KEY || !process.env.VAPID_PRIVATE_KEY) {
     console.log('Skipping web push notification: VAPID keys not configured');
     return;
   }
@@ -72,9 +92,14 @@ export async function sendWebPushNotification(
       );
 
     // Send to all subscriptions
+    const webPushClient = webPush;
+    if (!webPushClient) {
+      return;
+    }
+
     const promises = subscriptions.map(async (subscription) => {
       try {
-        await webPush.sendNotification(subscription, JSON.stringify(payload));
+        await webPushClient.sendNotification(subscription, JSON.stringify(payload));
       } catch (error) {
         console.error('Failed to send push notification:', error);
         // In a real app, you might want to remove invalid subscriptions
