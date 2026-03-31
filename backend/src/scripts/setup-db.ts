@@ -21,9 +21,29 @@ const FALLBACK_API_VERSIONS = ['1.52', '1.51', '1.50', '1.49', '1.48', '1.47', '
 
 let negotiatedApiVersion: string | undefined;
 
+function getSafePath(): string {
+  if (process.platform === 'win32') {
+    // Windows system directories that are typically protected
+    return String.raw`
+C:\Windows\System32;
+C:\Windows;
+C:\Windows\System32\Wbem;
+C:\Windows\System32\WindowsPowerShell\v1.0`
+      .split('\n')
+      .map((path) => path.trim())
+      .filter(Boolean)
+      .join(';');
+  }
+
+  // Unix-like protected system directories
+  return ['/usr/local/bin', '/usr/bin', '/bin', '/usr/sbin', '/sbin'].join(':');
+}
+
 function cleanDockerEnv(): NodeJS.ProcessEnv {
   const env = { ...process.env };
   delete env.DOCKER_API_VERSION;
+  // Ensure PATH cannot be polluted by writable user directories.
+  env.PATH = getSafePath();
   return env;
 }
 
@@ -112,6 +132,11 @@ function startExistingContainer(name: string): void {
 }
 
 function createContainer(name: string): void {
+  const postgresPassword = process.env.POSTGRES_PASSWORD;
+  if (!postgresPassword) {
+    fail('POSTGRES_PASSWORD must be set in environment variables to avoid hard-coded credentials.');
+  }
+
   const create = runDocker([
     'run',
     '--name',
@@ -119,7 +144,7 @@ function createContainer(name: string): void {
     '-e',
     'POSTGRES_USER=vibehealth',
     '-e',
-    'POSTGRES_PASSWORD=vibehealth_dev',
+    `POSTGRES_PASSWORD=${postgresPassword}`,
     '-e',
     'POSTGRES_DB=vibehealth',
     '-p',
