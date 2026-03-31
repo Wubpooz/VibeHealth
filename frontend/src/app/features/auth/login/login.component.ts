@@ -270,7 +270,7 @@ export class LoginComponent {
       this.toast.success('Welcome back! Your health dashboard is ready.', 'Signed in');
       this.router.navigate(['/dashboard']);
     } else if (this.auth.error()) {
-      this.toast.error(this.auth.error()!, 'Sign in failed');
+      this.toast.error(this.auth.error() || 'Une erreur s\'est produite', 'Sign in failed');
     }
   }
 
@@ -286,7 +286,7 @@ export class LoginComponent {
       this.magicLinkSent.set(true);
       this.toast.success('Magic link sent. Check your inbox.', 'Email sent');
     } else if (this.auth.error()) {
-      this.toast.error(this.auth.error()!, 'Unable to send magic link');
+      this.toast.error(this.auth.error() || 'Une erreur s\'est produite', 'Unable to send magic link');
     }
   }
 
@@ -320,7 +320,7 @@ export class LoginComponent {
       );
       this.router.navigate(['/dashboard']);
     } else if (this.auth.error()) {
-      this.toast.error(this.auth.error()!, this.translate.instant('AUTH.OTP_SIGN_IN_FAILED'));
+      this.toast.error(this.auth.error() || 'Une erreur s\'est produite', this.translate.instant('AUTH.OTP_SIGN_IN_FAILED'));
     }
   }
 }

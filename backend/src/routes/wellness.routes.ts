@@ -2,9 +2,8 @@ import { Hono } from 'hono';
 import { prisma } from '../lib/prisma';
 import { requireAuth } from '../middleware/auth.middleware';
 import type { Session as AuthSession, User as AuthUser } from 'better-auth';
-import type { MoodLog, JournalEntry } from '@prisma/client';
+import type { MoodLog, MoodEmoji, JournalEntry } from '@prisma/client';
 import { z } from 'zod';
-import type { MoodEmoji } from '@prisma/client';
 import { periodRoutes } from './wellness-period.routes';
 
 // =============================================================================

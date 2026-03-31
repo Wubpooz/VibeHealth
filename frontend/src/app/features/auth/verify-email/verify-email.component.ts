@@ -145,7 +145,7 @@ export class VerifyEmailComponent {
         this.translate.instant('AUTH.VERIFICATION_COMPLETE')
       );
     } else if (this.auth.error()) {
-      this.toast.error(this.auth.error()!, this.translate.instant('AUTH.VERIFICATION_FAILED'));
+      this.toast.error(this.auth.error() || 'Une erreur s\'est produite', this.translate.instant('AUTH.VERIFICATION_FAILED'));
     }
   }
 
@@ -158,7 +158,7 @@ export class VerifyEmailComponent {
         this.translate.instant('AUTH.EMAIL_SENT')
       );
     } else if (this.auth.error()) {
-      this.toast.error(this.auth.error()!, this.translate.instant('AUTH.VERIFICATION_FAILED'));
+      this.toast.error(this.auth.error() || 'Une erreur s\'est produite', this.translate.instant('AUTH.VERIFICATION_FAILED'));
     }
   }
 }

@@ -3,12 +3,15 @@
  * TypeScript interfaces for period tracking data
  */
 
+export type FlowIntensity = typeof FLOW_INTENSITY_OPTIONS[number];
+export type SymptomKey = typeof SYMPTOMS_OPTIONS[number];
+
 export interface PeriodLog {
   id: string;
   startDate: string; // YYYY-MM-DD
   endDate: string | null;
-  flowIntensity: 'LIGHT' | 'MEDIUM' | 'HEAVY';
-  symptoms: string[];
+  flowIntensity: FlowIntensity;
+  symptoms: SymptomKey[];
   notes: string | null;
   createdAt: string;
   updatedAt: string;
@@ -58,15 +61,15 @@ export interface ContraceptivePillReminderResponse {
 export interface PeriodLogCreatePayload {
   startDate: string; // YYYY-MM-DD
   endDate?: string | null;
-  flowIntensity?: 'LIGHT' | 'MEDIUM' | 'HEAVY';
-  symptoms?: string[];
+  flowIntensity?: FlowIntensity;
+  symptoms?: SymptomKey[];
   notes?: string;
 }
 
 export interface PeriodLogUpdatePayload {
   endDate?: string | null;
-  flowIntensity?: 'LIGHT' | 'MEDIUM' | 'HEAVY';
-  symptoms?: string[];
+  flowIntensity?: FlowIntensity;
+  symptoms?: SymptomKey[];
   notes?: string;
 }
 

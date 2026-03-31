@@ -618,15 +618,17 @@ export class MedicationPageComponent {
 
     for (const med of this.medications()) {
       for (const reminder of med.reminders) {
-        const time = new Date(reminder.nextDueAt!).getTime() - now.getTime(); // time until next due time
-        const soon = time > 0 && time < 1000 * 60 * 60 * 24; // within the next day
+        if (reminder.nextDueAt) {
+          const time = new Date(reminder.nextDueAt).getTime() - now.getTime(); // time until next due time
+          const soon = time > 0 && time < 1000 * 60 * 60 * 24; // within the next day
 
-        if (soon) {
-          reminders.push({
-            medication: med,
-            reminder,
-            nextTime: `${today}T${reminder.timeOfDay}:00`,
-          });
+          if (soon) {
+            reminders.push({
+              medication: med,
+              reminder,
+              nextTime: `${today}T${reminder.timeOfDay}:00`,
+            });
+          }
         }
       }
     }

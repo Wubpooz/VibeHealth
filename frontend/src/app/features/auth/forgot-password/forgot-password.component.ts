@@ -264,7 +264,7 @@ export class ForgotPasswordComponent {
         this.translate.instant('AUTH.EMAIL')
       );
     } else if (this.auth.error()) {
-      this.toast.error(this.auth.error()!, this.translate.instant('AUTH.FORGOT_PASSWORD'));
+      this.toast.error(this.auth.error() || 'Une erreur s\'est produite', this.translate.instant('AUTH.FORGOT_PASSWORD'));
     }
   }
 
@@ -287,7 +287,7 @@ export class ForgotPasswordComponent {
     }
 
     if (this.auth.error()) {
-      this.toast.error(this.auth.error()!, this.translate.instant('AUTH.RESET_PASSWORD'));
+      this.toast.error(this.auth.error() || 'Une erreur s\'est produite', this.translate.instant('AUTH.RESET_PASSWORD'));
     }
   }
 

@@ -63,7 +63,7 @@ const reminderSchema = z.object({
       break;
     case 'ONE_TIME':
       if (!hasDate) ctx.addIssue({ path: ['date'], code: z.ZodIssueCode.custom, message: 'date is required for ONE_TIME recurrence' });
-      else if (Number.isNaN(Date.parse(data.date!))) ctx.addIssue({ path: ['date'], code: z.ZodIssueCode.custom, message: 'date must be a valid ISO date string' });
+      else if (Number.isNaN(Date.parse(data.date ?? ''))) ctx.addIssue({ path: ['date'], code: z.ZodIssueCode.custom, message: 'date must be a valid ISO date string' });
       if (hasDayOfWeek) ctx.addIssue({ path: ['dayOfWeek'], code: z.ZodIssueCode.custom, message: 'dayOfWeek must not be set for ONE_TIME recurrence' });
       if (hasDayOfMonth) ctx.addIssue({ path: ['dayOfMonth'], code: z.ZodIssueCode.custom, message: 'dayOfMonth must not be set for ONE_TIME recurrence' });
       break;
@@ -305,7 +305,7 @@ medicalRoutes.post('/:medicationId/reminders', async (c) => {
       parsed.data.recurrence,
       parsed.data.recurrence === 'WEEKLY' ? parsed.data.dayOfWeek ?? null : null,
       parsed.data.recurrence === 'MONTHLY' ? parsed.data.dayOfMonth ?? null : null,
-      parsed.data.recurrence === 'ONE_TIME' ? new Date(parsed.data.date!) : null
+      parsed.data.recurrence === 'ONE_TIME' ? new Date(parsed.data.date ?? '') : null
     );
     console.log('Calculated nextDueAt:', nextDueAt);
 
@@ -317,7 +317,7 @@ medicalRoutes.post('/:medicationId/reminders', async (c) => {
         recurrence: parsed.data.recurrence,
         dayOfWeek: parsed.data.recurrence === 'WEEKLY' ? parsed.data.dayOfWeek ?? null : null,
         dayOfMonth: parsed.data.recurrence === 'MONTHLY' ? parsed.data.dayOfMonth ?? null : null,
-        date: parsed.data.recurrence === 'ONE_TIME' ? new Date(parsed.data.date!) : null,
+        date: parsed.data.recurrence === 'ONE_TIME' ? new Date(parsed.data.date ?? '') : null,
         nextDueAt,
       },
     });
@@ -363,7 +363,7 @@ medicalRoutes.put('/:medicationId/reminders/:reminderId', async (c) => {
       parsed.data.recurrence,
       parsed.data.recurrence === 'WEEKLY' ? parsed.data.dayOfWeek ?? null : null,
       parsed.data.recurrence === 'MONTHLY' ? parsed.data.dayOfMonth ?? null : null,
-      parsed.data.recurrence === 'ONE_TIME' ? new Date(parsed.data.date!) : null
+      parsed.data.recurrence === 'ONE_TIME' ? new Date(parsed.data.date ?? '') : null
     );
     console.log('Calculated nextDueAt for update:', nextDueAt);
 
@@ -375,7 +375,7 @@ medicalRoutes.put('/:medicationId/reminders/:reminderId', async (c) => {
         recurrence: parsed.data.recurrence,
         dayOfWeek: parsed.data.recurrence === 'WEEKLY' ? parsed.data.dayOfWeek ?? null : null,
         dayOfMonth: parsed.data.recurrence === 'MONTHLY' ? parsed.data.dayOfMonth ?? null : null,
-        date: parsed.data.recurrence === 'ONE_TIME' ? new Date(parsed.data.date!) : null,
+        date: parsed.data.recurrence === 'ONE_TIME' ? new Date(parsed.data.date ?? '') : null,
         nextDueAt,
       },
     });

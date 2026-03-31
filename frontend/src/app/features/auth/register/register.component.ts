@@ -217,11 +217,11 @@ export class RegisterComponent {
     });
 
     if (success) {
-      this.toast.success('Account created! Let’s complete your profile.', 'Welcome to VibeHealth');
+      this.toast.success('Account created! Let\'s complete your profile.', 'Welcome to VibeHealth');
       // Redirect new users to onboarding
       this.router.navigate(['/onboarding']);
     } else if (this.auth.error()) {
-      this.toast.error(this.auth.error()!, 'Sign up failed');
+      this.toast.error(this.auth.error() || "Une erreur s'est produite", 'Sign up failed');
     }
   }
 

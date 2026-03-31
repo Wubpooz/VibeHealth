@@ -518,7 +518,7 @@ periodRoutes.post('/reminder/pill', async (c) => {
     }
 
     // Update profile with pill reminder settings
-    const existingPreferences = (profile.notificationPreferences as Prisma.JsonObject | null) ?? {};
+    const existingPreferences = (typeof profile.notificationPreferences === 'object' && !Array.isArray(profile.notificationPreferences) ? profile.notificationPreferences : {}) as Prisma.JsonObject;
     const updatedPreferences: Prisma.JsonObject = {
       ...existingPreferences,
       contraceptivePillReminder: validated,
@@ -615,7 +615,7 @@ periodRoutes.delete('/reminder/pill', async (c) => {
       );
     }
 
-    const preferences = { ...(profile.notificationPreferences as Prisma.JsonObject) ?? {} } as Prisma.JsonObject;
+    const preferences = profile.notificationPreferences as Prisma.JsonObject;
     delete preferences.contraceptivePillReminder;
 
     await prisma.profile.update({

@@ -19,6 +19,8 @@ import {
   FLOW_INTENSITY_OPTIONS,
   FLOW_INTENSITY_LABELS,
   type PeriodLog,
+  type FlowIntensity,
+  type SymptomKey,
 } from '../../../core/wellness/period-tracker.types';
 
 /**
@@ -376,8 +378,8 @@ export class PeriodTrackerPageComponent {
   readonly logForm = signal({
     startDate: '',
     endDate: '',
-    flowIntensity: 'MEDIUM' as 'LIGHT' | 'MEDIUM' | 'HEAVY',
-    symptoms: [] as string[],
+    flowIntensity: 'MEDIUM' as FlowIntensity,
+    symptoms: [] as SymptomKey[],
     notes: '',
   });
 
@@ -509,7 +511,7 @@ export class PeriodTrackerPageComponent {
   /**
    * Set flow intensity
    */
-  setFlowIntensity(intensity: 'LIGHT' | 'MEDIUM' | 'HEAVY'): void {
+  setFlowIntensity(intensity: FlowIntensity): void {
     this.logForm.update((form) => ({
       ...form,
       flowIntensity: intensity,
@@ -588,15 +590,11 @@ export class PeriodTrackerPageComponent {
   /**
    * Toggle symptom in form
    */
-  toggleSymptom(symptom: string): void {
+  toggleSymptom(symptom: SymptomKey): void {
     this.logForm.update((form) => {
-      const symptoms = [...form.symptoms];
-      const index = symptoms.indexOf(symptom);
-      if (index >= 0) {
-        symptoms.splice(index, 1);
-      } else {
-        symptoms.push(symptom);
-      }
+      const symptoms = form.symptoms.includes(symptom)
+        ? form.symptoms.filter((s) => s !== symptom)
+        : [...form.symptoms, symptom];
       return { ...form, symptoms };
     });
   }
