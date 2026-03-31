@@ -1,8 +1,9 @@
-import { Component, OnInit, inject, signal, computed } from '@angular/core';
+import { Component, OnInit, ViewChild, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { PageHeaderComponent } from '../../shared/components/page-header/page-header.component';
+import { ModalComponent } from '../../shared/components/modal/modal.component';
 
 type MapProvider = 'openstreetmap' | 'google';
 
@@ -27,7 +28,7 @@ interface Practitioner {
 @Component({
   selector: 'app-practitioner-map',
   standalone: true,
-  imports: [CommonModule, TranslateModule, PageHeaderComponent],
+  imports: [CommonModule, TranslateModule, PageHeaderComponent, ModalComponent],
   template: `
     <div class="min-h-screen bg-[#fdf8f8] dark:bg-gray-950">
       <app-page-header
@@ -36,7 +37,7 @@ interface Practitioner {
         [backLabel]="'PRACTITIONER_MAP.BACK_TO_DASHBOARD' | translate"
         [showBackLabel]="true"
       >
-        <div pageHeaderRight>
+        <div pageHeaderRight class="flex gap-2">
           <button
             type="button"
             (click)="refreshLocation()"
@@ -44,10 +45,22 @@ interface Practitioner {
           >
             {{ 'PRACTITIONER_MAP.REFRESH_LOCATION' | translate }}
           </button>
+          <button
+            type="button"
+            (click)="toggleProvider()"
+            class="px-3 py-1.5 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 text-xs font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 transition"
+          >
+            {{ 'PRACTITIONER_MAP.SWITCH_PROVIDER' | translate }}
+          </button>
         </div>
       </app-page-header>
 
       <main class="px-4 sm:px-8 py-6 pb-20">
+        @if (bookingMessage()) {
+          <div class="mb-4 rounded-lg border border-green-300 bg-green-100 p-3 text-sm font-medium text-green-700 dark:border-green-700 dark:bg-green-900/60 dark:text-green-200">
+            {{ bookingMessage() }}
+          </div>
+        }
         <div class="grid grid-cols-1 lg:grid-cols-[380px_1fr] gap-4">
           <section class="space-y-4 rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 p-4 shadow-sm">
             <div class="flex flex-col gap-3">
@@ -118,6 +131,7 @@ interface Practitioner {
                   <button
                     type="button"
                     class="mt-2 inline-flex items-center justify-center rounded-lg bg-primary-500 px-3 py-1.5 text-xs font-semibold text-white hover:bg-primary-600"
+                    (click)="openBookingModal(practitioner)"
                   >
                     {{ 'PRACTITIONER_MAP.BOOK_APPOINTMENT' | translate }}
                   </button>
@@ -163,6 +177,22 @@ interface Practitioner {
         <div class="mt-4 text-xs text-gray-500 dark:text-gray-400">
           {{ 'PRACTITIONER_MAP.IMPLICIT_PERMISSIONS' | translate }}
         </div>
+
+        <app-modal #bookingModal title="{{ 'PRACTITIONER_MAP.BOOKING_MODAL_TITLE' | translate }}" [showClose]="true" size="sm" (closed)="closeBookingModal()">
+          <div>
+            <p class="text-sm text-gray-700 dark:text-gray-200">{{ 'PRACTITIONER_MAP.BOOKING_MODAL_SUBTITLE' | translate }}</p>
+
+            <div class="mt-4 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 p-3">
+              <p class="text-sm font-semibold text-gray-800 dark:text-gray-100">{{ 'PRACTITIONER_MAP.SELECT_PRACTITIONER' | translate:{ name: selectedPractitioner()?.name || '' } }}</p>
+              <p class="text-xs text-gray-500 dark:text-gray-400">{{ 'PRACTITIONER_MAP.SELECTED_PROVIDER' | translate }}: {{ provider() === 'openstreetmap' ? ('PRACTITIONER_MAP.OPENSTREETMAP' | translate) : ('PRACTITIONER_MAP.GOOGLE_MAPS' | translate) }}</p>
+            </div>
+          </div>
+
+          <div footer>
+            <button type="button" class="btn btn-secondary mr-2" (click)="closeBookingModal()">{{ 'PRACTITIONER_MAP.CANCEL' | translate }}</button>
+            <button type="button" class="btn btn-primary" (click)="confirmBooking()">{{ 'PRACTITIONER_MAP.CONFIRM_BOOK_APPOINTMENT' | translate }}</button>
+          </div>
+        </app-modal>
       </main>
     </div>
   `,
@@ -227,6 +257,10 @@ export class PractitionerMapComponent implements OnInit {
   readonly selectedCategory = signal<PractitionerCategory>('all');
   readonly searchQuery = signal('');
   readonly selectedPractitioner = signal<Practitioner | null>(null);
+  readonly bookingMessage = signal('');
+
+  @ViewChild('bookingModal', { static: true })
+  bookingModal!: ModalComponent;
 
   readonly filteredPractitioners = computed(() => {
     const query = this.searchQuery().toLowerCase();
@@ -259,8 +293,46 @@ export class PractitionerMapComponent implements OnInit {
     this.updateMapUrl();
   }
 
+  openBookingModal(practitioner: Practitioner): void {
+    this.selectPractitioner(practitioner);
+    this.bookingModal.open();
+  }
+
+  closeBookingModal(): void {
+    this.bookingModal.close();
+  }
+
+  confirmBooking(): void {
+    const practitioner = this.selectedPractitioner();
+    if (!practitioner) {
+      return;
+    }
+
+    this.bookingMessage.set(
+      this.translateService.instant('PRACTITIONER_MAP.BOOKING_CONFIRMED', { name: practitioner.name })
+    );
+    this.closeBookingModal();
+  }
+
+  toggleProvider(): void {
+    const nextProvider = this.provider() === 'openstreetmap' ? 'google' : 'openstreetmap';
+    this.setProvider(nextProvider);
+  }
+
   categoryLabel(category: PractitionerCategory): string {
-    return this.translateService.instant(`PRACTITIONER_MAP.CATEGORY_${category}`);
+    const normalizedCategory = category === 'all' ? 'ALL' : category.toUpperCase();
+    const key = `PRACTITIONER_MAP.CATEGORY_${normalizedCategory}`;
+    const translated = this.translateService.instant(key);
+
+    if (!translated || translated === key) {
+      // fallback to readable labels in case translation is missing
+      if (category === 'all') {
+        return this.translateService.instant('PRACTITIONER_MAP.CATEGORY_ALL');
+      }
+      return category;
+    }
+
+    return translated;
   }
 
   private locateUser(): void {
