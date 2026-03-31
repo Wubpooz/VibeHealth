@@ -1279,6 +1279,8 @@
     "PRACTITIONER_COUNT": "{{count}} praticiens trouvés",
     "NO_PRACTITIONERS_FOUND": "Aucun praticien ne correspond à vos critères.",
     "BOOK_APPOINTMENT": "Prendre rendez-vous",
+    "CATEGORY_FILTER_LABEL": "Filtrer par catégorie : {{category}}",
+    "SELECT_PRACTITIONER": "Sélectionner le praticien {{name}}",
     "GEOLOCATION_UNSUPPORTED": "La géolocalisation n'est pas prise en charge par ce navigateur.",
     "GEOLOCATION_DENIED": "Accès à la position refusé. Affichage de la position par défaut.",
     "IMPLICIT_PERMISSIONS": "La carte utilise la position de l’appareil pour afficher des praticiens proches. Vous pouvez refuser tout en continuant d’utiliser l’application.",
