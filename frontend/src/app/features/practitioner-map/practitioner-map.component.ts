@@ -26,6 +26,7 @@ interface Practitioner {
   distanceKm: number;
   location: Coordinates;
   avatarColor: string;
+  avatarUrl?: string;
 }
 
 @Component({
@@ -75,6 +76,37 @@ interface Practitioner {
                 class="w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 px-3 py-2 text-sm text-gray-700 dark:text-gray-100 focus:ring-2 focus:ring-primary-400 outline-none"
               />
 
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                <label class="text-xs text-gray-500 dark:text-gray-400">
+                  {{ 'PRACTITIONER_MAP.CUSTOM_LATITUDE' | translate }}
+                  <input
+                    type="number"
+                    [value]="customLatitude()"
+                    (input)="customLatitude.set(+$any($event.target).value)"
+                    class="mt-1 w-full rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 px-2 py-1 text-sm text-gray-700 dark:text-gray-100 outline-none"
+                    step="any"
+                  />
+                </label>
+                <label class="text-xs text-gray-500 dark:text-gray-400">
+                  {{ 'PRACTITIONER_MAP.CUSTOM_LONGITUDE' | translate }}
+                  <input
+                    type="number"
+                    [value]="customLongitude()"
+                    (input)="customLongitude.set(+$any($event.target).value)"
+                    class="mt-1 w-full rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 px-2 py-1 text-sm text-gray-700 dark:text-gray-100 outline-none"
+                    step="any"
+                  />
+                </label>
+              </div>
+
+              <button
+                type="button"
+                (click)="applyCustomLocation()"
+                class="w-full rounded-lg bg-primary-500 px-3 py-2 text-xs font-semibold text-white hover:bg-primary-600"
+              >
+                {{ 'PRACTITIONER_MAP.SET_CUSTOM_LOCATION' | translate }}
+              </button>
+
               <div class="flex flex-wrap gap-2">
                 @for (category of categories; track category) {
                   <button
@@ -96,25 +128,43 @@ interface Practitioner {
             </div>
 
             <div class="max-h-[calc(100vh-240px)] overflow-y-auto space-y-3">
-              @if (filteredPractitioners().length === 0) {
+              @if (loadingPractitioners()) {
                 <div class="rounded-lg border border-dashed border-gray-300 dark:border-gray-700 p-4 text-sm text-gray-500 dark:text-gray-400 text-center">
-                  {{ 'PRACTITIONER_MAP.NO_PRACTITIONERS_FOUND' | translate }}
+                  {{ 'PRACTITIONER_MAP.LOADING_PRACTITIONERS' | translate }}
                 </div>
               }
-              @for (practitioner of filteredPractitioners(); track practitioner.id) {
-                <article
-                  (click)="selectPractitioner(practitioner)"
-                  (keydown.enter)="selectPractitioner(practitioner)"
-                  (keydown.space)="selectPractitioner(practitioner)"
-                  tabindex="0"
-                  role="button"
-                  [attr.aria-label]="('PRACTITIONER_MAP.SELECT_PRACTITIONER' | translate:{ name: practitioner.name })"
-                  [class.border-primary-500]="selectedPractitioner()?.id === practitioner.id"
-                  class="cursor-pointer rounded-xl border p-3 transition hover:shadow-md hover:border-primary-500"
-                >
+
+              @if (!loadingPractitioners()) {
+                @if (filteredPractitioners().length === 0) {
+                  <div class="rounded-lg border border-dashed border-gray-300 dark:border-gray-700 p-4 text-sm text-gray-500 dark:text-gray-400 text-center">
+                    {{ 'PRACTITIONER_MAP.NO_PRACTITIONERS_FOUND' | translate }}
+                  </div>
+                }
+
+                @if (filteredPractitioners().length > 0) {
+                  @for (practitioner of filteredPractitioners(); track practitioner.id) {
+                    <article
+                      (click)="selectPractitioner(practitioner)"
+                      (keydown.enter)="selectPractitioner(practitioner)"
+                      (keydown.space)="selectPractitioner(practitioner)"
+                      tabindex="0"
+                      role="button"
+                      [attr.aria-label]="('PRACTITIONER_MAP.SELECT_PRACTITIONER' | translate:{ name: practitioner.name })"
+                      [class.border-primary-500]="selectedPractitioner()?.id === practitioner.id"
+                      class="cursor-pointer rounded-xl border p-3 transition hover:shadow-md hover:border-primary-500"
+                    >
                   <div class="flex items-center gap-3">
-                    <div class="flex h-10 w-10 items-center justify-center rounded-full" [ngStyle]="{ 'background-color': practitioner.avatarColor }">
-                      <span class="text-xs font-bold text-white">{{ practitioner.name.split(' ').map(n => n[0]).join('') }}</span>
+                    <div class="flex h-10 w-10 items-center justify-center rounded-full overflow-hidden" [ngStyle]="{ 'background-color': practitioner.avatarColor }">
+                      @if (practitioner.avatarUrl) {
+                        <img
+                          src="{{ practitioner.avatarUrl }}"
+                          alt="{{ practitioner.name }}"
+                          class="h-full w-full object-cover"
+                          loading="lazy"
+                        />
+                      } @else {
+                        <span class="text-xs font-bold text-white">{{ practitioner.name.split(' ').map(n => n[0]).join('') }}</span>
+                      }
                     </div>
                     <div>
                       <div class="text-sm font-semibold text-gray-900 dark:text-gray-100">{{ practitioner.name }}</div>
@@ -140,6 +190,8 @@ interface Practitioner {
                   </button>
                 </article>
               }
+            }
+          }
             </div>
           </section>
 
@@ -225,6 +277,7 @@ export class PractitionerMapComponent implements OnInit {
       distanceKm: 0.8,
       location: { lat: 48.8605, lng: 2.3377 },
       avatarColor: '#7f9cf5',
+      avatarUrl: 'https://i.pravatar.cc/80?u=sarah+chen',
     },
     {
       id: 'p2',
@@ -235,6 +288,7 @@ export class PractitionerMapComponent implements OnInit {
       distanceKm: 1.2,
       location: { lat: 48.8549, lng: 2.347 },
       avatarColor: '#f97316',
+      avatarUrl: 'https://i.pravatar.cc/80?u=james+wilson',
     },
     {
       id: 'p3',
@@ -245,6 +299,7 @@ export class PractitionerMapComponent implements OnInit {
       distanceKm: 2.4,
       location: { lat: 48.849, lng: 2.3564 },
       avatarColor: '#2dd4bf',
+      avatarUrl: 'https://i.pravatar.cc/80?u=elena+rodriguez',
     },
     {
       id: 'p4',
@@ -255,6 +310,7 @@ export class PractitionerMapComponent implements OnInit {
       distanceKm: 1.9,
       location: { lat: 48.858, lng: 2.349 },
       avatarColor: '#f43f5e',
+      avatarUrl: 'https://i.pravatar.cc/80?u=marc+dupont',
     },
   ]);
 
@@ -263,6 +319,9 @@ export class PractitionerMapComponent implements OnInit {
   readonly searchQuery = signal('');
   readonly selectedPractitioner = signal<Practitioner | null>(null);
   readonly bookingMessage = signal('');
+
+  readonly customLatitude = signal<number>(this.location().lat);
+  readonly customLongitude = signal<number>(this.location().lng);
 
   @ViewChild('bookingModal', { static: true })
   bookingModal!: ModalComponent;
@@ -296,7 +355,10 @@ export class PractitionerMapComponent implements OnInit {
   selectPractitioner(practitioner: Practitioner): void {
     this.selectedPractitioner.set(practitioner);
     this.location.set(practitioner.location);
+    this.customLatitude.set(practitioner.location.lat);
+    this.customLongitude.set(practitioner.location.lng);
     this.updateMapUrl();
+    this.loadPractitioners();
   }
 
   openBookingModal(practitioner: Practitioner): void {
@@ -339,10 +401,19 @@ export class PractitionerMapComponent implements OnInit {
       if (specialty && specialty !== 'all') params.set('specialty', specialty);
 
       const url = `${environment.apiUrl}/api/v1/references/practitioners?${params.toString()}`;
-      const practitioners = await firstValueFrom(this.http.get<Practitioner[]>(url));
+      const practitionersFromApi = await firstValueFrom(this.http.get<Practitioner[]>(url));
 
-      if (Array.isArray(practitioners) && practitioners.length > 0) {
-        this.practitioners.set(practitioners);
+      if (Array.isArray(practitionersFromApi)) {
+        const practitionersWithAvatars = practitionersFromApi.map((p, i) => {
+          const fallbackId = p.id || p.name || `practitioner-${i}`;
+          const fallbackAvatar = `https://i.pravatar.cc/80?u=${encodeURIComponent(fallbackId)}`;
+          return {
+            ...p,
+            avatarUrl: p.avatarUrl || fallbackAvatar,
+          };
+        });
+
+        this.practitioners.set(practitionersWithAvatars);
       }
     } catch (err) {
       console.error('Failed to load practitioners', err);
@@ -358,6 +429,21 @@ export class PractitionerMapComponent implements OnInit {
 
   onSearchQueryChanged(value: string): void {
     this.searchQuery.set(value);
+    this.loadPractitioners();
+  }
+
+  applyCustomLocation(): void {
+    this.error.set(null);
+    const lat = this.customLatitude();
+    const lng = this.customLongitude();
+
+    if (Number.isNaN(lat) || Number.isNaN(lng)) {
+      this.error.set('PRACTITIONER_MAP.INVALID_LOCATION');
+      return;
+    }
+
+    this.location.set({ lat, lng });
+    this.updateMapUrl();
     this.loadPractitioners();
   }
 
@@ -389,7 +475,10 @@ export class PractitionerMapComponent implements OnInit {
 
     navigator.geolocation.getCurrentPosition(
       async (position) => {
-        this.location.set({ lat: position.coords.latitude, lng: position.coords.longitude });
+        const coords = { lat: position.coords.latitude, lng: position.coords.longitude };
+        this.location.set(coords);
+        this.customLatitude.set(coords.lat);
+        this.customLongitude.set(coords.lng);
         this.updateMapUrl();
         await this.loadPractitioners();
         this.loading.set(false);
@@ -397,7 +486,10 @@ export class PractitionerMapComponent implements OnInit {
       async (err) => {
         console.error('Geolocation error', err);
         this.error.set('PRACTITIONER_MAP.GEOLOCATION_DENIED');
-        this.location.set({ lat: 48.8566, lng: 2.3522 });
+        const coords = { lat: 48.8566, lng: 2.3522 };
+        this.location.set(coords);
+        this.customLatitude.set(coords.lat);
+        this.customLongitude.set(coords.lng);
         this.updateMapUrl();
         await this.loadPractitioners();
         this.loading.set(false);
