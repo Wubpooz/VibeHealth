@@ -1,10 +1,12 @@
 /* Import Fonts - brand typography */
 @import url('https://api.fontshare.com/v2/css?f[]=satoshi@300,400,500,700,900&display=swap');
+@import 'leaflet/dist/leaflet.css';
 
 /* Tailwind directives */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
 
 /* Light & Dark Mode CSS Custom Properties */
 :root {

@@ -1,8 +1,10 @@
-import { Component, OnInit, ViewChild, inject, signal, computed } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ViewChild, ElementRef, inject, signal, computed } from '@angular/core';
+import * as L from 'leaflet';
+
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+
 import { PageHeaderComponent } from '../../shared/components/page-header/page-header.component';
 import { ModalComponent } from '../../shared/components/modal/modal.component';
 import { environment } from '../../../environments/environment';
@@ -107,6 +109,14 @@ interface Practitioner {
                 {{ 'PRACTITIONER_MAP.SET_CUSTOM_LOCATION' | translate }}
               </button>
 
+              <button
+                type="button"
+                (click)="setLocationToMapCenter()"
+                class="w-full rounded-lg border border-primary-500 bg-white px-3 py-2 text-xs font-semibold text-primary-700 hover:bg-primary-50"
+              >
+                {{ 'PRACTITIONER_MAP.SET_LOCATION_FROM_MAP_CENTER' | translate }}
+              </button>
+
               <div class="flex flex-wrap gap-2">
                 @for (category of categories; track category) {
                   <button
@@ -206,26 +216,14 @@ interface Practitioner {
               </div>
             </div>
 
-            @if (mapUrl()) {
-              <iframe
-                [src]="mapUrl()"
-                loading="lazy"
-                class="w-full h-[65vh]"
-                title="{{ 'PRACTITIONER_MAP.MAP_TITLE' | translate }}"
-                allowfullscreen
-                sandbox="allow-scripts allow-same-origin allow-popups"
-              ></iframe>
-            }
-            @if (loading()) {
-              <div class="p-6 text-center text-sm text-gray-500 dark:text-gray-400">
-                {{ 'PRACTITIONER_MAP.LOADING_MAP' | translate }}
-              </div>
-            }
-            @if (error()) {
-              <div class="p-6 text-center text-sm text-red-600 dark:text-red-400">
-                {{ error() | translate }}
-              </div>
-            }
+            <div
+              #mapContainer
+              class="w-full h-[65vh]"
+              aria-label="{{ 'PRACTITIONER_MAP.MAP_TITLE' | translate }}"
+            ></div>
+            <div class="mt-2 px-3 text-xs text-gray-500 dark:text-gray-400">
+              {{ 'PRACTITIONER_MAP.CLICK_TO_SET_LOCATION' | translate }}
+            </div>
           </section>
         </div>
 
@@ -255,17 +253,20 @@ interface Practitioner {
     iframe { border: 0; }
   `],
 })
-export class PractitionerMapComponent implements OnInit {
-  readonly sanitizer = inject(DomSanitizer);
+export class PractitionerMapComponent implements OnInit, AfterViewInit {
   readonly translateService = inject(TranslateService);
   readonly http = inject(HttpClient);
 
   readonly provider = signal<MapProvider>('openstreetmap');
   readonly loadingPractitioners = signal(false);
   readonly location = signal<Coordinates>({ lat: 48.8566, lng: 2.3522 });
-  readonly mapUrl = signal<SafeResourceUrl>(this.createMapUrl(this.location(), this.provider()));
   readonly loading = signal(true);
   readonly error = signal<string | null>(null);
+
+  private map: L.Map | null = null;
+  private tileLayer: L.TileLayer | null = null;
+  private readonly markersById = new Map<string, L.Marker>();
+  private userLocationMarker: L.Marker | null = null;
 
   readonly practitioners = signal<Practitioner[]>([
     {
@@ -323,6 +324,9 @@ export class PractitionerMapComponent implements OnInit {
   readonly customLatitude = signal<number>(this.location().lat);
   readonly customLongitude = signal<number>(this.location().lng);
 
+  @ViewChild('mapContainer', { static: true })
+  mapContainer!: ElementRef<HTMLDivElement>;
+
   @ViewChild('bookingModal', { static: true })
   bookingModal!: ModalComponent;
 
@@ -342,9 +346,15 @@ export class PractitionerMapComponent implements OnInit {
     this.locateUser();
   }
 
+  ngAfterViewInit(): void {
+    this.initializeMap();
+  }
+
   setProvider(value: MapProvider): void {
     this.provider.set(value);
-    this.updateMapUrl();
+    if (this.map) {
+      this.setMapTileLayer(value);
+    }
     this.loadPractitioners();
   }
 
@@ -357,7 +367,14 @@ export class PractitionerMapComponent implements OnInit {
     this.location.set(practitioner.location);
     this.customLatitude.set(practitioner.location.lat);
     this.customLongitude.set(practitioner.location.lng);
-    this.updateMapUrl();
+    if (this.map) {
+      const map = this.map;
+      map.setView([practitioner.location.lat, practitioner.location.lng], map.getZoom());
+      const marker = this.markersById.get(practitioner.id);
+      if (marker) {
+        marker.openPopup();
+      }
+    }
     this.loadPractitioners();
   }
 
@@ -442,9 +459,156 @@ export class PractitionerMapComponent implements OnInit {
       return;
     }
 
+    this.setUserLocation(lat, lng);
+  }
+
+  setUserLocation(lat: number, lng: number): void {
+    this.error.set(null);
     this.location.set({ lat, lng });
-    this.updateMapUrl();
+    this.customLatitude.set(lat);
+    this.customLongitude.set(lng);
+    if (this.map) {
+      this.map.setView([lat, lng], this.map.getZoom());
+    }
+    this.updateUserLocationMarker();
     this.loadPractitioners();
+  }
+
+  setLocationToMapCenter(): void {
+    if (!this.map) {
+      return;
+    }
+    const center = this.map.getCenter();
+    this.setUserLocation(center.lat, center.lng);
+  }
+
+  private initializeMap(): void {
+    if (!this.mapContainer) {
+      return;
+    }
+
+    const map = L.map(this.mapContainer.nativeElement);
+    map.setView([this.location().lat, this.location().lng], 13);
+    this.map = map;
+    this.setMapTileLayer(this.provider());
+
+    map.on('click', (event: unknown) => this.onMapClick(event as { latlng: { lat: number; lng: number } }));
+    map.on('moveend', () => {
+      const center = map.getCenter();
+      // Do not auto-update location when simply panning/zooming. Require explicit action.
+      this.customLatitude.set(center.lat);
+      this.customLongitude.set(center.lng);
+    });
+
+    this.updateUserLocationMarker();
+    this.renderMarkers();
+  }
+
+  private setMapTileLayer(provider: MapProvider): void {
+    const layers = {
+      openstreetmap: {
+        url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+        attribution: '&copy; OpenStreetMap contributors',
+      },
+      google: {
+        url: 'https://mt1.google.com/vt/lyrs=r&x={x}&y={y}&z={z}',
+        attribution: '&copy; Google',
+      },
+    };
+
+    if (!this.map) {
+      return;
+    }
+
+    if (this.tileLayer) {
+      this.map.removeLayer(this.tileLayer);
+    }
+
+    this.tileLayer = L.tileLayer(layers[provider].url, {
+      attribution: layers[provider].attribution,
+    }).addTo(this.map);
+  }
+
+  private onMapClick(event: { latlng: { lat: number; lng: number } }): void {
+    const { lat, lng } = event.latlng;
+    this.location.set({ lat, lng });
+    this.customLatitude.set(lat);
+    this.customLongitude.set(lng);
+    if (this.map) {
+      this.map.setView([lat, lng], this.map.getZoom());
+    }
+    this.updateUserLocationMarker();
+    this.loadPractitioners();
+  }
+
+  private getMarkerIcon() {
+    return L.divIcon({
+      className: 'leaflet-marker-icon custom-marker',
+      html: '<div style="background:#1f2937;border:2px solid #f97316;border-radius:50%;width:18px;height:18px;box-shadow:0 0 0 6px rgba(249,115,22,.25);"></div>',
+      iconSize: [20, 20],
+      iconAnchor: [10, 10],
+      popupAnchor: [0, -10],
+    });
+  }
+
+  private getUserLocationIcon() {
+    return L.divIcon({
+      className: 'leaflet-marker-icon user-location-marker',
+      html: '<div style="background:#3b82f6;border:2px solid #bfdbfe;border-radius:50%;width:18px;height:18px;box-shadow:0 0 0 6px rgba(59,130,246,0.25);"></div>',
+      iconSize: [20, 20],
+      iconAnchor: [10, 10],
+      popupAnchor: [0, -10],
+    });
+  }
+
+  private updateUserLocationMarker(): void {
+    if (!this.map) {
+      return;
+    }
+
+    const currentLocation = this.location();
+    const translationResult = this.translateService.instant('PRACTITIONER_MAP.YOUR_LOCATION');
+    const userLocationText = translationResult === 'PRACTITIONER_MAP.YOUR_LOCATION' ? 'You are here' : translationResult;
+
+    if (this.userLocationMarker) {
+      this.userLocationMarker.setLatLng([currentLocation.lat, currentLocation.lng]);
+      this.userLocationMarker.setPopupContent(userLocationText);
+    } else {
+      this.userLocationMarker = L.marker([currentLocation.lat, currentLocation.lng], {
+        icon: this.getUserLocationIcon(),
+        title: userLocationText,
+      })
+        .addTo(this.map)
+        .bindPopup(userLocationText);
+    }
+  }
+
+  private renderMarkers(): void {
+    this.clearMarkers();
+    const map = this.map;
+    if (!map) {
+      return;
+    }
+
+    for (const practitioner of this.practitioners()) {
+      const marker = L.marker([practitioner.location.lat, practitioner.location.lng], {
+        title: practitioner.name,
+        icon: this.getMarkerIcon(),
+      })
+        .addTo(map)
+        .bindPopup(`<strong>${practitioner.name}</strong><br/>${practitioner.role}`);
+
+      marker.on('click', () => this.selectPractitioner(practitioner));
+      this.markersById.set(practitioner.id, marker);
+    }
+  }
+
+  private clearMarkers(): void {
+    const map = this.map;
+    if (map) {
+      this.markersById.forEach((marker) => map.removeLayer(marker));
+    }
+    this.markersById.clear();
   }
 
   categoryLabel(category: PractitionerCategory): string {
@@ -479,7 +643,10 @@ export class PractitionerMapComponent implements OnInit {
         this.location.set(coords);
         this.customLatitude.set(coords.lat);
         this.customLongitude.set(coords.lng);
-        this.updateMapUrl();
+        if (this.map) {
+          this.map.setView([coords.lat, coords.lng], this.map.getZoom());
+        }
+        this.updateUserLocationMarker();
         await this.loadPractitioners();
         this.loading.set(false);
       },
@@ -490,7 +657,10 @@ export class PractitionerMapComponent implements OnInit {
         this.location.set(coords);
         this.customLatitude.set(coords.lat);
         this.customLongitude.set(coords.lng);
-        this.updateMapUrl();
+        if (this.map) {
+          this.map.setView([coords.lat, coords.lng], this.map.getZoom());
+        }
+        this.updateUserLocationMarker();
         await this.loadPractitioners();
         this.loading.set(false);
       },
@@ -498,23 +668,5 @@ export class PractitionerMapComponent implements OnInit {
     );
   }
 
-  private updateMapUrl(): void {
-    this.mapUrl.set(this.createMapUrl(this.location(), this.provider()));
-  }
-
-  private createMapUrl(loc: Coordinates, provider: MapProvider): SafeResourceUrl {
-    if (provider === 'google') {
-      const q = encodeURIComponent('doctor near me');
-      const url = `https://www.google.com/maps?q=${q}@${loc.lat},${loc.lng}&z=13&output=embed`;
-      return this.sanitizer.bypassSecurityTrustResourceUrl(url);
-    }
-
-    const delta = 0.05;
-    const minLon = loc.lng - delta;
-    const maxLon = loc.lng + delta;
-    const minLat = loc.lat - delta;
-    const maxLat = loc.lat + delta;
-    const url = `https://www.openstreetmap.org/export/embed.html?bbox=${minLon}%2C${minLat}%2C${maxLon}%2C${maxLat}&layer=mapnik&marker=${loc.lat}%2C${loc.lng}`;
-    return this.sanitizer.bypassSecurityTrustResourceUrl(url);
-  }
 }
+
