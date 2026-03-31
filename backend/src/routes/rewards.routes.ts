@@ -124,11 +124,14 @@ rewardsRoutes.post('/daily-checkin', async (c) => {
 
   const longestStreak = Math.max(profile.longestStreak, newStreak);
 
-  await prisma.$executeRaw`
-    UPDATE profiles
-    SET current_streak = ${newStreak}, longest_streak = ${longestStreak}, last_check_in = ${today}
-    WHERE user_id = ${user.id};
-  `;
+  await prisma.profile.update({
+    where: { userId: user.id },
+    data: {
+      currentStreak: newStreak,
+      longestStreak,
+      lastCheckIn: today,
+    },
+  });
 
   // award carrots for daily check-in + possible streak bonus
   await awardCarrots(user.id, 2);
