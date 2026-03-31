@@ -25,23 +25,32 @@
         .screenshot { width: min(68vw, 520px); margin: 1rem auto 0.8rem; border-radius: 18px; box-shadow: 0 8px 20px rgba(0,0,0,0.16); }
         .mascotte-strip { display: flex; flex-wrap: wrap; justify-content: center; gap: 1rem; margin-top: 1rem; }
         .mascotte-strip img { width: 96px; height: 96px; border-radius: 24px; filter: drop-shadow(0 4px 20px rgba(0,0,0,.12)); }
+        .reveal .slide-number { font-size: 1.8rem; font-weight: 600; color: #444; background: none; }
+        .feature-item { display: flex; align-items: center; gap: 0.8rem; justify-content: flex-start; }
+        .feature-item-icon { font-size: 2rem; }
+        .design-feature { margin-bottom: 0.7rem; padding: 0.6rem; background: rgba(255,107,74,.05); border-radius: 12px; }
+        .design-feature-title { font-weight: 600; color: #ff6b4a; margin-bottom: 0.2rem; font-size: 0.95rem; }
+        .design-feature-reason { font-size: 0.85rem; color: #666; }
+        .tech-item { margin-bottom: 0.5rem; text-align: left; }
+        .tech-tool { font-weight: 600; color: #ff6b4a; font-size: 0.95rem; }
+        .tech-reason { font-size: 0.8rem; color: #666; margin-top: 0.1rem; }
     </style>
 </head>
 <body>
     <div class="reveal">
         <div class="slides">
-            <section>
-                <div class="emoji">🐰</div>
-                <h1>VibeHealth</h1>
-                <div class="mascotte-strip">
-                    <img src="../frontend/src/assets/mascotte/rabbit_standing.svg" alt="Mascotte standing" />
-                    <img src="../frontend/src/assets/mascotte/rabbit_thinking.svg" alt="Mascotte thinking" />
-                    <img src="../frontend/src/assets/mascotte/rabbit_congrat.svg" alt="Mascotte congratulating" />
-                    <img src="../frontend/src/assets/mascotte/rabbit_sad.svg" alt="Mascotte sad" />
+            <section style="width: 100%; align-items: center; justify-content: center;">
+                <div style="text-align: center; width: 100%; display: flex; flex-direction: column; align-items: center;">
+                    <div class="emoji">🐰</div>
+                    <h1 style="margin-bottom: 1.2rem; width: 100%; text-align: center;">VibeHealth</h1>
+                    <div class="mascotte-strip" style="width: 100%; justify-content: center;">
+                        <img src="../frontend/src/assets/mascotte/rabbit_standing.svg" alt="Mascotte standing" />
+                        <img src="../frontend/src/assets/mascotte/rabbit_thinking.svg" alt="Mascotte thinking" />
+                        <img src="../frontend/src/assets/mascotte/rabbit_congrat.svg" alt="Mascotte congratulating" />
+                        <img src="../frontend/src/assets/mascotte/rabbit_sad.svg" alt="Mascotte sad" />
+                    </div>
+                    <p class="big" style="margin-top: 1.2rem; width: 100%; text-align: center;">Your Personal Health Companion</p>
                 </div>
-                <p class="big">Your Personal Health Companion</p>
-                <p class="small">Unify vitals tracking, medical intelligence, wellness tools, and lifestyle features into one delightful PWA experience.</p>
-                <p class="small"><strong>Offline-first • Bilingual (EN/FR) • Soft Pop design</strong></p>
             </section>
             <section>
                 <h2>The Problem</h2>
@@ -52,48 +61,48 @@
                     <li>Mobile health tracking is often inaccessible offline.</li>
                 </ul>
             </section>
-            <section>
-                <h2>Our Solution</h2>
-                <div class="highlight-box">
-                    <p>🎯 <strong>VibeHealth</strong> is an offline-first, bilingual personal health companion that centralizes vitals tracking, medical intelligence, wellness tools, and lifestyle features—all delivered with a premium "Soft Pop" aesthetic, a bunny mascot, and a carrot-based reward system.</p>
+            <section style="width: 100%; align-items: center; justify-content: center;">
+                <div style="width: 100%; max-width: 45rem; display: flex; flex-direction: column; align-items: center; text-align: center; margin: 0 auto;">
+                    <h2 style="width: 100%; text-align: center;">Our Solution</h2>
+                    <div class="highlight-box" style="font-size: 0.95rem; padding: 0.8rem 0.9rem; width: 100%; box-sizing: border-box; margin: 0.9rem auto;">
+                        <p style="width: 100%; text-align: center;">🎯 <strong>VibeHealth</strong> is an offline-first, bilingual personal health companion that centralizes vitals tracking, medical intelligence, wellness tools, and lifestyle features with a premium "Soft Pop" aesthetic, bunny mascot, and carrot rewards.</p>
+                    </div>
+                    <img class="screenshot" src="../frontend/src/assets/mascotte/rabbit_thinking.svg" alt="Mascotte" style="width: 120px; height: 120px; margin: 0.5rem auto;" />
+                    <ul class="feature-list" style="margin-top: 0.8rem; width: 100%; display: flex; flex-direction: column; align-items: center;">
+                        <li style="font-size: 0.95rem; text-align: center;">Clinically strong tracking + wellness coaching</li>
+                        <li style="font-size: 0.95rem; text-align: center;">Data ownership and privacy first design</li>
+                    </ul>
                 </div>
-                <img class="screenshot" src="../frontend/src/assets/logo.png" alt="App screenshot placeholder" />
-                <p class="small">Real app visuals and onboarding flows reinforce the product story. (Replace with production screenshots once exported from the UI.)</p>
-                <ul class="feature-list">
-                    <li>Clinically strong tracking + wellness coaching.</li>
-                    <li>Data ownership and privacy first design.</li>
-                </ul>
             </section>
             <section>
                 <h2>Core Features</h2>
-                <div class="feature-list">
-                    <p>1. Medical ID + QR export</p>
-                    <p>2. First-aid guide, steps, and protection in offline mode</p>
-                    <p>3. Vitals logging: blood pressure, heart rate, weight, glucose</p>
-                    <p>4. Activity and nutrition tracking with reference catalog</p>
-                    <p>5. Goals and progress + carrot rewards</p>
-                    <p>6. Journal, sleep, mood, wellness reminders</p>
-                    <p>7. Personalized insights and trend graphs</p>
-                    <p>8. Secure auth + account sync</p>
-                    <p>9. Multi-device PWA install, dark mode, animations</p>
+                <div class="feature-list" style="font-size: 0.9rem; gap: 0.4rem; max-height: calc(100vh - 200px); overflow-y: auto; padding-right: 1.5rem;">
+                    <div class="feature-item"><span class="feature-item-icon">🆔</span><p>Medical ID + QR export</p></div>
+                    <div class="feature-item"><span class="feature-item-icon">🚨</span><p>First-aid guide & offline protection</p></div>
+                    <div class="feature-item"><span class="feature-item-icon">❤️</span><p>Vitals: BP, heart rate, weight, glucose</p></div>
+                    <div class="feature-item"><span class="feature-item-icon">🏃</span><p>Activity & nutrition tracking</p></div>
+                    <div class="feature-item"><span class="feature-item-icon">🐰</span><p>Goals & carrot rewards</p></div>
+                    <div class="feature-item"><span class="feature-item-icon">📔</span><p>Journal, sleep, mood tracking</p></div>
+                    <div class="feature-item"><span class="feature-item-icon">📊</span><p>Insights & trend graphs</p></div>
+                    <div class="feature-item"><span class="feature-item-icon">🔐</span><p>Secure auth + sync</p></div>
+                    <div class="feature-item"><span class="feature-item-icon">📱</span><p>Multi-device PWA & dark mode</p></div>
+                    <div class="feature-item"><span class="feature-item-icon">📅</span><p>Cycle tracker & reproductive wellness</p></div>
                 </div>
             </section>
             <section>
                 <h2>Complete Feature Set</h2>
-                <img class="screenshot" src="../frontend/src/assets/mascotte/rabbit_thinking.svg" alt="Features UI screenshot placeholder" />
-                <div class="feature-list">
-                    <p>• Offline-first architecture for critical flows</p>
-                    <p>• Bilingual i18n (EN/FR) with translation completeness</p>
-                    <p>• Session-based and token-based auth (BetterAuth)</p>
-                    <p>• Prisma + PostgreSQL backend with Hono/Bun</p>
-                    <p>• E2E-ready PWA service worker</p>
-                    <p>• Personal health timeline</p>
-                    <p>• Medication tracker + reminder engine</p>
-                    <p>• Period & reproductive wellness planning</p>
-                    <p>• Challenges, badges, and carrot economy</p>
-                    <p>• Accessibility and responsive design</p>
-                    <p>• Integrations roadmap: sensors, calendars, devices</p>
-                    <p>• Analytics and smart notifications</p>
+                <div class="feature-list" style="font-size: 0.85rem; gap: 0.35rem; max-height: calc(100vh - 130px); overflow-y: auto; padding-right: 1.5rem;">
+                    <p>🏥 Medical ID, first aid, offline access</p>
+                    <p>🌍 Bilingual (EN/FR) with i18n</p>
+                    <p>🔐 Secure auth with BetterAuth</p>
+                    <p>📊 Prisma + PostgreSQL backend</p>
+                    <p>⚡ E2E-ready PWA & offline mode</p>
+                    <p>📈 Health timeline & personalized insights</p>
+                    <p>💊 Medication tracker & reminders</p>
+                    <p>📅 Period & reproductive wellness</p>
+                    <p>🥕 Carrot rewards & gamification</p>
+                    <p>♿ WCAG AA accessibility</p>
+                    <p>🔌 Integration roadmap</p>
                 </div>
             </section>
             <section>
@@ -111,42 +120,60 @@
                 </table>
             </section>
             <section>
-                <h2>Team</h2>
-                <div class="feature-list">
-                    <p>• Product: Visionary health + UX leader</p>
-                    <p>• Engineering: Full-stack Bun/Hono/Angular experts</p>
-                    <p>• Design: Soft Pop brand + accessibility-first</p>
-                    <p>• Growth: Early adopters, retention loops, community</p>
+                <h2>Design Philosophy</h2>
+                <div style="text-align: left; display: inline-flex; flex-direction: column; gap: 0.5rem; margin-top: 0.8rem; max-width: 45rem;">
+                    <div class="design-feature">
+                        <div class="design-feature-title">🎨 Warm Coral Gradients & Organic Shapes</div>
+                        <div class="design-feature-reason">Creates a friendly, approachable aesthetic that reduces health anxiety and builds trust. Organic shapes feel more human and less clinical.</div>
+                    </div>
+                    <div class="design-feature">
+                        <div class="design-feature-title">✨ Animated Micro-interactions</div>
+                        <div class="design-feature-reason">Bunny mascot and carrot XP animations provide positive reinforcement, encourage daily engagement, and make health tracking feel rewarding rather than tedious.</div>
+                    </div>
+                    <div class="design-feature">
+                        <div class="design-feature-title">📝 Satoshi Typography & Pill Controls</div>
+                        <div class="design-feature-reason">Modern, readable typeface with generous spacing ensures clarity for all users including those with visual impairments. Pill-style buttons are intuitive and comfortable to tap.</div>
+                    </div>
+                    <div class="design-feature">
+                        <div class="design-feature-title">♿ WCAG AA Accessibility & Dark Mode</div>
+                        <div class="design-feature-reason">Ensures the app is usable by everyone, including those with color blindness or visual disabilities. Dark mode reduces eye strain and accommodates user preferences.</div>
+                    </div>
                 </div>
             </section>
             <section>
-                <h2>Design</h2>
+                <h2>Roadmap (6 Steps)</h2>
                 <div class="feature-list">
-                    <p>• Warm coral gradients, soft shadows, organic shapes</p>
-                    <p>• Animated micro-interactions (bunny mascot, carrot XP)</p>
-                    <p>• Readable typography and pill-style controls</p>
-                    <p>• WCAG AA focus states and high contrast theme option</p>
-                </div>
-            </section>
-            <section>
-                <h2>Roadmap (5 Phases)</h2>
-                <div class="feature-list">
-                    <p>Phase 0: Foundation (completed)</p>
-                    <p>Phase 1: Health Tracking (in progress)</p>
-                    <p>Phase 2: Medication + Checks + Vaccines</p>
-                    <p>Phase 3: Mood, Journals, Workouts, Relaxation</p>
-                    <p>Phase 4: Sharing, Export, Calendar Sync</p>
-                    <p>Phase 5: Practitioner Map, Platform Sync</p>
+                    <p>✅ <strong>Basic Health Tracking:</strong> Vitals, hydration, activity logging</p>
+                    <p>✅ <strong>Personalization:</strong> Medical ID, first aid, user profiles</p>
+                    <p>✅ <strong>Nutrition:</strong> Meal tracking with reference catalog</p>
+                    <p>✅ <strong>Cycle Tracking:</strong> Period & reproductive wellness planning</p>
+                    <p>✅ <strong>Mental Health:</strong> Mood, journals, workouts <span style="color: #ff6b4a; font-size: 0.9rem;"></span></p>
+                    <p>🏥 <strong>Advanced Features:</strong> Sharing, export, integration <span style="color: #ff6b4a; font-size: 0.9rem;">(coming soon)</span></p>
                 </div>
             </section>
             <section>
                 <h2>Tech Stack</h2>
-                <div class="feature-list">
-                    <p>Frontend: Angular 21, Tailwind CSS, ngx-translate</p>
-                    <p>Backend: Bun, Hono, Prisma, PostgreSQL</p>
-                    <p>Auth: BetterAuth, JWT/session</p>
-                    <p>Testing: Cypress/Karma + Bun test</p>
-                    <p>Deploy: Docker Compose, CI/CD pipelines</p>
+                <div style="text-align: left; display: inline-flex; flex-direction: column; gap: 0.4rem; margin-top: 0.8rem; max-width: 45rem;">
+                    <div class="tech-item">
+                        <div class="tech-tool">🎨 Frontend: Angular 21 + Tailwind CSS</div>
+                        <div class="tech-reason">Modern standalone component architecture, reactive signals, and utility-first styling for rapid development and maintainability.</div>
+                    </div>
+                    <div class="tech-item">
+                        <div class="tech-tool">⚡ Backend: Bun + Hono + Prisma</div>
+                        <div class="tech-reason">Bun provides ultra-fast JavaScript runtime, Hono offers minimal routing overhead, Prisma gives type-safe database access with excellent DX.</div>
+                    </div>
+                    <div class="tech-item">
+                        <div class="tech-tool">🗄️ Database: PostgreSQL</div>
+                        <div class="tech-reason">Production-grade RDBMS with strong ACID compliance, perfect for health data integrity and complex relational queries.</div>
+                    </div>
+                    <div class="tech-item">
+                        <div class="tech-tool">🔐 Auth: BetterAuth</div>
+                        <div class="tech-reason">Simplifies session and token management with built-in OAuth support, reducing security vulnerabilities in authentication.</div>
+                    </div>
+                    <div class="tech-item">
+                        <div class="tech-tool">🐳 Deploy: Docker & CI/CD</div>
+                        <div class="tech-reason">Containerization ensures consistency across environments. Automated pipelines reduce manual errors and accelerate deployment cycles.</div>
+                    </div>
                 </div>
             </section>
             <section>
@@ -159,9 +186,23 @@
                 </ul>
             </section>
             <section>
-                <h2>Call to Action</h2>
-                <p class="big">Let's build the future of health—one carrot at a time.</p>
-                <p class="small">Website: <a href="https://vibehealth.app">vibehealth.app</a><br>Email: <a href="mailto:investors@vibehealth.app">investors@vibehealth.app</a><br>GitHub: <a href="https://github.com/vibehealth">github.com/vibehealth</a></p>
+                <h2>Team</h2>
+                <div class="feature-list">
+                    <p style="width: 100%; text-align: center;"><strong>Passionate about making health accessible and enjoyable for everyone</strong><br>
+                    </p>
+                </div>
+            </section>
+            <section style="width: 100%; align-items: center; justify-content: center; text-align: center;">
+                <div style="width: 100%; display: flex; flex-direction: column; align-items: center;">
+                    <p class="big" style="width: 100%; text-align: center;">Let's build the future of health<br/>one carrot at a time.</p>
+                    <p class="small" style="margin-top: 2rem; width: 100%; text-align: center;"><strong>Get in Touch</strong></p>
+                    <p class="small" style="width: 100%; text-align: center;">Email: <a href="mailto:investors@vibehealth.app" style="color: #ff6b4a; text-decoration: none;">investors@vibehealth.app</a></p>
+                </div>
+            </section>
+            <section style="width: 100%; align-items: center; justify-content: center;">
+                <div style="text-align: center; width: 100%; display: flex; flex-direction: column; align-items: center;">
+                    <h1 style="font-size: 3.5rem; color: #ff6b4a;">Demo</h1>
+                </div>
             </section>
         </div>
     </div>
