@@ -224,7 +224,7 @@ export class BottomNavComponent {
   @Input() hidden = signal(false);
   @Output() navigate = new EventEmitter<NavItem>();
 
-  private router = inject(Router);
+  private readonly router = inject(Router);
 
   private readonly activeIndex = signal(0);
 

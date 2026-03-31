@@ -230,8 +230,8 @@ periodRoutes.get('/logs', async (c) => {
   try {
     const limitParam = c.req.query('limit') || '12';
     const offsetParam = c.req.query('offset') || '0';
-    const limit = Math.min(parseInt(limitParam), 24); // Max 24 months
-    const offset = parseInt(offsetParam);
+    const limit = Math.min(Number.parseInt(limitParam), 24); // Max 24 months
+    const offset = Number.parseInt(offsetParam);
 
     const [logs, total] = await Promise.all([
       prisma.periodLog.findMany({
@@ -337,13 +337,20 @@ periodRoutes.patch('/:id', async (c) => {
     const body = await c.req.json();
     const validated = periodLogUpdateSchema.parse(body);
 
+    let endDate: Date | null | undefined;
+    if (validated.endDate === undefined) {
+      endDate = undefined;
+    } else {
+      endDate = validated.endDate ? new Date(validated.endDate) : null;
+    }
+
     const updated = await prisma.periodLog.update({
       where: { id: periodId },
       data: {
-        endDate: validated.endDate !== undefined ? (validated.endDate ? new Date(validated.endDate) : null) : undefined,
+        endDate,
         flowIntensity: validated.flowIntensity,
-        symptoms: validated.symptoms !== undefined ? validated.symptoms : undefined,
-        notes: validated.notes !== undefined ? (validated.notes || null) : undefined,
+        symptoms: validated.symptoms ?? undefined,
+        notes: validated.notes ?? undefined,
       },
     });
 
@@ -608,7 +615,7 @@ periodRoutes.delete('/reminder/pill', async (c) => {
       );
     }
 
-    const preferences = { ...(profile.notificationPreferences as Prisma.JsonObject | null) ?? {} } as Prisma.JsonObject;
+    const preferences = { ...(profile.notificationPreferences as Prisma.JsonObject) ?? {} } as Prisma.JsonObject;
     delete preferences.contraceptivePillReminder;
 
     await prisma.profile.update({

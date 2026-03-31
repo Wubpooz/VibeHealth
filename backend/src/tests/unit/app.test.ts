@@ -53,7 +53,7 @@ describe('GET /health', () => {
     const res = await buildApp().request('/health');
     const body: any = await res.json();
     const date = new Date(body.timestamp);
-    expect(isNaN(date.getTime())).toBe(false);
+    expect(Number.isNaN(date.getTime())).toBe(false);
   });
 
   it('timestamp is reasonably close to now (within 5 seconds)', async () => {
