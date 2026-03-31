@@ -140,7 +140,7 @@ import { ReferenceDataService } from '../../core/reference-data/reference-data.s
       <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-4 space-y-3 shadow-sm">
         <h2 class="text-lg font-semibold">{{ 'MEDICATION.INTEL_TITLE' | translate }}</h2>
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-          <!-- TODO make use of autocomplete to help input medicine name with a separator between my current medications and the list of all the medications in the dropdown -->
+          <!-- Autocomplete now presents current medications first and the known catalog after a separator -->
           <app-autocomplete
             [suggestions]="drugSearchSuggestions()"
             [selectedItems]="drugSearchSelection"

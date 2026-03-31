@@ -1,6 +1,34 @@
 import { prisma } from '../lib/prisma';
-import { sendMedicationReminder } from '../lib/notifications';
+import { sendMedicationReminder, sendWebPushNotification, sendEmailNotification } from '../lib/notifications';
 import { calculateNextDueAt } from '../lib/medication';
+
+function computePillNextDueAt(timeOfDay: string, dayOfWeekReminders: number[] = []): Date {
+  const now = new Date();
+  const [hours, minutes] = timeOfDay.split(':').map(Number);
+
+  if (dayOfWeekReminders.length > 0) {
+    const currentDay = now.getDay(); // 0=Sunday..6=Saturday
+    const days = dayOfWeekReminders.map((d) => (d + 7) % 7);
+
+    const candidates = days.map((target) => {
+      const delta = (target - currentDay + 7) % 7;
+      const dt = new Date(now);
+      dt.setDate(now.getDate() + (delta === 0 ? 0 : delta));
+      dt.setHours(hours, minutes, 0, 0);
+      if (delta === 0 && dt <= now) {
+        dt.setDate(dt.getDate() + 7);
+      }
+      return dt;
+    });
+
+    return candidates.sort((a, b) => a.getTime() - b.getTime())[0];
+  }
+
+  const dt = new Date(now);
+  dt.setHours(hours, minutes, 0, 0);
+  if (dt <= now) dt.setDate(dt.getDate() + 1);
+  return dt;
+}
 
 /**
  * Medication Reminder Worker
@@ -78,6 +106,53 @@ async function processDueReminders(): Promise<void> {
         // Continue processing other reminders even if one fails
       }
     }
+
+    // Process due contraceptive pill reminders as well
+    const db = prisma as unknown as {
+      contraceptivePillReminder: {
+        findMany: (args: object) => Promise<any[]>;
+        update: (args: object) => Promise<any>;
+      };
+    };
+
+    const pillReminders = await db.contraceptivePillReminder.findMany({
+      where: {
+        enabled: true,
+        nextDueAt: {
+          lte: now,
+        },
+      },
+      include: {
+        user: true,
+      },
+    });
+
+    for (const pill of pillReminders) {
+      try {
+        await sendWebPushNotification(pill.userId, {
+          title: 'Pill reminder',
+          body: `Take your contraceptive pill at ${pill.timeOfDay}`,
+          data: { type: 'pill-reminder' },
+        });
+
+        await sendEmailNotification(
+          pill.userId,
+          'Pill reminder',
+          `<p>It is time to take your contraceptive pill at ${pill.timeOfDay}.</p>`,
+          `It is time to take your contraceptive pill at ${pill.timeOfDay}.`
+        );
+
+        const nextDueAt = computePillNextDueAt(pill.timeOfDay, pill.dayOfWeekReminders || []);
+        await db.contraceptivePillReminder.update({
+          where: { userId: pill.userId },
+          data: { nextDueAt },
+        });
+
+        console.log(`Processed pill reminder for user ${pill.userId}, next due at ${nextDueAt.toISOString()}`);
+      } catch (error) {
+        console.error(`Failed to process pill reminder ${pill.id}:`, error);
+      }
+    }
   } catch (error) {
     console.error('Error processing due reminders:', error);
   }
@@ -109,7 +184,9 @@ process.on('SIGTERM', () => {
 });
 
 // Start the worker
-startWorker().catch((error) => {
+try {
+  await startWorker();
+} catch (error) {
   console.error('Failed to start Medication Reminder Worker:', error);
   process.exit(1);
-});
+}

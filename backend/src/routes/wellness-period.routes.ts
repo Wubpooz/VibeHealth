@@ -1,10 +1,11 @@
 import { Hono } from 'hono';
 import { prisma } from '../lib/prisma';
-import { Prisma } from '@prisma/client';
 import { requireAuth } from '../middleware/auth.middleware';
 import type { Session as AuthSession, User as AuthUser } from 'better-auth';
 import { z } from 'zod';
 import { getCycleInsights } from '../services/period';
+import { awardCarrots } from '../services/rewards.service';
+import { sendWebPushNotification, sendEmailNotification } from '../lib/notifications';
 
 // =============================================================================
 // Types
@@ -116,14 +117,103 @@ interface CycleInsightsResponse {
 }
 
 // =============================================================================
-// Notification Helpers (Stubs for future integration)
+// Notification Helpers
 // =============================================================================
 
-// TODO: Implement actual notification scheduling functions:
-// - notifyScheduled(userId: string, title: string)
-// - notifyPeriodUpcoming(userId: string, daysUntilPeriod: number)
-// - notifyPillReminder(userId: string, timeOfDay: string)
-// These will integrate with service worker or notification service
+async function notifyUser(userId: string, title: string, message: string): Promise<void> {
+  try {
+    await sendWebPushNotification(userId, {
+      title,
+      body: message,
+      icon: '/icons/icon-192x192.png',
+      badge: '/icons/badge-72x72.png',
+      tag: 'wellness-notification',
+      data: { type: 'wellness', message },
+    });
+
+    await sendEmailNotification(
+      userId,
+      title,
+      `<p>${message}</p>`,
+      message
+    );
+  } catch (error) {
+    console.error('[Period] notifyUser failed:', error);
+  }
+}
+
+function computeNextDueAt(timeOfDay: string, dayOfWeekReminders: number[] = []): Date {
+  const now = new Date();
+  const [hours, minutes] = timeOfDay.split(':').map(Number);
+
+  if (dayOfWeekReminders.length > 0) {
+    const currentDay = now.getDay(); // 0=Sunday..6=Saturday
+    const days = dayOfWeekReminders.map((day) => (day + 7) % 7);
+
+    const head = days
+      .map((targetDay) => {
+        const delta = (targetDay - currentDay + 7) % 7;
+        const candidate = new Date(now);
+        candidate.setDate(now.getDate() + (delta === 0 ? 0 : delta));
+        candidate.setHours(hours, minutes, 0, 0);
+
+        if (delta === 0 && candidate <= now) {
+          candidate.setDate(candidate.getDate() + 7);
+        }
+
+        return candidate;
+      })
+      .sort((a, b) => a.getTime() - b.getTime());
+
+    return head[0];
+  }
+
+  const candidate = new Date(now);
+  candidate.setHours(hours, minutes, 0, 0);
+
+  if (candidate <= now) {
+    candidate.setDate(candidate.getDate() + 1);
+  }
+
+  return candidate;
+}
+
+async function scheduleContraceptivePillReminder(userId: string, reminder: {
+  enabled: boolean;
+  timeOfDay: string;
+  snoozeDuration: number;
+  dayOfWeekReminders: number[];
+  notes?: string;
+}) {
+  const nextDueAt = computeNextDueAt(reminder.timeOfDay, reminder.dayOfWeekReminders);
+
+  const db = prisma as unknown as {
+    contraceptivePillReminder: {
+      upsert: (args: object) => Promise<unknown>;
+    };
+  };
+
+  await db.contraceptivePillReminder.upsert({
+    where: { userId },
+    update: {
+      enabled: reminder.enabled,
+      timeOfDay: reminder.timeOfDay,
+      snoozeDuration: reminder.snoozeDuration,
+      dayOfWeekReminders: reminder.dayOfWeekReminders,
+      notes: reminder.notes ?? null,
+      nextDueAt,
+    },
+    create: {
+      userId,
+      enabled: reminder.enabled,
+      timeOfDay: reminder.timeOfDay,
+      snoozeDuration: reminder.snoozeDuration,
+      dayOfWeekReminders: reminder.dayOfWeekReminders,
+      notes: reminder.notes ?? null,
+      nextDueAt,
+    },
+  });
+}
 
 // =============================================================================
 // Route Definitions
@@ -158,6 +248,8 @@ periodRoutes.post('/log', async (c) => {
 
     if (existingPeriod) {
       // Update existing period
+      const isNowEnded = validated.endDate && !existingPeriod.endDate;
+
       periodLog = await prisma.periodLog.update({
         where: { id: existingPeriod.id },
         data: {
@@ -167,6 +259,10 @@ periodRoutes.post('/log', async (c) => {
           notes: validated.notes || null,
         },
       });
+
+      if (isNowEnded) {
+        await notifyUser(user.id, 'Period ended', 'Your period log has been completed. Great job keeping track!');
+      }
     } else {
       // Create new period
       periodLog = await prisma.periodLog.create({
@@ -180,9 +276,8 @@ periodRoutes.post('/log', async (c) => {
         },
       });
 
-      // Award carrots for tracking
-      // TODO: Integrate with RewardsService
-      console.log(`[Rewards] Award 5 carrots to user ${user.id} for period tracking`);
+      await awardCarrots(user.id, 5);
+      await notifyUser(user.id, 'Period logged', 'Your period was successfully logged and 5 carrots were awarded.');
     }
 
     // Trigger notifications if needed
@@ -502,44 +597,59 @@ periodRoutes.post('/reminder/pill', async (c) => {
     const body = await c.req.json();
     const validated = contraceptivePillReminderSchema.parse(body);
 
-    // For now, store in a simple JSON field or create a new model
-    // TODO: Create ContraceptivePillReminder model in Prisma
-    // For this example, we'll store in profile as a JSON blob
+    const nextDueAt = computeNextDueAt(validated.timeOfDay, validated.dayOfWeekReminders ?? []);
 
-    const profile = await prisma.profile.findUnique({
-      where: { userId: user.id },
-    });
-
-    if (!profile) {
-      return c.json(
-        { success: false, error: 'User profile not found' },
-        { status: 404 }
-      );
-    }
-
-    // Update profile with pill reminder settings
-    const existingPreferences = (typeof profile.notificationPreferences === 'object' && !Array.isArray(profile.notificationPreferences) ? profile.notificationPreferences : {}) as Prisma.JsonObject;
-    const updatedPreferences: Prisma.JsonObject = {
-      ...existingPreferences,
-      contraceptivePillReminder: validated,
+    const db = prisma as unknown as {
+      contraceptivePillReminder: {
+        upsert: (args: object) => Promise<unknown>;
+      };
     };
 
-    await prisma.profile.update({
+    const reminder = (await db.contraceptivePillReminder.upsert({
       where: { userId: user.id },
-      data: {
-        notificationPreferences: updatedPreferences,
+      create: {
+        userId: user.id,
+        enabled: validated.enabled,
+        timeOfDay: validated.timeOfDay,
+        snoozeDuration: validated.snoozeDuration,
+        dayOfWeekReminders: validated.dayOfWeekReminders ?? [],
+        notes: validated.notes ?? null,
+        nextDueAt,
       },
-    });
+      update: {
+        enabled: validated.enabled,
+        timeOfDay: validated.timeOfDay,
+        snoozeDuration: validated.snoozeDuration,
+        dayOfWeekReminders: validated.dayOfWeekReminders ?? [],
+        notes: validated.notes ?? null,
+        nextDueAt,
+      },
+    })) as {
+      enabled: boolean;
+      timeOfDay: string;
+      snoozeDuration: number;
+      dayOfWeekReminders: number[];
+      notes: string | null;
+      nextDueAt: Date | null;
+    };
 
-    // TODO: Schedule recurring notifications based on settings
-    // if (validated.enabled) {
-    //   await scheduleContraceptivePillReminder(user.id, validated.timeOfDay);
-    // }
+    if (reminder.enabled) {
+      await scheduleContraceptivePillReminder(user.id, {
+        enabled: reminder.enabled,
+        timeOfDay: reminder.timeOfDay,
+        snoozeDuration: reminder.snoozeDuration,
+        dayOfWeekReminders: reminder.dayOfWeekReminders,
+        notes: reminder.notes ?? undefined,
+      });
+    }
 
     return c.json(
       {
         success: true,
-        data: validated,
+        data: {
+          ...validated,
+          nextDueAt: reminder.nextDueAt,
+        },
         message: 'Contraceptive pill reminder updated',
       },
       { status: 201 }
@@ -568,23 +678,19 @@ periodRoutes.get('/reminder/pill', async (c) => {
   const user = c.get('user');
 
   try {
-    const profile = await prisma.profile.findUnique({
+    const db = prisma as unknown as {
+      contraceptivePillReminder: {
+        findUnique: (args: object) => Promise<unknown>;
+      };
+    };
+
+    const pillReminder = await db.contraceptivePillReminder.findUnique({
       where: { userId: user.id },
     });
 
-    if (!profile) {
-      return c.json(
-        { success: false, error: 'User profile not found' },
-        { status: 404 }
-      );
-    }
-
-    const pillReminder = (profile.notificationPreferences as Record<string, unknown>)
-      ?.contraceptivePillReminder || null;
-
     return c.json({
       success: true,
-      data: pillReminder,
+      data: pillReminder || null,
     });
   } catch (error) {
     console.error('[Period] GET /reminder/pill error:', error);
@@ -604,25 +710,23 @@ periodRoutes.delete('/reminder/pill', async (c) => {
   const user = c.get('user');
 
   try {
-    const profile = await prisma.profile.findUnique({
+    const db = prisma as unknown as {
+      contraceptivePillReminder: {
+        findUnique: (args: object) => Promise<unknown>;
+        delete: (args: object) => Promise<unknown>;
+      };
+    };
+
+    const existing = await db.contraceptivePillReminder.findUnique({
       where: { userId: user.id },
     });
 
-    if (!profile) {
-      return c.json(
-        { success: false, error: 'User profile not found' },
-        { status: 404 }
-      );
+    if (!existing) {
+      return c.json({ success: false, error: 'Pill reminder not found' }, { status: 404 });
     }
 
-    const preferences = profile.notificationPreferences as Prisma.JsonObject;
-    delete preferences.contraceptivePillReminder;
-
-    await prisma.profile.update({
+    await db.contraceptivePillReminder.delete({
       where: { userId: user.id },
-      data: {
-        notificationPreferences: Object.keys(preferences).length ? preferences : Prisma.DbNull,
-      },
     });
 
     return c.json({

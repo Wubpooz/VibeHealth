@@ -5,6 +5,7 @@ import type { Session as AuthSession, User as AuthUser } from 'better-auth';
 import type { MoodLog, MoodEmoji, JournalEntry } from '@prisma/client';
 import { z } from 'zod';
 import { periodRoutes } from './wellness-period.routes';
+import { awardCarrots } from '../services/rewards.service';
 
 // =============================================================================
 // Types
@@ -50,18 +51,15 @@ const mediaAttachmentSchema = z.object({
 });
 
 // =============================================================================
-// Rewards Service Stub
+// Rewards Service Bridge
 // =============================================================================
 
 /**
- * Award carrots to a user (stub for integration with RewardsService).
- * Update this to call the actual RewardsService when available.
+ * Award carrots to a user through shared reward logic.
  */
-async function awardCarrots(userId: string, amount: number): Promise<void> {
+async function awardCarrotsHandler(userId: string, amount: number): Promise<void> {
   try {
-    // TODO: Integrate with actual RewardsService
-    // Example: await rewardsService.awardCarrots(userId, amount);
-    console.log(`[Rewards] Awarded ${amount} carrots to user ${userId}`);
+    await awardCarrots(userId, amount);
   } catch (error) {
     console.error(`[Rewards] Failed to award carrots:`, error);
     // Non-blocking error — don't fail the request if rewards fail
@@ -176,7 +174,7 @@ wellnessRoutes.post('/mood', async (c) => {
 
     // Award carrots on creation (not on update)
     if (moodLog.createdAt === moodLog.updatedAt || !body.isUpdate) {
-      await awardCarrots(user.id, 3);
+      await awardCarrotsHandler(user.id, 3);
     }
 
     return c.json(
@@ -406,6 +404,13 @@ wellnessRoutes.post('/journal', async (c) => {
           // Determine media type
           const mediaType = isValidImage ? 'IMAGE' : 'AUDIO';
 
+          // Determine duration for audio and pass through if present
+          const maybeDuration = (file as unknown as { duration?: number }).duration;
+          const durationSeconds =
+            isValidAudio && typeof maybeDuration === 'number' && !Number.isNaN(maybeDuration)
+              ? Math.round(maybeDuration)
+              : null;
+
           // Create media attachment record
           await prisma.mediaAttachment.create({
             data: {
@@ -413,7 +418,7 @@ wellnessRoutes.post('/journal', async (c) => {
               type: mediaType,
               url: dataUrl,
               mimeType: file.type,
-              durationSeconds: null, // TODO: Extract duration for audio files
+              durationSeconds,
             },
           });
 
@@ -435,7 +440,7 @@ wellnessRoutes.post('/journal', async (c) => {
     });
 
     // Award carrots for creating journal entry
-    await awardCarrots(user.id, 3);
+    await awardCarrotsHandler(user.id, 3);
 
     return c.json(
       {
