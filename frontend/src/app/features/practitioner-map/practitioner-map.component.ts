@@ -1,9 +1,12 @@
 import { Component, OnInit, ViewChild, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { PageHeaderComponent } from '../../shared/components/page-header/page-header.component';
 import { ModalComponent } from '../../shared/components/modal/modal.component';
+import { environment } from '../../../environments/environment';
+import { firstValueFrom } from 'rxjs';
 
 type MapProvider = 'openstreetmap' | 'google';
 
@@ -67,7 +70,7 @@ interface Practitioner {
               <input
                 type="text"
                 [value]="searchQuery()"
-                (input)="searchQuery.set($any($event.target).value)"
+                (input)="onSearchQueryChanged($any($event.target).value)"
                 placeholder="{{ 'PRACTITIONER_MAP.SEARCH_PLACEHOLDER' | translate }}"
                 class="w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 px-3 py-2 text-sm text-gray-700 dark:text-gray-100 focus:ring-2 focus:ring-primary-400 outline-none"
               />
@@ -76,7 +79,7 @@ interface Practitioner {
                 @for (category of categories; track category) {
                   <button
                     type="button"
-                    (click)="selectedCategory.set(category)"
+                    (click)="setCategory(category)"
                     [class.bg-primary-500]="selectedCategory() === category"
                     [class.text-white]="selectedCategory() === category"
                     [attr.aria-label]="('PRACTITIONER_MAP.CATEGORY_FILTER_LABEL' | translate:{ category: categoryLabel(category) })"
@@ -203,8 +206,10 @@ interface Practitioner {
 export class PractitionerMapComponent implements OnInit {
   readonly sanitizer = inject(DomSanitizer);
   readonly translateService = inject(TranslateService);
+  readonly http = inject(HttpClient);
 
   readonly provider = signal<MapProvider>('openstreetmap');
+  readonly loadingPractitioners = signal(false);
   readonly location = signal<Coordinates>({ lat: 48.8566, lng: 2.3522 });
   readonly mapUrl = signal<SafeResourceUrl>(this.createMapUrl(this.location(), this.provider()));
   readonly loading = signal(true);
@@ -281,6 +286,7 @@ export class PractitionerMapComponent implements OnInit {
   setProvider(value: MapProvider): void {
     this.provider.set(value);
     this.updateMapUrl();
+    this.loadPractitioners();
   }
 
   refreshLocation(): void {
@@ -319,6 +325,42 @@ export class PractitionerMapComponent implements OnInit {
     this.setProvider(nextProvider);
   }
 
+  async loadPractitioners(): Promise<void> {
+    this.loadingPractitioners.set(true);
+
+    try {
+      const lat = String(this.location().lat);
+      const lng = String(this.location().lng);
+      const q = this.searchQuery().trim();
+      const specialty = this.selectedCategory();
+
+      const params = new URLSearchParams({ lat, lng });
+      if (q) params.set('q', q);
+      if (specialty && specialty !== 'all') params.set('specialty', specialty);
+
+      const url = `${environment.apiUrl}/api/v1/references/practitioners?${params.toString()}`;
+      const practitioners = await firstValueFrom(this.http.get<Practitioner[]>(url));
+
+      if (Array.isArray(practitioners) && practitioners.length > 0) {
+        this.practitioners.set(practitioners);
+      }
+    } catch (err) {
+      console.error('Failed to load practitioners', err);
+    } finally {
+      this.loadingPractitioners.set(false);
+    }
+  }
+
+  setCategory(category: PractitionerCategory): void {
+    this.selectedCategory.set(category);
+    this.loadPractitioners();
+  }
+
+  onSearchQueryChanged(value: string): void {
+    this.searchQuery.set(value);
+    this.loadPractitioners();
+  }
+
   categoryLabel(category: PractitionerCategory): string {
     const normalizedCategory = category === 'all' ? 'ALL' : category.toUpperCase();
     const key = `PRACTITIONER_MAP.CATEGORY_${normalizedCategory}`;
@@ -346,16 +388,18 @@ export class PractitionerMapComponent implements OnInit {
     }
 
     navigator.geolocation.getCurrentPosition(
-      (position) => {
+      async (position) => {
         this.location.set({ lat: position.coords.latitude, lng: position.coords.longitude });
         this.updateMapUrl();
+        await this.loadPractitioners();
         this.loading.set(false);
       },
-      (err) => {
+      async (err) => {
         console.error('Geolocation error', err);
         this.error.set('PRACTITIONER_MAP.GEOLOCATION_DENIED');
         this.location.set({ lat: 48.8566, lng: 2.3522 });
         this.updateMapUrl();
+        await this.loadPractitioners();
         this.loading.set(false);
       },
       { timeout: 10000, maximumAge: 15_000, enableHighAccuracy: true },
